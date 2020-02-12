@@ -1,3 +1,0 @@
-Modelled after https://medium.com/sohoffice/the-api-first-strategy-use-swagger-to-generate-api-client-as-an-angular-library-66964ea43587
-
-Swagger code built on swagger-hub

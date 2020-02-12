@@ -3,6 +3,7 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { GenomicService } from './api/genomic.service';
 import { ImgtimgtGeneTableService } from './api/imgtimgtGeneTable.service';
 import { LongReadsubmittedSequencesService } from './api/longReadsubmittedSequences.service';
 
@@ -11,6 +12,7 @@ import { LongReadsubmittedSequencesService } from './api/longReadsubmittedSequen
   declarations: [],
   exports:      [],
   providers: [
+    GenomicService,
     ImgtimgtGeneTableService,
     LongReadsubmittedSequencesService ]
 })

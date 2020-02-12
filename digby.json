@@ -1,0 +1,64 @@
+{
+    "swagger": "2.0",
+    "basePath": "/api",
+    "paths": {
+        "/long_read/imgt_gene_table/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Returns IMGT Gene Table",
+                "operationId": "get_category_collection",
+                "tags": [
+                    "long_read/imgt_gene_table"
+                ]
+            }
+        },
+        "/long_read/submitted_sequences/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "summary": "Returns list of sequences submitted to IMGT",
+                "operationId": "get_category_collection",
+                "tags": [
+                    "long_read/submitted_sequences"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "DIgServer API",
+        "version": "1.0",
+        "description": "API for Ig Receptor gene data"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "long_read/submitted_sequences",
+            "description": "Long read sequences submitted to IMGT"
+        },
+        {
+            "name": "long_read/imgt_gene_table",
+            "description": "IMGT Gene Table"
+        }
+    ],
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        },
+        "NoResultFound": {}
+    }
+}

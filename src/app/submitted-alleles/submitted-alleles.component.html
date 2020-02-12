@@ -1,1 +1,14 @@
-<p>submitted-alleles works!</p>
+<p *ngIf="rowData.length < 1 && !isFetching">No data available</p>
+<ag-grid-angular  *ngIf="rowData.length >= 1 && !isFetching"
+    style="height: 500px;"
+    class="ag-theme-balham"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    >
+</ag-grid-angular>
+<p *ngIf="isFetching">Loading...</p>
+<div class="alert alert-danger" *ngIf="error">
+  <h4>Error loading data</h4>
+  <p>{{ error }}</p>
+</div>
+

@@ -48,3 +48,5 @@ Thumbs.db
 # Jbrowse
 /src/jbrowse
 
+# Module cache
+.cache/

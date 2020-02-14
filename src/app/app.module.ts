@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { SubmittedAllelesComponent } from './submitted-alleles/submitted-alleles.component';
@@ -14,6 +15,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { LongReadsubmittedSequencesService } from 'dist/digby-swagger-client';
 import { environment } from '../environments/environment';
+import { GeneTablePanelComponent } from './genetable/gene-table-panel/gene-table-panel.component';
+import { GeneTableSelectorComponent } from './genetable/gene-table-selector/gene-table-selector.component';
+import {DropdownDirective} from './shared/dropdown.directive';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -37,14 +41,19 @@ const appRoutes: Routes = [
     HomeComponent,
     SequencesComponent,
     SubmittedAllelesComponent,
-    GeneTableComponent
+    GeneTableComponent,
+    GeneTablePanelComponent,
+    GeneTableSelectorComponent,
+    DropdownDirective,
   ],
   imports: [
     BrowserModule,
     AgGridModule.withComponents([]),
     HttpClientModule,
     ApiModule.forRoot(apiConfigFactory),
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [LongReadsubmittedSequencesService,],
   bootstrap: [AppComponent]

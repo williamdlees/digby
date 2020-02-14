@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="selectSpecies">Species</label>
+      </div>
+      <select  id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
+        <option *ngFor="let s of species" [ngValue]="s">{{s.name}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-md">
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="selectSpecies">Reference Sequence</label>
+      </div>
+      <select [(ngModel)]="selectedRef" (ngModelChange)="refChange()">
+        <option *ngFor="let r of refSeqs" [ngValue]="r">{{r.displayName}}</option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <p *ngIf="isFetching">Loading...</p>
+  <div class="alert alert-danger" *ngIf="error">
+    <h4>Error loading data</h4>
+    <p>{{ error }}</p>
+  </div>
+</div>

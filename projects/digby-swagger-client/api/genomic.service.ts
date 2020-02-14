@@ -272,6 +272,53 @@ export class GenomicService {
     }
 
     /**
+     * Returns nucleotide sequences from selected references
+     * Use &#39;all&#39; to wildcard species or ref_seq
+     * @param species 
+     * @param refSeq 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getSequencesApi(species: string, refSeq: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, refSeq: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, refSeq: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, refSeq: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
+        }
+
+        if (refSeq === null || refSeq === undefined) {
+            throw new Error('Required parameter refSeq was null or undefined when calling getSequencesApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/sequences/${encodeURIComponent(String(species))}/${encodeURIComponent(String(refSeq))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of species for which information is held
      * 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

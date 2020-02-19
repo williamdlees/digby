@@ -33,7 +33,6 @@ export class GeneTableSelectorComponent implements OnInit {
       this.isFetching = false;
       this.error = error.message;
     });
-
   }
 
   speciesChange() {

@@ -185,7 +185,7 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
         for (let i = 0; i < nCols; i++) {
           const head = $(dtInstance.column(i).header()).html();
           if (head === clickedHeader + '_full') {
-            const modalRef = self.modalService.open(SeqModalComponent);
+            const modalRef = self.modalService.open(SeqModalComponent, { size: 'lg'});
             modalRef.componentInstance.name = clickedGene;
             modalRef.componentInstance.content = dtInstance.cell(clickedColumnIndex.row, i).data();
           }

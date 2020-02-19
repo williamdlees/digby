@@ -5,7 +5,9 @@
   </button>
 </div>
 <div class="modal-body">
-  <p>{{content}}</p>
+  <pre class="lead">
+    <div style="width: 600px;margin-left: auto;margin-right: auto;" [innerHTML]=displayContent></div>
+  </pre>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

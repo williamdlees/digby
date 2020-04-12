@@ -1,6 +1,10 @@
-<p *ngIf="rows.length < 1 && !isFetching">No data available</p>
+<p *ngIf="rows.length < 1 && !isFetching">Please select Species and Reference Sequence</p>
 
-<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+<p *ngIf="browserLink">
+  <a href="{{ browserLink }}">View in Genome Browser</a>
+</p>
+
+<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" style="width:100%">
 <thead>
   <tr>
     <th *ngFor="let col of cols">{{ col }}</th>

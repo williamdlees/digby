@@ -32,7 +32,6 @@ export function apiConfigFactory(): Configuration  {
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'sequences', component: SequencesComponent },
   { path: 'submitted', component: SubmittedAllelesComponent },
   { path: 'genetable', component: GeneTableComponent },
 ];

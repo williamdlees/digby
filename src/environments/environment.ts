@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiBasePath: 'http://localhost:5000/api',
+  jbrowseBasePath: 'http://localhost:5000/static/jbrowse',
 };
 
 /*

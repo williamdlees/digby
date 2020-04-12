@@ -46,11 +46,11 @@ export class GeneTableSelectorComponent implements OnInit {
       const allSeqs = [];
       for (const ref of resp) {
         // duplicated for testing
-        allSeqs.push(ref.ref_seq);
-        allSeqs.push(ref.ref_seq);
-        allSeqs.push(ref.ref_seq);
-        allSeqs.push(ref.ref_seq);
-        allSeqs.push(ref.ref_seq);
+        // allSeqs.push(ref.ref_seq);
+        // allSeqs.push(ref.ref_seq);
+        // allSeqs.push(ref.ref_seq);
+        // allSeqs.push(ref.ref_seq);
+        // allSeqs.push(ref.ref_seq);
         allSeqs.push(ref.ref_seq);
       }
       this.refSeqs.push({id: 0, displayName: 'All', names: allSeqs});
@@ -68,8 +68,7 @@ export class GeneTableSelectorComponent implements OnInit {
     }
   }
 
-  refChange() {
-    console.log(this.selectedRef);
+  onSubmit() {
     this.geneTableService.selectionUpdated.next({species: this.selectedSpecies.name, refSeqs: this.selectedRef.names});
   }
 }

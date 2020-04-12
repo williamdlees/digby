@@ -1,23 +1,44 @@
-<div class="row">
-  <div class="col-md">
-    <div class="input-group mb-3">
+<div class="form-row align-items-center">
+  <div class="col-auto my-1">
+    <div class="input-group">
       <div class="input-group-prepend">
         <label class="input-group-text" for="selectSpecies">Species</label>
       </div>
-      <select  id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
+      <select class="custom-select" id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
         <option *ngFor="let s of species" [ngValue]="s">{{s.name}}</option>
       </select>
     </div>
   </div>
-  <div class="col-md">
-    <div class="input-group mb-3">
+  <div class="col-auto my-1">
+    <div class="input-group">
       <div class="input-group-prepend">
         <label class="input-group-text" for="selectSpecies">Reference Sequence</label>
       </div>
-      <select [(ngModel)]="selectedRef" (ngModelChange)="refChange()">
+      <select class="custom-select" [(ngModel)]="selectedRef">
         <option *ngFor="let r of refSeqs" [ngValue]="r">{{r.displayName}}</option>
       </select>
     </div>
+  </div>
+  <div class="col-auto my-1">
+    <div class="custom-control custom-checkbox mr-sm-2">
+      <input type="checkbox" class="custom-control-input" id="show-imgt">
+      <label class="custom-control-label" for="show-imgt">IMGT</label>
+    </div>
+  </div>
+  <div class="col-auto my-1">
+    <div class="custom-control custom-checkbox mr-sm-2">
+      <input type="checkbox" class="custom-control-input" id="show-novel">
+      <label class="custom-control-label" for="show-novel">Novel</label>
+    </div>
+  </div>
+  <div class="col-auto my-1">
+    <div class="custom-control custom-checkbox mr-sm-2">
+      <input type="checkbox" class="custom-control-input" id="show-full-gene">
+      <label class="custom-control-label" for="show-full-gene">Full Gene</label>
+    </div>
+  </div>
+  <div class="col-auto my-1">
+    <button type="submit" class="btn btn-primary" [disabled]="!(selectedSpecies && selectedRef)" (click)="onSubmit()">Submit</button>
   </div>
 </div>
 <div class="row">

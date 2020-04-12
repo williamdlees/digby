@@ -6,6 +6,7 @@ import {Subject} from 'rxjs';
 import {DataTableDirective} from 'angular-datatables';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../seq-modal/seq-modal.component';
+import {environment} from '../../../environments/environment';
 
 
 @Component({
@@ -29,8 +30,7 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
   initialisedTable = false;
   newRows = [];
   newCols = [];
-
-
+  browserLink = '';
 
   constructor(private apiGateway: GenomicService,
               private geneTableService: GeneTableService,
@@ -137,6 +137,10 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
           dtInstance.column(i).visible(false);
         }
       }
+
+      // set up the link to the gene browser
+
+      this.browserLink = environment.jbrowseBasePath + '/' + this.selection.species.replace(' ', '_') + '.html';
     });
 
   }

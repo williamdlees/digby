@@ -276,13 +276,16 @@ export class GenomicService {
      * Use &#39;all&#39; to wildcard species or ref_seq
      * @param species 
      * @param refSeq 
+     * @param imgt 
+     * @param novel 
+     * @param full 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSequencesApi(species: string, refSeq: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSequencesApi(species: string, refSeq: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSequencesApi(species: string, refSeq: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSequencesApi(species: string, refSeq: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
@@ -290,6 +293,20 @@ export class GenomicService {
 
         if (refSeq === null || refSeq === undefined) {
             throw new Error('Required parameter refSeq was null or undefined when calling getSequencesApi.');
+        }
+
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (imgt !== undefined && imgt !== null) {
+            queryParameters = queryParameters.set('imgt', <any>imgt);
+        }
+        if (novel !== undefined && novel !== null) {
+            queryParameters = queryParameters.set('novel', <any>novel);
+        }
+        if (full !== undefined && full !== null) {
+            queryParameters = queryParameters.set('full', <any>full);
         }
 
         let headers = this.defaultHeaders;
@@ -310,6 +327,7 @@ export class GenomicService {
 
         return this.httpClient.get<any>(`${this.basePath}/genomic/sequences/${encodeURIComponent(String(species))}/${encodeURIComponent(String(refSeq))}`,
             {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

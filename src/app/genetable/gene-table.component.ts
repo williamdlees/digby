@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { GeneTableSelection} from './gene-table.model';
 
 @Component({
   selector: 'app-genetable',

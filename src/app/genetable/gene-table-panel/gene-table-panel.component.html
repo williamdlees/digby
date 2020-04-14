@@ -1,7 +1,7 @@
-<p *ngIf="rows.length < 1 && !isFetching">Please select Species and Reference Sequence</p>
+<p *ngIf="rows.length < 1 && !isFetching">{{emptyMessage}}</p>
 
-<p *ngIf="browserLink">
-  <a href="{{ browserLink }}">View in Genome Browser</a>
+<p *ngIf="refName">
+  <a class="nav-link" [routerLink]="['/genebrowser', speciesName.replace(' ', '_'), refName ]">View in Gene Browser</a>
 </p>
 
 <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" style="width:100%">

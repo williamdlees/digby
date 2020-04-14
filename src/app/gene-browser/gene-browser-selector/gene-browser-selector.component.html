@@ -20,31 +20,6 @@
     </div>
   </div>
   <div class="col-auto my-1">
-    <div class="custom-control custom-checkbox mr-sm-2">
-      <input type="checkbox" class="custom-control-input" id="show-imgt" [(ngModel)]="showImgt">
-      <label class="custom-control-label" for="show-imgt">IMGT</label>
-    </div>
-  </div>
-  <div class="col-auto my-1">
-    <div class="custom-control custom-checkbox mr-sm-2">
-      <input type="checkbox" class="custom-control-input" id="show-novel" [(ngModel)]="showNovel">
-      <label class="custom-control-label" for="show-novel">Novel</label>
-    </div>
-  </div>
-  <div class="col-auto my-1">
-    <div class="custom-control custom-checkbox mr-sm-2">
-      <input type="checkbox" class="custom-control-input" id="show-full-gene" [(ngModel)]="showFull">
-      <label class="custom-control-label" for="show-full-gene">Full Gene</label>
-    </div>
-  </div>
-  <div class="col-auto my-1">
     <button type="submit" class="btn btn-primary" [disabled]="!(selectedSpecies && selectedRef)" (click)="onSubmit()">Submit</button>
-  </div>
-</div>
-<div class="row">
-  <p *ngIf="isFetching">Loading...</p>
-  <div class="alert alert-danger" *ngIf="error">
-    <h4>Error loading data</h4>
-    <p>{{ error }}</p>
   </div>
 </div>

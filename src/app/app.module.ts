@@ -21,6 +21,9 @@ import {DropdownDirective} from './shared/dropdown.directive';
 import {DataTablesModule} from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SeqModalComponent } from './genetable/seq-modal/seq-modal.component';
+import { GeneBrowserComponent } from './gene-browser/gene-browser.component';
+import { GeneBrowserSelectorComponent } from './gene-browser/gene-browser-selector/gene-browser-selector.component';
+import { GeneBrowserPanelComponent } from './gene-browser/gene-browser-panel/gene-browser-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -32,8 +35,8 @@ export function apiConfigFactory(): Configuration  {
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'submitted', component: SubmittedAllelesComponent },
   { path: 'genetable', component: GeneTableComponent },
+  { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
 ];
 
 @NgModule({
@@ -48,6 +51,9 @@ const appRoutes: Routes = [
     GeneTableSelectorComponent,
     DropdownDirective,
     SeqModalComponent,
+    GeneBrowserComponent,
+    GeneBrowserSelectorComponent,
+    GeneBrowserPanelComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,25 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
-import { GeneTableService } from '../gene-table.service';
+import { GeneBrowserService } from '../gene-browser.service';
+import {GeneTableService} from '../../genetable/gene-table.service';
 
 @Component({
-  selector: 'app-gene-table-selector',
-  templateUrl: './gene-table-selector.component.html',
-  styleUrls: ['./gene-table-selector.component.scss']
+  selector: 'app-gene-browser-selector',
+  templateUrl: './gene-browser-selector.component.html',
+  styleUrls: ['./gene-browser-selector.component.scss']
 })
-export class GeneTableSelectorComponent implements OnInit {
+export class GeneBrowserSelectorComponent implements OnInit {
   species = [];
   selectedSpecies = null;
   refSeqs = [];
   selectedRef = null;
-  showImgt = true;
-  showNovel = true;
-  showFull = true;
   isFetching: boolean;
   error = null;
 
   constructor(private apiGateway: GenomicService,
-              private geneTableService: GeneTableService) { }
+              private geneBrowserService: GeneBrowserService) { }
 
   ngOnInit() {
     this.isFetching = true;
@@ -39,24 +37,11 @@ export class GeneTableSelectorComponent implements OnInit {
   }
 
   speciesChange() {
-    console.log(this.selectedSpecies);
-
     if (this.selectedSpecies.name !== 'None') {
       this.apiGateway.getRefSeqApi(this.selectedSpecies.name).subscribe((resp) => {
       this.isFetching = false;
       this.refSeqs = [];
 
-      const allSeqs = [];
-      for (const ref of resp) {
-        // duplicated for testing
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        allSeqs.push(ref.ref_seq);
-      }
-      this.refSeqs.push({id: 0, displayName: 'All', names: allSeqs});
       let id = 1;
       for (const ref of resp) {
         this.refSeqs.push({id, displayName: ref.ref_seq + ' (' + ref.locus + ')', names: [ref.ref_seq]});
@@ -74,6 +59,7 @@ export class GeneTableSelectorComponent implements OnInit {
   }
 
   onSubmit() {
-    this.geneTableService.selectionUpdated.next({species: this.selectedSpecies.name, refSeqs: this.selectedRef.names, imgt: this.showImgt, novel: this.showNovel, full: this.showFull});
+    this.geneBrowserService.selectionUpdated.next({species: this.selectedSpecies.name, refSeq: this.selectedRef.name});
   }
 }
+

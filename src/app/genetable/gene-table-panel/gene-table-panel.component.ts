@@ -1,3 +1,4 @@
+/* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, Directive, HostListener, AfterViewInit} from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../gene-table.model';
@@ -30,7 +31,9 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
   initialisedTable = false;
   newRows = [];
   newCols = [];
-  browserLink = '';
+  refName = null;
+  speciesName = null;
+  emptyMessage = 'Please select Species and Reference Sequence';
 
   constructor(private apiGateway: GenomicService,
               private geneTableService: GeneTableService,
@@ -63,15 +66,19 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
 
   // Assemble data for the panel, which potentially comes from multiple reference sequence requests
   assembleData() {
+    console.log('assembledata entered');
     this.newRows = [];
     this.newCols = [];
+    this.error = null;
 
     if (this.selection.species !== 'none' && this.selection.refSeqs.length) {
       this.isFetching = true;
       this.outstandingRequests = this.selection.refSeqs.length;
+      this.speciesName = this.selection.species;
 
       for (const seqName of this.selection.refSeqs) {
         this.getRefSeqData(seqName);
+        this.refName = seqName;
       }
     }
   }
@@ -79,12 +86,13 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
   // update panel with results from a single reference sequence
   // this may be called multiple times to combine results from several references
   getRefSeqData(refSeq) {
-    this.apiGateway.getSequencesApi(this.selection.species, refSeq).subscribe((resp) => {
+    this.apiGateway.getSequencesApi(this.selection.species, refSeq, this.selection.imgt, this.selection.novel, this.selection.full).subscribe((resp) => {
       if (resp['sequences'].length) {
         this.newRows.push(...resp['sequences']);
         this.isFetching = true;
-        this.checkComplete();
       }
+      this.checkComplete();
+      console.log('chunk finished without error');
     }, error => {
       this.error = error.message;
       this.checkComplete();
@@ -102,46 +110,71 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
 
 // display the assembled data on the panel
   displayData() {
-    // determine coloumn manes
-    for (const key of Object.keys(this.newRows[0])) {
-    this.newCols.push(key);
-    }
+    console.log('displayData called');
+    if (this.newRows.length > 0) {
+      // destroy table data if necessary
+      if (this.initialisedTable) {
+        this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+          // Destroy the table first
+          dtInstance.destroy();
+          this.initialisedTable = false;
+        });
+      }
 
-    // truncate long columns and add _full equivalents
-    this.truncateCols();
+      console.log('nrows > 1');
+      // determine column names
+      for (const key of Object.keys(this.newRows[0])) {
+      this.newCols.push(key);
+      }
 
-    // destroy table data if necessary
-    if (this.initialisedTable) {
+      // truncate long columns and add _full equivalents
+      this.truncateCols();
+
+      // assign the new data and trigger update event
+      this.rows = this.newRows;
+      this.cols = this.newCols;
+      this.dtTrigger.next();
+
+      // set up the select callback and hide _full columns
       this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        // Destroy the table first
-        dtInstance.destroy();
-      });
-    };
-
-    // assign the new data and trigger update event
-    this.rows = this.newRows;
-    this.cols = this.newCols;
-    this.dtTrigger.next();
-
-    // set up the select callback and hide _full columns
-    this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-      if (!this.initialisedTable) {
-        dtInstance.on('select', this.getSelectCallback(dtInstance));
-        this.initialisedTable = true;
-      }
-
-      const nCols = dtInstance.columns().nodes().length;
-      for (let i = 0; i < nCols; i++) {
-        const head = $(dtInstance.column(i).header()).html();
-        if (head.includes('_full')) {
-          dtInstance.column(i).visible(false);
+        if (!this.initialisedTable) {
+          dtInstance.on('select', this.getSelectCallback(dtInstance));
+          this.initialisedTable = true;
         }
+
+        const nCols = dtInstance.columns().nodes().length;
+        for (let i = 0; i < nCols; i++) {
+          const head = $(dtInstance.column(i).header()).html();
+          dtInstance.column(i).visible(!head.includes('_full'));
+        }
+      });
+    } else {
+        // no data returned
+        // If we have a table already, destroy and rebuild with no rows.
+        // Otherwise don't init the table because we don't know what cols we want.
+
+        if (this.initialisedTable) {
+          this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+            // Destroy the table first
+            dtInstance.destroy();
+            this.initialisedTable = false;
+          });
+
+          this.rows = [];
+          this.dtTrigger.next();
+
+          // set up the select callback and hide _full columns
+          this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+            if (!this.initialisedTable) {
+              dtInstance.on('select', this.getSelectCallback(dtInstance));
+              this.initialisedTable = true;
+            }
+          });
+        }
+
+        this.emptyMessage = 'No data returned.';
+        this.refName = null;
       }
-
-      // set up the link to the gene browser
-
-      this.browserLink = environment.jbrowseBasePath + '/' + this.selection.species.replace(' ', '_') + '.html';
-    });
 
   }
 

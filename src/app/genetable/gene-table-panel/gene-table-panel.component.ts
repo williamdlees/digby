@@ -7,7 +7,7 @@ import {Subject} from 'rxjs';
 import {DataTableDirective} from 'angular-datatables';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../seq-modal/seq-modal.component';
-import {environment} from '../../../environments/environment';
+
 
 
 @Component({

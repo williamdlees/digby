@@ -1,6 +1,9 @@
+/* tslint:disable:only-arrow-functions */
 import {Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {GeneBrowserSelection} from '../gene-browser.model';
+import { GeneBrowserService } from '../gene-browser.service';
+import {ActivatedRoute} from '@angular/router';
 
 declare var igv: any;
 declare var $: any;
@@ -28,15 +31,82 @@ const options = {
 })
 
 export class GeneBrowserPanelComponent implements OnInit {
-  @Input() selection: GeneBrowserSelection;
+  browser = null;
+  species = 'Human';
+  refName = 'Human_IGH';
 
-  constructor() { }
+  @Input() selection: GeneBrowserSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 
+  constructor(private geneBrowserService: GeneBrowserService,
+              private route: ActivatedRoute) {
+  }
+
   ngOnInit() {
-    // tslint:disable-next-line:only-arrow-functions
-    igv.createBrowser($('#igvdiv'), options).then(function(browser) {
-                    console.log('Created IGV browser');
-                });
+    this.species = this.route.snapshot.params.speciesName;
+    this.refName = this.route.snapshot.params.refName;
+    igv.createBrowser($('#igvdiv'),
+      {
+        reference: {
+          id: this.species,
+          fastaURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta.fai'
+        }
+      }).then((browser) => {
+        this.browser = browser;
+        browser.loadTrack(
+        {
+          name: 'Genes',
+          type: 'annotation',
+          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
+        }
+      ).then(() => {
+        this.browser.loadTrack(
+        {
+          name: 'Alleles',
+          type: 'alignment',
+          format: 'bam',
+          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai',
+        });
+        });
+    });
+
+    this.geneBrowserService.selectionUpdated.subscribe(
+      (sel: GeneBrowserSelection) => {
+        this.selection = sel;
+        this.reconfigureBrowser();
+      }
+    );
+  }
+
+  reconfigureBrowser() {
+    this.browser.loadGenome({
+        id: this.selection.species,
+        fastaURL: environment.igvBasePath + '/' + this.selection.species + '_' + this.selection.refSeq + '.fasta',
+        indexURL: environment.igvBasePath + '/' + this.selection.species + '_' + this.selection.refSeq + '.fasta.fai'
+    }).then(() => {
+      this.browser.loadTrack({
+          name: 'Genes',
+          type: 'annotation',
+          url: environment.igvBasePath + '/' + this.selection.species + '_' + this.selection.refSeq + '.gff3',
+      }).then(() => {
+        this.browser.loadTrack({
+          name: 'Samples',
+          type: 'alignment',
+          format: 'bam',
+          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai'
+      }).then(() => {
+        this.browser.loadTrack({
+          name: 'Refs',
+          type: 'alignment',
+          format: 'bam',
+          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam.bai',
+      });
+      });
+      });
+    });
   }
 }

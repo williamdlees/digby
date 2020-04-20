@@ -8,10 +8,9 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class GeneBrowserComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute) { }
+  constructor() { }
 
   ngOnInit() {
-    console.log(this.route.snapshot.params.speciesName + '   ' + this.route.snapshot.params.refName);
   }
 
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneBrowserService } from '../gene-browser.service';
-import {GeneTableService} from '../../genetable/gene-table.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-gene-browser-selector',
@@ -39,16 +39,14 @@ export class GeneBrowserSelectorComponent implements OnInit {
   speciesChange() {
     if (this.selectedSpecies.name !== 'None') {
       this.apiGateway.getRefSeqApi(this.selectedSpecies.name).subscribe((resp) => {
-      this.isFetching = false;
-      this.refSeqs = [];
+        this.isFetching = false;
+        this.refSeqs = [];
 
-      let id = 1;
-      for (const ref of resp) {
-        this.refSeqs.push({id, displayName: ref.ref_seq + ' (' + ref.locus + ')', names: [ref.ref_seq]});
-        id = id + 1;
-      }
-
-      this.selectedRef = null;
+        let id = 1;
+        for (const ref of resp) {
+          this.refSeqs.push({id, displayName: ref.ref_seq + ' (' + ref.locus + ')', name: [ref.ref_seq]});
+          id = id + 1;
+        }
       }, error => {
         this.isFetching = false;
         this.error = error.message;
@@ -59,7 +57,9 @@ export class GeneBrowserSelectorComponent implements OnInit {
   }
 
   onSubmit() {
-    this.geneBrowserService.selectionUpdated.next({species: this.selectedSpecies.name, refSeq: this.selectedRef.name});
+    this.geneBrowserService.selectionUpdated.next({
+      species: this.selectedSpecies.name.toString().replace(' ', '_'),
+      refSeq: this.selectedRef.name.toString().replace(' ', '_')});
   }
 }
 

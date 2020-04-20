@@ -17,7 +17,7 @@ import {SeqModalComponent} from '../seq-modal/seq-modal.component';
 })
 
 export class GeneTablePanelComponent implements OnDestroy, OnInit {
-  @ViewChild(DataTableDirective, {static: false})
+  @ViewChild(DataTableDirective)
   dtElement: DataTableDirective;
 
   @Input() selection: GeneTableSelection;

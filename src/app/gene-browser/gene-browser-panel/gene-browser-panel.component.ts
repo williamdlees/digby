@@ -4,6 +4,7 @@ import {environment} from '../../../environments/environment';
 import {GeneBrowserSelection} from '../gene-browser.model';
 import { GeneBrowserService } from '../gene-browser.service';
 import {ActivatedRoute} from '@angular/router';
+// import {igv} from '../../../../node_modules/igv';
 
 declare var igv: any;
 declare var $: any;
@@ -54,22 +55,27 @@ export class GeneBrowserPanelComponent implements OnInit {
         }
       }).then((browser) => {
         this.browser = browser;
-        browser.loadTrack(
-        {
+        browser.loadTrack({
           name: 'Genes',
           type: 'annotation',
           url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
-        }
-      ).then(() => {
-        this.browser.loadTrack(
-        {
-          name: 'Alleles',
+      }).then(() => {
+        this.browser.loadTrack({
+          name: 'Samples',
           type: 'alignment',
           format: 'bam',
           url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
           indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai',
-        });
-        });
+      }).then(() => {
+        this.browser.loadTrack({
+          name: 'Refs',
+          type: 'alignment',
+          format: 'bam',
+          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam.bai',
+      });
+      });
+      });
     });
 
     this.geneBrowserService.selectionUpdated.subscribe(

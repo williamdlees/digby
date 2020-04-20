@@ -36,9 +36,9 @@
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
+              "node_modules/igv/dist/igv.js",
               "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/datatables.net-select/js/dataTables.select.js",
-              "node_modules/igv/dist/igv.js"
             ]
           },
           "configurations": {

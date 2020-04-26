@@ -4,13 +4,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { SubmittedAllelesComponent } from './submitted-alleles/submitted-alleles.component';
 import { GeneTableComponent } from './genetable/gene-table.component';
 
 import { ApiModule, Configuration, ConfigurationParameters } from 'dist/digby-swagger-client';
-import { AgGridModule } from 'ag-grid-angular';
 import { HomeComponent } from './home/home.component';
-import { SequencesComponent } from './sequences/sequences.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { LongReadsubmittedSequencesService } from 'dist/digby-swagger-client';
@@ -44,8 +41,6 @@ const appRoutes: Routes = [
     AppComponent,
     AppHeaderComponent,
     HomeComponent,
-    SequencesComponent,
-    SubmittedAllelesComponent,
     GeneTableComponent,
     GeneTablePanelComponent,
     GeneTableSelectorComponent,
@@ -57,7 +52,6 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    AgGridModule.withComponents([]),
     HttpClientModule,
     ApiModule.forRoot(apiConfigFactory),
     RouterModule.forRoot(appRoutes),

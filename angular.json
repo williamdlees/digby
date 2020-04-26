@@ -36,9 +36,9 @@
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
-              "node_modules/igv/dist/igv.js",
               "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/datatables.net-select/js/dataTables.select.js",
+              "src/assets/js/igv.js"
             ]
           },
           "configurations": {
@@ -61,12 +61,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "600kb",
+                  "maximumError": "2mb"
                 }
               ]
             }

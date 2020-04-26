@@ -4,9 +4,9 @@ import {environment} from '../../../environments/environment';
 import {GeneBrowserSelection} from '../gene-browser.model';
 import { GeneBrowserService } from '../gene-browser.service';
 import {ActivatedRoute} from '@angular/router';
-// import {igv} from '../../../../node_modules/igv';
+import igv from 'src/assets/js/igv.js';
 
-declare var igv: any;
+// declare var igv: any;
 declare var $: any;
 
 const options = {
@@ -46,37 +46,7 @@ export class GeneBrowserPanelComponent implements OnInit {
   ngOnInit() {
     this.species = this.route.snapshot.params.speciesName;
     this.refName = this.route.snapshot.params.refName;
-    igv.createBrowser($('#igvdiv'),
-      {
-        reference: {
-          id: this.species,
-          fastaURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta.fai'
-        }
-      }).then((browser) => {
-        this.browser = browser;
-        browser.loadTrack({
-          name: 'Genes',
-          type: 'annotation',
-          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
-      }).then(() => {
-        this.browser.loadTrack({
-          name: 'Samples',
-          type: 'alignment',
-          format: 'bam',
-          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai',
-      }).then(() => {
-        this.browser.loadTrack({
-          name: 'Refs',
-          type: 'alignment',
-          format: 'bam',
-          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam.bai',
-      });
-      });
-      });
-    });
+    this.buildBrowser();
 
     this.geneBrowserService.selectionUpdated.subscribe(
       (sel: GeneBrowserSelection) => {
@@ -87,31 +57,49 @@ export class GeneBrowserPanelComponent implements OnInit {
   }
 
   reconfigureBrowser() {
-    this.browser.loadGenome({
-        id: this.selection.species,
-        fastaURL: environment.igvBasePath + '/' + this.selection.species + '_' + this.selection.refSeq + '.fasta',
-        indexURL: environment.igvBasePath + '/' + this.selection.species + '_' + this.selection.refSeq + '.fasta.fai'
-    }).then(() => {
+    this.species = this.selection.species;
+    this.refName = this.selection.refSeq;
+    igv.removeBrowser(this.browser);
+    this.buildBrowser();
+  }
+
+
+  buildBrowser() {
+    igv.createBrowser($('#igvdiv'),
+      {
+        reference: {
+          id: this.species,
+          fastaURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta.fai'
+        },
+        search: {
+          url: environment.apiBasePath +  '/genomic/feature_pos/' + this.species + '/' + this.refName + '/$FEATURE$'
+        }
+    }).then((browser) => {
+      console.log('browser created');
+      this.browser = browser;
       this.browser.loadTrack({
-          name: 'Genes',
-          type: 'annotation',
-          url: environment.igvBasePath + '/' + this.selection.species + '_' + this.selection.refSeq + '.gff3',
+        name: 'Genes',
+        type: 'annotation',
+        url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
       }).then(() => {
+        console.log('browser created 2');
         this.browser.loadTrack({
           name: 'Samples',
           type: 'alignment',
           format: 'bam',
           url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
           indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai'
-      }).then(() => {
+        }).then(() => {
+        console.log('browser created 3');
         this.browser.loadTrack({
-          name: 'Refs',
-          type: 'alignment',
-          format: 'bam',
-          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam.bai',
-      });
-      });
+            name: 'Refs',
+            type: 'alignment',
+            format: 'bam',
+            url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam',
+            indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam.bai',
+          });
+        });
       });
     });
   }

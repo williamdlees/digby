@@ -56,42 +56,29 @@ export class GenomicService {
 
 
     /**
-     * Returns the list of features within the specified reference sequence and range
+     * Returns the position of the first feature matching the specified string
      * 
      * @param species 
-     * @param refSeq 
-     * @param start 
-     * @param end 
+     * @param refSeqName 
+     * @param featureString 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getJbrowseFeatureApi(species: string, refSeq: string, start: number, end: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getJbrowseFeatureApi(species: string, refSeq: string, start: number, end: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getJbrowseFeatureApi(species: string, refSeq: string, start: number, end: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getJbrowseFeatureApi(species: string, refSeq: string, start: number, end: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getFeaturePosApi(species: string, refSeqName: string, featureString: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getFeaturePosApi(species: string, refSeqName: string, featureString: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getFeaturePosApi(species: string, refSeqName: string, featureString: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getFeaturePosApi(species: string, refSeqName: string, featureString: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
-            throw new Error('Required parameter species was null or undefined when calling getJbrowseFeatureApi.');
+            throw new Error('Required parameter species was null or undefined when calling getFeaturePosApi.');
         }
 
-        if (refSeq === null || refSeq === undefined) {
-            throw new Error('Required parameter refSeq was null or undefined when calling getJbrowseFeatureApi.');
+        if (refSeqName === null || refSeqName === undefined) {
+            throw new Error('Required parameter refSeqName was null or undefined when calling getFeaturePosApi.');
         }
 
-        if (start === null || start === undefined) {
-            throw new Error('Required parameter start was null or undefined when calling getJbrowseFeatureApi.');
-        }
-
-        if (end === null || end === undefined) {
-            throw new Error('Required parameter end was null or undefined when calling getJbrowseFeatureApi.');
-        }
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (start !== undefined && start !== null) {
-            queryParameters = queryParameters.set('start', <any>start);
-        }
-        if (end !== undefined && end !== null) {
-            queryParameters = queryParameters.set('end', <any>end);
+        if (featureString === null || featureString === undefined) {
+            throw new Error('Required parameter featureString was null or undefined when calling getFeaturePosApi.');
         }
 
         let headers = this.defaultHeaders;
@@ -110,117 +97,8 @@ export class GenomicService {
             'application/json'
         ];
 
-        return this.httpClient.get<any>(`${this.basePath}/genomic/jbrowse/${encodeURIComponent(String(species))}/features/${encodeURIComponent(String(refSeq))}`,
+        return this.httpClient.get<any>(`${this.basePath}/genomic/feature_pos/${encodeURIComponent(String(species))}/${encodeURIComponent(String(refSeqName))}/${encodeURIComponent(String(featureString))}`,
             {
-                params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Returns global statistics about features served from this store
-     * 
-     * @param species 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getJbrowseGLobalStatsApi(species: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getJbrowseGLobalStatsApi(species: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getJbrowseGLobalStatsApi(species: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getJbrowseGLobalStatsApi(species: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (species === null || species === undefined) {
-            throw new Error('Required parameter species was null or undefined when calling getJbrowseGLobalStatsApi.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-
-        return this.httpClient.get<any>(`${this.basePath}/genomic/jbrowse/${encodeURIComponent(String(species))}/stats/global`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Returns statistics for a particular region
-     * 
-     * @param species 
-     * @param refSeq 
-     * @param start 
-     * @param end 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getJbrowseRegionalStatsApi(species: string, refSeq: string, start: number, end: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getJbrowseRegionalStatsApi(species: string, refSeq: string, start: number, end: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getJbrowseRegionalStatsApi(species: string, refSeq: string, start: number, end: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getJbrowseRegionalStatsApi(species: string, refSeq: string, start: number, end: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (species === null || species === undefined) {
-            throw new Error('Required parameter species was null or undefined when calling getJbrowseRegionalStatsApi.');
-        }
-
-        if (refSeq === null || refSeq === undefined) {
-            throw new Error('Required parameter refSeq was null or undefined when calling getJbrowseRegionalStatsApi.');
-        }
-
-        if (start === null || start === undefined) {
-            throw new Error('Required parameter start was null or undefined when calling getJbrowseRegionalStatsApi.');
-        }
-
-        if (end === null || end === undefined) {
-            throw new Error('Required parameter end was null or undefined when calling getJbrowseRegionalStatsApi.');
-        }
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (start !== undefined && start !== null) {
-            queryParameters = queryParameters.set('start', <any>start);
-        }
-        if (end !== undefined && end !== null) {
-            queryParameters = queryParameters.set('end', <any>end);
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-
-        return this.httpClient.get<any>(`${this.basePath}/genomic/jbrowse/${encodeURIComponent(String(species))}/stats/region/${encodeURIComponent(String(refSeq))}`,
-            {
-                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -279,13 +157,16 @@ export class GenomicService {
      * @param imgt 
      * @param novel 
      * @param full 
+     * @param filter 
+     * @param pageNumber 
+     * @param pageSize 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
@@ -294,6 +175,9 @@ export class GenomicService {
         if (refSeq === null || refSeq === undefined) {
             throw new Error('Required parameter refSeq was null or undefined when calling getSequencesApi.');
         }
+
+
+
 
 
 
@@ -307,6 +191,15 @@ export class GenomicService {
         }
         if (full !== undefined && full !== null) {
             queryParameters = queryParameters.set('full', <any>full);
+        }
+        if (filter !== undefined && filter !== null) {
+            queryParameters = queryParameters.set('filter', <any>filter);
+        }
+        if (pageNumber !== undefined && pageNumber !== null) {
+            queryParameters = queryParameters.set('page_number', <any>pageNumber);
+        }
+        if (pageSize !== undefined && pageSize !== null) {
+            queryParameters = queryParameters.set('page_size', <any>pageSize);
         }
 
         let headers = this.defaultHeaders;

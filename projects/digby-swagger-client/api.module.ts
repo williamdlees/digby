@@ -4,20 +4,16 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { GenomicService } from './api/genomic.service';
-import { ImgtimgtGeneTableService } from './api/imgtimgtGeneTable.service';
-import { LongReadsubmittedSequencesService } from './api/longReadsubmittedSequences.service';
 
 @NgModule({
   imports:      [],
   declarations: [],
   exports:      [],
   providers: [
-    GenomicService,
-    ImgtimgtGeneTableService,
-    LongReadsubmittedSequencesService ]
+    GenomicService ]
 })
 export class ApiModule {
-    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {
+    public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
         return {
             ngModule: ApiModule,
             providers: [ { provide: Configuration, useFactory: configurationFactory } ]

@@ -17,20 +17,19 @@ import {SeqModalComponent} from '../seq-modal/seq-modal.component';
 })
 
 export class GeneTablePanelComponent implements OnDestroy, OnInit {
-  @ViewChild(DataTableDirective)
+  @ViewChild(DataTableDirective, {static: false})
   dtElement: DataTableDirective;
+  dtTrigger: Subject<null> = new Subject();
 
   @Input() selection: GeneTableSelection;
   isFetching = false;
   error = null;
   outstandingRequests = 0;
   dtOptions: any = {};
-  rows = [];
-  cols = [];
-  dtTrigger: Subject<null> = new Subject();
+  rows: string [] = [];
+  cols: string [] = [];
   initialisedTable = false;
-  newRows = [];
-  newCols = [];
+  newRows: string [] = [];
   refName = null;
   speciesName = null;
   emptyMessage = 'Please select Species and Reference Sequence';
@@ -66,9 +65,7 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
 
   // Assemble data for the panel, which potentially comes from multiple reference sequence requests
   assembleData() {
-    console.log('assembledata entered');
     this.newRows = [];
-    this.newCols = [];
     this.error = null;
 
     if (this.selection.species !== 'none' && this.selection.refSeqs.length) {
@@ -92,7 +89,6 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
         this.isFetching = true;
       }
       this.checkComplete();
-      console.log('chunk finished without error');
     }, error => {
       this.error = error.message;
       this.checkComplete();
@@ -109,34 +105,30 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
   }
 
 // display the assembled data on the panel
-  displayData() {
-    console.log('displayData called');
+  async displayData() {
     if (this.newRows.length > 0) {
       // destroy table data if necessary
       if (this.initialisedTable) {
-        this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-          // Destroy the table first
+        await this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+          dtInstance.rows.clear();
           dtInstance.destroy();
-          this.initialisedTable = false;
         });
       }
 
-      console.log('nrows > 1');
       // determine column names
-      for (const key of Object.keys(this.newRows[0])) {
-      this.newCols.push(key);
+      if (!this.cols.length) {
+        this.cols = this.addTruncatedCols(this.newRows[0]);
       }
 
-      // truncate long columns and add _full equivalents
-      this.truncateCols();
+      // provide truncated versions of long sequences
+      this.truncateSeqs();
 
       // assign the new data and trigger update event
       this.rows = this.newRows;
-      this.cols = this.newCols;
       this.dtTrigger.next();
 
       // set up the select callback and hide _full columns
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
+      await this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
         if (!this.initialisedTable) {
           dtInstance.on('select', this.getSelectCallback(dtInstance));
           this.initialisedTable = true;
@@ -157,18 +149,14 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
           this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
             // Destroy the table first
             dtInstance.destroy();
-            this.initialisedTable = false;
           });
 
-          this.rows = [];
           this.dtTrigger.next();
 
           // set up the select callback and hide _full columns
           this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-            if (!this.initialisedTable) {
-              dtInstance.on('select', this.getSelectCallback(dtInstance));
-              this.initialisedTable = true;
-            }
+            dtInstance.on('select', this.getSelectCallback(dtInstance));
+            this.initialisedTable = true;
           });
         }
 
@@ -178,31 +166,25 @@ export class GeneTablePanelComponent implements OnDestroy, OnInit {
 
   }
 
-  private truncateCols() {
+  // Make column list from keys of a sample row. Add _full keys to handle long sequences
+  private addTruncatedCols(row) {
+    const newCols = Object.keys(row);
+    newCols.push(...newCols.filter(col => col.includes('equence')).map(tcol => tcol + '_full'));
+    return (newCols);
+  }
+
+  private truncateSeqs() {
   // truncate lengthy columns, create _full equivalents
-    const fullCols = [];
+    const truncCols = this.cols.filter(col => col.includes('equence') && !col.includes('_full'));
 
-    for (const col of this.newCols) {
-      let maxLength = 0;
-      for (const row of this.newRows) {
-        const foo: string = row[col];
-        if (foo) {
-          maxLength = Math.max(maxLength, foo.length);
-        }
-      }
-
-      if (maxLength > 25) {
-        fullCols.push(col + '_full');
-        for (let i = 0; i < this.newRows.length; i++) {
-          this.newRows[i][col + '_full'] = this.newRows[i][col];
-          if (this.newRows[i][col].length > 15) {
-            this.newRows[i][col] = this.newRows[i][col].slice(0, 15) + '...';
-          }
+    for (let i = 0; i < this.newRows.length; i++) {
+      for (const col of truncCols) {
+        this.newRows[i][col + '_full'] = this.newRows[i][col];
+        if (this.newRows[i][col] && this.newRows[i][col].length > 15) {
+          this.newRows[i][col] = this.newRows[i][col].slice(0, 15) + '...';
         }
       }
     }
-
-    this.newCols.push(...fullCols);
   }
 
   // The select callback

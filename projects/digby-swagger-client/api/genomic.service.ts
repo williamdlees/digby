@@ -150,23 +150,24 @@ export class GenomicService {
     }
 
     /**
-     * Returns nucleotide sequences from selected references
-     * Use &#39;all&#39; to wildcard species or ref_seq
+     * Returns nucleotide sequences from selected reference
+     * 
      * @param species 
      * @param refSeq 
      * @param imgt 
      * @param novel 
      * @param full 
      * @param filter 
+     * @param sortdirection 
      * @param pageNumber 
      * @param pageSize 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
@@ -175,6 +176,7 @@ export class GenomicService {
         if (refSeq === null || refSeq === undefined) {
             throw new Error('Required parameter refSeq was null or undefined when calling getSequencesApi.');
         }
+
 
 
 
@@ -194,6 +196,9 @@ export class GenomicService {
         }
         if (filter !== undefined && filter !== null) {
             queryParameters = queryParameters.set('filter', <any>filter);
+        }
+        if (sortdirection !== undefined && sortdirection !== null) {
+            queryParameters = queryParameters.set('sortdirection', <any>sortdirection);
         }
         if (pageNumber !== undefined && pageNumber !== null) {
             queryParameters = queryParameters.set('page_number', <any>pageNumber);

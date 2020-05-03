@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableService } from '../gene-table.service';
 
@@ -8,6 +8,7 @@ import { GeneTableService } from '../gene-table.service';
   styleUrls: ['./gene-table-selector.component.scss']
 })
 export class GeneTableSelectorComponent implements OnInit {
+  @Input() showFilter: string;
   species = [];
   selectedSpecies = null;
   refSeqs = [];
@@ -15,6 +16,7 @@ export class GeneTableSelectorComponent implements OnInit {
   showImgt = true;
   showNovel = true;
   showFull = true;
+  filter = null;
   isFetching: boolean;
   error = null;
 
@@ -23,14 +25,27 @@ export class GeneTableSelectorComponent implements OnInit {
 
   ngOnInit() {
     this.isFetching = true;
+    this.showImgt = this.geneTableService.selection.value.imgt;
+    this.showNovel = this.geneTableService.selection.value.novel;
+    this.showFull = this.geneTableService.selection.value.full;
+
+    let selectedVal = null;
     this.apiGateway.getSpeciesApi().subscribe((resp) => {
       this.isFetching = false;
-
-      this.species = [];
       let id = 1;
       for (const sp of resp) {
-        this.species.push({id, name: sp});
+        const sel = {id, name: sp};
+        this.species.push(sel);
+        if (sp === this.geneTableService.selection.value.species) {
+          selectedVal = sel;
+        }
         id = id + 1;
+      }
+
+      if (selectedVal) {
+        this.selectedSpecies = selectedVal;
+        this.refSeqs = [];
+        this.updateRefs(this.geneTableService.selection.value.refSeqs);
       }
     }, error => {
       this.isFetching = false;
@@ -38,42 +53,42 @@ export class GeneTableSelectorComponent implements OnInit {
     });
   }
 
-  speciesChange() {
-    console.log(this.selectedSpecies);
 
-    if (this.selectedSpecies.name !== 'None') {
-      this.apiGateway.getRefSeqApi(this.selectedSpecies.name).subscribe((resp) => {
+  updateRefs(selectedName?: string) {
+    this.apiGateway.getRefSeqApi(this.selectedSpecies.name).subscribe((resp) => {
       this.isFetching = false;
       this.refSeqs = [];
+      this.selectedRef = null;
 
-      const allSeqs = [];
-      for (const ref of resp) {
-        // duplicated for testing
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        // allSeqs.push(ref.ref_seq);
-        allSeqs.push(ref.ref_seq);
-      }
-      this.refSeqs.push({id: 0, displayName: 'All', names: allSeqs});
       let id = 1;
       for (const ref of resp) {
-        this.refSeqs.push({id, displayName: ref.ref_seq + ' (' + ref.locus + ')', names: [ref.ref_seq]});
+        const sel = {id, displayName: ref.ref_seq + ' (' + ref.locus + ')', name: ref.ref_seq};
+        this.refSeqs.push(sel);
+        if (selectedName === sel.name) {
+          this.selectedRef = sel;
+        }
         id = id + 1;
-      }
 
-      this.selectedRef = null;
-      }, error => {
+        if (!this.selectedRef) {
+          this.selectedRef = sel;
+        }
+      }
+     }, error => {
         this.isFetching = false;
         this.error = error.message;
       });
-    } else {
-      this.refSeqs = [];
+  }
+
+
+  speciesChange() {
+    this.selectedRef = null;
+    if (this.selectedSpecies.name !== 'None') {
+      this.updateRefs();
     }
   }
 
   onSubmit() {
-    this.geneTableService.selectionUpdated.next({species: this.selectedSpecies.name, refSeqs: this.selectedRef.names, imgt: this.showImgt, novel: this.showNovel, full: this.showFull});
+    this.geneTableService.selection.next({species: this.selectedSpecies.name, refSeqs: this.selectedRef.name,
+      imgt: this.showImgt, novel: this.showNovel, full: this.showFull, filter: this.filter});
   }
 }

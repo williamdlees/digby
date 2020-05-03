@@ -7,7 +7,6 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./gene-browser.component.scss']
 })
 export class GeneBrowserComponent implements OnInit {
-
   constructor() { }
 
   ngOnInit() {

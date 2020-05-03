@@ -1,10 +1,11 @@
 /* tslint:disable:only-arrow-functions */
 import {Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {GeneBrowserSelection} from '../gene-browser.model';
-import { GeneBrowserService } from '../gene-browser.service';
+import { GeneTableSelection } from '../../genetable/gene-table.model';
+import { GeneTableService } from '../../genetable/gene-table.service';
 import {ActivatedRoute} from '@angular/router';
 import igv from 'src/assets/js/igv.js';
+import { delay } from 'rxjs/operators';
 
 // declare var igv: any;
 declare var $: any;
@@ -35,36 +36,43 @@ export class GeneBrowserPanelComponent implements OnInit {
   browser = null;
   species = 'Human';
   refName = 'Human_IGH';
+  browserInit = false;
 
-  @Input() selection: GeneBrowserSelection;
+  @Input() selection: GeneTableSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 
-  constructor(private geneBrowserService: GeneBrowserService,
+  constructor(private geneTableService: GeneTableService,
               private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.species = this.route.snapshot.params.speciesName;
-    this.refName = this.route.snapshot.params.refName;
-    this.buildBrowser();
-
-    this.geneBrowserService.selectionUpdated.subscribe(
-      (sel: GeneBrowserSelection) => {
-        this.selection = sel;
-        this.reconfigureBrowser();
-      }
-    );
+    console.log('subscribing to geneTableService');
+    this.geneTableService.source.subscribe(
+    (sel: GeneTableSelection) => {
+      console.log('selection change: ' + sel.species);
+      this.selection = sel;
+      this.reconfigureBrowser();
+    });
   }
 
   reconfigureBrowser() {
-    this.species = this.selection.species;
-    this.refName = this.selection.refSeq;
-    igv.removeBrowser(this.browser);
+    this.species = this.selection.species.replace(' ', '_');
+    this.refName = this.selection.refSeqs.replace(' ', '_');
+
+    if (this.browser) {
+      console.log('remove browser');
+      igv.removeBrowser(this.browser);
+    }
+
+    console.log('build browser');
     this.buildBrowser();
   }
 
 
   buildBrowser() {
+    console.log('creating browser');
+    console.log(environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta')
+    delay(0);
     igv.createBrowser($('#igvdiv'),
       {
         reference: {
@@ -76,14 +84,15 @@ export class GeneBrowserPanelComponent implements OnInit {
           url: environment.apiBasePath +  '/genomic/feature_pos/' + this.species + '/' + this.refName + '/$FEATURE$'
         }
     }).then((browser) => {
-      console.log('browser created');
+      delay(0);
+      console.log('creating browser 1');
       this.browser = browser;
       this.browser.loadTrack({
         name: 'Genes',
         type: 'annotation',
         url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
       }).then(() => {
-        console.log('browser created 2');
+        console.log('creating browser 2');
         this.browser.loadTrack({
           name: 'Samples',
           type: 'alignment',
@@ -91,8 +100,8 @@ export class GeneBrowserPanelComponent implements OnInit {
           url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
           indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai'
         }).then(() => {
-        console.log('browser created 3');
-        this.browser.loadTrack({
+          console.log('creating browser 3');
+          this.browser.loadTrack({
             name: 'Refs',
             type: 'alignment',
             format: 'bam',

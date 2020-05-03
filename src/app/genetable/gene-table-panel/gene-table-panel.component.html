@@ -1,24 +1,48 @@
-<p *ngIf="rows.length < 1 && !isFetching">{{emptyMessage}}</p>
 
-<p *ngIf="refName">
-  <a class="nav-link" [routerLink]="['/genebrowser', speciesName.replace(' ', '_'), refName ]">View in Gene Browser</a>
-</p>
+<div>
+    <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
+      <span class="sr-only">Loading...</span>
+    </div>
 
-<table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" style="width:100%">
-<thead>
-  <tr>
-    <th *ngFor="let col of cols">{{ col }}</th>
-  </tr>
-</thead>
-<tbody>
-  <tr *ngFor="let row of rows">
-    <td *ngFor="let col of cols">{{ row[col] }}</td>
-  </tr>
-</tbody>
-</table>
+    <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
+      <h4>Error loading table</h4>
+      <p>{{dataSource.error$ | async}}</p>
+    </div>
 
-<p *ngIf="isFetching">Loading...</p>
-<div class="alert alert-danger" *ngIf="error">
-  <h4>Error loading data</h4>
-  <p>{{ error }}</p>
+    <mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="imgt_name">
+            <mat-header-cell *matHeaderCellDef>IMGT Name</mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.imgt_name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.type}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="seq">
+            <mat-header-cell *matHeaderCellDef>Sequence</mat-header-cell>
+            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.sequence | geneTrunc }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="gapped">
+            <mat-header-cell *matHeaderCellDef>Gapped</mat-header-cell>
+            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'gapped')">{{sequence.gapped_sequence | geneTrunc}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+    </mat-table>
+
+    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15"
+                 [pageSizeOptions]="[15, 50, 100]"></mat-paginator>
+
 </div>

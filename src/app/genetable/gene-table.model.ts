@@ -4,4 +4,5 @@ export class GeneTableSelection {
   imgt: boolean;
   novel: boolean;
   full: boolean;
+  filter: string;
 }

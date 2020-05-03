@@ -18,7 +18,6 @@ import {DropdownDirective} from './shared/dropdown.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SeqModalComponent } from './genetable/seq-modal/seq-modal.component';
 import { GeneBrowserComponent } from './gene-browser/gene-browser.component';
-import { GeneBrowserSelectorComponent } from './gene-browser/gene-browser-selector/gene-browser-selector.component';
 import { GeneBrowserPanelComponent } from './gene-browser/gene-browser-panel/gene-browser-panel.component';
 import { GeneTruncPipe } from './genetable/gene-trunc-pipe';
 import { MatInputModule } from '@angular/material/input';
@@ -53,7 +52,6 @@ const appRoutes: Routes = [
     DropdownDirective,
     SeqModalComponent,
     GeneBrowserComponent,
-    GeneBrowserSelectorComponent,
     GeneBrowserPanelComponent,
     GeneTruncPipe,
   ],

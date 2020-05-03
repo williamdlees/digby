@@ -28,7 +28,6 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
         if (species && refSeq) {
           this.genomicService.getSequencesApi(species, refSeq, imgt, novel, full, filter, sortDirection, pageIndex, pageSize).pipe(
             catchError(error => {
-              console.log('Error loading table: ' + error.message);
               this.errorSubject.next(error.message);
               return([]);
             }),

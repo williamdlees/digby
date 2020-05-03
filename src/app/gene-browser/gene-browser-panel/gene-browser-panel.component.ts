@@ -1,5 +1,5 @@
 /* tslint:disable:only-arrow-functions */
-import {Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import { GeneTableSelection } from '../../genetable/gene-table.model';
 import { GeneTableService } from '../../genetable/gene-table.service';
@@ -32,11 +32,11 @@ const options = {
   styleUrls: ['./gene-browser-panel.component.scss']
 })
 
-export class GeneBrowserPanelComponent implements OnInit {
+export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   browser = null;
   species = 'Human';
   refName = 'Human_IGH';
-  browserInit = false;
+  geneTableServiceSubscription = null;
 
   @Input() selection: GeneTableSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
@@ -46,13 +46,15 @@ export class GeneBrowserPanelComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('subscribing to geneTableService');
-    this.geneTableService.source.subscribe(
+    this.geneTableServiceSubscription = this.geneTableService.source.subscribe(
     (sel: GeneTableSelection) => {
-      console.log('selection change: ' + sel.species);
       this.selection = sel;
       this.reconfigureBrowser();
     });
+  }
+
+  ngOnDestroy() {
+    this.geneTableServiceSubscription.unsubscribe();
   }
 
   reconfigureBrowser() {
@@ -60,18 +62,14 @@ export class GeneBrowserPanelComponent implements OnInit {
     this.refName = this.selection.refSeqs.replace(' ', '_');
 
     if (this.browser) {
-      console.log('remove browser');
       igv.removeBrowser(this.browser);
     }
 
-    console.log('build browser');
     this.buildBrowser();
   }
 
 
   buildBrowser() {
-    console.log('creating browser');
-    console.log(environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta')
     delay(0);
     igv.createBrowser($('#igvdiv'),
       {
@@ -85,14 +83,12 @@ export class GeneBrowserPanelComponent implements OnInit {
         }
     }).then((browser) => {
       delay(0);
-      console.log('creating browser 1');
       this.browser = browser;
       this.browser.loadTrack({
         name: 'Genes',
         type: 'annotation',
         url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
       }).then(() => {
-        console.log('creating browser 2');
         this.browser.loadTrack({
           name: 'Samples',
           type: 'alignment',
@@ -100,7 +96,6 @@ export class GeneBrowserPanelComponent implements OnInit {
           url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
           indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai'
         }).then(() => {
-          console.log('creating browser 3');
           this.browser.loadTrack({
             name: 'Refs',
             type: 'alignment',

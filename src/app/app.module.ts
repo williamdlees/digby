@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -25,6 +25,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { RequestCache } from './shared/http_cache';
+import {CachingInterceptor } from './shared/caching_interceptor';
 
 
 export function apiConfigFactory(): Configuration  {
@@ -69,6 +71,10 @@ const appRoutes: Routes = [
     MatProgressSpinnerModule,
     RouterModule.forRoot(appRoutes),
     ApiModule.forRoot(apiConfigFactory),
+  ],
+  providers: [
+    RequestCache,
+    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [SeqModalComponent],

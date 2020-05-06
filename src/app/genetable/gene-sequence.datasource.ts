@@ -1,8 +1,9 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {Observable, BehaviorSubject, of} from 'rxjs';
+import {Observable, BehaviorSubject, of, EMPTY} from 'rxjs';
 import { GenomicService } from '../../../dist/digby-swagger-client';
 import {catchError, finalize} from 'rxjs/operators';
 import {GeneSequence} from './gene-sequence.model';
+import {retryWithBackoff} from '../shared/retry_with_backoff';
 
 
 export class GeneSequenceDataSource implements DataSource<GeneSequence> {
@@ -27,8 +28,10 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
 
         if (species && refSeq) {
           this.genomicService.getSequencesApi(species, refSeq, imgt, novel, full, filter, sortDirection, pageIndex, pageSize).pipe(
+            retryWithBackoff(),
             catchError(error => {
-              this.errorSubject.next(error.message);
+              console.log('error caught: ' + error);
+              this.errorSubject.next(error);
               return([]);
             }),
             finalize(() => {

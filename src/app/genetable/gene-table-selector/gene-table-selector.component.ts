@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableService } from '../gene-table.service';
+import { retryWithBackoff } from '../../shared/retry_with_backoff';
+import { catchError  } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-gene-table-selector',
@@ -30,7 +34,16 @@ export class GeneTableSelectorComponent implements OnInit {
     this.showFull = this.geneTableService.selection.value.full;
 
     let selectedVal = null;
-    this.apiGateway.getSpeciesApi().subscribe((resp) => {
+    this.apiGateway.getSpeciesApi()
+      .pipe(
+        retryWithBackoff(),
+        catchError(err => {
+          this.isFetching = false;
+          this.error = err;
+          return EMPTY;
+        })
+      )
+      .subscribe((resp) => {
       this.isFetching = false;
       let id = 1;
       for (const sp of resp) {
@@ -55,7 +68,16 @@ export class GeneTableSelectorComponent implements OnInit {
 
 
   updateRefs(selectedName?: string) {
-    this.apiGateway.getRefSeqApi(this.selectedSpecies.name).subscribe((resp) => {
+    this.apiGateway.getRefSeqApi(this.selectedSpecies.name)
+      .pipe(
+        retryWithBackoff(),
+        catchError(err => {
+          this.isFetching = false;
+          this.error = err;
+          return EMPTY;
+        })
+      )
+      .subscribe((resp) => {
       this.isFetching = false;
       this.refSeqs = [];
       this.selectedRef = null;
@@ -77,6 +99,11 @@ export class GeneTableSelectorComponent implements OnInit {
         this.isFetching = false;
         this.error = error.message;
       });
+  }
+
+  handleError(error: HttpErrorResponse) {
+    this.isFetching = false;
+    this.error = error.message;
   }
 
 

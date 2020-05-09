@@ -27,6 +27,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RequestCache } from './shared/http_cache';
 import {CachingInterceptor } from './shared/caching_interceptor';
+import { SampleRepComponent } from './sample-rep/sample-rep.component';
+import { SampleRepPanelComponent } from './sample-rep/sample-rep-panel/sample-rep-panel.component';
 
 
 export function apiConfigFactory(): Configuration  {
@@ -56,6 +58,8 @@ const appRoutes: Routes = [
     GeneBrowserComponent,
     GeneBrowserPanelComponent,
     GeneTruncPipe,
+    SampleRepComponent,
+    SampleRepPanelComponent,
   ],
   imports: [
     BrowserModule,

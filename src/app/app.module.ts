@@ -13,7 +13,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { environment } from '../environments/environment';
 import {GeneTablePanelComponent} from './genetable/gene-table-panel/gene-table-panel.component';
-import { GeneTableSelectorComponent } from './genetable/gene-table-selector/gene-table-selector.component';
+import { GeneTableSelectorComponent } from './gene-table-selector/gene-table-selector.component';
 import {DropdownDirective} from './shared/dropdown.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SeqModalComponent } from './genetable/seq-modal/seq-modal.component';
@@ -29,6 +29,7 @@ import { RequestCache } from './shared/http_cache';
 import {CachingInterceptor } from './shared/caching_interceptor';
 import { SampleRepComponent } from './sample-rep/sample-rep.component';
 import { SampleRepPanelComponent } from './sample-rep/sample-rep-panel/sample-rep-panel.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 
 export function apiConfigFactory(): Configuration  {
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'genetable', component: GeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
+  { path: 'samplerep', component: SampleRepComponent }
 ];
 
 @NgModule({
@@ -75,6 +77,7 @@ const appRoutes: Routes = [
     MatProgressSpinnerModule,
     RouterModule.forRoot(appRoutes),
     ApiModule.forRoot(apiConfigFactory),
+    NgMultiSelectDropDownModule.forRoot(),
   ],
   providers: [
     RequestCache,

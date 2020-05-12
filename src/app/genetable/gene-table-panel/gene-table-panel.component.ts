@@ -50,7 +50,7 @@ export class GeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy
           .subscribe(
             (sel: GeneTableSelection) => {
               this.selection = sel;
-              this.paginator.firstPage()
+              this.paginator.firstPage();
               this.table.renderRows();
               this.loadSequencesPage();
 
@@ -60,7 +60,7 @@ export class GeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   loadSequencesPage() {
-    this.dataSource.loadGeneSequences(this.selection.species, this.selection.refSeqs, this.selection.imgt, this.selection.novel, this.selection.full, this.selection.filter, 'asc', this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.loadGeneSequences(this.selection.species, this.selection.refSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, this.selection.filter, 'asc', this.paginator.pageIndex, this.paginator.pageSize);
   }
 
   onCellClick(seq, type) {

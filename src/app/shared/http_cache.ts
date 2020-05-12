@@ -17,13 +17,8 @@ export class RequestCache  {
     const cached = this.cache.get(url);
 
     if (!cached) {
-      console.log('not cached - fetching');
       return undefined;
     }
-
-    const isExpired = cached.lastRead < (Date.now() - maxAge);
-    const expired = isExpired ? 'expired ' : '';
-    console.log('cached ' + expired);
 
     return cached.response;
   }
@@ -32,7 +27,6 @@ export class RequestCache  {
     const url = req.url;
     const entry = { url, response, lastRead: Date.now() };
     this.cache.set(url, entry);
-    console.log('cached - ' + url);
 
     const expired = Date.now() - maxAge;
     this.cache.forEach(expiredEntry => {

@@ -1,1 +1,57 @@
-<p>sample-rep-panel works!</p>
+
+<div>
+  <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
+    <h4>Error loading table</h4>
+    <p>{{dataSource.error$ | async}}</p>
+  </div>
+
+  <mat-table [dataSource]="dataSource">
+       <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.name}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef>Condition</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.status}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="tissue">
+          <mat-header-cell *matHeaderCellDef>Tissue</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.tissue}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="combined_cell_type">
+          <mat-header-cell *matHeaderCellDef>Cell</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.combined_cell_type}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="raw_reads">
+          <mat-header-cell *matHeaderCellDef>Reads</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.row_reads }}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="sequencing_length">
+          <mat-header-cell *matHeaderCellDef>Sequence Length</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.sequencing_length}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="umi">
+          <mat-header-cell *matHeaderCellDef>UMI</mat-header-cell>
+          <mat-cell *matCellDef="let sample">{{sample.umi}}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+  </mat-table>
+
+  <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15"
+               [pageSizeOptions]="[15, 50, 100]"></mat-paginator>
+
+</div>

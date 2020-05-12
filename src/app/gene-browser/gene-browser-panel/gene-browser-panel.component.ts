@@ -34,12 +34,13 @@ const options = {
 
 export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   browser = null;
-  species = 'Human';
-  refName = 'Human_IGH';
   geneTableServiceSubscription = null;
 
   @Input() selection: GeneTableSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
+
+  species = null;
+  refName = null;
 
   constructor(private geneTableService: GeneTableService,
               private route: ActivatedRoute) {
@@ -48,6 +49,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.geneTableServiceSubscription = this.geneTableService.source.subscribe(
     (sel: GeneTableSelection) => {
+      console.log('selection length: ' + sel.refSeqs.length);
       this.selection = sel;
       this.reconfigureBrowser();
     });
@@ -58,14 +60,27 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   }
 
   reconfigureBrowser() {
-    this.species = this.selection.species.replace(' ', '_');
-    this.refName = this.selection.refSeqs.replace(' ', '_');
+    if (this.selection.species) {
+      this.species = this.selection.species.replace(' ', '_');
+    } else {
+      this.species = null;
+    }
+
+    if (this.selection.refSeqs.length > 0) {
+      this.refName = this.selection.refSeqs[0].replace(' ', '_');
+    } else {
+      this.refName = null;
+    }
 
     if (this.browser) {
       igv.removeBrowser(this.browser);
+      this.browser = null;
     }
 
-    this.buildBrowser();
+    console.log('species: ' + this.species + ' refname: ' + this.refName);
+    if (this.species && this.refName) {
+      this.buildBrowser();
+    }
   }
 
 

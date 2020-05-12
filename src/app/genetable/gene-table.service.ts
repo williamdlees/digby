@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   providedIn: 'root'
 })
 export class GeneTableService {
-  selection = new BehaviorSubject<GeneTableSelection>({species: 'Human', refSeqs: 'Human_IGH', imgt: true, novel: true, full: true, filter: ''});
+  selection = new BehaviorSubject<GeneTableSelection>({species: 'Human', refSeqs: ['Human_IGH'], repSeqs: ['Human_IGH'], imgt: true, novel: true, full: true, filter: ''});
   source = this.selection.asObservable();
 
   constructor() {

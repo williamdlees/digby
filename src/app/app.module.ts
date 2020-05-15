@@ -30,7 +30,8 @@ import {CachingInterceptor } from './shared/caching_interceptor';
 import { SampleRepComponent } from './sample-rep/sample-rep.component';
 import { SampleRepPanelComponent } from './sample-rep/sample-rep-panel/sample-rep-panel.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-
+import { DynamicModule } from 'ng-dynamic-component';
+import { FilterModule } from './sample-rep/sample-rep-panel/filter/filter.module';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -78,6 +79,7 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     ApiModule.forRoot(apiConfigFactory),
     NgMultiSelectDropDownModule.forRoot(),
+    FilterModule
   ],
   providers: [
     RequestCache,
@@ -86,4 +88,6 @@ const appRoutes: Routes = [
   bootstrap: [AppComponent],
   entryComponents: [SeqModalComponent],
 })
-export class AppModule { }
+export class AppModule {
+}
+

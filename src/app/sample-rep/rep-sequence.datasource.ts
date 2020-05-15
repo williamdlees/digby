@@ -27,7 +27,7 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
         this.errorSubject.next(null);
 
         if (species && refSeq) {
-          this.repseqService.getSamplesApi(species, refSeq, pageIndex, pageSize).pipe(
+          this.repseqService.getSamplesApi(species, refSeq, pageIndex, pageSize, filter).pipe(
             retryWithBackoff(),
             catchError(error => {
               this.errorSubject.next(error);

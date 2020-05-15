@@ -150,7 +150,7 @@ export class GenomicService {
     }
 
     /**
-     * Returns nucleotide sequences from selected reference
+     * Returns nucleotide sequences from selected reference or multiple references (separate multiple reference names with &#39;,&#39;)
      * 
      * @param species 
      * @param refSeq 

@@ -7,6 +7,8 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
+import { FilterMode } from './filter/filter-mode.enum';
+import { ColumnPredicate } from './filter/column-predicate';
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -18,9 +20,30 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: RepSequenceDataSource;
-  displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'raw_reads', 'sequencing_length', 'umi'];
+  displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi'];
   paginatorSubscription = null;
   geneTableServiceSubscription = null;
+  filterModeEnum = FilterMode;
+  filters = [];
+
+
+  applyFilter(columnPredicate: ColumnPredicate) {
+    console.log('applyFilter field: ' + columnPredicate.predicate.field +
+      ' op: ' + columnPredicate.predicate.op +
+      ' value: ' + columnPredicate.predicate.value);
+
+    for (let i = this.filters.length - 1; i >= 0; i--) {
+      if (this.filters[i].field === columnPredicate.predicate.field) {
+        this.filters.splice(i, 1);
+      }
+    }
+
+    if (columnPredicate.predicate.op) {
+      this.filters.push(columnPredicate.predicate);
+    }
+
+    this.loadSequencesPage();
+  }
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableService,
@@ -58,7 +81,8 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   loadSequencesPage() {
-    this.dataSource.loadRepSequences(this.selection.species, this.selection.repSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, this.selection.filter, 'asc', this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.loadRepSequences(this.selection.species, this.selection.repSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, JSON.stringify(this.filters), 'asc', this.paginator.pageIndex, this.paginator.pageSize);
   }
+
 
 }

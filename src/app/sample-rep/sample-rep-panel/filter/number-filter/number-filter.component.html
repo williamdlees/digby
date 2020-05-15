@@ -1,0 +1,67 @@
+<button mat-icon-button [matMenuTriggerFor]="filterMenu">
+  <div class="mat-select-arrow"></div>
+</button>
+
+<mat-menu #filterMenu="matMenu" xPosition="before" >
+  <div class="content-centered" (click) = "$event.stopPropagation()">
+    <form class="col-12" >
+      <div class="row">
+        <button mat-button>Sort Ascending</button>
+      </div>
+      <div class="row">
+        <button mat-button>Sort Descending</button>
+      </div>
+      <div class="dropdown-divider"></div>
+      <div class="row">
+      <mat-form-field class="col-12">
+        <mat-select placeholder="Select comparison" [(value)]="selectedOperator">
+          <mat-option *ngFor="let operator of operatorList" [value]="operator">
+            {{operator.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+
+      <ng-container *ngIf="selectedOperator">
+        <div class="row">
+          <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
+            <input matInput placeholder="Numeric operand 1" [(ngModel)]="operand1Input" name="operand1Input">
+          </mat-form-field>
+        </div>
+
+          <ng-container *ngIf="selectedOperator.operands === 3">
+            <div class="row">
+              <span class="col-12">and</span>
+            </div>
+            <div class="row">
+              <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
+                <input matInput placeholder="Numeric operand 2" [(ngModel)]="operand2Input" name="operand2Input">
+              </mat-form-field>
+            </div>
+          </ng-container>
+      <div class="row">
+        <button mat-button  (click)="onClearFilter()">Clear Filter</button>
+      </div>
+      <div class="dropdown-divider"></div>
+      </ng-container>
+    </form>
+    <div class="col-12">
+    <div class="row">
+       <div class="col-6">
+          <button mat-flat-button color="primary" (click)="onValidation()" [disabled]="isDisabled()">
+            <i class='material-icons'>
+              OK
+            </i>
+          </button>
+        </div>
+        <div class="col-6">
+          <button mat-flat-button color="warn" (click)="onCancel()">
+            <i class='material-icons'>
+              Cancel
+            </i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-menu>

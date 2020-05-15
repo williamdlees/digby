@@ -11,32 +11,50 @@
 
   <mat-table [dataSource]="dataSource">
        <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            Name
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.name}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef>Condition</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            Condition
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'status'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.status}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="tissue">
-          <mat-header-cell *matHeaderCellDef>Tissue</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            Tissue
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'tissue'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.tissue}}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="combined_cell_type">
-          <mat-header-cell *matHeaderCellDef>Cell</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            Cell
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'combined-cell-type'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.combined_cell_type}}</mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="raw_reads">
-          <mat-header-cell *matHeaderCellDef>Reads</mat-header-cell>
+      <ng-container matColumnDef="row_reads">
+          <mat-header-cell *matHeaderCellDef>
+            Reads
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'row_reads'" [filterMode]="filterModeEnum.NUMBER_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.row_reads }}</mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="sequencing_length">
-          <mat-header-cell *matHeaderCellDef>Sequence Length</mat-header-cell>
+          <mat-header-cell *matHeaderCellDef>
+            Sequence Length
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequencing_length'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.sequencing_length}}</mat-cell>
       </ng-container>
 

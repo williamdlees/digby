@@ -21,13 +21,13 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
     }
 
     loadRepSequences(species: string, refSeq: string, imgt: boolean, novel: boolean, full: boolean,
-                     filter: string, sortDirection: string, pageIndex: number, pageSize: number) {
+                     filter: string, sortBy: string, pageIndex: number, pageSize: number) {
 
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
 
         if (species && refSeq) {
-          this.repseqService.getSamplesApi(species, refSeq, pageIndex, pageSize, filter).pipe(
+          this.repseqService.getSamplesApi(species, refSeq, pageIndex, pageSize, filter, sortBy).pipe(
             retryWithBackoff(),
             catchError(error => {
               this.errorSubject.next(error);

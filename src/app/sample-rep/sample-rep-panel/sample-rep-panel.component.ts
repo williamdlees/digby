@@ -25,21 +25,30 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   geneTableServiceSubscription = null;
   filterModeEnum = FilterMode;
   filters = [];
+  sorts = [];
 
 
   applyFilter(columnPredicate: ColumnPredicate) {
-    console.log('applyFilter field: ' + columnPredicate.predicate.field +
-      ' op: ' + columnPredicate.predicate.op +
-      ' value: ' + columnPredicate.predicate.value);
-
     for (let i = this.filters.length - 1; i >= 0; i--) {
-      if (this.filters[i].field === columnPredicate.predicate.field) {
+      if (this.filters[i].field === columnPredicate.field) {
         this.filters.splice(i, 1);
       }
     }
 
-    if (columnPredicate.predicate.op) {
-      this.filters.push(columnPredicate.predicate);
+    for (const predicate of columnPredicate.predicates) {
+      if (predicate.op) {
+        this.filters.push(predicate);
+      }
+    }
+
+    for (let i = this.sorts.length - 1; i >= 0; i--) {
+      if (this.sorts[i].field === columnPredicate.field) {
+        this.sorts.splice(i, 1);
+      }
+    }
+
+    if (columnPredicate.sort.order) {
+      this.sorts.push(columnPredicate.sort);
     }
 
     this.loadSequencesPage();
@@ -81,7 +90,7 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   loadSequencesPage() {
-    this.dataSource.loadRepSequences(this.selection.species, this.selection.repSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, JSON.stringify(this.filters), 'asc', this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.loadRepSequences(this.selection.species, this.selection.repSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, JSON.stringify(this.filters), JSON.stringify(this.sorts), this.paginator.pageIndex, this.paginator.pageSize);
   }
 
 

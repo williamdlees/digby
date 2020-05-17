@@ -37,6 +37,7 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     { name: 'Not equal to', operands: 2, operator: '!=' },
     { name: 'Between', operands: 3, operator: '>', operator2: '<' },
   ];
+  selectedSort = null;
 
   constructor() { }
 
@@ -61,6 +62,24 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     this.filterCleared = true;
   }
 
+  onSortAsc() {
+    this.selectedSort = 'asc';
+    this.predicateEmitter.emit(this.generatePredicate());
+    this.matMenuTrigger.closed.emit();
+  }
+
+  onSortDesc() {
+    this.selectedSort = 'desc';
+    this.predicateEmitter.emit(this.generatePredicate());
+    this.matMenuTrigger.closed.emit();
+  }
+
+  onSortClear() {
+    this.selectedSort = null;
+    this.predicateEmitter.emit(this.generatePredicate());
+    this.matMenuTrigger.closed.emit();
+  }
+
   isDisabled(): boolean {
     if (!this.selectedOperator) {
       return !this.filterCleared;
@@ -78,40 +97,33 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     this.prevInput.operand1Input = this.operand1Input;
     this.prevInput.operand2Input = this.operand2Input;
 
-    if (this.selectedOperator && this.selectedOperator.operands === 3) {
-      return {
-        name: this.columnName,
-        predicate: {
-          field: this.columnName,
-          op: this.selectedOperator.operator,
-          op2: this.selectedOperator.operator2,
-          value: this.selectedOperator.prefix ? this.selectedOperator.prefix : '' +
-            this.operand1Input +
-            this.selectedOperator.postfix ? this.selectedOperator.postfix : ''
-        }
-      };
-    }
-    if (this.selectedOperator && this.selectedOperator.operands === 2) {
-      return {
-        name: this.columnName,
-        predicate: {
-          field: this.columnName,
-          op: this.selectedOperator.operator,
-          op2: null,
-          value: (this.selectedOperator.prefix ? this.selectedOperator.prefix : '') +
-            this.operand1Input +
-            (this.selectedOperator.postfix ? this.selectedOperator.postfix : '')
-        }
-      };
-    }
-    return {
-      name: this.columnName,
-      predicate: {
-        field: this.columnName,
-        op: null,
-        op2: null,
-        value: null
-      }
+    const pred = {
+      field: this.columnName,
+      predicates: [],
+      sort: { field: this.columnName, order: this.selectedSort }
     };
+
+    if (this.selectedOperator && this.selectedOperator.operands === 2) {
+      pred.predicates = [{
+        field: this.columnName,
+        op: this.selectedOperator.operator,
+        value: this.operand1Input
+      }];
+    } else if (this.selectedOperator && this.selectedOperator.operands === 3) {
+      pred.predicates = [
+        {
+          field: this.columnName,
+          op: this.selectedOperator.operator,
+          value: this.operand1Input
+        },
+        {
+          field: this.columnName,
+          op: this.selectedOperator.operator2,
+          value: this.operand2Input
+        },
+      ];
+    }
+
+    return pred;
   }
 }

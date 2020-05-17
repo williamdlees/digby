@@ -26,13 +26,15 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/jbrowse"
+              "src/jbrowse",
+              { "glob": "mdi.svg", "input": "node_modules/@mdi/angular-material/", "output": "./assets" }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss",
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",
-              "node_modules/datatables.net-select-dt/css/select.dataTables.css"
+              "node_modules/datatables.net-select-dt/css/select.dataTables.css",
+              "node_modules/material-design-icons/iconfont/material-icons.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",

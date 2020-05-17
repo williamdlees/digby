@@ -106,14 +106,13 @@ export class RepseqService {
      * @param pageSize 
      * @param filter 
      * @param sortBy 
-     * @param sortOrder 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, sortOrder?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, sortOrder?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, sortOrder?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, sortOrder?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSamplesApi.');
@@ -122,7 +121,6 @@ export class RepseqService {
         if (dataset === null || dataset === undefined) {
             throw new Error('Required parameter dataset was null or undefined when calling getSamplesApi.');
         }
-
 
 
 
@@ -140,9 +138,6 @@ export class RepseqService {
         }
         if (sortBy !== undefined && sortBy !== null) {
             queryParameters = queryParameters.set('sort_by', <any>sortBy);
-        }
-        if (sortOrder !== undefined && sortOrder !== null) {
-            queryParameters = queryParameters.set('sort_order', <any>sortOrder);
         }
 
         let headers = this.defaultHeaders;

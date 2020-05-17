@@ -1,9 +1,11 @@
 export class ColumnPredicate {
-  name: string;
-  predicate: {
-    field: string,
+  field: string;
+  predicates: {
+    field: string;
     op: string,
-    op2: string,
     value: string,
+  }[];
+  sort: {
+    order: string,
   };
 }

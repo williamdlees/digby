@@ -1,0 +1,5 @@
+
+button:focus, button:active:focus, button.active:focus {
+outline: none !important;
+outline-style: none !important;
+}

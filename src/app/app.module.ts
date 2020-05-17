@@ -32,6 +32,7 @@ import { SampleRepPanelComponent } from './sample-rep/sample-rep-panel/sample-re
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { DynamicModule } from 'ng-dynamic-component';
 import { FilterModule } from './sample-rep/sample-rep-panel/filter/filter.module';
+import { MatIconModule } from '@angular/material/icon';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -79,7 +80,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     ApiModule.forRoot(apiConfigFactory),
     NgMultiSelectDropDownModule.forRoot(),
-    FilterModule
+    FilterModule,
+    MatIconModule
   ],
   providers: [
     RequestCache,

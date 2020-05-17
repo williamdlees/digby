@@ -37,7 +37,7 @@
       <ng-container matColumnDef="combined_cell_type">
           <mat-header-cell *matHeaderCellDef>
             Cell
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'combined-cell-type'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'combined_cell_type'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.combined_cell_type}}</mat-cell>
       </ng-container>

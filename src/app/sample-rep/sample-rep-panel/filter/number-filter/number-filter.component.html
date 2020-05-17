@@ -1,15 +1,23 @@
 <button mat-icon-button [matMenuTriggerFor]="filterMenu">
-  <div class="mat-select-arrow"></div>
+  <span>
+    <mat-icon *ngIf="selectedOperator">filter_list</mat-icon>
+    <mat-icon *ngIf="selectedSort==='desc'">arrow_upward</mat-icon>
+    <mat-icon *ngIf="selectedSort==='asc'">arrow_downward</mat-icon>
+    <mat-icon>arrow_drop_down</mat-icon>
+    </span>
 </button>
 
 <mat-menu #filterMenu="matMenu" xPosition="before" >
   <div class="content-centered" (click) = "$event.stopPropagation()">
     <form class="col-12" >
       <div class="row">
-        <button mat-button>Sort Ascending</button>
+        <button mat-button (click)="onSortAsc()">Sort Ascending</button>
       </div>
       <div class="row">
-        <button mat-button>Sort Descending</button>
+        <button mat-button (click)="onSortDesc()">Sort Descending</button>
+      </div>
+      <div class="row" *ngIf="selectedSort">
+        <button mat-button  (click)="onSortClear()">Clear Sort</button>
       </div>
       <div class="dropdown-divider"></div>
       <div class="row">
@@ -47,18 +55,14 @@
     </form>
     <div class="col-12">
     <div class="row">
-       <div class="col-6">
+        <div class="col-6">
           <button mat-flat-button color="primary" (click)="onValidation()" [disabled]="isDisabled()">
-            <i class='material-icons'>
-              OK
-            </i>
+            <mat-icon>check</mat-icon>
           </button>
         </div>
         <div class="col-6">
           <button mat-flat-button color="warn" (click)="onCancel()">
-            <i class='material-icons'>
-              Cancel
-            </i>
+            <mat-icon>cancel</mat-icon>
           </button>
         </div>
       </div>

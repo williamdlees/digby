@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { FilterImplementation } from '../filter-implementation';
 import { ColumnPredicate } from '../column-predicate';
+import { IChoices } from '../ichoices';
+import { Observable } from 'rxjs';
+
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
  * triPredicate => Will become a (value) => boolean with curryfication --> the two operand will disappear in
@@ -24,6 +27,7 @@ class Operator {
 export class DateFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
   @Input() columnName: string;
+  @Input() choices$: Observable<IChoices>;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
   selectedOperator: Operator;
 

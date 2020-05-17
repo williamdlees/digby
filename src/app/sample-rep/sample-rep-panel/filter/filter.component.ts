@@ -6,6 +6,8 @@ import { DateFilterComponent } from './date-filter/date-filter.component';
 import { FilterImplementation } from './filter-implementation';
 import { FilterMode } from './filter-mode.enum';
 import { ColumnPredicate } from './column-predicate';
+import { IChoices } from './ichoices';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-filter',
@@ -15,11 +17,13 @@ import { ColumnPredicate } from './column-predicate';
 })
 export class FilterComponent implements OnInit {
   @Input() columnName: string;
+  @Input() choices$: Observable<IChoices>;
   @Input() filterMode: FilterMode;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
   filterImplementationComponent: Type<FilterImplementation>;
   inputs = {
     columnName: this.columnName,
+    choices$: this.choices$,
   }
   outputs = {
     predicateEmitter: columnPredicate => this.predicateEmitter.emit(columnPredicate),
@@ -30,6 +34,7 @@ export class FilterComponent implements OnInit {
   ngOnInit() {
 
     this.inputs.columnName = this.columnName;
+    this.inputs.choices$ = this.choices$;
 
     switch (this.filterMode) {
       case FilterMode.TEXT_MODE:

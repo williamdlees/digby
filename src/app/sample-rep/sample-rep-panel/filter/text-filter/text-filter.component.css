@@ -6,3 +6,8 @@ button:focus, button:active:focus, button.active:focus {
 outline: none !important;
 outline-style: none !important;
 }
+
+.mat-menu-panel {
+  overflow: hidden !important;
+  max-width: none !important;
+}

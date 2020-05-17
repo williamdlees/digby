@@ -13,7 +13,7 @@
        <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef>
             Name
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" (predicateEmitter)="applyFilter($event)"></app-filter>
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
           <mat-cell *matCellDef="let sample">{{sample.name}}</mat-cell>
       </ng-container>

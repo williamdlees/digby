@@ -21,6 +21,7 @@ import { TextFilterComponent } from './text-filter/text-filter.component';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
 import { DynamicModule } from 'ng-dynamic-component';
+import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { DynamicModule } from 'ng-dynamic-component';
     MatSortModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    NgMultiSelectDropDownModule,
     DynamicModule.withComponents([
       TextFilterComponent,
       NumberFilterComponent,

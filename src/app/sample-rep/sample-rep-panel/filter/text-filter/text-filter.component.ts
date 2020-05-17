@@ -1,6 +1,19 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
-import { FilterImplementation } from '../filter-implementation';
-import { ColumnPredicate } from '../column-predicate';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
+import {FilterImplementation} from '../filter-implementation';
+import {ColumnPredicate} from '../column-predicate';
+import {IChoices} from '../ichoices';
+import {Observable} from 'rxjs';
+import {IDropdownSettings} from 'ng-multiselect-dropdown';
+
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
  * triPredicate => Will become a (value) => boolean with curryfication --> the two operand will disappear in
@@ -10,7 +23,6 @@ class Operator {
   name: string;
   operands: number;
   operator: string;
-  operator2?: string;
   prefix?: string;
   postfix?: string;
 }
@@ -18,11 +30,13 @@ class Operator {
 @Component({
   selector: 'app-text-filter',
   templateUrl: './text-filter.component.html',
-  styleUrls: ['./text-filter.component.css']
+  styleUrls: ['./text-filter.component.css'],
+  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
-export class TextFilterComponent implements OnInit, FilterImplementation {
+export class TextFilterComponent implements OnInit, AfterViewInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
   @Input() columnName: string;
+  @Input() choices$: Observable<IChoices>;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
   selectedOperator: Operator;
   operand1Input = '';
@@ -36,14 +50,35 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
     { name: 'Matches', operands: 2, operator: 'like' },
   ];
   selectedSort = null;
+  choices: { id: number, text: string }[];
+  dropdownSettings: IDropdownSettings = {
+      itemsShowLimit: 1,
+      allowSearchFilter: true,
+      defaultOpen: false,
+  };
+  selectedItems = [];
 
   constructor() {
 
   }
 
   ngOnInit() {
+    console.log('onInit: ' + this.columnName);
+
+    if (this.choices$) {
+      this.choices$.subscribe((c) => {
+        if (c[this.columnName]) {
+          this.choices = [];
+          for (let i = 0; i < c[this.columnName].length; i++) {
+            this.choices.push({ id: i, text: c[this.columnName][i] })
+          }
+        }
+      });
+    }
   }
 
+  ngAfterViewInit() {
+  }
   onCancel() {
     this.selectedOperator = this.prevInput.selectedInput;
     this.operand1Input = this.prevInput.operand1Input;
@@ -92,6 +127,7 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
   }
 
   generatePredicate(): ColumnPredicate {
+    console.log('choices: ' + this.choices);
     this.prevInput.selectedInput = this.selectedOperator;
     this.prevInput.operand1Input = this.operand1Input;
     this.prevInput.operand2Input = this.operand2Input;

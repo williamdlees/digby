@@ -9,12 +9,15 @@ import {MatTable} from '@angular/material/table';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { FilterMode } from './filter/filter-mode.enum';
 import { ColumnPredicate } from './filter/column-predicate';
+import { IChoices } from './filter/ichoices';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-sample-rep-panel',
   templateUrl: './sample-rep-panel.component.html',
   styleUrls: ['./sample-rep-panel.component.scss']
 })
+
 export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -26,6 +29,41 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   filterModeEnum = FilterMode;
   filters = [];
   sorts = [];
+  choices$: Observable<IChoices>;
+
+  constructor(private repseqService: RepseqService,
+              private geneTableService: GeneTableService) {
+
+  }
+
+  ngOnInit() {
+    this.dataSource = new RepSequenceDataSource(this.repseqService);
+  }
+
+  ngOnDestroy() {
+    this.paginatorSubscription.unsubscribe();
+    this.geneTableServiceSubscription.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+      this.paginatorSubscription = this.paginator.page
+        .subscribe(() => this.loadSequencesPage());
+
+      // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
+      setTimeout(() => {
+        this.geneTableServiceSubscription = this.geneTableService.source
+          .subscribe(
+            (sel: GeneTableSelection) => {
+              this.selection = sel;
+              this.paginator.firstPage()
+              this.table.renderRows();
+              this.loadSequencesPage();
+            }
+          );
+
+        // this.choices$.subscribe(() => {console.log('choices event in ample-rep-panel'); } );
+      });
+  }
 
 
   applyFilter(columnPredicate: ColumnPredicate) {
@@ -54,40 +92,6 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
     this.loadSequencesPage();
   }
 
-  constructor(private repseqService: RepseqService,
-              private geneTableService: GeneTableService,
-              private modalService: NgbModal) {
-
-  }
-
-
-  ngOnInit() {
-    this.dataSource = new RepSequenceDataSource(this.repseqService);
-  }
-
-  ngOnDestroy() {
-    this.paginatorSubscription.unsubscribe();
-    this.geneTableServiceSubscription.unsubscribe();
-  }
-
-  ngAfterViewInit() {
-      this.paginatorSubscription = this.paginator.page
-        .subscribe(() => this.loadSequencesPage());
-
-      // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
-      setTimeout(() => {
-        this.geneTableServiceSubscription = this.geneTableService.source
-          .subscribe(
-            (sel: GeneTableSelection) => {
-              this.selection = sel;
-              this.paginator.firstPage()
-              this.table.renderRows();
-              this.loadSequencesPage();
-
-            }
-          );
-      });
-  }
 
   loadSequencesPage() {
     this.dataSource.loadRepSequences(this.selection.species, this.selection.repSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, JSON.stringify(this.filters), JSON.stringify(this.sorts), this.paginator.pageIndex, this.paginator.pageSize);

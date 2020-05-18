@@ -11,3 +11,16 @@ outline-style: none !important;
   overflow: hidden !important;
   max-width: none !important;
 }
+
+.dropdown-list {
+  position: relative !important;
+}
+
+.dropdown-btn {
+  border: none !important;
+  padding: 0px 0px !important;
+}
+
+.multiselect-item-checkbox {
+  padding: 0px 10px !important;
+}

@@ -1,6 +1,6 @@
 <button mat-icon-button [matMenuTriggerFor]="filterMenu">
   <span>
-    <mat-icon *ngIf="selectedOperator">filter_list</mat-icon>
+    <mat-icon *ngIf="selectedOperator || (selectedItems.length > 0)">filter_list</mat-icon>
     <mat-icon *ngIf="selectedSort==='desc'">arrow_downward</mat-icon>
     <mat-icon *ngIf="selectedSort==='asc'">arrow_upward</mat-icon>
     <mat-icon>arrow_drop_down</mat-icon>
@@ -19,10 +19,11 @@
       <div class="row" *ngIf="selectedSort">
         <button mat-button  (click)="onSortClear()">Clear Sort</button>
       </div>
-      <div class="dropdown-divider"></div>
+
       <div class="row">
+      <div class="dropdown-divider"></div>
       <mat-form-field class="col-12">
-        <mat-select placeholder="Select comparison" [(value)]="selectedOperator">
+        <mat-select placeholder="Select Filter" [(value)]="selectedOperator">
           <mat-option *ngFor="let operator of operatorList" [value]="operator">
             {{operator.name}}
           </mat-option>
@@ -37,45 +38,43 @@
           </mat-form-field>
         </div>
 
-          <ng-container *ngIf="selectedOperator.operands === 3">
-            <div class="row">
-              <span class="col-12">and</span>
-            </div>
-            <div class="row">
-              <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
-                <input matInput placeholder="Filter value 2" [(ngModel)]="operand2Input" name="operand2Input">
-              </mat-form-field>
-            </div>
-          </ng-container>
-      <div class="row">
-        <button mat-button  (click)="onClearFilter()">Clear Filter</button>
-      </div>
-      <div class="dropdown-divider"></div>
-      </ng-container>
-      <div style="height: 400px;">
-        <ng-container >
-            <ng-multiselect-dropdown name="multi"  class="col-12"
-              [data]="choices"
-              [(ngModel)]="selectedItems"
-              [settings]="dropdownSettings"
-            >
-          </ng-multiselect-dropdown>
+        <ng-container *ngIf="selectedOperator.operands === 3">
+          <div class="row">
+            <span class="col-12">and</span>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
+              <input matInput placeholder="Filter value 2" [(ngModel)]="operand2Input" name="operand2Input">
+            </mat-form-field>
+          </div>
         </ng-container>
+
+        <div class="row">
+          <button mat-button  (click)="onClearFilter()">Clear Filter</button>
+        </div>
+        <div class="dropdown-divider"></div>
+      </ng-container>
+
+      <div>
+        <ng-multiselect-dropdown name="multi"  class="col-12"
+          [data]="choices"
+          [placeholder]="'Select Items'"
+          [(ngModel)]="selectedItems"
+          [settings]="dropdownSettings"
+        >
+        </ng-multiselect-dropdown>
+      </div>
+
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <button mat-flat-button color="primary" (click)="onValidation()">
+              Close
+            </button>
+          </div>
+        </div>
       </div>
     </form>
-    <div class="col-12">
-      <div class="row">
-        <div class="col-6">
-          <button mat-flat-button color="primary" (click)="onValidation()" [disabled]="isDisabled()">
-            <mat-icon>check</mat-icon>
-          </button>
-        </div>
-        <div class="col-6">
-          <button mat-flat-button color="warn" (click)="onCancel()">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 </mat-menu>

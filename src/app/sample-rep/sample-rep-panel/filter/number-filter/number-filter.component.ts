@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import {Component, OnInit, ViewChild, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import { FilterImplementation } from '../filter-implementation';
 import { ColumnPredicate } from '../column-predicate';
 import { IChoices } from '../ichoices';
 import { Observable } from 'rxjs';
+import {IDropdownSettings} from 'ng-multiselect-dropdown';
 
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
@@ -21,19 +22,19 @@ class Operator {
 @Component({
   selector: 'app-number-filter',
   templateUrl: './number-filter.component.html',
-  styleUrls: ['./number-filter.component.css']
+  styleUrls: ['./number-filter.component.css'],
+  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
 export class NumberFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
-  selectedOperator: Operator;
 
+  selectedOperator: Operator;
   operand1Input = '';
   operand2Input = '';
   filterCleared = false;
-  prevInput = { selectedInput: null, operand1Input: '', operand2Input: '' };
   operatorList: Operator[] = [
     { name: 'Less than',  operands: 2, operator: '<' },
     { name: 'Greater than', operands: 2, operator: '>' },
@@ -42,18 +43,27 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     { name: 'Between', operands: 3, operator: '>', operator2: '<' },
   ];
   selectedSort = null;
+  choices: { id: number, text: string }[];
+  dropdownSettings: IDropdownSettings = {
+      itemsShowLimit: 6,
+      allowSearchFilter: true,
+      defaultOpen: false,
+  };
+  selectedItems = [];
 
   constructor() { }
 
   ngOnInit() {
-
-  }
-
-  onCancel() {
-    this.selectedOperator = this.prevInput.selectedInput;
-    this.operand1Input = this.prevInput.operand1Input;
-    this.operand2Input = this.prevInput.operand2Input;
-    this.matMenuTrigger.closed.emit();
+    if (this.choices$) {
+      this.choices$.subscribe((c) => {
+        if (c[this.columnName]) {
+          this.choices = [];
+          for (let i = 0; i < c[this.columnName].length; i++) {
+            this.choices.push({ id: i, text: c[this.columnName][i] });
+          }
+        }
+      });
+    }
   }
 
   onValidation() {
@@ -84,23 +94,7 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     this.matMenuTrigger.closed.emit();
   }
 
-  isDisabled(): boolean {
-    if (!this.selectedOperator) {
-      return !this.filterCleared;
-    }
-    if (this.selectedOperator.operands === 2) {
-      return this.operand1Input.trim() === '';
-    }
-    if (this.selectedOperator.operands === 3) {
-      return this.operand1Input.trim() === '' || this.operand2Input.trim() === '';
-    }
-  }
-
-  generatePredicate(): ColumnPredicate {
-    this.prevInput.selectedInput = this.selectedOperator;
-    this.prevInput.operand1Input = this.operand1Input;
-    this.prevInput.operand2Input = this.operand2Input;
-
+ generatePredicate(): ColumnPredicate {
     const pred = {
       field: this.columnName,
       predicates: [],
@@ -108,24 +102,26 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     };
 
     if (this.selectedOperator && this.selectedOperator.operands === 2) {
-      pred.predicates = [{
+      pred.predicates.push ({
         field: this.columnName,
         op: this.selectedOperator.operator,
         value: this.operand1Input
-      }];
+      });
     } else if (this.selectedOperator && this.selectedOperator.operands === 3) {
-      pred.predicates = [
-        {
+      pred.predicates.push({
           field: this.columnName,
           op: this.selectedOperator.operator,
-          value: this.operand1Input
-        },
-        {
+          value: this.operand1Input < this.operand2Input ? this.selectedOperator.operator : this.selectedOperator.operator2
+        });
+      pred.predicates.push({
           field: this.columnName,
           op: this.selectedOperator.operator2,
-          value: this.operand2Input
-        },
-      ];
+          value: this.operand1Input < this.operand2Input ? this.selectedOperator.operator2 : this.selectedOperator.operator
+        });
+    }
+
+    if (this.selectedItems.length > 0) {
+      pred.predicates.push({ field: this.columnName, op: 'in', value: this.selectedItems.map((x) => x.text) });
     }
 
     return pred;

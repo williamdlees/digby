@@ -49,7 +49,6 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.geneTableServiceSubscription = this.geneTableService.source.subscribe(
     (sel: GeneTableSelection) => {
-      console.log('selection length: ' + sel.refSeqs.length);
       this.selection = sel;
       this.reconfigureBrowser();
     });
@@ -77,7 +76,6 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.browser = null;
     }
 
-    console.log('species: ' + this.species + ' refname: ' + this.refName);
     if (this.species && this.refName) {
       this.buildBrowser();
     }

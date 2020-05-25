@@ -1,75 +1,134 @@
 
-<div>
+<div class="container-fluid">
   <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
     <span class="sr-only">Loading...</span>
   </div>
 
   <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
-    <h4>Error loading table</h4>
-    <p>{{dataSource.error$ | async}}</p>
+    <div class="row">
+      <h4>Error loading table</h4>
+      <p>{{dataSource.error$ | async}}</p>
+    </div>
   </div>
 
-  <mat-table [dataSource]="dataSource">
-       <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef>
-            Name
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.name}}</mat-cell>
-      </ng-container>
+  <div class="row">
+    <div class="col-md-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+      <button va-mat-table-column-sorter
+         [(columns)]="displayedColumns"
+         [columnNames]="displayedColumnNames"
+         [saveName]="'example-table'">
+         <mat-icon class="primary-icon"  style="">view_column</mat-icon>
+        <span class="header-text">Arrange Columns</span>
+      </button>
+    </div>
 
-      <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef>
-            Condition
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'status'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.status}}</mat-cell>
-      </ng-container>
+    <div class="col-md">
+      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15" [pageSizeOptions]="[15, 50, 100, 250]"></mat-paginator>
+    </div>
+  </div>
 
-      <ng-container matColumnDef="tissue">
-          <mat-header-cell *matHeaderCellDef>
-            Tissue
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'tissue'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.tissue}}</mat-cell>
-      </ng-container>
+  <div class="row">
+    <div class="col">
+     <mat-table [dataSource]="dataSource">
+           <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef>
+                Name
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">{{sample.name}}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="combined_cell_type">
-          <mat-header-cell *matHeaderCellDef>
-            Cell
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'combined_cell_type'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.combined_cell_type}}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef>
+                Condition
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'status'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">{{sample.status}}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="row_reads">
-          <mat-header-cell *matHeaderCellDef>
-            Reads
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'row_reads'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.row_reads }}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="tissue">
+              <mat-header-cell *matHeaderCellDef>
+                Tissue
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'tissue'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">{{sample.tissue}}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="sequencing_length">
-          <mat-header-cell *matHeaderCellDef>
-            Sequence Length
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequencing_length'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.sequencing_length}}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="combined_cell_type">
+              <mat-header-cell *matHeaderCellDef>
+                Cell
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'combined_cell_type'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">{{sample.combined_cell_type}}</mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="umi">
-          <mat-header-cell *matHeaderCellDef>UMI</mat-header-cell>
-          <mat-cell *matCellDef="let sample">{{sample.umi}}</mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="row_reads">
+              <mat-header-cell *matHeaderCellDef>
+                Reads
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'row_reads'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">{{sample.row_reads }}</mat-cell>
+          </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+          <ng-container matColumnDef="sequencing_length">
+              <mat-header-cell *matHeaderCellDef>
+                Read Length
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequencing_length'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">{{sample.sequencing_length}}</mat-cell>
+          </ng-container>
 
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          <ng-container matColumnDef="umi">
+              <mat-header-cell *matHeaderCellDef>
+                UMI
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'umi'" [filterMode]="filterModeEnum.BOOL_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let sample">
+                <i *ngIf="sample.umi" class="fa fa-check" style="line-height: inherit;"></i>
+                <i *ngIf="!sample.umi" class="fa fa-times" style="line-height: inherit;"></i>
+              </mat-cell>
+          </ng-container>
 
-  </mat-table>
+          <ng-container matColumnDef="haplotypes">
+              <mat-header-cell *matHeaderCellDef>
+                Haplotype
+               <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              </mat-header-cell>
+            <mat-cell *matCellDef="let sample">
+              <div *ngIf="sample.haplotypes">
+                <div *ngFor="let h of sample.haplotypes.split(',')">
+                  <button class="btn btn-secondary btn-sm" [matMenuTriggerFor]="haploMenu" [matMenuTriggerData]="{name: sample.name, haplo: h}">{{h}}</button>
+                </div>
+              </div>
+            </mat-cell>
+          </ng-container>
 
-  <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15"
-               [pageSizeOptions]="[15, 50, 100]"></mat-paginator>
+          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
 
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+      </mat-table>
+      </div>
+  </div>
 </div>
+
+<mat-menu #haploMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+  <div  (click) = "$event.stopPropagation()">
+    <ng-template matMenuContent let-name="name" let-haplo="haplo">
+      <div class="container">
+        <div class="row ml-1 mr-2">
+          <b>{{name}}</b>
+        </div>
+        <div class="row ml-1 mr-2 mb-1">
+          Inferred haplotype using {{haplo}} as anchor
+        </div>
+        <div class="row ml-4 mr-2 mb-0 align-middle">
+          Haplotype Analysis<span>&nbsp;&nbsp;</span><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i><span>&nbsp;&nbsp;</span><i class="fa fa-desktop" style="line-height: inherit;"></i>
+        </div>
+        <div class="row ml-4 mr-2 mb-1">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/31173062">Rabhit</a><span>&nbsp;</span>report<span>&nbsp;&nbsp;</span><i class="fa fa-save" style="line-height: inherit;"></i>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</mat-menu>

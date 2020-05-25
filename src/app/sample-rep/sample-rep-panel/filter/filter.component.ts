@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input, Type, Output, EventEmitter } from 
 import { TextFilterComponent } from './text-filter/text-filter.component';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
+import { BoolFilterComponent } from './bool-filter/bool-filter.component';
 
 import { FilterImplementation } from './filter-implementation';
 import { FilterMode } from './filter-mode.enum';
@@ -19,11 +20,13 @@ export class FilterComponent implements OnInit {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Input() filterMode: FilterMode;
+  @Input() showTextFilter = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
   filterImplementationComponent: Type<FilterImplementation>;
   inputs = {
     columnName: this.columnName,
     choices$: this.choices$,
+    showTextFilter: this.showTextFilter
   }
   outputs = {
     predicateEmitter: columnPredicate => this.predicateEmitter.emit(columnPredicate),
@@ -32,9 +35,9 @@ export class FilterComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
     this.inputs.columnName = this.columnName;
     this.inputs.choices$ = this.choices$;
+    this.inputs.showTextFilter = this.showTextFilter;
 
     switch (this.filterMode) {
       case FilterMode.TEXT_MODE:
@@ -45,6 +48,9 @@ export class FilterComponent implements OnInit {
         break;
       case FilterMode.DATE_MODE:
         this.filterImplementationComponent = DateFilterComponent;
+        break;
+      case FilterMode.BOOL_MODE:
+        this.filterImplementationComponent = BoolFilterComponent;
         break;
     }
   }

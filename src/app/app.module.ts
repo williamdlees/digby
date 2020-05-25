@@ -33,6 +33,11 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { DynamicModule } from 'ng-dynamic-component';
 import { FilterModule } from './sample-rep/sample-rep-panel/filter/filter.module';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule} from '@angular/material/menu';
+import {ColumnSorterComponent} from './sample-rep/sample-rep-panel/column-sorter/column-sorter.component';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {MatCardModule} from '@angular/material/card';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -64,6 +69,7 @@ const appRoutes: Routes = [
     GeneTruncPipe,
     SampleRepComponent,
     SampleRepPanelComponent,
+    ColumnSorterComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,7 +87,11 @@ const appRoutes: Routes = [
     ApiModule.forRoot(apiConfigFactory),
     NgMultiSelectDropDownModule.forRoot(),
     FilterModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    DragDropModule,
+    MatCardModule,
   ],
   providers: [
     RequestCache,

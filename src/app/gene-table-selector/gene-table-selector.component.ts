@@ -188,7 +188,6 @@ export class GeneTableSelectorComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('submitting: ' + this.selectedGen.map(x => x.text));
     this.geneTableService.selection.next({species: this.selectedSpecies.name, refSeqs: this.selectedGen.map(x => x.text),
       repSeqs: this.selectedRep.map(x => x.text), imgt: this.showImgt, novel: this.showNovel, full: this.showFull, filter: this.filter});
   }

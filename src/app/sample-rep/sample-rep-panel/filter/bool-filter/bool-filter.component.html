@@ -1,0 +1,45 @@
+<button mat-icon-button [matMenuTriggerFor]="filterMenu">
+  <span>
+    <mat-icon *ngIf=selectedItems.length > 0">filter_list</mat-icon>
+    <mat-icon *ngIf="selectedSort==='desc'">arrow_downward</mat-icon>
+    <mat-icon *ngIf="selectedSort==='asc'">arrow_upward</mat-icon>
+    <mat-icon>arrow_drop_down</mat-icon>
+    </span>
+</button>
+
+<mat-menu #filterMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+  <div class="content-centered" (click) = "$event.stopPropagation()">
+    <form class="col-12" >
+      <div class="row">
+        <button mat-button (click)="onSortAsc()">Sort Ascending</button>
+      </div>
+      <div class="row">
+        <button mat-button (click)="onSortDesc()">Sort Descending</button>
+      </div>
+      <div class="row" *ngIf="selectedSort">
+        <button mat-button  (click)="onSortClear()">Clear Sort</button>
+      </div>
+
+      <div class="row">
+        <ng-multiselect-dropdown name="multi"  class="col-12"
+          [settings]="dropdownSettings"
+          [data]="choices"
+          [placeholder]="'Select Items'"
+          [(ngModel)]="selectedItems"
+        >
+        </ng-multiselect-dropdown>
+      </div>
+
+      <div class="col-12">
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <button mat-flat-button color="primary" (click)="onValidation()">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-menu>

@@ -18,6 +18,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 
 import { FilterComponent } from './filter.component';
 import { TextFilterComponent } from './text-filter/text-filter.component';
+import { BoolFilterComponent } from './bool-filter/bool-filter.component';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
 import { DynamicModule } from 'ng-dynamic-component';
@@ -49,7 +50,7 @@ import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
       DateFilterComponent,
       ])
   ],
-  declarations: [TextFilterComponent, NumberFilterComponent, DateFilterComponent, FilterComponent, ],
+  declarations: [TextFilterComponent, BoolFilterComponent, NumberFilterComponent, DateFilterComponent, FilterComponent, ],
   providers: [MatNativeDateModule,
   {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
   ],

@@ -27,32 +27,22 @@ class Operator {
 }
 
 @Component({
-  selector: 'app-text-filter',
-  templateUrl: './text-filter.component.html',
-  styleUrls: ['./text-filter.component.css'],
+  selector: 'app-bool-filter',
+  templateUrl: './bool-filter.component.html',
+  styleUrls: ['./bool-filter.component.css'],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
-export class TextFilterComponent implements OnInit, FilterImplementation {
+export class BoolFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
-  @Input() showTextFilter = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
-  selectedOperator: Operator;
-  operand1Input = '';
-  operand2Input = '';
   filterCleared = false;
-  operatorList: Operator[] = [
-    { name: 'Begins with', operands: 2, operator: 'like', postfix: '%' },
-    { name: 'Ends with', operands: 2, operator: 'like', prefix: '%' },
-    { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' },
-    { name: 'Matches', operands: 2, operator: 'like' },
-  ];
   selectedSort = null;
   choices: { id: number, text: string }[];
   dropdownSettings: IDropdownSettings = {
-      itemsShowLimit: 6,
+      itemsShowLimit: 2,
       allowSearchFilter: true,
       defaultOpen: false,
   };
@@ -79,11 +69,6 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
     this.matMenuTrigger.closed.emit();
   }
 
-  onClearFilter() {
-    this.selectedOperator = null;
-    this.filterCleared = true;
-  }
-
   onSortAsc() {
     this.selectedSort = 'asc';
     this.predicateEmitter.emit(this.generatePredicate());
@@ -108,16 +93,6 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
       predicates: [],
       sort: { field: this.columnName, order: this.selectedSort }
     };
-
-    if (this.selectedOperator && this.selectedOperator.operands === 2) {
-      pred.predicates.push({
-        field: this.columnName,
-        op: this.selectedOperator.operator,
-        value: (this.selectedOperator.prefix ? this.selectedOperator.prefix : '') +
-          this.operand1Input +
-          (this.selectedOperator.postfix ? this.selectedOperator.postfix : '')
-      });
-    }
 
     if (this.selectedItems.length > 0) {
       pred.predicates.push({ field: this.columnName, op: 'in', value: this.selectedItems.map((x) => x.text) });

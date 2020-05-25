@@ -62,10 +62,10 @@
 
       <div>
         <ng-multiselect-dropdown name="multi"  class="col-12"
+          [settings]="dropdownSettings"
           [data]="choices"
           [placeholder]="'Select Items'"
           [(ngModel)]="selectedItems"
-          [settings]="dropdownSettings"
         >
         </ng-multiselect-dropdown>
       </div>

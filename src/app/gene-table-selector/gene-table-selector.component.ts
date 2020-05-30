@@ -187,8 +187,24 @@ export class GeneTableSelectorComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    this.geneTableService.selection.next({species: this.selectedSpecies.name, refSeqs: this.selectedGen.map(x => x.text),
-      repSeqs: this.selectedRep.map(x => x.text), imgt: this.showImgt, novel: this.showNovel, full: this.showFull, filter: this.filter});
+  genomicChange() {
+    this.onSelectionChange();
+  }
+
+  repSeqChange() {
+    this.onSelectionChange();
+  }
+
+  onSelectionChange() {
+    if (this.selectedSpecies) {
+      this.geneTableService.selection.next({
+        species: this.selectedSpecies.name,
+        refSeqs: this.selectedGen ? this.selectedGen.map(x => x.text) : null,
+        repSeqs: this.selectedRep ? this.selectedRep.map(x => x.text) : null,
+        imgt: this.showImgt,
+        novel: this.showNovel,
+        full: this.showFull,
+        filter: this.filter});
+    }
   }
 }

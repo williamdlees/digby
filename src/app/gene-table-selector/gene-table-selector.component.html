@@ -19,6 +19,7 @@
         [data] = refSeqs
         [(ngModel)] = selectedGen
         [placeholder] = "'Select Datasets'"
+        (ngModelChange)="genomicChange()"
       >
       </ng-multiselect-dropdown>
     </div>
@@ -33,6 +34,7 @@
         [data] = repSeqs
         [(ngModel)] = selectedRep
         [placeholder] = "'Select Datasets'"
+        (ngModelChange)="repSeqChange()"
       >
       </ng-multiselect-dropdown>
     </div>
@@ -58,14 +60,16 @@
   <div class="col-auto my-1" *ngIf="showFilter">
       <input type="text" id="filter" placeholder="Filter"  [(ngModel)]="filter">
   </div>
-  <div class="col-auto my-1">
-    <button type="submit" class="btn btn-primary" [disabled]="!(selectedSpecies && selectedGen)" (click)="onSubmit()">Submit</button>
-  </div>
 </div>
-<div class="row">
-  <p *ngIf="isFetching">Loading...</p>
-  <div class="alert alert-danger" *ngIf="error">
-    <h4>Error loading selector data</h4>
-    <p>{{ error }}</p>
+
+<div  class="spinner-border" role="status" *ngIf="isFetching">
+  <span class="sr-only">Loading...</span>
+</div>
+
+
+<div class="alert alert-danger" *ngIf="error">
+  <div class="row">
+    <h4>Error loading data</h4>
+    <p>{{error}}</p>
   </div>
 </div>

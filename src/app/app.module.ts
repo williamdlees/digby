@@ -31,13 +31,14 @@ import { SampleRepComponent } from './sample-rep/sample-rep.component';
 import { SampleRepPanelComponent } from './sample-rep/sample-rep-panel/sample-rep-panel.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { DynamicModule } from 'ng-dynamic-component';
-import { FilterModule } from './sample-rep/sample-rep-panel/filter/filter.module';
+import { FilterModule } from './table/filter/filter.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule} from '@angular/material/menu';
-import {ColumnSorterComponent} from './sample-rep/sample-rep-panel/column-sorter/column-sorter.component';
+import {ColumnSorterComponent} from './table/column-sorter/column-sorter.component';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatCardModule} from '@angular/material/card';
+import { SampleRepInfoComponent } from './sample-rep/sample-rep-info/sample-rep-info.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -70,6 +71,7 @@ const appRoutes: Routes = [
     SampleRepComponent,
     SampleRepPanelComponent,
     ColumnSorterComponent,
+    SampleRepInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,7 +100,7 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [SeqModalComponent],
+  entryComponents: [SeqModalComponent, SampleRepInfoComponent],
 })
 export class AppModule {
 }

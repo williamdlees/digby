@@ -11,7 +11,14 @@
   <div class="content-centered" (click) = "$event.stopPropagation()">
     <form class="col-12" >
       <div class="row">
-        <button mat-button (click)="onSortAsc()">Sort Ascending</button>
+        <div class="col-6" style="padding-left: 0px">
+          <button mat-button (click)="onSortAsc()">Sort Ascending</button>
+        </div>
+        <div class="col-6" style="text-align: right">
+          <button mat-flat-button color="primary"  (click)="onValidation()">
+            OK
+          </button>
+        </div>
       </div>
       <div class="row">
         <button mat-button (click)="onSortDesc()">Sort Descending</button>
@@ -68,17 +75,6 @@
           [(ngModel)]="selectedItems"
         >
         </ng-multiselect-dropdown>
-      </div>
-
-      <div class="col-12">
-        <div class="row">
-          <div class="col-6"></div>
-          <div class="col-6">
-            <button mat-flat-button color="primary" (click)="onValidation()">
-              Close
-            </button>
-          </div>
-        </div>
       </div>
     </form>
   </div>

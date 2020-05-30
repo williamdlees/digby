@@ -2,7 +2,7 @@
     <ng-content></ng-content>
 </button>
 <mat-menu #columnMenu="matMenu">
-    <div class="va-mat-table-dragable-container" cdkDropList dkDropListLockAxis="y" cdkDropListOrientation="vertical">
+    <div class="digby-table-dragable-container" cdkDropList dkDropListLockAxis="y" cdkDropListOrientation="vertical">
         <div class="dragable-row"
             *ngFor="let column of columnInfo; let i = index"
             cdkDrag
@@ -17,7 +17,7 @@
                 {{ column.name }}
             </mat-checkbox>
 
-            <mat-card class="va-mat-table-drag-preview" *cdkDragPreview>
+            <mat-card class="digby-table-drag-preview" *cdkDragPreview>
                 <mat-icon>drag_handle</mat-icon>
                 <mat-checkbox [checked]="!column.hidden">
                     {{ column.name }}

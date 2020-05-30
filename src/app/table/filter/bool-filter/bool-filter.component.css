@@ -1,0 +1,23 @@
+.content-centered {
+  text-align: center;
+}
+
+button:focus, button:active:focus, button.active:focus {
+outline: none !important;
+outline-style: none !important;
+}
+
+.tf-mat-menu {
+  overflow: visible !important;
+  max-width: none !important;
+}
+
+
+.dropdown-btn {
+  border: none !important;
+  padding: 0px 0px !important;
+}
+
+.multiselect-item-checkbox {
+  padding: 0px 10px !important;
+}

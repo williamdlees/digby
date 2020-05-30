@@ -6,10 +6,14 @@ import { GeneTableService } from '../../genetable/gene-table.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
-import { FilterMode } from './filter/filter-mode.enum';
-import { ColumnPredicate } from './filter/column-predicate';
-import { IChoices } from './filter/ichoices';
+import { FilterMode } from '../../table/filter/filter-mode.enum';
+import { ColumnPredicate } from '../../table/filter/column-predicate';
+import { IChoices } from '../../table/filter/ichoices';
 import { Observable } from 'rxjs';
+import { columnInfo } from './sample-rep-panel-cols';
+import {SeqModalComponent} from '../../genetable/seq-modal/seq-modal.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {SampleRepInfoComponent} from '../sample-rep-info/sample-rep-info.component';
 
 
 @Component({
@@ -26,8 +30,10 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: RepSequenceDataSource;
 
-  displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'haplotypes'];
-  displayedColumnNames = ['Name', 'Condition', 'Tissue', 'Cell', 'Reads', 'Read Length', 'UMI', 'Haplotype'];
+  displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'genotypes', 'haplotypes'];
+  displayedColumnNames = ['Name', 'Condition', 'Tissue', 'Cell', 'Reads', 'Read Length', 'UMI', 'Genotype', 'Haplotype'];
+  allColumns = columnInfo;
+  lastLoadedColumns = [];
   paginatorSubscription = null;
   geneTableServiceSubscription = null;
   filterModeEnum = FilterMode;
@@ -36,12 +42,14 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   choices$: Observable<IChoices>;
 
   constructor(private repseqService: RepseqService,
-              private geneTableService: GeneTableService) {
+              private geneTableService: GeneTableService,
+              private modalService: NgbModal) {
 
   }
 
   ngOnInit() {
     this.dataSource = new RepSequenceDataSource(this.repseqService);
+
   }
 
   ngOnDestroy() {
@@ -93,9 +101,56 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
     this.loadSequencesPage();
   }
 
-  loadSequencesPage() {
-    this.dataSource.loadRepSequences(this.selection.species, this.selection.repSeqs.join(), this.selection.imgt, this.selection.novel, this.selection.full, JSON.stringify(this.filters), JSON.stringify(this.sorts), this.paginator.pageIndex, this.paginator.pageSize);
+  updateColumnData(event: any) {
+    const sLoaded = new Set(this.lastLoadedColumns);
+    const sDisplayed = new Set(this.displayedColumns);
+
+    const deleted = difference(sLoaded, sDisplayed);
+    this.filters = this.filters.filter((x) => !(deleted.has(x.field)));
+    this.sorts = this.sorts.filter((x) => !(deleted.has(x.field)));
+
+    this.loadSequencesPage();
   }
 
+  loadSequencesPage() {
+    if (this.selection) {
+      this.dataSource.loadRepSequences(this.selection.species,
+        this.selection.repSeqs.join(),
+        this.selection.imgt,
+        this.selection.novel,
+        this.selection.full,
+        JSON.stringify(this.filters),
+        JSON.stringify(this.sorts),
+        this.paginator.pageIndex,
+        this.paginator.pageSize,
+        JSON.stringify(this.displayedColumns)
+      );
+    }
 
+    this.lastLoadedColumns = this.displayedColumns;
+  }
+
+  showInfo(sample) {
+    const modalRef = this.modalService.open(SampleRepInfoComponent, { size: 'xl'});
+    modalRef.componentInstance.sampleName = sample.name;
+    modalRef.componentInstance.species = this.selection.species;
+    modalRef.componentInstance.dataset = sample.dataset;
+  }
+}
+
+function isSuperset(set, subset) {
+    for (const elem of subset) {
+        if (!set.has(elem)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function difference(setA, setB) {
+    const diff = new Set(setA);
+    for (const elem of setB) {
+        diff.delete(elem);
+    }
+    return diff;
 }

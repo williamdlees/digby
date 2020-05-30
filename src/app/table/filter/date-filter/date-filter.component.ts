@@ -19,21 +19,22 @@ class Operator {
   postfix?: string;
 }
 
+
 @Component({
-  selector: 'app-number-filter',
-  templateUrl: './number-filter.component.html',
-  styleUrls: ['./number-filter.component.css'],
+  selector: 'app-date-filter',
+  templateUrl: './date-filter.component.html',
+  styleUrls: ['./date-filter.component.css'],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
-export class NumberFilterComponent implements OnInit, FilterImplementation {
+export class DateFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   selectedOperator: Operator;
-  operand1Input = '';
-  operand2Input = '';
+  operand1Input;
+  operand2Input;
   filterCleared = false;
   operatorList: Operator[] = [
     { name: 'Less than',  operands: 2, operator: '<' },
@@ -51,7 +52,8 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
   };
   selectedItems = [];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     if (this.choices$) {
@@ -69,11 +71,6 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
   onValidation() {
     this.predicateEmitter.emit(this.generatePredicate());
     this.matMenuTrigger.closed.emit();
-  }
-
-  onClearFilter() {
-    this.selectedOperator = null;
-    this.filterCleared = true;
   }
 
   onSortAsc() {
@@ -94,7 +91,12 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     this.matMenuTrigger.closed.emit();
   }
 
- generatePredicate(): ColumnPredicate {
+  onClearFilter() {
+    this.selectedOperator = null;
+    this.filterCleared = true;
+  }
+
+  generatePredicate(): ColumnPredicate {
     const pred = {
       field: this.columnName,
       predicates: [],
@@ -111,12 +113,12 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
       pred.predicates.push({
           field: this.columnName,
           op: this.selectedOperator.operator,
-          value: this.operand1Input < this.operand2Input ? this.selectedOperator.operator : this.selectedOperator.operator2
+          value: this.operand1Input < this.operand2Input ? this.operand1Input : this.operand2Input
         });
       pred.predicates.push({
           field: this.columnName,
           op: this.selectedOperator.operator2,
-          value: this.operand1Input < this.operand2Input ? this.selectedOperator.operator2 : this.selectedOperator.operator
+          value: this.operand1Input < this.operand2Input ? this.operand2Input : this.operand1Input
         });
     }
 

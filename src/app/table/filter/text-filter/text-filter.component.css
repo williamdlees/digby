@@ -7,7 +7,7 @@ outline: none !important;
 outline-style: none !important;
 }
 
-.mat-menu-panel {
+.tf-mat-menu{
   overflow: visible !important;
   max-width: none !important;
 }

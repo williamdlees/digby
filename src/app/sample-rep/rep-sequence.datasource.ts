@@ -4,7 +4,7 @@ import { RepseqService } from '../../../dist/digby-swagger-client';
 import {catchError, finalize} from 'rxjs/operators';
 import { RepSequence } from './rep-sequence.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';
-import { IChoices } from './sample-rep-panel/filter/ichoices';
+import { IChoices } from '../table/filter/ichoices';
 
 export class RepSequenceDataSource implements DataSource<RepSequence> {
 
@@ -23,13 +23,13 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
     }
 
     loadRepSequences(species: string, refSeq: string, imgt: boolean, novel: boolean, full: boolean,
-                     filter: string, sortBy: string, pageIndex: number, pageSize: number) {
+                     filter: string, sortBy: string, pageIndex: number, pageSize: number, cols: string) {
 
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
 
         if (species && refSeq) {
-          this.repseqService.getSamplesApi(species, refSeq, pageIndex, pageSize, filter, sortBy).pipe(
+          this.repseqService.getSamplesApi(species, refSeq, pageIndex, pageSize, filter, sortBy, cols).pipe(
             retryWithBackoff(),
             catchError(error => {
               this.errorSubject.next(error);

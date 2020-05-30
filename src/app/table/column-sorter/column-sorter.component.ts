@@ -1,3 +1,5 @@
+// Adapted from https://medium.com/vendasta/wrapping-angular-material-table-styling-it-once-drag-drop-sorting-b1765c995b40
+
 import {
   Component,
   OnInit,
@@ -12,8 +14,20 @@ import {
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
 
+function symmetricDifference(setA, setB) {
+    const _difference = new Set(setA);
+    for (const elem of setB) {
+        if (_difference.has(elem)) {
+            _difference.delete(elem);
+        } else {
+            _difference.add(elem);
+        }
+    }
+    return _difference;
+}
+
 @Component({
-  selector: 'va-mat-table-column-sorter, button[va-mat-table-column-sorter]',
+  selector: 'digby-table-column-sorter, button[digby-table-column-sorter]',
   templateUrl: './column-sorter.component.html',
   styleUrls: ['./column-sorter.component.css'],
   encapsulation: ViewEncapsulation.None,
@@ -26,23 +40,21 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   @Input()
   columns: string[];
   @Input()
-  columnNames: string[];
-  @Input()
   saveName?: string;
-
+  @Input()
   columnInfo: ColumnInfo[];
 
   constructor(private elementRef: ElementRef, private columnSorterService: ColumnSorterService) {}
 
   ngOnInit() {
-    this.columnInfo = this.columns.map((currElement, index) => {
-      return {
-        id: currElement,
-        name: this.columnNames[index],
-        hidden: false,
-      };
-    });
-    this.columnInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName);
+    const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName);
+    const sNew = new Set(this.columnInfo.map((x) => x.name));
+    const sSaved = new Set(savedInfo.map((x) => x.name));
+
+    if (!symmetricDifference(sNew, sSaved).size) {
+      this.columnInfo = savedInfo;
+    }
+
     this.emitColumns(false);
   }
 
@@ -64,6 +76,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   private emitColumns(saveColumns: boolean) {
     // Only emit the columns on the next animation frame available
     window.requestAnimationFrame(() => {
+      const foo = this.columnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
       this.columnsChange.emit(this.columnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
       if (saveColumns) {
         this.columnSorterService.saveColumnInfo(this.columnInfo, this.saveName);

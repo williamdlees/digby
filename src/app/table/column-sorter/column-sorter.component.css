@@ -4,10 +4,10 @@
   outline: none;
 }
 
-.va-mat-table-dragable-container {
+.digby-table-dragable-container {
   min-width: 200px;
 }
-.va-mat-table-dragable-container .dragable-row {
+.digby-table-dragable-container .dragable-row {
   width: 100%;
   line-height: 14px;
   font-size: 14px;
@@ -15,11 +15,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.va-mat-table-dragable-container .dragable-row mat-icon,
-.va-mat-table-dragable-container .dragable-row mat-checkbox {
+.digby-table-dragable-container .dragable-row mat-icon,
+.digby-table-dragable-container .dragable-row mat-checkbox {
   vertical-align: top;
 }
-.va-mat-table-dragable-container .dragable-row mat-icon {
+.digby-table-dragable-container .dragable-row mat-icon {
   opacity: 0.15;
   transition: opacity 0.5s;
   margin-right: 8px;
@@ -27,22 +27,22 @@
   color: #616161;
   cursor: grab;
 }
-.va-mat-table-dragable-container .dragable-row:hover mat-icon {
+.digby-table-dragable-container .dragable-row:hover mat-icon {
   opacity: 1;
 }
 
-.va-mat-table-drag-preview {
+.digby-table-drag-preview {
   padding: 4px 8px 4px 4px !important;
   cursor: grabbing !important;
   margin-top: -4px;
   margin-left: -4px;
   font-size: 14px;
 }
-.va-mat-table-drag-preview mat-icon,
-.va-mat-table-drag-preview mat-checkbox {
+.digby-table-drag-preview mat-icon,
+.digby-table-drag-preview mat-checkbox {
   vertical-align: top;
 }
-.va-mat-table-drag-preview mat-icon {
+.digby-table-drag-preview mat-icon {
   margin-right: 8px;
   padding-left: 4px;
   color: #616161;

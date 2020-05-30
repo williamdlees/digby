@@ -18,3 +18,9 @@
   color: rgba(0,0,0,0.54);
   font-size: 12px;
 }
+
+.btn-solid-icon {
+  background-color: white;
+  color: #6c757d;
+  border: none;
+}

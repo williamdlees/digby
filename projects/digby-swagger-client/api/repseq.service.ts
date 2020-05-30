@@ -98,6 +98,58 @@ export class RepseqService {
     }
 
     /**
+     * Returns information on the selected sample
+     * 
+     * @param species 
+     * @param dataset 
+     * @param sample 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getSampleInfoApi(species: string, dataset: string, sample: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSampleInfoApi(species: string, dataset: string, sample: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSampleInfoApi(species: string, dataset: string, sample: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSampleInfoApi(species: string, dataset: string, sample: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getSampleInfoApi.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getSampleInfoApi.');
+        }
+
+        if (sample === null || sample === undefined) {
+            throw new Error('Required parameter sample was null or undefined when calling getSampleInfoApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/sample_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}/${encodeURIComponent(String(sample))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of samples in the selected dataset
      * 
      * @param species 
@@ -106,13 +158,14 @@ export class RepseqService {
      * @param pageSize 
      * @param filter 
      * @param sortBy 
+     * @param cols 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSamplesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSamplesApi.');
@@ -121,6 +174,7 @@ export class RepseqService {
         if (dataset === null || dataset === undefined) {
             throw new Error('Required parameter dataset was null or undefined when calling getSamplesApi.');
         }
+
 
 
 
@@ -138,6 +192,9 @@ export class RepseqService {
         }
         if (sortBy !== undefined && sortBy !== null) {
             queryParameters = queryParameters.set('sort_by', <any>sortBy);
+        }
+        if (cols !== undefined && cols !== null) {
+            queryParameters = queryParameters.set('cols', <any>cols);
         }
 
         let headers = this.defaultHeaders;

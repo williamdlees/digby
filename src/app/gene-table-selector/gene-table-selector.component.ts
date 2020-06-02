@@ -195,6 +195,10 @@ export class GeneTableSelectorComponent implements OnInit {
     this.onSelectionChange();
   }
 
+  filterChange() {
+    this.onSelectionChange();
+  }
+
   onSelectionChange() {
     if (this.selectedSpecies) {
       this.geneTableService.selection.next({

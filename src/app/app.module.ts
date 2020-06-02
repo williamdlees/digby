@@ -39,6 +39,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatCardModule} from '@angular/material/card';
 import { SampleRepInfoComponent } from './sample-rep/sample-rep-info/sample-rep-info.component';
+import { RepGeneTableComponent } from './rep-gene-table/rep-gene-table.component';
+import { RepGeneTablePanelComponent } from './rep-gene-table/rep-gene-table-panel/rep-gene-table-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -52,7 +54,8 @@ const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'genetable', component: GeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
-  { path: 'samplerep', component: SampleRepComponent }
+  { path: 'samplerep', component: SampleRepComponent },
+  { path: 'generep', component: RepGeneTableComponent }
 ];
 
 @NgModule({
@@ -72,6 +75,8 @@ const appRoutes: Routes = [
     SampleRepPanelComponent,
     ColumnSorterComponent,
     SampleRepInfoComponent,
+    RepGeneTableComponent,
+    RepGeneTablePanelComponent,
   ],
   imports: [
     BrowserModule,

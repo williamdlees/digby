@@ -153,29 +153,31 @@ export class GenomicService {
      * Returns nucleotide sequences from selected reference or multiple references (separate multiple reference names with &#39;,&#39;)
      * 
      * @param species 
-     * @param refSeq 
+     * @param genomicDatasets 
      * @param imgt 
      * @param novel 
      * @param full 
      * @param filter 
-     * @param sortdirection 
+     * @param sortBy 
+     * @param cols 
      * @param pageNumber 
      * @param pageSize 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSequencesApi(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortdirection?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
         }
 
-        if (refSeq === null || refSeq === undefined) {
-            throw new Error('Required parameter refSeq was null or undefined when calling getSequencesApi.');
+        if (genomicDatasets === null || genomicDatasets === undefined) {
+            throw new Error('Required parameter genomicDatasets was null or undefined when calling getSequencesApi.');
         }
+
 
 
 
@@ -197,8 +199,101 @@ export class GenomicService {
         if (filter !== undefined && filter !== null) {
             queryParameters = queryParameters.set('filter', <any>filter);
         }
-        if (sortdirection !== undefined && sortdirection !== null) {
-            queryParameters = queryParameters.set('sortdirection', <any>sortdirection);
+        if (sortBy !== undefined && sortBy !== null) {
+            queryParameters = queryParameters.set('sort_by', <any>sortBy);
+        }
+        if (cols !== undefined && cols !== null) {
+            queryParameters = queryParameters.set('cols', <any>cols);
+        }
+        if (pageNumber !== undefined && pageNumber !== null) {
+            queryParameters = queryParameters.set('page_number', <any>pageNumber);
+        }
+        if (pageSize !== undefined && pageSize !== null) {
+            queryParameters = queryParameters.set('page_size', <any>pageSize);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/sequences/${encodeURIComponent(String(species))}/${encodeURIComponent(String(genomicDatasets))}`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns nucleotide sequences from selected reference or multiple references (separate multiple reference names with &#39;,&#39;)
+     * 
+     * @param species 
+     * @param refSeq 
+     * @param imgt 
+     * @param novel 
+     * @param full 
+     * @param filter 
+     * @param sortBy 
+     * @param cols 
+     * @param pageNumber 
+     * @param pageSize 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getSequencesApi_1(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi_1(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi_1(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi_1(species: string, refSeq: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getSequencesApi_1.');
+        }
+
+        if (refSeq === null || refSeq === undefined) {
+            throw new Error('Required parameter refSeq was null or undefined when calling getSequencesApi_1.');
+        }
+
+
+
+
+
+
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (imgt !== undefined && imgt !== null) {
+            queryParameters = queryParameters.set('imgt', <any>imgt);
+        }
+        if (novel !== undefined && novel !== null) {
+            queryParameters = queryParameters.set('novel', <any>novel);
+        }
+        if (full !== undefined && full !== null) {
+            queryParameters = queryParameters.set('full', <any>full);
+        }
+        if (filter !== undefined && filter !== null) {
+            queryParameters = queryParameters.set('filter', <any>filter);
+        }
+        if (sortBy !== undefined && sortBy !== null) {
+            queryParameters = queryParameters.set('sort_by', <any>sortBy);
+        }
+        if (cols !== undefined && cols !== null) {
+            queryParameters = queryParameters.set('cols', <any>cols);
         }
         if (pageNumber !== undefined && pageNumber !== null) {
             queryParameters = queryParameters.set('page_number', <any>pageNumber);

@@ -1,39 +1,148 @@
 
-<div>
-    <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
-      <span class="sr-only">Loading...</span>
+<div class="container-fluid">
+  <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
+    <h4>Error loading table</h4>
+    <p>{{dataSource.error$ | async}}</p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+      <button digby-table-column-sorter
+         [(columns)]="displayedColumns"
+         [columnInfo]="allColumns"
+         [saveName]="'example-table'"
+         (columnsChange)="updateColumnData($event)" >
+         <mat-icon class="primary-icon"  style="">view_column</mat-icon>
+        <span class="header-text">Arrange Columns</span>
+      </button>
     </div>
 
-    <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
-      <h4>Error loading table</h4>
-      <p>{{dataSource.error$ | async}}</p>
+    <div class="col-md">
+      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15" [pageSizeOptions]="[15, 50, 100, 250]"></mat-paginator>
     </div>
+  </div>
 
-    <mat-table [dataSource]="dataSource">
+  <div class="row">
+    <div class="col">
+      <mat-table [dataSource]="dataSource">
 
         <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+              Name
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
             <mat-cell *matCellDef="let sequence">{{sequence.name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="imgt_name">
-            <mat-header-cell *matHeaderCellDef>IMGT Name</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+              IMGT Name
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'imgt_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
             <mat-cell *matCellDef="let sequence">{{sequence.imgt_name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="type">
-            <mat-header-cell *matHeaderCellDef>Type</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>
+              Type
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
             <mat-cell *matCellDef="let sequence">{{sequence.type}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="seq">
-            <mat-header-cell *matHeaderCellDef>Sequence</mat-header-cell>
-            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.sequence | geneTrunc }}</mat-cell>
+        <ng-container matColumnDef="novel">
+            <mat-header-cell *matHeaderCellDef>
+              Novel
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'novel'" [filterMode]="filterModeEnum.BOOL_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">
+              <i *ngIf="sequence.novel" class="fa fa-check" style="line-height: inherit;"></i>
+              <i *ngIf="!sequence.novel" class="fa fa-times" style="line-height: inherit;"></i>
+            </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="gapped">
-            <mat-header-cell *matHeaderCellDef>Gapped</mat-header-cell>
+        <ng-container matColumnDef="sequence">
+            <mat-header-cell *matHeaderCellDef>
+              Sequence
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.sequence | geneTrunc}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="gapped_sequence">
+            <mat-header-cell *matHeaderCellDef>
+              Gapped
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'gapped_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
             <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'gapped')">{{sequence.gapped_sequence | geneTrunc}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="feature">
+            <mat-header-cell *matHeaderCellDef>
+              Feature
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'feature'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.feature}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="start">
+            <mat-header-cell *matHeaderCellDef>
+              Start
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'start'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.start}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="end">
+            <mat-header-cell *matHeaderCellDef>
+              End
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'end'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.end}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="score">
+            <mat-header-cell *matHeaderCellDef>
+              Score
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'score'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.score}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="strand">
+            <mat-header-cell *matHeaderCellDef>
+              Strand
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'strand'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.strand}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="frame">
+            <mat-header-cell *matHeaderCellDef>
+              Frame
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'frame'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.frame}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refseq_name">
+            <mat-header-cell *matHeaderCellDef>
+              Reference
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.refseq_name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="refseq_sequence">
+            <mat-header-cell *matHeaderCellDef>
+              Ref Seq
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.refseq_sequence | geneTrunc}}</mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
@@ -41,8 +150,4 @@
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
     </mat-table>
-
-    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15"
-                 [pageSizeOptions]="[15, 50, 100]"></mat-paginator>
-
 </div>

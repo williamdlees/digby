@@ -31,7 +31,6 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   dataSource: RepSequenceDataSource;
 
   displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'genotypes', 'haplotypes'];
-  displayedColumnNames = ['Name', 'Condition', 'Tissue', 'Cell', 'Reads', 'Read Length', 'UMI', 'Genotype', 'Haplotype'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -67,7 +66,7 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
           .subscribe(
             (sel: GeneTableSelection) => {
               this.selection = sel;
-              this.paginator.firstPage()
+              this.paginator.firstPage();
               this.table.renderRows();
               this.loadSequencesPage();
             }

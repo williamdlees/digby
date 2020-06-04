@@ -95,7 +95,7 @@ export class BoolFilterComponent implements OnInit, FilterImplementation {
     };
 
     if (this.selectedItems.length > 0) {
-      pred.predicates.push({ field: this.columnName, op: 'in', value: this.selectedItems.map((x) => (x.text ? 'true' : 'false')) });
+      pred.predicates.push({ field: this.columnName, op: 'in', value: this.selectedItems.map((x) => (x.text ? '1' : '0')) });
     }
 
     return pred;

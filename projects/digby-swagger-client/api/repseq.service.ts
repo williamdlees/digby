@@ -225,6 +225,81 @@ export class RepseqService {
     }
 
     /**
+     * Returns the list of sequences in the selected dataset
+     * 
+     * @param species 
+     * @param dataset 
+     * @param pageNumber 
+     * @param pageSize 
+     * @param filter 
+     * @param sortBy 
+     * @param cols 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getSequencesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, dataset: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getSequencesApi.');
+        }
+
+
+
+
+
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (pageNumber !== undefined && pageNumber !== null) {
+            queryParameters = queryParameters.set('page_number', <any>pageNumber);
+        }
+        if (pageSize !== undefined && pageSize !== null) {
+            queryParameters = queryParameters.set('page_size', <any>pageSize);
+        }
+        if (filter !== undefined && filter !== null) {
+            queryParameters = queryParameters.set('filter', <any>filter);
+        }
+        if (sortBy !== undefined && sortBy !== null) {
+            queryParameters = queryParameters.set('sort_by', <any>sortBy);
+        }
+        if (cols !== undefined && cols !== null) {
+            queryParameters = queryParameters.set('cols', <any>cols);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/sequences/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of species for which information is held
      * 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

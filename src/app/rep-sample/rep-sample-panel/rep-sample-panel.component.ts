@@ -10,21 +10,20 @@ import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
 import { Observable } from 'rxjs';
-import { columnInfo } from './sample-rep-panel-cols';
-import {SeqModalComponent} from '../../gene-table/seq-modal/seq-modal.component';
+import { columnInfo } from './rep-sample-panel-cols';
+import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {SampleRepInfoComponent} from '../sample-rep-info/sample-rep-info.component';
+import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.component';
 
 
 @Component({
   selector: 'app-sample-rep-panel',
-  templateUrl: './sample-rep-panel.component.html',
-  styleUrls: ['./sample-rep-panel.component.css'],
+  templateUrl: './rep-sample-panel.component.html',
+  styleUrls: ['./rep-sample-panel.component.css'],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
 
-
-export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy {
+export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
@@ -127,7 +126,7 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   showInfo(sample) {
-    const modalRef = this.modalService.open(SampleRepInfoComponent, { size: 'xl'});
+    const modalRef = this.modalService.open(RepSampleInfoComponent, { size: 'xl'});
     modalRef.componentInstance.sampleName = sample.name;
     modalRef.componentInstance.species = this.selection.species;
     modalRef.componentInstance.dataset = sample.dataset;

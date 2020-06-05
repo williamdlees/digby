@@ -4,7 +4,7 @@ import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../gene-table.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {SeqModalComponent} from '../seq-modal/seq-modal.component';
+import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {GeneSequenceDataSource} from '../gene-sequence.datasource';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';

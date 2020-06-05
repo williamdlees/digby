@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SampleRepComponent } from './sample-rep.component';
+import { RepSampleComponent } from './rep-sample.component';
 
 describe('SampleRepComponent', () => {
-  let component: SampleRepComponent;
-  let fixture: ComponentFixture<SampleRepComponent>;
+  let component: RepSampleComponent;
+  let fixture: ComponentFixture<RepSampleComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SampleRepComponent ]
+      declarations: [ RepSampleComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SampleRepComponent);
+    fixture = TestBed.createComponent(RepSampleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

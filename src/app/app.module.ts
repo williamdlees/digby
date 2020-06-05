@@ -16,7 +16,7 @@ import {GeneTablePanelComponent} from './gene-table/gene-table-panel/gene-table-
 import { GeneTableSelectorComponent } from './gene-table-selector/gene-table-selector.component';
 import {DropdownDirective} from './shared/dropdown.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SeqModalComponent } from './gene-table/seq-modal/seq-modal.component';
+import { SeqModalComponent } from './seq-modal/seq-modal.component';
 import { GeneBrowserComponent } from './gene-browser/gene-browser.component';
 import { GeneBrowserPanelComponent } from './gene-browser/gene-browser-panel/gene-browser-panel.component';
 import { GeneTruncPipe } from './gene-table/gene-trunc-pipe';
@@ -27,8 +27,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RequestCache } from './shared/http_cache';
 import {CachingInterceptor } from './shared/caching_interceptor';
-import { SampleRepComponent } from './sample-rep/sample-rep.component';
-import { SampleRepPanelComponent } from './sample-rep/sample-rep-panel/sample-rep-panel.component';
+import { RepSampleComponent } from './rep-sample/rep-sample.component';
+import { RepSamplePanelComponent } from './rep-sample/rep-sample-panel/rep-sample-panel.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { DynamicModule } from 'ng-dynamic-component';
 import { FilterModule } from './table/filter/filter.module';
@@ -38,7 +38,7 @@ import {ColumnSorterComponent} from './table/column-sorter/column-sorter.compone
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {MatCardModule} from '@angular/material/card';
-import { SampleRepInfoComponent } from './sample-rep/sample-rep-info/sample-rep-info.component';
+import { RepSampleInfoComponent } from './rep-sample/rep-sample-info/rep-sample-info.component';
 import { RepGeneTableComponent } from './rep-gene-table/rep-gene-table.component';
 import { RepGeneTablePanelComponent } from './rep-gene-table/rep-gene-table-panel/rep-gene-table-panel.component';
 
@@ -54,7 +54,7 @@ const appRoutes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'genetable', component: GeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
-  { path: 'samplerep', component: SampleRepComponent },
+  { path: 'samplerep', component: RepSampleComponent },
   { path: 'generep', component: RepGeneTableComponent }
 ];
 
@@ -71,10 +71,10 @@ const appRoutes: Routes = [
     GeneBrowserComponent,
     GeneBrowserPanelComponent,
     GeneTruncPipe,
-    SampleRepComponent,
-    SampleRepPanelComponent,
+    RepSampleComponent,
+    RepSamplePanelComponent,
     ColumnSorterComponent,
-    SampleRepInfoComponent,
+    RepSampleInfoComponent,
     RepGeneTableComponent,
     RepGeneTablePanelComponent,
   ],
@@ -105,7 +105,7 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [SeqModalComponent, SampleRepInfoComponent],
+  entryComponents: [SeqModalComponent, RepSampleInfoComponent],
 })
 export class AppModule {
 }

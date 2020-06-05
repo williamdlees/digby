@@ -7,11 +7,11 @@ import { RepseqService } from '../../../../dist/digby-swagger-client';
 
 @Component({
   selector: 'app-sample-rep-info',
-  templateUrl: './sample-rep-info.component.html',
-  styleUrls: ['./sample-rep-info.component.css'],
+  templateUrl: './rep-sample-info.component.html',
+  styleUrls: ['./rep-sample-info.component.css'],
   encapsulation: ViewEncapsulation.None   // needed for css styling
 })
-export class SampleRepInfoComponent implements OnInit {
+export class RepSampleInfoComponent implements OnInit {
   @Input() sampleName;
   @Input() species;
   @Input() dataset;

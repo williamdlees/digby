@@ -22,8 +22,7 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
 
     }
 
-    loadRepSequences(species: string, refSeq: string, imgt: boolean, novel: boolean, full: boolean,
-                     filter: string, sortBy: string, pageIndex: number, pageSize: number, cols: string) {
+    loadRepSequences(species: string, refSeq: string, pageIndex: number, pageSize: number, filter: string, sortBy: string,  cols: string) {
 
         this.loadingSubject.next(true);
         this.errorSubject.next(null);

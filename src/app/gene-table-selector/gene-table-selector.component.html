@@ -39,27 +39,6 @@
       </ng-multiselect-dropdown>
     </div>
   </div>
-  <div class="col-auto my-1" *ngIf="showFilter">
-    <div class="custom-control custom-checkbox mr-sm-2">
-      <input type="checkbox" class="custom-control-input" id="show-imgt" [(ngModel)]="showImgt" (ngModelChange)="filterChange()">
-      <label class="custom-control-label" for="show-imgt">IMGT</label>
-    </div>
-  </div>
-  <div class="col-auto my-1" *ngIf="showFilter">
-    <div class="custom-control custom-checkbox mr-sm-2">
-      <input type="checkbox" class="custom-control-input" id="show-novel" [(ngModel)]="showNovel" (ngModelChange)="filterChange()">
-      <label class="custom-control-label" for="show-novel">Novel</label>
-    </div>
-  </div>
-  <div class="col-auto my-1" *ngIf="showFilter">
-    <div class="custom-control custom-checkbox mr-sm-2">
-      <input type="checkbox" class="custom-control-input" id="show-full-gene" [(ngModel)]="showFull" (ngModelChange)="filterChange()">
-      <label class="custom-control-label" for="show-full-gene">Full Gene</label>
-    </div>
-  </div>
-  <div class="col-auto my-1" *ngIf="showFilter && showGenomic">
-      <input type="text" id="filter" placeholder="Filter"  [(ngModel)]="filter">
-  </div>
 </div>
 
 <div  class="spinner-border" role="status" *ngIf="isFetching">

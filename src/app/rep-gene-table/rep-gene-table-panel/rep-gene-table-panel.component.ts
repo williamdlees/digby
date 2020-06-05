@@ -1,10 +1,10 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../../genetable/gene-table.model';
-import { GeneTableService } from '../../genetable/gene-table.service';
+import { GeneTableSelection } from '../../gene-table/gene-table.model';
+import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {SeqModalComponent} from '../../genetable/seq-modal/seq-modal.component';
+import {SeqModalComponent} from '../../gene-table/seq-modal/seq-modal.component';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {columnInfo} from './rep-gene-table-panel-cols';
@@ -38,7 +38,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   choices$: Observable<IChoices>;
 
   constructor(private repseqService: RepseqService,
-              private geneTableService: GeneTableService,
+              private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal) {
   }
 

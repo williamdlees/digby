@@ -5,21 +5,21 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { GeneTableComponent } from './genetable/gene-table.component';
+import { GeneTableComponent } from './gene-table/gene-table.component';
 
 import { ApiModule, Configuration, ConfigurationParameters } from 'dist/digby-swagger-client';
 import { HomeComponent } from './home/home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { environment } from '../environments/environment';
-import {GeneTablePanelComponent} from './genetable/gene-table-panel/gene-table-panel.component';
+import {GeneTablePanelComponent} from './gene-table/gene-table-panel/gene-table-panel.component';
 import { GeneTableSelectorComponent } from './gene-table-selector/gene-table-selector.component';
 import {DropdownDirective} from './shared/dropdown.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SeqModalComponent } from './genetable/seq-modal/seq-modal.component';
+import { SeqModalComponent } from './gene-table/seq-modal/seq-modal.component';
 import { GeneBrowserComponent } from './gene-browser/gene-browser.component';
 import { GeneBrowserPanelComponent } from './gene-browser/gene-browser-panel/gene-browser-panel.component';
-import { GeneTruncPipe } from './genetable/gene-trunc-pipe';
+import { GeneTruncPipe } from './gene-table/gene-trunc-pipe';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';

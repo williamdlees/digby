@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { GenomicService } from '../../../dist/digby-swagger-client';
 import { RepseqService } from '../../../dist/digby-swagger-client';
-import { GeneTableService } from '../genetable/gene-table.service';
+import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
 import { catchError  } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -14,7 +14,6 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
   styleUrls: ['./gene-table-selector.component.scss']
 })
 export class GeneTableSelectorComponent implements OnInit {
-  @Input() showFilter: boolean;
   @Input() showGenomic: boolean;
   @Input() showRepseq: boolean;
   species = [];
@@ -23,10 +22,6 @@ export class GeneTableSelectorComponent implements OnInit {
   repSeqs = [];
   selectedGen: { id: number, text: string }[] = null;
   selectedRep = null;
-  showImgt = true;
-  showNovel = true;
-  showFull = true;
-  filter = null;
   isFetching: boolean;
   error = null;
   dropdownSettings: IDropdownSettings = {
@@ -42,13 +37,10 @@ export class GeneTableSelectorComponent implements OnInit {
 
   constructor(private genomicService: GenomicService,
               private repseqService: RepseqService,
-              private geneTableService: GeneTableService) { }
+              private geneTableService: GeneTableSelectorService) { }
 
   ngOnInit() {
     this.isFetching = true;
-    this.showImgt = this.geneTableService.selection.value.imgt;
-    this.showNovel = this.geneTableService.selection.value.novel;
-    this.showFull = this.geneTableService.selection.value.full;
 
     let selectedVal = null;
     this.genomicService.getSpeciesApi()
@@ -205,10 +197,7 @@ export class GeneTableSelectorComponent implements OnInit {
         species: this.selectedSpecies.name,
         refSeqs: this.selectedGen ? this.selectedGen.map(x => x.text) : null,
         repSeqs: this.selectedRep ? this.selectedRep.map(x => x.text) : null,
-        imgt: this.showImgt,
-        novel: this.showNovel,
-        full: this.showFull,
-        filter: this.filter});
+      });
     }
   }
 }

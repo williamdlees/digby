@@ -2,7 +2,7 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../gene-table.model';
-import { GeneTableService } from '../gene-table.service';
+import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../seq-modal/seq-modal.component';
 import {GeneSequenceDataSource} from '../gene-sequence.datasource';
@@ -39,7 +39,7 @@ export class GeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy
   choices$: Observable<IChoices>;
 
   constructor(private genomicService: GenomicService,
-              private geneTableService: GeneTableService,
+              private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal) {
   }
 
@@ -115,13 +115,10 @@ export class GeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.dataSource.loadGeneSequences(
         this.selection.species,
         this.selection.refSeqs.join(),
-        this.selection.imgt,
-        this.selection.novel,
-        this.selection.full,
-        JSON.stringify(this.filters),
-        JSON.stringify(this.sorts),
         this.paginator.pageIndex,
         this.paginator.pageSize,
+        JSON.stringify(this.filters),
+        JSON.stringify(this.sorts),
         JSON.stringify(this.displayedColumns)
       );
     }

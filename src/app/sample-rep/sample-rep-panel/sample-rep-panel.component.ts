@@ -1,8 +1,8 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../../genetable/gene-table.model';
-import { GeneTableService } from '../../genetable/gene-table.service';
+import { GeneTableSelection } from '../../gene-table/gene-table.model';
+import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
@@ -11,7 +11,7 @@ import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
 import { Observable } from 'rxjs';
 import { columnInfo } from './sample-rep-panel-cols';
-import {SeqModalComponent} from '../../genetable/seq-modal/seq-modal.component';
+import {SeqModalComponent} from '../../gene-table/seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SampleRepInfoComponent} from '../sample-rep-info/sample-rep-info.component';
 
@@ -41,7 +41,7 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
   choices$: Observable<IChoices>;
 
   constructor(private repseqService: RepseqService,
-              private geneTableService: GeneTableService,
+              private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal) {
 
   }
@@ -115,13 +115,10 @@ export class SampleRepPanelComponent implements AfterViewInit, OnInit, OnDestroy
     if (this.selection) {
       this.dataSource.loadRepSequences(this.selection.species,
         this.selection.repSeqs.join(),
-        this.selection.imgt,
-        this.selection.novel,
-        this.selection.full,
-        JSON.stringify(this.filters),
-        JSON.stringify(this.sorts),
         this.paginator.pageIndex,
         this.paginator.pageSize,
+        JSON.stringify(this.filters),
+        JSON.stringify(this.sorts),
         JSON.stringify(this.displayedColumns)
       );
     }

@@ -23,14 +23,13 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
 
     }
 
-    loadGeneSequences(species: string, refSeq: string, imgt: boolean, novel: boolean, full: boolean,
-                      filter: string, sortBy: string, pageIndex: number, pageSize: number, cols: string) {
+    loadGeneSequences(species: string, refSeq: string, pageIndex: number, pageSize: number, filter: string, sortBy: string, cols: string) {
 
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
 
         if (species && refSeq) {
-          this.genomicService.getSequencesApi(species, refSeq, imgt, novel, full, filter, sortBy, cols, pageIndex, pageSize).pipe(
+          this.genomicService.getSequencesApi(species, refSeq, pageIndex, pageSize, filter, sortBy, cols).pipe(
             retryWithBackoff(),
             catchError(error => {
               this.errorSubject.next(error);

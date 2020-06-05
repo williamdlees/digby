@@ -154,21 +154,18 @@ export class GenomicService {
      * 
      * @param species 
      * @param genomicDatasets 
-     * @param imgt 
-     * @param novel 
-     * @param full 
+     * @param pageNumber 
+     * @param pageSize 
      * @param filter 
      * @param sortBy 
      * @param cols 
-     * @param pageNumber 
-     * @param pageSize 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSequencesApi(species: string, genomicDatasets: string, imgt?: boolean, novel?: boolean, full?: boolean, filter?: string, sortBy?: string, cols?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSequencesApi(species: string, genomicDatasets: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSequencesApi(species: string, genomicDatasets: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSequencesApi(species: string, genomicDatasets: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSequencesApi(species: string, genomicDatasets: string, pageNumber?: number, pageSize?: number, filter?: string, sortBy?: string, cols?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSequencesApi.');
@@ -183,18 +180,12 @@ export class GenomicService {
 
 
 
-
-
-
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (imgt !== undefined && imgt !== null) {
-            queryParameters = queryParameters.set('imgt', <any>imgt);
+        if (pageNumber !== undefined && pageNumber !== null) {
+            queryParameters = queryParameters.set('page_number', <any>pageNumber);
         }
-        if (novel !== undefined && novel !== null) {
-            queryParameters = queryParameters.set('novel', <any>novel);
-        }
-        if (full !== undefined && full !== null) {
-            queryParameters = queryParameters.set('full', <any>full);
+        if (pageSize !== undefined && pageSize !== null) {
+            queryParameters = queryParameters.set('page_size', <any>pageSize);
         }
         if (filter !== undefined && filter !== null) {
             queryParameters = queryParameters.set('filter', <any>filter);
@@ -204,12 +195,6 @@ export class GenomicService {
         }
         if (cols !== undefined && cols !== null) {
             queryParameters = queryParameters.set('cols', <any>cols);
-        }
-        if (pageNumber !== undefined && pageNumber !== null) {
-            queryParameters = queryParameters.set('page_number', <any>pageNumber);
-        }
-        if (pageSize !== undefined && pageSize !== null) {
-            queryParameters = queryParameters.set('page_size', <any>pageSize);
         }
 
         let headers = this.defaultHeaders;

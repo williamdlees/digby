@@ -1,8 +1,8 @@
 /* tslint:disable:only-arrow-functions */
 import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import { GeneTableSelection } from '../../genetable/gene-table.model';
-import { GeneTableService } from '../../genetable/gene-table.service';
+import { GeneTableSelection } from '../../gene-table/gene-table.model';
+import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {ActivatedRoute} from '@angular/router';
 import igv from 'src/assets/js/igv.js';
 import { delay } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   species = null;
   refName = null;
 
-  constructor(private geneTableService: GeneTableService,
+  constructor(private geneTableService: GeneTableSelectorService,
               private route: ActivatedRoute) {
   }
 

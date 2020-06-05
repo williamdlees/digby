@@ -41,6 +41,8 @@ import {MatCardModule} from '@angular/material/card';
 import { RepSampleInfoComponent } from './rep-sample/rep-sample-info/rep-sample-info.component';
 import { RepGeneTableComponent } from './rep-gene-table/rep-gene-table.component';
 import { RepGeneTablePanelComponent } from './rep-gene-table/rep-gene-table-panel/rep-gene-table-panel.component';
+import { GenSampleComponent } from './gen-sample/gen-sample.component';
+import { GenSamplePanelComponent } from './gen-sample/gen-sample-panel/gen-sample-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -52,6 +54,7 @@ export function apiConfigFactory(): Configuration  {
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'genesample', component: GenSampleComponent },
   { path: 'genetable', component: GenGeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
   { path: 'samplerep', component: RepSampleComponent },
@@ -77,6 +80,8 @@ const appRoutes: Routes = [
     RepSampleInfoComponent,
     RepGeneTableComponent,
     RepGeneTablePanelComponent,
+    GenSampleComponent,
+    GenSamplePanelComponent,
   ],
   imports: [
     BrowserModule,

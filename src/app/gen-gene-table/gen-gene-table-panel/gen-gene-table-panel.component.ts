@@ -1,7 +1,7 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../gene-table.model';
+import { GeneTableSelection } from '../gen-gene-table.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
@@ -17,12 +17,12 @@ import {ColumnPredicate} from '../../table/filter/column-predicate';
 
 @Component({
   selector: 'app-gene-table-panel',
-  templateUrl: './gene-table-panel.component.html',
-  styleUrls: ['./gene-table-panel.component.css'],
+  templateUrl: './gen-gene-table-panel.component.html',
+  styleUrls: ['./gen-gene-table-panel.component.css'],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
 
-export class GeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy {
+export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy {
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;

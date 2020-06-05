@@ -1,7 +1,7 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../../gene-table/gene-table.model';
+import { GeneTableSelection } from '../../gen-gene-table/gen-gene-table.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';

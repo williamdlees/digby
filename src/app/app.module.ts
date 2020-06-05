@@ -5,21 +5,21 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { GeneTableComponent } from './gene-table/gene-table.component';
+import { GenGeneTableComponent } from './gen-gene-table/gen-gene-table.component';
 
 import { ApiModule, Configuration, ConfigurationParameters } from 'dist/digby-swagger-client';
 import { HomeComponent } from './home/home.component';
 import { RouterModule, Routes } from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { environment } from '../environments/environment';
-import {GeneTablePanelComponent} from './gene-table/gene-table-panel/gene-table-panel.component';
+import {GenGeneTablePanelComponent} from './gen-gene-table/gen-gene-table-panel/gen-gene-table-panel.component';
 import { GeneTableSelectorComponent } from './gene-table-selector/gene-table-selector.component';
 import {DropdownDirective} from './shared/dropdown.directive';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SeqModalComponent } from './seq-modal/seq-modal.component';
 import { GeneBrowserComponent } from './gene-browser/gene-browser.component';
 import { GeneBrowserPanelComponent } from './gene-browser/gene-browser-panel/gene-browser-panel.component';
-import { GeneTruncPipe } from './gene-table/gene-trunc-pipe';
+import { GeneTruncPipe } from './shared/gene-trunc-pipe';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -52,7 +52,7 @@ export function apiConfigFactory(): Configuration  {
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'genetable', component: GeneTableComponent },
+  { path: 'genetable', component: GenGeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
   { path: 'samplerep', component: RepSampleComponent },
   { path: 'generep', component: RepGeneTableComponent }
@@ -63,8 +63,8 @@ const appRoutes: Routes = [
     AppComponent,
     AppHeaderComponent,
     HomeComponent,
-    GeneTableComponent,
-    GeneTablePanelComponent,
+    GenGeneTableComponent,
+    GenGeneTablePanelComponent,
     GeneTableSelectorComponent,
     DropdownDirective,
     SeqModalComponent,

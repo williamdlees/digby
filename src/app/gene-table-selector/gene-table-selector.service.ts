@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import {GeneTableSelection} from '../gene-table/gene-table.model';
+import {GeneTableSelection} from '../gen-gene-table/gen-gene-table.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable({

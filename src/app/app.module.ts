@@ -9,7 +9,7 @@ import { GenGeneTableComponent } from './gen-gene-table/gen-gene-table.component
 
 import { ApiModule, Configuration, ConfigurationParameters } from 'dist/digby-swagger-client';
 import { HomeComponent } from './home/home.component';
-import { RouterModule, Routes } from '@angular/router';
+import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { environment } from '../environments/environment';
 import {GenGeneTablePanelComponent} from './gen-gene-table/gen-gene-table-panel/gen-gene-table-panel.component';
@@ -43,6 +43,9 @@ import { RepGeneTableComponent } from './rep-gene-table/rep-gene-table.component
 import { RepGeneTablePanelComponent } from './rep-gene-table/rep-gene-table-panel/rep-gene-table-panel.component';
 import { GenSampleComponent } from './gen-sample/gen-sample.component';
 import { GenSamplePanelComponent } from './gen-sample/gen-sample-panel/gen-sample-panel.component';
+import {ObserversModule} from '@angular/cdk/observers';
+import {CustomReuseStrategy} from './shared/route-reuse-strategy';
+import { GenSampleInfoComponent } from './gen-sample/gen-sample-info/gen-sample-info.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -82,6 +85,7 @@ const appRoutes: Routes = [
     RepGeneTablePanelComponent,
     GenSampleComponent,
     GenSamplePanelComponent,
+    GenSampleInfoComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,10 +108,12 @@ const appRoutes: Routes = [
     MatCheckboxModule,
     DragDropModule,
     MatCardModule,
+    ObserversModule
   ],
   providers: [
     RequestCache,
-    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
   ],
   bootstrap: [AppComponent],
   entryComponents: [SeqModalComponent, RepSampleInfoComponent],

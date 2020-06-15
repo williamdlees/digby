@@ -1,7 +1,7 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../gen-gene-table.model';
+import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
@@ -13,6 +13,7 @@ import {FilterMode} from '../../table/filter/filter-mode.enum';
 import {Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
+import { GenGeneSelectedService } from '../gen-gene-selected.service'
 
 
 @Component({
@@ -37,10 +38,12 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   filters = [];
   sorts = [];
   choices$: Observable<IChoices>;
+  choices$Subscription = null;
 
   constructor(private genomicService: GenomicService,
               private geneTableService: GeneTableSelectorService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private genGeneSelectedService: GenGeneSelectedService) {
   }
 
 
@@ -51,6 +54,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   ngOnDestroy() {
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
+    this.choices$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -70,6 +74,16 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
               }
             }
           );
+
+        this.choices$Subscription = this.dataSource.choices$.subscribe(
+          choices => {
+            if (this.filters.length > 0) {
+              this.genGeneSelectedService.selection.next({names: choices.name});
+            } else {
+              this.genGeneSelectedService.selection.next({names: []});
+            }
+          }
+        );
       });
   }
 

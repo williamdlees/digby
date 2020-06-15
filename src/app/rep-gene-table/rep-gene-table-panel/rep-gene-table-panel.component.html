@@ -16,7 +16,7 @@
       <button digby-table-column-sorter
          [(columns)]="displayedColumns"
          [columnInfo]="allColumns"
-         [saveName]="'example-table'"
+         [saveName]="'rep-gene-table'"
          (columnsChange)="updateColumnData($event)" >
          <mat-icon class="primary-icon"  style="">view_column</mat-icon>
         <span class="header-text">Arrange Columns</span>
@@ -64,7 +64,7 @@
             <mat-cell *matCellDef="let seq" >{{seq.similar}}</mat-cell>
         </ng-container>
 
-         <ng-container matColumnDef="appears">
+         <ng-container matColumnDef="appears" >
             <mat-header-cell *matHeaderCellDef>
               Appearances
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appears'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -115,7 +115,7 @@
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
 
-        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns" ></mat-row>
 
       </mat-table>
       </div>

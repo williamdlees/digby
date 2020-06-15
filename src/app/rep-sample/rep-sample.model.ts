@@ -1,4 +1,4 @@
-export interface RepSequence {
+export interface RepSample {
     name: string;
     row_reads: number;
     genotype: string;

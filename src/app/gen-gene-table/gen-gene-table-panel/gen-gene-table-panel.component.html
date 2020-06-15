@@ -14,7 +14,7 @@
       <button digby-table-column-sorter
          [(columns)]="displayedColumns"
          [columnInfo]="allColumns"
-         [saveName]="'example-table'"
+         [saveName]="'gen-gene-table'"
          (columnsChange)="updateColumnData($event)" >
          <mat-icon class="primary-icon"  style="">view_column</mat-icon>
         <span class="header-text">Arrange Columns</span>
@@ -143,6 +143,14 @@
             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
             <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.refseq_sequence | geneTrunc}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="sample_name">
+            <mat-header-cell *matHeaderCellDef>
+              Sample
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sample_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.sample_name}}</mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

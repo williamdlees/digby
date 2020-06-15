@@ -1,1 +1,134 @@
-<p>gen-sample-panel works!</p>
+
+<div class="container-fluid">
+  <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
+    <div class="row">
+      <h4>Error loading table</h4>
+      <p>{{dataSource.error$ | async}}</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3" style="align-items: center; justify-content: flex-start; display: flex;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+          [disabled]="!selectedSequenceNames.length"
+          [(ngModel)]="isSelectedSamplesChecked"
+          (change)="(onSelectedSamplesChange(isSelectedSamplesChecked))"
+        >
+        <label class="form-check-label" for="chk-selected-items">
+          Only samples with selected alleles
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-2" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+      <button digby-table-column-sorter
+         [(columns)]="displayedColumns"
+         [columnInfo]="allColumns"
+         [saveName]="'rep-sample-table'"
+         (columnsChange)="updateColumnData($event)" id="colbutton">
+         <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
+      </button>
+        <label class="form-check-label" for="colbutton">Arrange Columns</label>
+    </div>
+    <div class="col-md-7">
+      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15" [pageSizeOptions]="[15, 50, 100, 250]"></mat-paginator>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <mat-table [dataSource]="dataSource">
+         // Sample
+         <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>
+              Sample Name
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.name}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="type">
+            <mat-header-cell *matHeaderCellDef>
+              Type
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.type}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="date">
+            <mat-header-cell *matHeaderCellDef>
+              Date
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'date'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.date}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="study_name">
+            <mat-header-cell *matHeaderCellDef>
+              Study Name
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'study_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.study_name}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="institute">
+            <mat-header-cell *matHeaderCellDef>
+              Institute
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'institute'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.institute}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="researcher">
+            <mat-header-cell *matHeaderCellDef>
+              Researcher
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'researcher'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.researcher}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="reference">
+            <mat-header-cell *matHeaderCellDef>
+              Reference
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.reference}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="contact">
+            <mat-header-cell *matHeaderCellDef>
+              Contact
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'contact'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.contact}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="accession_id">
+            <mat-header-cell *matHeaderCellDef>
+              Accession ID
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'accession_id'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.accession_id}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="accession_reference">
+            <mat-header-cell *matHeaderCellDef>
+              Accession Ref
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'accession_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.accession_reference}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+      </mat-table>
+      </div>
+  </div>
+</div>

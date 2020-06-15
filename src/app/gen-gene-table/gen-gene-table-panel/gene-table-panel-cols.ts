@@ -13,4 +13,5 @@
    {id: 'frame', name: 'Frame', hidden: false},
    {id: 'refseq_name', name: 'Reference', hidden: false},
    {id: 'refseq_sequence', name: 'Ref Sequence', hidden: false},
+   {id: 'sample_name', name: 'Sample', hidden: false},
 ];

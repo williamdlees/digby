@@ -3,7 +3,7 @@ export class ColumnPredicate {
   predicates: {
     field: string;
     op: string,
-    value: string,
+    value: string[],
   }[];
   sort: {
     order: string,

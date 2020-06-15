@@ -137,14 +137,6 @@
             <mat-cell *matCellDef="let sequence">{{sequence.refseq_name}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="refseq_sequence">
-            <mat-header-cell *matHeaderCellDef>
-              Ref Seq
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.refseq_sequence | geneTrunc}}</mat-cell>
-        </ng-container>
-
         <ng-container matColumnDef="sample_name">
             <mat-header-cell *matHeaderCellDef>
               Sample

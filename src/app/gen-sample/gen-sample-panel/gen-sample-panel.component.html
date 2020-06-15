@@ -49,7 +49,7 @@
               Sample Name
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.name}}</mat-cell>
+           <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)"><b>{{sample.name}}</b></mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="type">
@@ -97,7 +97,14 @@
               Reference
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.reference}}</mat-cell>
+            <mat-cell *matCellDef="let sample">
+              <ng-container *ngIf="sample.reference.startsWith('http')">
+                <a href={{sample.reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+              </ng-container>
+              <ng-container *ngIf="!sample.reference.startsWith('http')">
+                {{sample.reference}}
+              </ng-container>
+            </mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="contact">
@@ -113,7 +120,14 @@
               Accession ID
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'accession_id'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.accession_id}}</mat-cell>
+            <mat-cell *matCellDef="let sample">
+              <ng-container *ngIf="sample.accession_id.startsWith('http')">
+                <a href={{sample.accession_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+              </ng-container>
+              <ng-container *ngIf="!sample.accession_id.startsWith('http')">
+                {{sample.accession_id}}
+              </ng-container>
+            </mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="accession_reference">
@@ -121,7 +135,14 @@
               Accession Ref
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'accession_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.accession_reference}}</mat-cell>
+            <mat-cell *matCellDef="let sample">
+              <ng-container *ngIf="sample.accession_reference.startsWith('http')">
+                <a href={{sample.accession_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+              </ng-container>
+              <ng-container *ngIf="!sample.accession_reference.startsWith('http')">
+                {{sample.accession_reference}}
+              </ng-container>
+            </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>

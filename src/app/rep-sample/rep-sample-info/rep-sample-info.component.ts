@@ -28,7 +28,7 @@ export class RepSampleInfoComponent implements OnInit {
     this.error = null;
 
     this.repseqService.getSampleInfoApi(this.species, this.dataset, this.sampleName).pipe(
-//      retryWithBackoff(),
+      retryWithBackoff(),
       catchError(error => {
         this.error.next(error);
         return([]);

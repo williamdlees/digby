@@ -10,7 +10,6 @@ import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
 import { Observable } from 'rxjs';
 import { columnInfo } from './gen-sample-panel-cols';
-import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { GenSampleInfoComponent } from '../gen-sample-info/gen-sample-info.component';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
@@ -159,7 +158,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     const modalRef = this.modalService.open(GenSampleInfoComponent, { size: 'xl'});
     modalRef.componentInstance.sampleName = sample.name;
     modalRef.componentInstance.species = this.selection.species;
-    modalRef.componentInstance.dataset = sample.dataset;
+    modalRef.componentInstance.studyName = sample.study_name;
   }
 }
 

@@ -12,5 +12,6 @@
    {id: 'strand', name: 'Strand', hidden: false},
    {id: 'frame', name: 'Frame', hidden: false},
    {id: 'refseq_name', name: 'Reference', hidden: false},
-   {id: 'sample_name', name: 'Sample', hidden: false},
+   {id: 'sample_count', name: 'Samples', hidden: false},
+   {id: 'appearances', name: 'Appearances', hidden: false},
 ];

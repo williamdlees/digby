@@ -14,6 +14,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { GenSampleInfoComponent } from '../gen-sample-info/gen-sample-info.component';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import {GenGeneSelectedService} from '../../gen-gene-table/gen-gene-selected.service';
+import {GenSampleSelectedService} from '../gen-sample-selected.service';
 
 
 @Component({
@@ -39,13 +40,15 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   filters = [];
   sorts = [];
   choices$: Observable<IChoices>;
+  choices$Subscription = null;
   selectedSequenceNames: string[] = [];
   isSelectedSamplesChecked = false;
 
   constructor(private genSampleService: GenomicService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
-              private genGeneSelectedService: GenGeneSelectedService
+              private genGeneSelectedService: GenGeneSelectedService,
+              private genSampleSelectedService: GenSampleSelectedService
               ) {
 
   }
@@ -57,6 +60,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   ngOnDestroy() {
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
+    this.choices$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -75,10 +79,23 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
             }
           );
 
+        this.choices$Subscription = this.dataSource.choices$.subscribe(
+          choices => {
+            if (this.filters.length > 0 && !this.isSelectedSamplesChecked) {
+              this.genSampleSelectedService.selection.next({ids: choices.id});
+            } else {
+              this.genSampleSelectedService.selection.next({ids: []});
+            }
+          }
+        );
+
         this.genGeneSelectedServiceSubscription = this.genGeneSelectedService.source.subscribe(
           selectedNames => {
             this.selectedSequenceNames = selectedNames.names;
-            this.onSelectedSamplesChange(null);
+
+            if (this.isSelectedSamplesChecked) {
+              this.onSelectedSamplesChange(null);
+            }
           }
         );
       });

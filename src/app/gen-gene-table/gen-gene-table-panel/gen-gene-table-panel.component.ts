@@ -14,6 +14,7 @@ import {Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import { GenGeneSelectedService } from '../gen-gene-selected.service'
+import {GenSampleSelectedService} from '../../gen-sample/gen-sample-selected.service';
 
 
 @Component({
@@ -29,7 +30,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: GeneSequenceDataSource;
 
-  displayedColumns = ['name', 'imgt_name', 'type', 'sequence', 'gapped_sequence'];
+  displayedColumns = [];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -39,11 +40,15 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
+  genSampleSelectedServiceSubscription = null;
+  selectedSampleIds: string[] = [];
+  isSelectedGenesChecked = false;
 
   constructor(private genomicService: GenomicService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
-              private genGeneSelectedService: GenGeneSelectedService) {
+              private genGeneSelectedService: GenGeneSelectedService,
+              private genSampleSelectedService: GenSampleSelectedService) {
   }
 
 
@@ -55,6 +60,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
     this.choices$Subscription.unsubscribe();
+    this.genSampleSelectedServiceSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -77,14 +83,42 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
         this.choices$Subscription = this.dataSource.choices$.subscribe(
           choices => {
-            if (this.filters.length > 0) {
+            if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
               this.genGeneSelectedService.selection.next({names: choices.name});
             } else {
               this.genGeneSelectedService.selection.next({names: []});
             }
           }
         );
+
+        this.genSampleSelectedServiceSubscription = this.genSampleSelectedService.source.subscribe(
+          selectedIds => {
+            this.selectedSampleIds = selectedIds.ids;
+
+            if (this.isSelectedGenesChecked) {
+              this.onSelectedIdsChange(null);
+            }
+          }
+        );
       });
+  }
+
+  onSelectedIdsChange(state) {
+    if (this.isSelectedGenesChecked && this.selectedSampleIds.length) {
+      this.applyFilter(
+        {
+          field: 'sample_id',
+          predicates: [{field: 'sample_id', op: 'in', value: this.selectedSampleIds}],
+          sort: {order: ''}
+        });
+    } else {
+      this.applyFilter(
+        {
+          field: 'sample_id',
+          predicates: [],
+          sort: {order: ''}
+        });
+    }
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {

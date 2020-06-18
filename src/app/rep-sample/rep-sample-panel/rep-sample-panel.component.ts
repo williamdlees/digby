@@ -15,7 +15,7 @@ import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.component';
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
-
+import { RepSampleSelectedService } from '../rep-sample-selected.service'
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -42,11 +42,14 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   choices$: Observable<IChoices>;
   selectedSequenceNames: string[] = [];
   isSelectedSamplesChecked = false;
+  choices$Subscription = null;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
-              private repGeneSelectedService: RepGeneSelectedService) {
+              private repGeneSelectedService: RepGeneSelectedService,
+              private repSampleSelectedService: RepSampleSelectedService
+              ) {
 
   }
 
@@ -57,6 +60,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   ngOnDestroy() {
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
+    this.choices$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -75,10 +79,23 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
             }
           );
 
+
+        this.choices$Subscription = this.dataSource.choices$.subscribe(
+          choices => {
+            if (this.filters.length > 0 && !this.isSelectedSamplesChecked) {
+              this.repSampleSelectedService.selection.next({ids: choices.id});
+            } else {
+              this.repSampleSelectedService.selection.next({ids: []});
+            }
+          }
+        );
+
         this.repGeneSelectedServiceSubscription = this.repGeneSelectedService.source.subscribe(
           selectedNames => {
             this.selectedSequenceNames = selectedNames.names;
-            this.onSelectedSamplesChange(null);
+            if (this.isSelectedSamplesChecked) {
+              this.onSelectedSamplesChange(null);
+            }
           }
         );
       });

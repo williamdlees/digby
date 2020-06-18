@@ -14,6 +14,7 @@ import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { RepGeneSelectedService } from '../rep-gene-selected.service';
+import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
 
 
 
@@ -39,11 +40,15 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
+  selectedSampleIds: string[] = [];
+  isSelectedGenesChecked = false;
+  repSampleSelectedServiceSubscription = null;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
-              private repGeneSelectedService: RepGeneSelectedService) {
+              private repGeneSelectedService: RepGeneSelectedService,
+              private repSampleSelectedService: RepSampleSelectedService) {
   }
 
   ngOnInit() {
@@ -54,6 +59,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
     this.choices$Subscription.unsubscribe();
+    this.repSampleSelectedServiceSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -76,14 +82,42 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
       this.choices$Subscription = this.dataSource.choices$.subscribe(
         choices => {
-          if (this.filters.length > 0) {
+          if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
             this.repGeneSelectedService.selection.next({names: choices.name});
           } else {
             this.repGeneSelectedService.selection.next({names: []});
           }
         }
       );
+
+      this.repSampleSelectedServiceSubscription = this.repSampleSelectedService.source.subscribe(
+        selectedIds => {
+          this.selectedSampleIds = selectedIds.ids;
+
+          if (this.isSelectedGenesChecked) {
+            this.onSelectedIdsChange(null);
+          }
+        }
+      );
     });
+  }
+
+  onSelectedIdsChange(state) {
+    if (this.isSelectedGenesChecked && this.selectedSampleIds.length) {
+      this.applyFilter(
+        {
+          field: 'sample_id',
+          predicates: [{field: 'sample_id', op: 'in', value: this.selectedSampleIds}],
+          sort: {order: ''}
+        });
+    } else {
+      this.applyFilter(
+        {
+          field: 'sample_id',
+          predicates: [],
+          sort: {order: ''}
+        });
+    }
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {

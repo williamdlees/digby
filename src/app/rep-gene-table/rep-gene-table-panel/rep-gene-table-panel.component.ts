@@ -1,7 +1,7 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../../gen-gene-table/gen-gene-table.model';
+import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
@@ -13,6 +13,9 @@ import {Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
+import { RepGeneSelectedService } from '../rep-gene-selected.service';
+import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
+
 
 
 @Component({
@@ -36,12 +39,17 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   filters = [];
   sorts = [];
   choices$: Observable<IChoices>;
+  choices$Subscription = null;
+  selectedSampleIds: string[] = [];
+  isSelectedGenesChecked = false;
+  repSampleSelectedServiceSubscription = null;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private repGeneSelectedService: RepGeneSelectedService,
+              private repSampleSelectedService: RepSampleSelectedService) {
   }
-
 
   ngOnInit() {
     this.dataSource = new RepSequenceDataSource(this.repseqService);
@@ -50,26 +58,66 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   ngOnDestroy() {
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
+    this.choices$Subscription.unsubscribe();
+    this.repSampleSelectedServiceSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
-      this.paginatorSubscription = this.paginator.page
-        .subscribe(() => this.loadSequencesPage());
+    this.paginatorSubscription = this.paginator.page
+      .subscribe(() => this.loadSequencesPage());
 
-      // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
-      setTimeout(() => {
-        this.geneTableServiceSubscription = this.geneTableService.source
-          .subscribe(
-            (sel: GeneTableSelection) => {
-              if (sel.species && sel.refSeqs) {
-                this.selection = sel;
-                this.paginator.firstPage();
-                this.table.renderRows();
-                this.loadSequencesPage();
-              }
+    // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
+    setTimeout(() => {
+      this.geneTableServiceSubscription = this.geneTableService.source
+        .subscribe(
+          (sel: GeneTableSelection) => {
+            if (sel.species && sel.repSeqs) {
+              this.selection = sel;
+              this.paginator.firstPage();
+              this.table.renderRows();
+              this.loadSequencesPage();
             }
-          );
-      });
+          }
+        );
+
+      this.choices$Subscription = this.dataSource.choices$.subscribe(
+        choices => {
+          if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
+            this.repGeneSelectedService.selection.next({names: choices.name});
+          } else {
+            this.repGeneSelectedService.selection.next({names: []});
+          }
+        }
+      );
+
+      this.repSampleSelectedServiceSubscription = this.repSampleSelectedService.source.subscribe(
+        selectedIds => {
+          this.selectedSampleIds = selectedIds.ids;
+
+          if (this.isSelectedGenesChecked) {
+            this.onSelectedIdsChange(null);
+          }
+        }
+      );
+    });
+  }
+
+  onSelectedIdsChange(state) {
+    if (this.isSelectedGenesChecked && this.selectedSampleIds.length) {
+      this.applyFilter(
+        {
+          field: 'sample_id',
+          predicates: [{field: 'sample_id', op: 'in', value: this.selectedSampleIds}],
+          sort: {order: ''}
+        });
+    } else {
+      this.applyFilter(
+        {
+          field: 'sample_id',
+          predicates: [],
+          sort: {order: ''}
+        });
+    }
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {
@@ -113,7 +161,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     if (this.selection) {
       this.dataSource.loadRepSequences(
         this.selection.species,
-        this.selection.refSeqs.join(),
+        this.selection.repSeqs.join(),
         JSON.stringify(this.filters),
         JSON.stringify(this.sorts),
         this.paginator.pageIndex,

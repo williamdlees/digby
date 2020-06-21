@@ -12,18 +12,30 @@
   </div>
 
   <div class="row">
-    <div class="col-md-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+    <div class="col-md-3" style="align-items: center; justify-content: flex-start; display: flex;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+          [disabled]="!selectedSequenceNames.length"
+          [(ngModel)]="isSelectedSamplesChecked"
+          (change)="(onSelectedSamplesChange(isSelectedSamplesChecked))"
+        >
+        <label class="form-check-label" for="chk-selected-items">
+          Only samples with selected alleles
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-2" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
       <button digby-table-column-sorter
          [(columns)]="displayedColumns"
          [columnInfo]="allColumns"
-         [saveName]="'example-table'"
-         (columnsChange)="updateColumnData($event)" >
-         <mat-icon class="primary-icon"  style="">view_column</mat-icon>
-        <span class="header-text">Arrange Columns</span>
+         [saveName]="'rep-sample-table'"
+         (columnsChange)="updateColumnData($event)" id="colbutton">
+         <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
       </button>
+        <label class="form-check-label" for="colbutton">Arrange Columns</label>
     </div>
-
-    <div class="col-md">
+    <div class="col-md-7">
       <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15" [pageSizeOptions]="[15, 50, 100, 250]"></mat-paginator>
     </div>
   </div>

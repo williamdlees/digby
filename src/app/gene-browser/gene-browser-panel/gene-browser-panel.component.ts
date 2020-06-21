@@ -1,7 +1,7 @@
 /* tslint:disable:only-arrow-functions */
 import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import { GeneTableSelection } from '../../gen-gene-table/gen-gene-table.model';
+import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {ActivatedRoute} from '@angular/router';
 import igv from 'src/assets/js/igv.js';

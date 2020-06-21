@@ -14,12 +14,12 @@
       <div class="input-group-prepend">
         <label class="input-group-text" for="selectSpecies">Genomic Sets</label>
       </div>
-      <ng-multiselect-dropdown
-        [settings] = dropdownSettings
+      <ng-multiselect-dropdown style="padding-left: 10px !important; padding-top: 7px !important;"
+        [settings] = genDropdownSettings
         [data] = refSeqs
         [(ngModel)] = selectedGen
         [placeholder] = "'Select Datasets'"
-        (ngModelChange)="genomicChange()"
+        (ngModelChange)="refSeqChange()"
       >
       </ng-multiselect-dropdown>
     </div>
@@ -29,8 +29,8 @@
       <div class="input-group-prepend">
         <label class="input-group-text" for="selectSpecies">RepSeq Sets</label>
       </div>
-      <ng-multiselect-dropdown
-        [settings] = dropdownSettings
+      <ng-multiselect-dropdown style="padding-left: 10px !important; padding-top: 7px !important;"
+        [settings] = repDropdownSettings
         [data] = repSeqs
         [(ngModel)] = selectedRep
         [placeholder] = "'Select Datasets'"

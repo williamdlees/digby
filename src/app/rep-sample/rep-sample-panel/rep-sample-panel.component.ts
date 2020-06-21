@@ -1,11 +1,11 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
-import { GeneTableSelection } from '../../gen-gene-table/gen-gene-table.model';
+import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
-import {RepSequenceDataSource} from '../rep-sequence.datasource';
+import {RepSampleDataSource} from '../rep-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
@@ -14,7 +14,8 @@ import { columnInfo } from './rep-sample-panel-cols';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.component';
-
+import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
+import { RepSampleSelectedService } from '../rep-sample-selected.service'
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -27,32 +28,39 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
-  dataSource: RepSequenceDataSource;
+  dataSource: RepSampleDataSource;
 
   displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'genotypes', 'haplotypes'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
   geneTableServiceSubscription = null;
+  repGeneSelectedServiceSubscription = null;
   filterModeEnum = FilterMode;
   filters = [];
   sorts = [];
   choices$: Observable<IChoices>;
+  selectedSequenceNames: string[] = [];
+  isSelectedSamplesChecked = false;
+  choices$Subscription = null;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
-              private modalService: NgbModal) {
+              private modalService: NgbModal,
+              private repGeneSelectedService: RepGeneSelectedService,
+              private repSampleSelectedService: RepSampleSelectedService
+              ) {
 
   }
 
   ngOnInit() {
-    this.dataSource = new RepSequenceDataSource(this.repseqService);
-
+    this.dataSource = new RepSampleDataSource(this.repseqService);
   }
 
   ngOnDestroy() {
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
+    this.choices$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -70,7 +78,45 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               this.loadSequencesPage();
             }
           );
+
+
+        this.choices$Subscription = this.dataSource.choices$.subscribe(
+          choices => {
+            if (this.filters.length > 0 && !this.isSelectedSamplesChecked) {
+              this.repSampleSelectedService.selection.next({ids: choices.id});
+            } else {
+              this.repSampleSelectedService.selection.next({ids: []});
+            }
+          }
+        );
+
+        this.repGeneSelectedServiceSubscription = this.repGeneSelectedService.source.subscribe(
+          selectedNames => {
+            this.selectedSequenceNames = selectedNames.names;
+            if (this.isSelectedSamplesChecked) {
+              this.onSelectedSamplesChange(null);
+            }
+          }
+        );
       });
+  }
+
+  onSelectedSamplesChange(state) {
+    if (this.isSelectedSamplesChecked && this.selectedSequenceNames.length) {
+      this.applyFilter(
+        {
+          field: 'allele',
+          predicates: [{field: 'allele', op: 'in', value: this.selectedSequenceNames}],
+          sort: {order: ''}
+        });
+    } else {
+      this.applyFilter(
+        {
+          field: 'allele',
+          predicates: [],
+          sort: {order: ''}
+        });
+    }
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {
@@ -112,7 +158,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
   loadSequencesPage() {
     if (this.selection) {
-      this.dataSource.loadRepSequences(this.selection.species,
+      this.dataSource.loadRepSamples(this.selection.species,
         this.selection.repSeqs.join(),
         this.paginator.pageIndex,
         this.paginator.pageSize,
@@ -133,14 +179,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 }
 
-function isSuperset(set, subset) {
-    for (const elem of subset) {
-        if (!set.has(elem)) {
-            return false;
-        }
-    }
-    return true;
-}
 
 function difference(setA, setB) {
     const diff = new Set(setA);

@@ -5,23 +5,38 @@
   </div>
 
   <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
-    <h4>Error loading table</h4>
-    <p>{{dataSource.error$ | async}}</p>
+    <div class="row">
+      <h4>Error loading table</h4>
+      <p>{{dataSource.error$ | async}}</p>
+    </div>
   </div>
 
   <div class="row">
-    <div class="col-md-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+    <div class="col-md-3" style="align-items: center; justify-content: flex-start; display: flex;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+          [disabled]="!selectedSampleIds.length"
+          [(ngModel)]="isSelectedGenesChecked"
+          (change)="(onSelectedIdsChange(isSelectedGenesChecked))"
+        >
+        <label class="form-check-label" for="chk-selected-items">
+          Only alleles present in selected samples
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-2" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
       <button digby-table-column-sorter
          [(columns)]="displayedColumns"
          [columnInfo]="allColumns"
-         [saveName]="'example-table'"
+         [saveName]="'gen-gene-table'"
          (columnsChange)="updateColumnData($event)" >
          <mat-icon class="primary-icon"  style="">view_column</mat-icon>
         <span class="header-text">Arrange Columns</span>
       </button>
     </div>
 
-    <div class="col-md">
+    <div class="col-md-7">
       <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15" [pageSizeOptions]="[15, 50, 100, 250]"></mat-paginator>
     </div>
   </div>
@@ -62,6 +77,17 @@
             <mat-cell *matCellDef="let sequence">
               <i *ngIf="sequence.novel" class="fa fa-check" style="line-height: inherit;"></i>
               <i *ngIf="!sequence.novel" class="fa fa-times" style="line-height: inherit;"></i>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="deleted">
+            <mat-header-cell *matHeaderCellDef>
+              Deleted
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'deleted'" [filterMode]="filterModeEnum.BOOL_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">
+              <i *ngIf="sequence.deleted" class="fa fa-check" style="line-height: inherit;"></i>
+              <i *ngIf="!sequence.deleted" class="fa fa-times" style="line-height: inherit;"></i>
             </mat-cell>
         </ng-container>
 
@@ -137,12 +163,20 @@
             <mat-cell *matCellDef="let sequence">{{sequence.refseq_name}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="refseq_sequence">
+        <ng-container matColumnDef="sample_count">
             <mat-header-cell *matHeaderCellDef>
-              Ref Seq
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              Samples
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sample_count'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" (click)="onCellClick(sequence, 'seq')">{{sequence.refseq_sequence | geneTrunc}}</mat-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.sample_count}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="appearances">
+            <mat-header-cell *matHeaderCellDef>
+              Appearances
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appearances'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence">{{sequence.appearances}}</mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

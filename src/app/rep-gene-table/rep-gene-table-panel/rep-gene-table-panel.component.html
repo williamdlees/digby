@@ -12,18 +12,31 @@
   </div>
 
   <div class="row">
-    <div class="col-md-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+    <div class="col-md-3" style="align-items: center; justify-content: flex-start; display: flex;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+          [disabled]="!selectedSampleIds.length"
+          [(ngModel)]="isSelectedGenesChecked"
+          (change)="(onSelectedIdsChange(isSelectedGenesChecked))"
+        >
+        <label class="form-check-label" for="chk-selected-items">
+          Only alleles present in selected samples
+        </label>
+      </div>
+    </div>
+
+    <div class="col-md-2" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
       <button digby-table-column-sorter
          [(columns)]="displayedColumns"
          [columnInfo]="allColumns"
-         [saveName]="'example-table'"
+         [saveName]="'rep-gene-table'"
          (columnsChange)="updateColumnData($event)" >
          <mat-icon class="primary-icon"  style="">view_column</mat-icon>
         <span class="header-text">Arrange Columns</span>
       </button>
     </div>
 
-    <div class="col-md">
+    <div class="col-md-7">
       <mat-paginator [length]="dataSource?.totalItems" [pageSize]="15" [pageSizeOptions]="[15, 50, 100, 250]"></mat-paginator>
     </div>
   </div>
@@ -64,7 +77,7 @@
             <mat-cell *matCellDef="let seq" >{{seq.similar}}</mat-cell>
         </ng-container>
 
-         <ng-container matColumnDef="appears">
+         <ng-container matColumnDef="appears" >
             <mat-header-cell *matHeaderCellDef>
               Appearances
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appears'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -115,7 +128,7 @@
 
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
 
-        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns" ></mat-row>
 
       </mat-table>
       </div>

@@ -3,6 +3,7 @@
    {id: 'imgt_name', name: 'IMGT Name', hidden: false},
    {id: 'type', name: 'Type', hidden: false},
    {id: 'novel', name: 'Novel', hidden: false},
+   {id: 'deleted', name: 'Deleted', hidden: false},
    {id: 'sequence', name: 'Sequence', hidden: false},
    {id: 'gapped_sequence', name: 'Gapped', hidden: false},
    {id: 'feature', name: 'Feature', hidden: false},
@@ -12,5 +13,6 @@
    {id: 'strand', name: 'Strand', hidden: false},
    {id: 'frame', name: 'Frame', hidden: false},
    {id: 'refseq_name', name: 'Reference', hidden: false},
-   {id: 'refseq_sequence', name: 'Ref Sequence', hidden: false},
+   {id: 'sample_count', name: 'Samples', hidden: false},
+   {id: 'appearances', name: 'Appearances', hidden: false},
 ];

@@ -189,13 +189,13 @@
           IGenotyper Report
         </div>
         <div class="row ml-4 mr-2 mb-0 align-middle">
-          Genotype Analysis<span>&nbsp;&nbsp;</span><a href={{sample.report}} target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          Genotype Analysis<span>&nbsp;&nbsp;</span><a href="{{sample.report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
         </div>
         <div class="row ml-4 mr-2 mb-1">
           Haplotype<span>&nbsp;&nbsp;</span>
-          <a href={{sample.hap_report}} target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          <a href="{{sample.hap_report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
           <span>&nbsp;&nbsp;</span>
-          <a href={{sample.hap_report}} download="haplotype.txt"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          <a href="{{sample.hap_report.encodeURI}}" download="{{sample.name + '_haplotype.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
         </div>
       </div>
     </ng-template>

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { GenomicService } from './api/genomic.service';
+import { ReportsService } from './api/reports.service';
 import { RepseqService } from './api/repseq.service';
 
 @NgModule({
@@ -12,6 +13,7 @@ import { RepseqService } from './api/repseq.service';
   exports:      [],
   providers: [
     GenomicService,
+    ReportsService,
     RepseqService ]
 })
 export class ApiModule {

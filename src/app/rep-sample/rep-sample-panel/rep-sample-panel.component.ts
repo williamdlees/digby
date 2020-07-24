@@ -16,6 +16,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.component';
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
 import { RepSampleSelectedService } from '../rep-sample-selected.service'
+import {RepSampleFilterService} from '../rep-sample-filter.service';
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -48,7 +49,8 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private repGeneSelectedService: RepGeneSelectedService,
-              private repSampleSelectedService: RepSampleSelectedService
+              private repSampleSelectedService: RepSampleSelectedService,
+              private repSampleFilterService: RepSampleFilterService
               ) {
 
   }
@@ -142,6 +144,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.sorts.push(columnPredicate.sort);
     }
 
+    this.repSampleFilterService.selection.next({filters: this.filters});
     this.loadSequencesPage();
   }
 

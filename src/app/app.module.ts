@@ -46,6 +46,8 @@ import { GenSamplePanelComponent } from './gen-sample/gen-sample-panel/gen-sampl
 import {ObserversModule} from '@angular/cdk/observers';
 import {CustomReuseStrategy} from './shared/route-reuse-strategy';
 import { GenSampleInfoComponent } from './gen-sample/gen-sample-info/gen-sample-info.component';
+import { ReportsComponent } from './reports/reports.component';
+import { ReportParamsDialogComponent } from './reports/report-params-dialog/report-params-dialog.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -61,7 +63,8 @@ const appRoutes: Routes = [
   { path: 'genetable', component: GenGeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
   { path: 'samplerep', component: RepSampleComponent },
-  { path: 'generep', component: RepGeneTableComponent }
+  { path: 'generep', component: RepGeneTableComponent },
+  { path: 'reports', component: ReportsComponent }
 ];
 
 @NgModule({
@@ -86,6 +89,8 @@ const appRoutes: Routes = [
     GenSampleComponent,
     GenSamplePanelComponent,
     GenSampleInfoComponent,
+    ReportsComponent,
+    ReportParamsDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +113,7 @@ const appRoutes: Routes = [
     MatCheckboxModule,
     DragDropModule,
     MatCardModule,
-    ObserversModule
+    ObserversModule,
   ],
   providers: [
     RequestCache,

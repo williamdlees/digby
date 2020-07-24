@@ -1,0 +1,36 @@
+<app-gene-table-selector [showGenomic] = true [showRepseq]=true></app-gene-table-selector>
+<div>
+  <h2>Reporting against AIRR-seq Sample Data</h2>
+  <mat-table [dataSource]="repListDataSource">
+    <ng-container matColumnDef="title">
+      <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
+      <mat-cell *matCellDef="let rep"> {{rep.title}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="description">
+      <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+      <mat-cell *matCellDef="let rep"> {{rep.description}} </mat-cell>
+    </ng-container>
+    <ng-container  matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-cell *matCellDef="let rep">
+        <ng-container *ngIf="rep.format.indexOf('pdf') >= 0">
+          <button class="btn btn-sm btn-solid-icon" (click)="runReport(rep, 'pdf')">
+            <i class="fa fa-file-pdf-o" style="line-height: inherit;"></i>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="rep.format.indexOf('html') >= 0">
+          <button class="btn btn-sm btn-solid-icon" (click)="runReport(rep, 'html')">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="rep.format.indexOf('xls') >= 0">
+          <button class="btn btn-sm btn-solid-icon" (click)="runReport(rep, 'xls')">
+            <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
+          </button>
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</div>

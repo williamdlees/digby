@@ -15,6 +15,7 @@ import { GenSampleInfoComponent } from '../gen-sample-info/gen-sample-info.compo
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import {GenGeneSelectedService} from '../../gen-gene-table/gen-gene-selected.service';
 import {GenSampleSelectedService} from '../gen-sample-selected.service';
+import {GenSampleFilterService} from '../gen-sample-filter.service';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private genGeneSelectedService: GenGeneSelectedService,
-              private genSampleSelectedService: GenSampleSelectedService
+              private genSampleSelectedService: GenSampleSelectedService,
+              private genSampleFilterService: GenSampleFilterService
               ) {
 
   }
@@ -142,6 +144,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.sorts.push(columnPredicate.sort);
     }
 
+    this.genSampleFilterService.selection.next({filters: this.filters});
     this.loadSequencesPage();
   }
 

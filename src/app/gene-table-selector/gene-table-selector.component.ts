@@ -141,13 +141,13 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         id = id + 1;
       }
 
-      // for testing
+      /* for testing
       this.refSeqs.push({ id, text: 'Test'});
 
       if (selectedNames && selectedNames.indexOf('Test') >= 0) {
         this.selectedGen.push({id, text: 'Test'});
       }
-      // end of testing block
+      // end of testing block */
 
 
       if (this.selectedGen.length === 0 && this.refSeqs.length > 0) {
@@ -185,12 +185,13 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
         id = id + 1;
       }
-      // for testing
+      /* for testing
       this.repSeqs.push({ id, text: 'Test'});
 
       if (selectedNames.indexOf('Test') >= 0) {
         this.selectedRep.push({ id, text: 'Test'});
        }
+       end of testing block */
 
       if (this.selectedRep.length === 0 && this.repSeqs.length > 0) {
         this.selectedRep.push(this.repSeqs[0]);

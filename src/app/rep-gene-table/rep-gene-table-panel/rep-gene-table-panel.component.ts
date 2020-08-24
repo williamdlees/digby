@@ -15,6 +15,7 @@ import {ColumnPredicate} from '../../table/filter/column-predicate';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { RepGeneSelectedService } from '../rep-gene-selected.service';
 import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
+import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component';
 
 
 
@@ -171,6 +172,12 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     }
 
     this.lastLoadedColumns = this.displayedColumns;
+  }
+
+  showNotes(seq) {
+    const modalRef = this.modalService.open(RepGeneNotesComponent, { size: 'lg'});
+    modalRef.componentInstance.sequenceName = seq.name;
+    modalRef.componentInstance.notes = seq.notes;
   }
 
   onCellClick(seq, type) {

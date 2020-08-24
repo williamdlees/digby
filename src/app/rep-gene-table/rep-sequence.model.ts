@@ -9,6 +9,9 @@ export interface RepSequence {
     low_confidence: boolean;
     novel: boolean;
     max_kdiff: number;
+    dataset: string;
+    note_count: number;
+    notes: string;
   }];
   total_items: number;
   page_size: number;

@@ -48,6 +48,8 @@ import {CustomReuseStrategy} from './shared/route-reuse-strategy';
 import { GenSampleInfoComponent } from './gen-sample/gen-sample-info/gen-sample-info.component';
 import { ReportsComponent } from './reports/reports.component';
 import { ReportParamsDialogComponent } from './reports/report-params-dialog/report-params-dialog.component';
+import { RepGeneNotesComponent } from './rep-gene-table/rep-gene-notes/rep-gene-notes.component';
+import { SafePipe } from './safe.pipe';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -91,6 +93,8 @@ const appRoutes: Routes = [
     GenSampleInfoComponent,
     ReportsComponent,
     ReportParamsDialogComponent,
+    RepGeneNotesComponent,
+    SafePipe,
   ],
   imports: [
     BrowserModule,

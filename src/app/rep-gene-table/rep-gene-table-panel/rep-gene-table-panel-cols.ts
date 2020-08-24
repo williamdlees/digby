@@ -8,4 +8,6 @@
    {id: 'low_confidence', name: 'Low Confidence', hidden: false},
    {id: 'novel', name: 'Novel', hidden: false},
    {id: 'max_kdiff', name: 'Max kDiff', hidden: false},
+   {id: 'dataset', name: 'Dataset', hidden: false},
+   {id: 'notes_count', name: 'Notes', hidden: false},
 ];

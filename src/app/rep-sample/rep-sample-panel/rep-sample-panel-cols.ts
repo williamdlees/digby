@@ -37,4 +37,5 @@
    {id: 'helix', name: 'Helix', hidden: true},
    {id: 'genotypes', name: 'Genotype', hidden: false},
    {id: 'haplotypes', name: 'Haplotypes', hidden: false},
+   {id: 'dataset', name: 'Dataset', hidden: false},
  ];

@@ -126,6 +126,26 @@
             <mat-cell *matCellDef="let seq" >{{seq.max_kdiff}}</mat-cell>
         </ng-container>
 
+         <ng-container matColumnDef="dataset">
+            <mat-header-cell *matHeaderCellDef>
+              Dataset
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'dataset'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let seq" >{{seq.dataset}}</mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="notes_count">
+            <mat-header-cell *matHeaderCellDef>
+              Notes
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'notes_count'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let seq" (click)="showNotes(seq)">
+              <button class="btn btn-sm btn-solid-icon" >
+                {{seq.notes_count}}
+              </button>
+            </mat-cell>
+        </ng-container>
+
         <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
 
         <mat-row *matRowDef="let row; columns: displayedColumns" ></mat-row>
@@ -134,4 +154,3 @@
       </div>
   </div>
 </div>
-

@@ -34,7 +34,6 @@ export class RepSampleInfoComponent implements OnInit {
         return([]);
       }),
       finalize(() => {
-        console.log('component finalised');
         this.loading = false;
       })
     )

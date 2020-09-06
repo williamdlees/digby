@@ -50,6 +50,8 @@ import { ReportsComponent } from './reports/reports.component';
 import { ReportParamsDialogComponent } from './reports/report-params-dialog/report-params-dialog.component';
 import { RepGeneNotesComponent } from './rep-gene-table/rep-gene-notes/rep-gene-notes.component';
 import { SafePipe } from './safe.pipe';
+import { ResizableModule } from 'angular-resizable-element';
+import {MatRippleModule} from '@angular/material/core';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -118,6 +120,7 @@ const appRoutes: Routes = [
     DragDropModule,
     MatCardModule,
     ObserversModule,
+    ResizableModule,
   ],
   providers: [
     RequestCache,

@@ -44,12 +44,15 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   @Input()
   columnInfo: ColumnInfo[];
 
+  private initialColumnInfo: ColumnInfo[];
+
   constructor(private elementRef: ElementRef, private columnSorterService: ColumnSorterService) {}
 
   ngOnInit() {
     const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName);
     const sNew = new Set(this.columnInfo.map((x) => x.name));
     const sSaved = new Set(savedInfo.map((x) => x.name));
+    this.initialColumnInfo = this.columnInfo;
 
     if (!symmetricDifference(sNew, sSaved).size) {
       this.columnInfo = savedInfo;
@@ -70,6 +73,11 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   toggleSelectedColumn(columnId: string) {
     const colFound = this.columnInfo.find(col => col.id === columnId);
     colFound.hidden = !colFound.hidden;
+    this.emitColumns(true);
+  }
+
+  onResetColumns() {
+    this.columnInfo = this.initialColumnInfo;
     this.emitColumns(true);
   }
 

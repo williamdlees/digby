@@ -1,5 +1,6 @@
  export const columnInfo = [
    {id: 'name', name: 'Name', hidden: false},
+   {id: 'pipeline_name', name: 'Primer Name', hidden: false},
    {id: 'seq', name: 'Sequence', hidden: false},
    {id: 'seq_len', name: 'Seq Length', hidden: false},
    {id: 'similar', name: 'Similar', hidden: false},

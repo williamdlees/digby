@@ -15,13 +15,16 @@ import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import { GenGeneSelectedService } from '../gen-gene-selected.service'
 import {GenSampleSelectedService} from '../../gen-sample/gen-sample-selected.service';
+import { ResizeEvent } from 'angular-resizable-element';
+import { TableParamsStorageService } from '../../table/table-params-storage-service';
 
 
 @Component({
   selector: 'app-gene-table-panel',
   templateUrl: './gen-gene-table-panel.component.html',
   styleUrls: ['./gen-gene-table-panel.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+  encapsulation: ViewEncapsulation.None,   // needed for css styling on mat-menu-panel
+  providers: [TableParamsStorageService],
 })
 
 export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -43,11 +46,13 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   genSampleSelectedServiceSubscription = null;
   selectedSampleIds: string[] = [];
   isSelectedGenesChecked = false;
+  resizeEvents = new Map();
 
   constructor(private genomicService: GenomicService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private genGeneSelectedService: GenGeneSelectedService,
+              private tableParamsStorageService: TableParamsStorageService,
               private genSampleSelectedService: GenSampleSelectedService) {
   }
 
@@ -180,6 +185,30 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       modalRef.componentInstance.content = seq.sequence;
     } else {
       modalRef.componentInstance.content = seq.gapped_sequence;
+    }
+  }
+
+  onResizeEnd(event: ResizeEvent, columnName): void {
+    if (event.edges.right) {
+      const cssValue = event.rectangle.width + 'px';
+      this.updateColumnWidth(columnName, cssValue);
+      this.resizeEvents.set(columnName, cssValue);
+      this.tableParamsStorageService.saveInfo(this.resizeEvents, 'gen-gene-table-widths');
+    }
+  }
+
+  applyResizes(): void {
+    for (const [columnName, cssValue] of this.resizeEvents) {
+      this.updateColumnWidth(columnName, cssValue);
+    }
+  }
+
+  updateColumnWidth(columnName: string, cssValue: string) {
+    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < columnElts.length; i++) {
+      const currentEl = columnElts[i] as HTMLDivElement;
+      currentEl.style.width = cssValue;
     }
   }
 }

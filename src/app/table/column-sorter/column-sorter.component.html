@@ -3,6 +3,10 @@
 </button>
 <mat-menu #columnMenu="matMenu">
     <div class="digby-table-dragable-container" cdkDropList dkDropListLockAxis="y" cdkDropListOrientation="vertical">
+        <button digby-table-column-clear id="col-clear-button" style="border-width: 0px !important;" (click)="onResetColumns()">
+          <mat-icon class="primary-icon"  style="padding-left: 0px !important;">clear</mat-icon>
+        </button>
+        <label class="form-check-label" for="col-clear-button">Reset Columns</label>
         <div class="dragable-row"
             *ngFor="let column of columnInfo; let i = index"
             cdkDrag

@@ -21,7 +21,7 @@ import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.mod
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<string>;
-  displayedColumns = ['title', 'description', 'actions'];
+  displayedColumns = ['thumbnail', 'title', 'description', 'actions'];
   geneTableServiceSubscription = null;
   geneTableSelection: GeneTableSelection = null;
   genSampleFilterSubscription = null;

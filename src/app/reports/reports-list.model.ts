@@ -2,6 +2,7 @@ export interface ReportList {
   name: string;
   title: string;
   description: string;
+  thumbnail: string;
   params: {
     [index: string]: string
   };

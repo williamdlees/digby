@@ -65,6 +65,7 @@ export class ReportsListDataSource implements DataSource<ReportList> {
               name,
               title: reportList[name].title,
               description: reportList[name].description,
+              thumbnail: reportList[name].thumbnail,
               params: reportList[name].params,
               filter_params: reportList[name].filter_params,
               scope: reportList[name].scope,

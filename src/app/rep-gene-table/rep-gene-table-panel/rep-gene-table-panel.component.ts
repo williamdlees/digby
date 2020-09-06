@@ -16,13 +16,15 @@ import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { RepGeneSelectedService } from '../rep-gene-selected.service';
 import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
 import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component';
-
+import { ResizeEvent } from 'angular-resizable-element';
+import {TableParamsStorageService} from '../../table/table-params-storage-service';
 
 
 @Component({
   selector: 'app-rep-gene-table-panel',
   templateUrl: './rep-gene-table-panel.component.html',
   styleUrls: ['./rep-gene-table-panel.component.css'],
+  providers: [TableParamsStorageService],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
 export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -31,7 +33,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: RepSequenceDataSource;
 
-  displayedColumns = ['name', 'seq', 'seq_len', 'similar', 'appears', 'is_single_allele', 'low_confidence', 'novel', 'max_kdiff'];
+  displayedColumns = ['name', 'pipeline_name', 'seq', 'seq_len', 'similar', 'appears', 'is_single_allele', 'low_confidence', 'novel', 'max_kdiff'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -41,18 +43,22 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
+  loading$Subscription = null;
   selectedSampleIds: string[] = [];
   isSelectedGenesChecked = false;
   repSampleSelectedServiceSubscription = null;
+  resizeEvents = new Map();
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private repGeneSelectedService: RepGeneSelectedService,
-              private repSampleSelectedService: RepSampleSelectedService) {
+              private repSampleSelectedService: RepSampleSelectedService,
+              private tableParamsStorageService: TableParamsStorageService) {
   }
 
   ngOnInit() {
+    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'rep-gene-table-widths');
     this.dataSource = new RepSequenceDataSource(this.repseqService);
   }
 
@@ -87,6 +93,14 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
             this.repGeneSelectedService.selection.next({names: choices.name});
           } else {
             this.repGeneSelectedService.selection.next({names: []});
+          }
+        }
+      );
+
+      this.loading$Subscription = this.dataSource.loading$.subscribe(
+        loading => {
+          if (!loading) {
+            this.applyResizes();
           }
         }
       );
@@ -175,7 +189,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   showNotes(seq) {
-    const modalRef = this.modalService.open(RepGeneNotesComponent, { size: 'lg'});
+    const modalRef = this.modalService.open(RepGeneNotesComponent, {size: 'lg'});
     modalRef.componentInstance.sequenceName = seq.name;
     modalRef.componentInstance.notes = seq.notes;
   }
@@ -186,6 +200,30 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
     if (type === 'seq') {
       modalRef.componentInstance.content = seq.seq;
+    }
+  }
+
+  onResizeEnd(event: ResizeEvent, columnName): void {
+    if (event.edges.right) {
+      const cssValue = event.rectangle.width + 'px';
+      this.updateColumnWidth(columnName, cssValue);
+      this.resizeEvents.set(columnName, cssValue);
+      this.tableParamsStorageService.saveInfo(this.resizeEvents, 'rep-gene-table-widths');
+    }
+  }
+
+  applyResizes(): void {
+    for (const [columnName, cssValue] of this.resizeEvents) {
+      this.updateColumnWidth(columnName, cssValue);
+    }
+  }
+
+  updateColumnWidth(columnName: string, cssValue: string) {
+    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < columnElts.length; i++) {
+      const currentEl = columnElts[i] as HTMLDivElement;
+      currentEl.style.width = cssValue;
     }
   }
 }

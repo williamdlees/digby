@@ -1,30 +1,44 @@
 <app-gene-table-selector [showGenomic] = true [showRepseq]=true></app-gene-table-selector>
 <div>
-  <h2>Reporting against AIRR-seq Sample Data</h2>
+  <h2>VDJbase Reports</h2>
+  <p>.Some reports run
+    just against AIRR-Seq or genomic data, while some will run on both. Please select above the species and datasets on which you would like to report. You can
+    further refine the samples against which the reports will run by using the filters on the Samples tabs to display just those samples that you wish to be included.
+    To run a report, click on an icon in the Run column corresponding to the output format that you would like (e.g. pdf, on-screen, Excel)</p>
+
+  <h2>Reports using just AIRR-seq Sample Data</h2>
   <mat-table [dataSource]="repListDataSource">
     <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef> Title </mat-header-cell>
-      <mat-cell *matCellDef="let rep"> {{rep.title}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <mat-cell *matCellDef="let rep"> <b>{{rep.title}}</b> </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="thumbnail">
+      <mat-header-cell *matHeaderCellDef> Thumbnail </mat-header-cell>
+      <mat-cell *matCellDef="let rep">
+        <div *ngIf="rep.thumbnail">
+          <img src='{{rep.thumbnail}}' height='100'>
+        </div>
+      </mat-cell>
     </ng-container>
     <ng-container matColumnDef="description">
       <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
       <mat-cell *matCellDef="let rep"> {{rep.description}} </mat-cell>
     </ng-container>
     <ng-container  matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> Run </mat-header-cell>
       <mat-cell *matCellDef="let rep">
         <ng-container *ngIf="rep.format.indexOf('pdf') >= 0">
-          <button class="btn btn-sm btn-solid-icon" (click)="runReport(rep, 'pdf')">
+          <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'pdf')">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;"></i>
           </button>
         </ng-container>
         <ng-container *ngIf="rep.format.indexOf('html') >= 0">
-          <button class="btn btn-sm btn-solid-icon" (click)="runReport(rep, 'html')">
+          <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'html')">
             <i class="fa fa-desktop" style="line-height: inherit;"></i>
           </button>
         </ng-container>
         <ng-container *ngIf="rep.format.indexOf('xls') >= 0">
-          <button class="btn btn-sm btn-solid-icon" (click)="runReport(rep, 'xls')">
+          <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
             <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
           </button>
         </ng-container>

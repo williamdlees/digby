@@ -16,12 +16,15 @@ import { GenomicService } from '../../../../dist/digby-swagger-client';
 import {GenGeneSelectedService} from '../../gen-gene-table/gen-gene-selected.service';
 import {GenSampleSelectedService} from '../gen-sample-selected.service';
 import {GenSampleFilterService} from '../gen-sample-filter.service';
+import { ResizeEvent } from 'angular-resizable-element';
+import {TableParamsStorageService} from '../../table/table-params-storage-service';
 
 
 @Component({
   selector: 'app-gen-sample-panel',
   templateUrl: './gen-sample-panel.component.html',
   styleUrls: ['./gen-sample-panel.component.css'],
+  providers: [TableParamsStorageService],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
 
@@ -44,13 +47,15 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   choices$Subscription = null;
   selectedSequenceNames: string[] = [];
   isSelectedSamplesChecked = false;
+  resizeEvents = new Map();
 
   constructor(private genSampleService: GenomicService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private genGeneSelectedService: GenGeneSelectedService,
               private genSampleSelectedService: GenSampleSelectedService,
-              private genSampleFilterService: GenSampleFilterService
+              private genSampleFilterService: GenSampleFilterService,
+              private tableParamsStorageService: TableParamsStorageService
               ) {
 
   }
@@ -179,6 +184,30 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     modalRef.componentInstance.sampleName = sample.name;
     modalRef.componentInstance.species = this.selection.species;
     modalRef.componentInstance.studyName = sample.study_name;
+  }
+
+  onResizeEnd(event: ResizeEvent, columnName): void {
+    if (event.edges.right) {
+      const cssValue = event.rectangle.width + 'px';
+      this.updateColumnWidth(columnName, cssValue);
+      this.resizeEvents.set(columnName, cssValue);
+      this.tableParamsStorageService.saveInfo(this.resizeEvents, 'rep-sample-table-widths');
+    }
+  }
+
+  applyResizes(): void {
+    for (const [columnName, cssValue] of this.resizeEvents) {
+      this.updateColumnWidth(columnName, cssValue);
+    }
+  }
+
+  updateColumnWidth(columnName: string, cssValue: string) {
+    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < columnElts.length; i++) {
+      const currentEl = columnElts[i] as HTMLDivElement;
+      currentEl.style.width = cssValue;
+    }
   }
 }
 

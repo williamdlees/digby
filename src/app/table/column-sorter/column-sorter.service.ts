@@ -20,6 +20,9 @@ export class ColumnSorterService {
       if (loadedInfo) {
         return JSON.parse(loadedInfo);
       }
+      if (saveName) {
+        this.saveColumnInfo(columnInfo, saveName);
+      }
       this.saveColumnInfo(columnInfo);
       return columnInfo;
     }

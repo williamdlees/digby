@@ -45,6 +45,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
+  loading$Subscription = null;
   selectedSequenceNames: string[] = [];
   isSelectedSamplesChecked = false;
   resizeEvents = new Map();
@@ -61,6 +62,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   ngOnInit() {
+    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'gen-sample-table-widths');
     this.dataSource = new GenSampleDataSource(this.genSampleService);
   }
 
@@ -92,6 +94,14 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               this.genSampleSelectedService.selection.next({ids: choices.id});
             } else {
               this.genSampleSelectedService.selection.next({ids: []});
+            }
+          }
+        );
+
+        this.loading$Subscription = this.dataSource.loading$.subscribe(
+          loading => {
+            if (!loading) {
+              this.applyResizes();
             }
           }
         );

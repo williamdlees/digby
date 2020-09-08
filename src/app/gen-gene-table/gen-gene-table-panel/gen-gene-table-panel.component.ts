@@ -43,6 +43,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
+  loading$Subscription = null;
   genSampleSelectedServiceSubscription = null;
   selectedSampleIds: string[] = [];
   isSelectedGenesChecked = false;
@@ -58,6 +59,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
 
   ngOnInit() {
+    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'gen-gene-table-widths');
     this.dataSource = new GeneSequenceDataSource(this.genomicService);
   }
 
@@ -86,12 +88,28 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
             }
           );
 
+        this.loading$Subscription = this.dataSource.loading$.subscribe(
+          loading => {
+            if (!loading) {
+              this.applyResizes();
+            }
+          }
+        );
+
         this.choices$Subscription = this.dataSource.choices$.subscribe(
           choices => {
             if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
               this.genGeneSelectedService.selection.next({names: choices.name});
             } else {
               this.genGeneSelectedService.selection.next({names: []});
+            }
+          }
+        );
+
+        this.loading$Subscription = this.dataSource.loading$.subscribe(
+          loading => {
+            if (!loading) {
+              this.applyResizes();
             }
           }
         );

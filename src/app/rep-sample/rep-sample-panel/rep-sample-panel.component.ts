@@ -47,6 +47,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   selectedSequenceNames: string[] = [];
   isSelectedSamplesChecked = false;
   choices$Subscription = null;
+  loading$Subscription = null;
   resizeEvents = new Map();
 
   constructor(private repseqService: RepseqService,
@@ -61,6 +62,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   ngOnInit() {
+    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'rep-sample-table-widths');
     this.dataSource = new RepSampleDataSource(this.repseqService);
   }
 
@@ -93,6 +95,14 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               this.repSampleSelectedService.selection.next({ids: choices.id});
             } else {
               this.repSampleSelectedService.selection.next({ids: []});
+            }
+          }
+        );
+
+        this.loading$Subscription = this.dataSource.loading$.subscribe(
+          loading => {
+            if (!loading) {
+              this.applyResizes();
             }
           }
         );

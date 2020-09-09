@@ -37,6 +37,7 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Input() showTextFilter = true;
+  @Input() showSort = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   selectedOperator: Operator;

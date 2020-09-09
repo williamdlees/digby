@@ -467,8 +467,8 @@
             <span>&nbsp;&nbsp;</span>Not available
           </ng-container>
         </div>
-        <div class="row ml-4 mr-2 mb-1">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/31173062">Rabhit</a><span>&nbsp;</span>report
+        <div class="row ml-4 mr-2 mb-4">
+          RabHIT report
           <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length > 0">
             <span>&nbsp;&nbsp;</span>
             <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['rabhit'] }}" download="{{ sample.name + '_rabhit.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
@@ -476,6 +476,13 @@
           <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length === 0">
             <span>&nbsp;&nbsp;</span>Not available
           </ng-container>
+        </div>
+        <div class="row ml-1 mr-2 mb-1">
+          RAbHIT documentation
+          <span>&nbsp;&nbsp;</span>
+          <a href="https://pubmed.ncbi.nlm.nih.gov/31173062">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </a>
         </div>
       </div>
     </ng-template>
@@ -492,7 +499,7 @@
         <div class="row ml-1 mr-2 mb-1">
           Inferred genotype
         </div>
-        <div class="row ml-4 mr-2 mb-0 align-middle">
+        <div class="row ml-4 mr-2 mb-1">
           Genotype Analysis
           <ng-container *ngIf="sample.genotypes['analysis_pdf'].length > 0">
             <span>&nbsp;&nbsp;</span>
@@ -505,7 +512,7 @@
           </ng-container>
         </div>
         <div class="row ml-4 mr-2 mb-1">
-          <a href="https://pubmed.ncbi.nlm.nih.gov/30814994">TIgGER</a><span>&nbsp;</span>report
+          TIgGER report
           <span>&nbsp;&nbsp;</span>
           <ng-container *ngIf="sample.genotypes['tigger'].length > 0">
             <a href="{{ sample.genotypes['path']+sample.genotypes['tigger'] }}" download="{{ sample.name + '_tigger.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
@@ -515,7 +522,7 @@
           </ng-container>
         </div>
         <div class="row ml-4 mr-2 mb-1">
-          <a href="https://github.com/airr-community/ogrdbstats">OGRDBStats</a><span>&nbsp;</span>report
+          OGRDBStats report
           <span>&nbsp;&nbsp;</span>
           <ng-container *ngIf="sample.genotypes['ogrdbstats'].length > 0">
             <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbstats'] }}" download="{{ sample.name + '_ogrdbstats.csv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
@@ -523,6 +530,30 @@
           <ng-container *ngIf="sample.genotypes['ogrdbstats'].length === 0">
             <span>&nbsp;&nbsp;</span>Not available
           </ng-container>
+        </div>
+        <div class="row ml-4 mr-2 mb-4">
+           OGRDBStats plots
+          <span>&nbsp;&nbsp;</span>
+          <ng-container *ngIf="sample.genotypes['ogrdbplot'].length > 0">
+            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf" style="line-height: inherit;"></i></a>
+          </ng-container>
+          <ng-container *ngIf="sample.genotypes['ogrdbplot'].length === 0">
+            <span>&nbsp;&nbsp;</span>Not available
+          </ng-container>
+        </div>
+        <div class="row ml-1 mr-2 mb-1">
+          TIgGER documentation
+          <span>&nbsp;&nbsp;</span>
+          <a href="https://pubmed.ncbi.nlm.nih.gov/30814994">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </a>
+        </div>
+        <div class="row ml-1 mr-2 mb-1">
+          OGRDBstats documentation
+          <span>&nbsp;&nbsp;</span>
+          <a href="https://github.com/airr-community/ogrdbstats">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </a>
         </div>
       </div>
     </ng-template>

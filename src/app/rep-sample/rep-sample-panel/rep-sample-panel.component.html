@@ -535,7 +535,7 @@
            OGRDBStats plots
           <span>&nbsp;&nbsp;</span>
           <ng-container *ngIf="sample.genotypes['ogrdbplot'].length > 0">
-            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf" style="line-height: inherit;"></i></a>
+            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
           </ng-container>
           <ng-container *ngIf="sample.genotypes['ogrdbplot'].length === 0">
             <span>&nbsp;&nbsp;</span>Not available

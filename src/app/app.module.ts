@@ -52,6 +52,7 @@ import { RepGeneNotesComponent } from './rep-gene-table/rep-gene-notes/rep-gene-
 import { SafePipe } from './safe.pipe';
 import { ResizableModule } from 'angular-resizable-element';
 import {MatRippleModule} from '@angular/material/core';
+import { ReportErrorDialogComponent } from './reports/report-error-dialog/report-error-dialog.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -97,6 +98,7 @@ const appRoutes: Routes = [
     ReportParamsDialogComponent,
     RepGeneNotesComponent,
     SafePipe,
+    ReportErrorDialogComponent,
   ],
   imports: [
     BrowserModule,

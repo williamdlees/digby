@@ -402,7 +402,7 @@
               Genotype
             </mat-header-cell>
             <mat-cell *matCellDef="let sample" class="small-col">
-              <button class="btn btn-sm btn-solid-icon" style=""[matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: sample}">
+              <button class="btn btn-sm btn-solid-icon" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: sample}">
                 <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
               </button>
             </mat-cell>
@@ -418,7 +418,7 @@
             <div *ngIf="sample.haplotypes">
               <div *ngFor="let h of sample.haplotypes | keyvalue">
                 <ng-container *ngIf="h.key !== 'path'">
-                  <button class="btn btn-secondary btn-sm" [matMenuTriggerFor]="haploMenu" [matMenuTriggerData]="{sample: sample, haplo: h.key}">
+                  <button class="btn btn-secondary btn-sm" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: sample, haplo: h.key}">
                     {{h.key}}
                   </button>
                 </ng-container>
@@ -446,116 +446,112 @@
 </div>
 
 <mat-menu #haploMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <div  (click) = "$event.stopPropagation()">
-    <ng-template matMenuContent let-sample="sample" let-haplo="haplo">
-      <div class="container">
-        <div class="row ml-1 mr-2">
-          <b>{{sample.name}}</b>
-        </div>
-        <div class="row ml-1 mr-2 mb-1">
-          Inferred haplotype using {{haplo}} as anchor
-        </div>
-        <div class="row ml-4 mr-2 mb-0 align-middle">
-          Haplotype Analysis
-          <ng-container *ngIf="sample.haplotypes[haplo]['analysis_screen'].length > 0">
-            <span>&nbsp;&nbsp;</span>
-            <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['analysis_pdf'] }}" download="{{ sample.name + '_haplotype.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
-            <span>&nbsp;&nbsp;</span>
-            <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['analysis_screen'] }}"  target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-          </ng-container>
-          <ng-container *ngIf="sample.haplotypes[haplo]['analysis_screen'].length === 0">
-            <span>&nbsp;&nbsp;</span>Not available
-          </ng-container>
-        </div>
-        <div class="row ml-4 mr-2 mb-4">
-          RabHIT report
-          <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length > 0">
-            <span>&nbsp;&nbsp;</span>
-            <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['rabhit'] }}" download="{{ sample.name + '_rabhit.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </ng-container>
-          <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length === 0">
-            <span>&nbsp;&nbsp;</span>Not available
-          </ng-container>
-        </div>
-        <div class="row ml-1 mr-2 mb-1">
-          RAbHIT documentation
-          <span>&nbsp;&nbsp;</span>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/31173062">
-            <i class="fa fa-desktop" style="line-height: inherit;"></i>
-          </a>
-        </div>
+  <ng-template matMenuContent let-sample="sample" let-haplo="haplo">
+    <div class="container">
+      <div class="row ml-1 mr-2">
+        <b>{{sample.name}}</b>
       </div>
-    </ng-template>
-  </div>
+      <div class="row ml-1 mr-2 mb-1">
+        Inferred haplotype using {{haplo}} as anchor
+      </div>
+      <div class="row ml-4 mr-2 mb-0 align-middle">
+        Haplotype Analysis
+        <ng-container *ngIf="sample.haplotypes[haplo]['analysis_screen'].length > 0">
+          <span>&nbsp;&nbsp;</span>
+          <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['analysis_pdf'] }}" download="{{ sample.name + '_haplotype.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
+          <span>&nbsp;&nbsp;</span>
+          <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['analysis_screen'] }}"  target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.haplotypes[haplo]['analysis_screen'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-4 mr-2 mb-4">
+        RabHIT report
+        <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length > 0">
+          <span>&nbsp;&nbsp;</span>
+          <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['rabhit'] }}" download="{{ sample.name + '_rabhit.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-1 mr-2 mb-1">
+        RAbHIT documentation
+        <span>&nbsp;&nbsp;</span>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/31173062" target="_blank">
+          <i class="fa fa-desktop" style="line-height: inherit;"></i>
+        </a>
+      </div>
+    </div>
+  </ng-template>
 </mat-menu>
 
 <mat-menu #genoMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <div  (click) = "$event.stopPropagation()">
-    <ng-template matMenuContent let-sample="sample">
-      <div class="container">
-        <div class="row ml-1 mr-2">
-          <b>{{sample.name}}</b>
-        </div>
-        <div class="row ml-1 mr-2 mb-1">
-          Inferred genotype
-        </div>
-        <div class="row ml-4 mr-2 mb-1">
-          Genotype Analysis
-          <ng-container *ngIf="sample.genotypes['analysis_pdf'].length > 0">
-            <span>&nbsp;&nbsp;</span>
-            <a href="{{ sample.genotypes['path']+sample.genotypes['analysis_pdf'] }}" download="{{ sample.name + 'genotype.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
-            <span>&nbsp;&nbsp;</span>
-            <a href="{{ sample.genotypes['path']+sample.genotypes['analysis_screen'] }}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-          </ng-container>
-          <ng-container *ngIf="sample.genotypes['analysis_pdf'].length === 0">
-            <span>&nbsp;&nbsp;</span>Not available
-          </ng-container>
-        </div>
-        <div class="row ml-4 mr-2 mb-1">
-          TIgGER report
-          <span>&nbsp;&nbsp;</span>
-          <ng-container *ngIf="sample.genotypes['tigger'].length > 0">
-            <a href="{{ sample.genotypes['path']+sample.genotypes['tigger'] }}" download="{{ sample.name + '_tigger.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </ng-container>
-          <ng-container *ngIf="sample.genotypes['tigger'].length === 0">
-            <span>&nbsp;&nbsp;</span>Not available
-          </ng-container>
-        </div>
-        <div class="row ml-4 mr-2 mb-1">
-          OGRDBStats report
-          <span>&nbsp;&nbsp;</span>
-          <ng-container *ngIf="sample.genotypes['ogrdbstats'].length > 0">
-            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbstats'] }}" download="{{ sample.name + '_ogrdbstats.csv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </ng-container>
-          <ng-container *ngIf="sample.genotypes['ogrdbstats'].length === 0">
-            <span>&nbsp;&nbsp;</span>Not available
-          </ng-container>
-        </div>
-        <div class="row ml-4 mr-2 mb-4">
-           OGRDBStats plots
-          <span>&nbsp;&nbsp;</span>
-          <ng-container *ngIf="sample.genotypes['ogrdbplot'].length > 0">
-            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
-          </ng-container>
-          <ng-container *ngIf="sample.genotypes['ogrdbplot'].length === 0">
-            <span>&nbsp;&nbsp;</span>Not available
-          </ng-container>
-        </div>
-        <div class="row ml-1 mr-2 mb-1">
-          TIgGER documentation
-          <span>&nbsp;&nbsp;</span>
-          <a href="https://pubmed.ncbi.nlm.nih.gov/30814994">
-            <i class="fa fa-desktop" style="line-height: inherit;"></i>
-          </a>
-        </div>
-        <div class="row ml-1 mr-2 mb-1">
-          OGRDBstats documentation
-          <span>&nbsp;&nbsp;</span>
-          <a href="https://github.com/airr-community/ogrdbstats">
-            <i class="fa fa-desktop" style="line-height: inherit;"></i>
-          </a>
-        </div>
+  <ng-template matMenuContent let-sample="sample">
+    <div class="container">
+      <div class="row ml-1 mr-2">
+        <b>{{sample.name}}</b>
       </div>
-    </ng-template>
-  </div>
+      <div class="row ml-1 mr-2 mb-1">
+        Inferred genotype
+      </div>
+      <div class="row ml-4 mr-2 mb-1">
+        Genotype Analysis
+        <ng-container *ngIf="sample.genotypes['analysis_pdf'].length > 0">
+          <span>&nbsp;&nbsp;</span>
+          <a href="{{ sample.genotypes['path']+sample.genotypes['analysis_pdf'] }}" download="{{ sample.name + 'genotype.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
+          <span>&nbsp;&nbsp;</span>
+          <a href="{{ sample.genotypes['path']+sample.genotypes['analysis_screen'] }}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.genotypes['analysis_pdf'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-4 mr-2 mb-1">
+        TIgGER report
+        <span>&nbsp;&nbsp;</span>
+        <ng-container *ngIf="sample.genotypes['tigger'].length > 0">
+          <a href="{{ sample.genotypes['path']+sample.genotypes['tigger'] }}" download="{{ sample.name + '_tigger.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.genotypes['tigger'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-4 mr-2 mb-1">
+        OGRDBStats report
+        <span>&nbsp;&nbsp;</span>
+        <ng-container *ngIf="sample.genotypes['ogrdbstats'].length > 0">
+          <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbstats'] }}" download="{{ sample.name + '_ogrdbstats.csv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.genotypes['ogrdbstats'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-4 mr-2 mb-4">
+         OGRDBStats plots
+        <span>&nbsp;&nbsp;</span>
+        <ng-container *ngIf="sample.genotypes['ogrdbplot'].length > 0">
+          <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.genotypes['ogrdbplot'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-1 mr-2 mb-1">
+        TIgGER documentation
+        <span>&nbsp;&nbsp;</span>
+        <a href="https://pubmed.ncbi.nlm.nih.gov/30814994" target="_blank">
+          <i class="fa fa-desktop" style="line-height: inherit;"></i>
+        </a>
+      </div>
+      <div class="row ml-1 mr-2 mb-1">
+        OGRDBstats documentation
+        <span>&nbsp;&nbsp;</span>
+        <a href="https://github.com/airr-community/ogrdbstats" target="_blank">
+          <i class="fa fa-desktop" style="line-height: inherit;"></i>
+        </a>
+      </div>
+    </div>
+  </ng-template>
 </mat-menu>

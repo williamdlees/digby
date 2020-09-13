@@ -19,6 +19,7 @@ import { RepSampleSelectedService } from '../rep-sample-selected.service'
 import {RepSampleFilterService} from '../rep-sample-filter.service';
 import {ResizeEvent} from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'app-sample-rep-panel',

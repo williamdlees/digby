@@ -13,6 +13,7 @@ import {RepSampleFilterService} from '../rep-sample/rep-sample-filter.service';
 import {environment} from '../../environments/environment';
 import {GeneTableSelectorService} from '../gene-table-selector/gene-table-selector.service';
 import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.model';
+import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
 
 @Component({
   selector: 'app-reports',
@@ -38,8 +39,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
     private repSampleFilterService: RepSampleFilterService,
     private genSampleFilterService: GenSampleFilterService,
     public repListDataSource: RepOnlyDataSource,
-    private reportsListDataSource: ReportsListDataSource
-  ) { }
+    private reportsListDataSource: ReportsListDataSource,
+  ) {
+  }
 
   ngOnInit(): void {
     this.geneTableServiceSubscription = this.geneTableService.source
@@ -101,25 +103,74 @@ export class ReportsComponent implements OnInit, OnDestroy {
         if (result) {
           this.sendReportRequest(report, format, result);
         }
-      }, () => {});
+      }, () => {
+      });
     } else {
       this.sendReportRequest(report, format, {});
     }
   }
 
   sendReportRequest(report, format, params) {
-    console.log('send report ' + report.name + ' params ' + params);
-    let url = environment.apiBasePath + '/reports/reports/run/' + report.name;
-    url += '?format=' + format;
-    url += '&species=' + this.geneTableSelection.species;
-    url += '&genomic_datasets=' + this.geneTableSelection.refSeqs.join(',');
-    url += '&rep_datasets=' + this.geneTableSelection.repSeqs.join(',');
-    url += '&genomic_filters=' + JSON.stringify(this.genSampleFilters);
-    url += '&rep_filters=' + JSON.stringify(this.repSampleFilters);
-    url += '&params=' + JSON.stringify(params);
-    console.log(url);
-    window.open(url, '_blank');
+    const reportWindow = window.open('', '_blank');
+    reportWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" ' +
+      'integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">' +
+      '<h3>Running your report...</h3>' +
+      '<div  class="spinner-border" role="status"> ' +
+      '<span class="sr-only">Loading...</span> ' +
+      '</div>');
+
+    this.reportsService.getReportsRunApi(
+      report.name,
+      format,
+      this.geneTableSelection.species,
+      this.geneTableSelection.refSeqs.join(','),
+      JSON.stringify(this.genSampleFilters),
+      this.geneTableSelection.repSeqs.join(','),
+      JSON.stringify(this.repSampleFilters),
+      JSON.stringify(params)
+    ).subscribe(
+      (response) => {
+        console.log(response);
+      },
+      (error) => {
+        if (error.status === 200) {
+          reportWindow.location = error.url; // this is the expected result
+        } else {
+          reportWindow.close();
+          const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
+          modalRef.componentInstance.report = 'Error running ' + report.title;
+
+          if (error.error.message) {
+            modalRef.componentInstance.errorMessage = error.error.message;
+          } else if (error.statusText) {
+            modalRef.componentInstance.errorMessage = 'Status ' + error.status + '. ' + error.name + ': ' + error.statusText;
+          } else {
+            modalRef.componentInstance.errorMessage = 'Status ' + error.status;
+          }
+
+          modalRef.result.then(
+            (result) => {
+            },
+            () => {
+            }
+          );
+        }
+      }
+    );
   }
+
+  /*
+  console.log('send report ' + report.name + ' params ' + params);
+  let url = environment.apiBasePath + '/reports/reports/run/' + report.name;
+  url += '?format=' + format;
+  url += '&species=' + this.geneTableSelection.species;
+  url += '&genomic_datasets=' + this.geneTableSelection.refSeqs.join(',');
+  url += '&rep_datasets=' + this.geneTableSelection.repSeqs.join(',');
+  url += '&genomic_filters=' + JSON.stringify(this.genSampleFilters);
+  url += '&rep_filters=' + JSON.stringify(this.repSampleFilters);
+  url += '&params=' + JSON.stringify(params);
+  console.log(url);
+  window.open(url, '_blank'); */
 }
 
 @Injectable({ providedIn: 'any'})

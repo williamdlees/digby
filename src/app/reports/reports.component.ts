@@ -14,6 +14,7 @@ import {environment} from '../../environments/environment';
 import {GeneTableSelectorService} from '../gene-table-selector/gene-table-selector.service';
 import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.model';
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-reports',
@@ -40,6 +41,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     private genSampleFilterService: GenSampleFilterService,
     public repListDataSource: RepOnlyDataSource,
     private reportsListDataSource: ReportsListDataSource,
+    private httpClient: HttpClient,
   ) {
   }
 
@@ -130,31 +132,42 @@ export class ReportsComponent implements OnInit, OnDestroy {
       JSON.stringify(params)
     ).subscribe(
       (response) => {
-        console.log(response);
-      },
-      (error) => {
-        if (error.status === 200) {
-          reportWindow.location = error.url; // this is the expected result
+        if (!response.filename) {
+          reportWindow.location = response.url;
         } else {
           reportWindow.close();
-          const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
-          modalRef.componentInstance.report = 'Error running ' + report.title;
-
-          if (error.error.message) {
-            modalRef.componentInstance.errorMessage = error.error.message;
-          } else if (error.statusText) {
-            modalRef.componentInstance.errorMessage = 'Status ' + error.status + '. ' + error.name + ': ' + error.statusText;
-          } else {
-            modalRef.componentInstance.errorMessage = 'Status ' + error.status;
-          }
-
-          modalRef.result.then(
-            (result) => {
-            },
-            () => {
-            }
-          );
+          const token = 'my JWT';
+          const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
+          this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
+            (rep: any) => {
+              const dataType = rep.type;
+              const downloadLink = document.createElement('a');
+              downloadLink.href = window.URL.createObjectURL(rep);
+              downloadLink.setAttribute('download', response.filename);
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+            });
         }
+      },
+    (error) => {
+        reportWindow.close();
+        const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
+        modalRef.componentInstance.report = 'Error running ' + report.title;
+
+        if (error.error.message) {
+          modalRef.componentInstance.errorMessage = error.error.message;
+        } else if (error.statusText) {
+          modalRef.componentInstance.errorMessage = 'Status ' + error.status + '. ' + error.name + ': ' + error.statusText;
+        } else {
+          modalRef.componentInstance.errorMessage = 'Status ' + error.status;
+        }
+
+        modalRef.result.then(
+          (result) => {
+          },
+          () => {
+          }
+        );
       }
     );
   }

@@ -10,6 +10,7 @@ outline-style: none !important;
 .tf-mat-menu{
   overflow: visible !important;
   max-width: none !important;
+  min-width: 240px !important;
 }
 
 

@@ -412,7 +412,7 @@
             <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'haplotypes')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
               Haplotype
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [showSort] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
           <mat-cell *matCellDef="let sample">
             <div *ngIf="sample.haplotypes">

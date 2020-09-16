@@ -8,25 +8,32 @@
 </button>
 
 <mat-menu #filterMenu="matMenu" xPosition="before" class="menu-overflow-hidden tf-mat-menu">
-  <div class="content-centered" (click) = "$event.stopPropagation()">
-    <form class="col-12" >
-        <div class="row">
-          <div *ngIf="showSort" class="col-6" style="padding-left: 0px">
+  <div class="container content-centered" (click) = "$event.stopPropagation()">
+    <form>
+      <div class="row">
+        <div *ngIf="showSort">
+          <div class="col-8" style="padding-left: 0px; padding-right: 16px">
             <button mat-button (click)="onSortAsc()">Sort Ascending</button>
           </div>
-          <div class="col-6" style="text-align: right">
-            <button mat-flat-button color="primary"  (click)="onValidation()">
-              OK
-            </button>
-          </div>
-        <div *ngIf="showSort" class="row">
-          <button mat-button (click)="onSortDesc()">Sort Descending</button>
         </div>
-        <div class="row" *ngIf="selectedSort">
+        <div class="col-4 ml-auto">
+          <button  style="min-width: 0px" mat-flat-button color="primary"  (click)="onValidation()">
+            OK
+          </button>
+        </div>
+      </div>
+      <div *ngIf="showSort">
+        <div class="row">
+          <div class="col-6"  style="padding-left: 0px">
+            <button mat-button (click)="onSortDesc()">Sort Descending</button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selectedSort">
+        <div class="row">
           <button mat-button  (click)="onSortClear()">Clear Sort</button>
         </div>
       </div>
-
       <div *ngIf="showTextFilter">
         <div class="row">
         <div class="dropdown-divider"></div>

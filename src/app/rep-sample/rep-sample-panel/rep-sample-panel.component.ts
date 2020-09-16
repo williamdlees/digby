@@ -226,7 +226,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   // Used for genotype report
-  sendGenotypeReportRequest(params, format) {
+  sendReportRequest(report, params, format) {
     try {
       params = JSON.parse(params);
     } catch {
@@ -242,15 +242,20 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       '<span class="sr-only">Loading...</span> ' +
       '</div>');
 
+    let reportParams = '[]';
+    if (report === 'rep_single_haplotype') {
+      reportParams = '{"haplo_gene":"' + params.hap_gene + '"}';
+    }
+
     this.reportsService.getReportsRunApi(
-      'rep_single_genotype',
+      report,
       format,
       params.species,
-      [],
+      '',
       '[]',
       params.repSeqs,
       '[{"field":"name","op":"in","value":["' + params.name + '"]}]',
-      '[]'
+      reportParams
     ).subscribe(
       (response) => {
         if (!response.filename) {

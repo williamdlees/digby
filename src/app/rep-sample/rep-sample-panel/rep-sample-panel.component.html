@@ -416,12 +416,18 @@
             </mat-header-cell>
           <mat-cell *matCellDef="let sample">
             <div *ngIf="sample.haplotypes">
-              <div *ngFor="let h of sample.haplotypes | keyvalue">
-                <ng-container *ngIf="h.key !== 'path'">
-                  <button class="btn btn-secondary btn-sm" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: sample, haplo: h.key}">
-                    {{h.key}}
-                  </button>
-                </ng-container>
+              <div class="container">
+                <div class="row">
+                  <div *ngFor="let h of sample.haplotypes | keyvalue">
+                    <ng-container *ngIf="h.key !== 'path'">
+                      <div class="col-xs-6">
+                        <button class="btn btn-secondary btn-sm mr-1" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: sample, haplo: h.key}">
+                          {{h.key}}
+                        </button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
               </div>
             </div>
           </mat-cell>

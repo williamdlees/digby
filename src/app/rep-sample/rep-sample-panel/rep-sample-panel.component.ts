@@ -1,6 +1,6 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
-import { RepseqService } from '../../../../dist/digby-swagger-client';
+import {ReportsService, RepseqService} from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {MatPaginator} from '@angular/material/paginator';
@@ -15,11 +15,13 @@ import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.component';
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
-import { RepSampleSelectedService } from '../rep-sample-selected.service'
+import { RepSampleSelectedService } from '../rep-sample-selected.service';
 import {RepSampleFilterService} from '../rep-sample-filter.service';
 import {ResizeEvent} from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import {MatMenuTrigger} from '@angular/material/menu';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {ReportErrorDialogComponent} from '../../reports/report-error-dialog/report-error-dialog.component';
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -58,6 +60,8 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private repSampleSelectedService: RepSampleSelectedService,
               private repSampleFilterService: RepSampleFilterService,
               private tableParamsStorageService: TableParamsStorageService,
+              private reportsService: ReportsService,
+              private httpClient: HttpClient,
               ) {
 
   }
@@ -219,6 +223,74 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       const currentEl = columnElts[i] as HTMLDivElement;
       currentEl.style.width = cssValue;
     }
+  }
+
+  // Used for genotype report
+  sendGenotypeReportRequest(params, format) {
+    try {
+      params = JSON.parse(params);
+    } catch {
+      console.log('Error parsing genotype report request parameters');
+      return;
+    }
+
+    const reportWindow = window.open('', '_blank');
+    reportWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" ' +
+      'integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">' +
+      '<h3>Running your report...</h3>' +
+      '<div  class="spinner-border" role="status"> ' +
+      '<span class="sr-only">Loading...</span> ' +
+      '</div>');
+
+    this.reportsService.getReportsRunApi(
+      'rep_single_genotype',
+      format,
+      params.species,
+      [],
+      '[]',
+      params.repSeqs,
+      '[{"field":"name","op":"in","value":["' + params.name + '"]}]',
+      '[]'
+    ).subscribe(
+      (response) => {
+        if (!response.filename) {
+          reportWindow.location = response.url;
+        } else {
+          reportWindow.close();
+          const token = 'my JWT';
+          const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
+          this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
+            (rep: any) => {
+              const dataType = rep.type;
+              const downloadLink = document.createElement('a');
+              downloadLink.href = window.URL.createObjectURL(rep);
+              downloadLink.setAttribute('download', response.filename);
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+            });
+        }
+      },
+    (error) => {
+        reportWindow.close();
+        const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
+        modalRef.componentInstance.report = 'Error running genotype analysis';
+
+        if (error.error.message) {
+          modalRef.componentInstance.errorMessage = error.error.message;
+        } else if (error.statusText) {
+          modalRef.componentInstance.errorMessage = 'Status ' + error.status + '. ' + error.name + ': ' + error.statusText;
+        } else {
+          modalRef.componentInstance.errorMessage = 'Status ' + error.status;
+        }
+
+        modalRef.result.then(
+          (result) => {
+          },
+          () => {
+          }
+        );
+      }
+    );
   }
 }
 

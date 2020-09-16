@@ -498,13 +498,17 @@
       </div>
       <div class="row ml-4 mr-2 mb-1">
         Genotype Analysis
-        <ng-container *ngIf="sample.genotypes['analysis_pdf'].length > 0">
+        <ng-container *ngIf="sample.genotypes['analysis'].length > 0">
           <span>&nbsp;&nbsp;</span>
-          <a href="{{ sample.genotypes['path']+sample.genotypes['analysis_pdf'] }}" download="{{ sample.name + 'genotype.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendGenotypeReportRequest(sample.genotypes['analysis'], 'pdf')">
+            <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
+          </button>
           <span>&nbsp;&nbsp;</span>
-          <a href="{{ sample.genotypes['path']+sample.genotypes['analysis_screen'] }}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendGenotypeReportRequest(sample.genotypes['analysis'], 'html')">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </button>
         </ng-container>
-        <ng-container *ngIf="sample.genotypes['analysis_pdf'].length === 0">
+        <ng-container *ngIf="sample.genotypes['analysis'].length === 0">
           <span>&nbsp;&nbsp;</span>Not available
         </ng-container>
       </div>

@@ -3,6 +3,10 @@
   line-height: 1 !important;
 }
 
+.addr {
+  color: rgb(0, 123, 255) !important;
+}
+
 .i {
   line-height: inherit;
 }

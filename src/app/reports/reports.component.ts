@@ -171,19 +171,6 @@ export class ReportsComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  /*
-  console.log('send report ' + report.name + ' params ' + params);
-  let url = environment.apiBasePath + '/reports/reports/run/' + report.name;
-  url += '?format=' + format;
-  url += '&species=' + this.geneTableSelection.species;
-  url += '&genomic_datasets=' + this.geneTableSelection.refSeqs.join(',');
-  url += '&rep_datasets=' + this.geneTableSelection.repSeqs.join(',');
-  url += '&genomic_filters=' + JSON.stringify(this.genSampleFilters);
-  url += '&rep_filters=' + JSON.stringify(this.repSampleFilters);
-  url += '&params=' + JSON.stringify(params);
-  console.log(url);
-  window.open(url, '_blank'); */
 }
 
 @Injectable({ providedIn: 'any'})

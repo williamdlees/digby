@@ -16,6 +16,8 @@ export class RequestCache  {
     const url = req.urlWithParams;
     const cached = this.cache.get(url);
 
+    return undefined;   // disable caching altogether while we sort out reports
+
     if (!cached) {
       return undefined;
     }

@@ -225,7 +225,7 @@ export class RepseqService {
     }
 
     /**
-     * Returns the list of sequences in the selected dataset
+     * Returns the list of sequences in the selected datasets
      * 
      * @param species 
      * @param dataset 

@@ -2,9 +2,9 @@ import {AfterViewInit, Component, Injectable, OnDestroy, OnInit, ViewChild} from
 import {MatTable} from '@angular/material/table';
 import {ReportsListDataSource} from './reports-list-data.source';
 import {ReportsService} from '../../../dist/digby-swagger-client';
-import {filter, flatMap, map, toArray} from 'rxjs/operators';
+import {catchError, filter, flatMap, map, toArray} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/collections';
-import {Observable} from 'rxjs';
+import {defer, EMPTY, Observable} from 'rxjs';
 import {ReportList} from './reports-list.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportParamsDialogComponent} from './report-params-dialog/report-params-dialog.component';
@@ -15,6 +15,8 @@ import {GeneTableSelectorService} from '../gene-table-selector/gene-table-select
 import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.model';
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { pollUntil } from '../shared/poll-until-rxjs';
+import {ajax} from 'rxjs/ajax';
 
 @Component({
   selector: 'app-reports',
@@ -112,7 +114,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
     }
   }
 
-  sendReportRequest(report, format, params) {
+
+  private sendReportRequest(report, format, params) {
     const reportWindow = window.open('', '_blank');
     reportWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" ' +
       'integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">' +
@@ -130,44 +133,85 @@ export class ReportsComponent implements OnInit, OnDestroy {
       this.geneTableSelection.repSeqs.join(','),
       JSON.stringify(this.repSampleFilters),
       JSON.stringify(params)
-    ).subscribe(
-      (response) => {
-        if (!response.filename) {
-          reportWindow.location = response.url;
-        } else {
-          reportWindow.close();
-          const token = 'my JWT';
-          const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
-          this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
-            (rep: any) => {
-              const dataType = rep.type;
-              const downloadLink = document.createElement('a');
-              downloadLink.href = window.URL.createObjectURL(rep);
-              downloadLink.setAttribute('download', response.filename);
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-            });
-        }
-      },
-    (error) => {
-        reportWindow.close();
-        const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
-        modalRef.componentInstance.report = 'Error running ' + report.title;
+    ).subscribe((reportResponse) => {
+      const jobId = reportResponse.id;
+      console.log('job id:' + jobId);
 
-        if (error.error.message) {
-          modalRef.componentInstance.errorMessage = error.error.message;
-        } else if (error.statusText) {
-          modalRef.componentInstance.errorMessage = 'Status ' + error.status + '. ' + error.name + ': ' + error.statusText;
-        } else {
-          modalRef.componentInstance.errorMessage = 'Status ' + error.status;
-        }
+      let pollCount = 0;
 
-        modalRef.result.then(
-          (result) => {
+      this.fetchReportStatus(jobId)
+        .pipe(pollUntil(3000, 20, (response) => {
+          console.log(response.status + ': ' + pollCount);
+          pollCount += 1;
+          return (response.status === 'SUCCESS' || response.status === 'FAILURE');
+        }))
+        .subscribe((response) => {
+            console.log('status: ' + response.status);
+            if (response.status === 'SUCCESS') {
+              if (response.results.status === 'ok') {
+                this.showResult(response.results, reportWindow);
+              } else {
+                this.displayError(reportWindow, report, {status: response.results.description});
+              }
+            } else {
+              this.displayError(reportWindow, report, 'return code:' + response.status + ' ' + response.description);
+            }
           },
-          () => {
+          (error) => {
+            console.log('error: poll count exceeded');
+            this.displayError(reportWindow, report, {status: 'Timeout waiting for report'});
           }
         );
+    },
+      (error) => {
+        console.log('error from run request');
+        this.displayError(reportWindow, report, error);
+      }
+    );
+  }
+
+  private fetchReportStatus(jobId) {
+    return defer(() =>
+      this.reportsService.getReportsStatus(jobId)
+    ).pipe(catchError(() => EMPTY));
+  }
+
+  private showResult(response, reportWindow: Window) {
+    if (!response.filename) {
+      reportWindow.location = response.url;
+    } else {
+      reportWindow.close();
+      const token = 'my JWT';
+      const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
+      this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
+        (rep: any) => {
+          const dataType = rep.type;
+          const downloadLink = document.createElement('a');
+          downloadLink.href = window.URL.createObjectURL(rep);
+          downloadLink.setAttribute('download', response.filename);
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+        });
+    }
+  }
+
+  private displayError(reportWindow: Window, report, error) {
+    reportWindow.close();
+    const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
+    modalRef.componentInstance.report = 'Error running ' + report.title;
+
+    if ('error' in error && 'message' in error.error && error.error.message) {
+      modalRef.componentInstance.errorMessage = error.error.message;
+    } else if ('statusText' in error && error.statusText) {
+      modalRef.componentInstance.errorMessage = error.status + '. ' + error.name + ': ' + error.statusText;
+    } else {
+      modalRef.componentInstance.errorMessage = error.status;
+    }
+
+    modalRef.result.then(
+      (result) => {
+      },
+      () => {
       }
     );
   }
@@ -194,3 +238,4 @@ export class RepOnlyDataSource  extends DataSource<any> {
   }
 
 }
+

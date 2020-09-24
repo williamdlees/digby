@@ -128,13 +128,14 @@ export class ReportsService {
     public getReportsRunApi(reportName: string, format?: string, species?: string, genomicDatasets?: string, genomicFilters?: string, repDatasets?: string, repFilters?: string, params?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
     public getReportsRunApi(reportName: string, format?: string, species?: string, genomicDatasets?: string, genomicFilters?: string, repDatasets?: string, repFilters?: string, params?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
     public getReportsRunApi(reportName: string, format?: string, species?: string, genomicDatasets?: string, genomicFilters?: string, repDatasets?: string, repFilters?: string, params?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
         if (reportName === null || reportName === undefined) {
             throw new Error('Required parameter reportName was null or undefined when calling getReportsRunApi.');
         }
 
 
 
-        console.log("in getReportsRunAPI");
+
 
 
 
@@ -181,6 +182,47 @@ export class ReportsService {
         return this.httpClient.get<any>(`${this.basePath}/reports/reports/run/${encodeURIComponent(String(reportName))}`,
             {
                 params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     *
+     *
+     * @param jobId
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getReportsStatus(jobId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getReportsStatus(jobId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getReportsStatus(jobId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getReportsStatus(jobId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (jobId === null || jobId === undefined) {
+            throw new Error('Required parameter jobId was null or undefined when calling getReportsStatus.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/reports/reports/status/${encodeURIComponent(String(jobId))}`,
+            {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

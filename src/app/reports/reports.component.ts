@@ -140,7 +140,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
       let pollCount = 0;
 
       this.fetchReportStatus(jobId)
-        .pipe(pollUntil(3000, 20, (response) => {
+        .pipe(pollUntil(3000, 40, (response) => {
           console.log(response.status + ': ' + pollCount);
           pollCount += 1;
           return (response.status === 'SUCCESS' || response.status === 'FAILURE');

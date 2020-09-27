@@ -97,7 +97,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
         this.choices$Subscription = this.dataSource.choices$.subscribe(
           choices => {
             if (this.filters.length > 0 && !this.isSelectedSamplesChecked) {
-              this.repSampleSelectedService.selection.next({ids: choices.id});
+              this.repSampleSelectedService.selection.next({ids: choices.names_by_dataset});
             } else {
               this.repSampleSelectedService.selection.next({ids: []});
             }

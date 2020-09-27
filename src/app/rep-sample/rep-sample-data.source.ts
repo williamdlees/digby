@@ -64,5 +64,4 @@ export class RepSampleDataSource implements DataSource<RepSample> {
         this.errorSubject.complete();
         this.choicesSubject.complete();
     }
-
 }

@@ -44,10 +44,11 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   choices$: Observable<IChoices>;
   choices$Subscription = null;
   loading$Subscription = null;
-  selectedSampleIds: string[] = [];
+  selectedSampleIds = [];
   isSelectedGenesChecked = false;
   repSampleSelectedServiceSubscription = null;
   resizeEvents = new Map();
+  samplesSelected: boolean = false;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -108,17 +109,18 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.repSampleSelectedServiceSubscription = this.repSampleSelectedService.source.subscribe(
         selectedIds => {
           this.selectedSampleIds = selectedIds.ids;
+          this.samplesSelected = Object.keys(this.selectedSampleIds).length > 0;
 
           if (this.isSelectedGenesChecked) {
-            this.onSelectedIdsChange(null);
+            this.onSelectedIdsChange();
           }
         }
       );
     });
   }
 
-  onSelectedIdsChange(state) {
-    if (this.isSelectedGenesChecked && this.selectedSampleIds.length) {
+  onSelectedIdsChange() {
+    if (this.isSelectedGenesChecked && this.samplesSelected) {
       this.applyFilter(
         {
           field: 'sample_id',

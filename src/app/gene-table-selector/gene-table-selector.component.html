@@ -12,9 +12,10 @@
   <div class="col-auto my-1" *ngIf="showGenomic">
     <div class="input-group">
       <div class="input-group-prepend">
-        <label class="input-group-text" for="selectSpecies">Genomic Sets</label>
+        <label class="input-group-text" for="selectGenomic" style="height: 38px">Genomic Sets</label>
       </div>
-      <ng-multiselect-dropdown style="padding-left: 10px !important; padding-top: 7px !important;"
+      <ng-multiselect-dropdown id="selectGenomic"
+        [class]="'selector-dropdown'"
         [settings] = genDropdownSettings
         [data] = refSeqs
         [(ngModel)] = selectedGen
@@ -27,9 +28,10 @@
   <div class="col-auto my-1" *ngIf="showRepseq">
     <div class="input-group">
       <div class="input-group-prepend">
-        <label class="input-group-text" for="selectSpecies">AIRR-seq Sets</label>
+        <label class="input-group-text" for="selectAIRR" style="height: 38px">AIRR-seq Sets</label>
       </div>
-      <ng-multiselect-dropdown style="padding-left: 10px !important; padding-top: 7px !important;"
+      <ng-multiselect-dropdown id="selectAIRR"
+        [class]="'selector-dropdown'"
         [settings] = repDropdownSettings
         [data] = repSeqs
         [(ngModel)] = selectedRep
@@ -48,7 +50,6 @@
 
 <div class="alert alert-danger" *ngIf="error">
   <div class="row">
-    <h4>Error loading data</h4>
-    <p>{{error}}</p>
+    <h4>Error loading data: {{error}}</h4>
   </div>
 </div>

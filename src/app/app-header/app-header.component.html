@@ -1,32 +1,51 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+  <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        <a class="nav-link" routerLink="/">VDJbase <span class="sr-only">(current)</span></a>
+  <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+    <ul ngbNav class="navbar-nav mr-auto">
+      <li ngbNavItem class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuCollapsed = true">
+        <a class="nav-link" ngbNavLink  style="padding: 0" routerLink="/">
+          <img class="navbar-brand" src="assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/genesample">Genomic Samples</a>
+      <li ngbDropdown class="nav-item dropdown">
+        <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Genomic Data
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+          <a ngbDropdownItem class="dropdown-item" routerLink="/genesample" (click)="isMenuCollapsed = true">Genomic Samples</a>
+          <a ngbDropdownItem class="dropdown-item" routerLink="/genetable" (click)="isMenuCollapsed = true">Genomic Genes</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['/genebrowser', 'Human', 'Human_IGH']" (click)="isMenuCollapsed = true">Genomic Gene Browser</a>
+        </div>
       </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/genetable">Genomic Genes</a>
+      <li ngbDropdown class="nav-item dropdown">
+        <a ngbDropdownToggle class="nav-link " id="navbarAIRRSeq" role="button">
+          AIRR-Seq Data
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+          <a ngbDropdownItem class="dropdown-item" routerLink="/samplerep" (click)="isMenuCollapsed = true">AIRR-seq Samples</a>
+          <a ngbDropdownItem class="dropdown-item" routerLink="/generep" (click)="isMenuCollapsed = true">AIRR-seq Genes</a>
+        </div>
       </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/genebrowser', 'Human', 'Human_IGH']">Genomic Gene Browser</a>
+      <li ngbNavItem class="nav-item" routerLinkActive="active">
+        <a class="nav-link" ngbNavLink routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
       </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/samplerep">AIRR-seq Samples</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/generep">AIRR-seq Genes</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" routerLink="/reports">Reports</a>
+      <li ngbDropdown class="nav-item dropdown">
+        <a ngbDropdownToggle class="nav-link " id="navbarHelpAbout" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Help / About
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Explore Data</a>
+          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Guide to Reports</a>
+          <div class="dropdown-divider"></div>
+          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">User Guide</a>
+          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Quick Reference</a>
+          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Licensing</a>
+        </div>
       </li>
     </ul>
   </div>
 </nav>
+
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { GenomicService } from '../../../dist/digby-swagger-client';
 import { RepseqService } from '../../../dist/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
@@ -12,7 +12,8 @@ import {GeneTableSelection} from './gene-table-selector.model';
 @Component({
   selector: 'app-gene-table-selector',
   templateUrl: './gene-table-selector.component.html',
-  styleUrls: ['./gene-table-selector.component.scss']
+  styleUrls: ['./gene-table-selector.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   @Input() showGenomic: boolean;

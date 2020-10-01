@@ -9,7 +9,7 @@ import {RepSampleDataSource} from '../rep-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
-import { Observable } from 'rxjs';
+import {defer, EMPTY, Observable} from 'rxjs';
 import { columnInfo } from './rep-sample-panel-cols';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -22,6 +22,8 @@ import {TableParamsStorageService} from '../../table/table-params-storage-servic
 import {MatMenuTrigger} from '@angular/material/menu';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ReportErrorDialogComponent} from '../../reports/report-error-dialog/report-error-dialog.component';
+import {pollUntil} from '../../shared/poll-until-rxjs';
+import {catchError} from 'rxjs/operators';
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -225,8 +227,9 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     }
   }
 
-  // Used for genotype report
-  sendReportRequest(report, params, format) {
+  // this code is duplicated in the reports compnent. Really needs breaking out into a service.
+
+  private sendReportRequest(report, format, params) {
     try {
       params = JSON.parse(params);
     } catch {
@@ -256,44 +259,85 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       params.repSeqs,
       '[{"field":"name","op":"in","value":["' + params.name + '"]}]',
       reportParams
-    ).subscribe(
-      (response) => {
-        if (!response.filename) {
-          reportWindow.location = response.url;
-        } else {
-          reportWindow.close();
-          const token = 'my JWT';
-          const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
-          this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
-            (rep: any) => {
-              const dataType = rep.type;
-              const downloadLink = document.createElement('a');
-              downloadLink.href = window.URL.createObjectURL(rep);
-              downloadLink.setAttribute('download', response.filename);
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-            });
-        }
-      },
-    (error) => {
-        reportWindow.close();
-        const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
-        modalRef.componentInstance.report = 'Error running genotype analysis';
+    ).subscribe((reportResponse) => {
+      const jobId = reportResponse.id;
+      console.log('job id:' + jobId);
 
-        if (error.error.message) {
-          modalRef.componentInstance.errorMessage = error.error.message;
-        } else if (error.statusText) {
-          modalRef.componentInstance.errorMessage = 'Status ' + error.status + '. ' + error.name + ': ' + error.statusText;
-        } else {
-          modalRef.componentInstance.errorMessage = 'Status ' + error.status;
-        }
+      let pollCount = 0;
 
-        modalRef.result.then(
-          (result) => {
+      this.fetchReportStatus(jobId)
+        .pipe(pollUntil(3000, 40, (response) => {
+          console.log(response.status + ': ' + pollCount);
+          pollCount += 1;
+          return (response.status === 'SUCCESS' || response.status === 'FAILURE');
+        }))
+        .subscribe((response) => {
+            console.log('status: ' + response.status);
+            if (response.status === 'SUCCESS') {
+              if (response.results.status === 'ok') {
+                this.showResult(response.results, reportWindow);
+              } else {
+                this.displayError(reportWindow, report, {status: response.results.description});
+              }
+            } else {
+              this.displayError(reportWindow, report, 'return code:' + response.status + ' ' + response.description);
+            }
           },
-          () => {
+          (error) => {
+            console.log('error: poll count exceeded');
+            this.displayError(reportWindow, report, {status: 'Timeout waiting for report'});
           }
         );
+    },
+      (error) => {
+        console.log('error from run request');
+        this.displayError(reportWindow, report, error);
+      }
+    );
+  }
+
+  private fetchReportStatus(jobId) {
+    return defer(() =>
+      this.reportsService.getReportsStatus(jobId)
+    ).pipe(catchError(() => EMPTY));
+  }
+
+  private showResult(response, reportWindow: Window) {
+    if (!response.filename) {
+      reportWindow.location = response.url;
+    } else {
+      reportWindow.close();
+      const token = 'my JWT';
+      const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
+      this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
+        (rep: any) => {
+          const dataType = rep.type;
+          const downloadLink = document.createElement('a');
+          downloadLink.href = window.URL.createObjectURL(rep);
+          downloadLink.setAttribute('download', response.filename);
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+        });
+    }
+  }
+
+  private displayError(reportWindow: Window, report, error) {
+    reportWindow.close();
+    const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
+    modalRef.componentInstance.report = 'Error running ' + report.title;
+
+    if ('error' in error && 'message' in error.error && error.error.message) {
+      modalRef.componentInstance.errorMessage = error.error.message;
+    } else if ('statusText' in error && error.statusText) {
+      modalRef.componentInstance.errorMessage = error.status + '. ' + error.name + ': ' + error.statusText;
+    } else {
+      modalRef.componentInstance.errorMessage = error.status;
+    }
+
+    modalRef.result.then(
+      (result) => {
+      },
+      () => {
       }
     );
   }

@@ -40,10 +40,12 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
               return([]);
             }),
             finalize(() => {
+              console.log('finalize');
               this.loadingSubject.next(false);
             })
           )
             .subscribe((sequence) => {
+              console.log('subscribe');
               this.totalItems = sequence.total_items;
               this.choicesSubject.next(sequence.uniques);
               this.repSequenceSubject.next(sequence.samples);

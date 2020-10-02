@@ -24,23 +24,20 @@ export class FilterComponent implements OnInit {
   @Input() showSort = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
   filterImplementationComponent: Type<FilterImplementation>;
-  inputs = {
-    columnName: this.columnName,
-    choices$: this.choices$,
-    showTextFilter: this.showTextFilter,
-    showSort: this.showSort
-  };
+  inputs = null;
   outputs = {
     predicateEmitter: columnPredicate => this.predicateEmitter.emit(columnPredicate),
   };
 
-  constructor() { }
+  constructor() { };
 
   ngOnInit() {
-    this.inputs.columnName = this.columnName;
-    this.inputs.choices$ = this.choices$;
-    this.inputs.showTextFilter = this.showTextFilter;
-    this.inputs.showSort = this.showSort;
+    this.inputs = {
+      columnName: this.columnName,
+      choices$: this.choices$,
+      showTextFilter: this.showTextFilter,
+      showSort: this.showSort,
+    };
 
     switch (this.filterMode) {
       case FilterMode.TEXT_MODE:

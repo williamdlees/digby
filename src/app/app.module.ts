@@ -56,6 +56,7 @@ import { ReportErrorDialogComponent } from './reports/report-error-dialog/report
 import { QuickRefComponent } from './home/quick-ref/quick-ref.component';
 import { ExploreDataComponent } from './home/explore-data/explore-data.component';
 import { UserGuideComponent } from './home/user-guide/user-guide.component';
+import {GoogleChartsModule} from 'angular-google-charts';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -132,6 +133,7 @@ const appRoutes: Routes = [
     MatCardModule,
     ObserversModule,
     ResizableModule,
+    GoogleChartsModule,
   ],
   providers: [
     RequestCache,

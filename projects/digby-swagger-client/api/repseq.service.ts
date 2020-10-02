@@ -98,6 +98,53 @@ export class RepseqService {
     }
 
     /**
+     * Returns information and statistics on the dataset
+     * 
+     * @param species 
+     * @param dataset 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getDataSetInfoApi(species: string, dataset: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getDataSetInfoApi(species: string, dataset: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getDataSetInfoApi(species: string, dataset: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getDataSetInfoApi(species: string, dataset: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getDataSetInfoApi.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getDataSetInfoApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/dataset_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns information on the selected sample
      * 
      * @param species 

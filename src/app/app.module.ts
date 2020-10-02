@@ -53,6 +53,9 @@ import { SafePipe } from './safe.pipe';
 import { ResizableModule } from 'angular-resizable-element';
 import {MatRippleModule} from '@angular/material/core';
 import { ReportErrorDialogComponent } from './reports/report-error-dialog/report-error-dialog.component';
+import { QuickRefComponent } from './home/quick-ref/quick-ref.component';
+import { ExploreDataComponent } from './home/explore-data/explore-data.component';
+import { UserGuideComponent } from './home/user-guide/user-guide.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -69,7 +72,10 @@ const appRoutes: Routes = [
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
   { path: 'samplerep', component: RepSampleComponent },
   { path: 'generep', component: RepGeneTableComponent },
-  { path: 'reports', component: ReportsComponent }
+  { path: 'reports', component: ReportsComponent },
+  { path: 'quick-ref', component: QuickRefComponent },
+  { path: 'explore-data', component: ExploreDataComponent },
+  { path: 'user-guide', component: UserGuideComponent },
 ];
 
 @NgModule({
@@ -99,6 +105,9 @@ const appRoutes: Routes = [
     RepGeneNotesComponent,
     SafePipe,
     ReportErrorDialogComponent,
+    QuickRefComponent,
+    ExploreDataComponent,
+    UserGuideComponent,
   ],
   imports: [
     BrowserModule,

@@ -229,7 +229,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
   // this code is duplicated in the reports compnent. Really needs breaking out into a service.
 
-  private sendReportRequest(report, format, params) {
+  sendReportRequest(report, format, params) {
     try {
       params = JSON.parse(params);
     } catch {

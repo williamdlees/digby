@@ -10,6 +10,15 @@
           <img class="navbar-brand" src="assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
       </li>
       <li ngbDropdown class="nav-item dropdown">
+        <a ngbDropdownToggle class="nav-link " id="navbarAIRRSeq" role="button">
+          AIRR-Seq Data
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+          <a ngbDropdownItem class="dropdown-item" routerLink="/samplerep" (click)="isMenuCollapsed = true">AIRR-seq Samples</a>
+          <a ngbDropdownItem class="dropdown-item" routerLink="/generep" (click)="isMenuCollapsed = true">AIRR-seq Genes</a>
+        </div>
+      </li>
+      <li ngbDropdown class="nav-item dropdown">
         <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Genomic Data
         </a>
@@ -17,15 +26,6 @@
           <a ngbDropdownItem class="dropdown-item" routerLink="/genesample" (click)="isMenuCollapsed = true">Genomic Samples</a>
           <a ngbDropdownItem class="dropdown-item" routerLink="/genetable" (click)="isMenuCollapsed = true">Genomic Genes</a>
           <a ngbDropdownItem class="dropdown-item" [routerLink]="['/genebrowser', 'Human', 'Human_IGH']" (click)="isMenuCollapsed = true">Genomic Gene Browser</a>
-        </div>
-      </li>
-      <li ngbDropdown class="nav-item dropdown">
-        <a ngbDropdownToggle class="nav-link " id="navbarAIRRSeq" role="button">
-          AIRR-Seq Data
-        </a>
-        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-          <a ngbDropdownItem class="dropdown-item" routerLink="/samplerep" (click)="isMenuCollapsed = true">AIRR-seq Samples</a>
-          <a ngbDropdownItem class="dropdown-item" routerLink="/generep" (click)="isMenuCollapsed = true">AIRR-seq Genes</a>
         </div>
       </li>
       <li ngbNavItem class="nav-item" routerLinkActive="active">
@@ -36,11 +36,11 @@
           Help / About
         </a>
         <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Explore Data</a>
+          <a ngbDropdownItem class="dropdown-item" href="/explore-data" (click)="isMenuCollapsed = true">Explore Data</a>
           <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Guide to Reports</a>
           <div class="dropdown-divider"></div>
-          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">User Guide</a>
-          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Quick Reference</a>
+          <a ngbDropdownItem class="dropdown-item" href="/user-guide" (click)="isMenuCollapsed = true">User Guide</a>
+          <a ngbDropdownItem class="dropdown-item" href="/quick-ref" (click)="isMenuCollapsed = true">Quick Reference</a>
           <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Licensing</a>
         </div>
       </li>

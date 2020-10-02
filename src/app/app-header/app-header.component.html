@@ -14,6 +14,7 @@
           AIRR-Seq Data
         </a>
         <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+          <a ngbDropdownItem class="dropdown-item" routerLink="/datarep" (click)="isMenuCollapsed = true">Explore AIRR-Seq Data</a>
           <a ngbDropdownItem class="dropdown-item" routerLink="/samplerep" (click)="isMenuCollapsed = true">AIRR-seq Samples</a>
           <a ngbDropdownItem class="dropdown-item" routerLink="/generep" (click)="isMenuCollapsed = true">AIRR-seq Genes</a>
         </div>
@@ -36,11 +37,9 @@
           Help / About
         </a>
         <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-          <a ngbDropdownItem class="dropdown-item" href="/explore-data" (click)="isMenuCollapsed = true">Explore Data</a>
-          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Guide to Reports</a>
-          <div class="dropdown-divider"></div>
           <a ngbDropdownItem class="dropdown-item" href="/user-guide" (click)="isMenuCollapsed = true">User Guide</a>
           <a ngbDropdownItem class="dropdown-item" href="/quick-ref" (click)="isMenuCollapsed = true">Quick Reference</a>
+          <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Guide to Reports</a>
           <a ngbDropdownItem class="dropdown-item" href="#" (click)="isMenuCollapsed = true">Licensing</a>
         </div>
       </li>

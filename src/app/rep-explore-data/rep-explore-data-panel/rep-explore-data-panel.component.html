@@ -1,0 +1,22 @@
+
+<div class="container-fluid">
+  <div  class="spinner-border" role="status" *ngIf="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    <div class="row">
+      <h4>Error loading table</h4>
+      <p>{{error}}</p>
+    </div>
+  </div>
+
+  <div class="container" *ngIf="!loading && !error">
+    <google-chart #chart
+       [title]="'Condition (% individuals)'"
+       [data]="datasetInfo['condition_count']"
+       [type]="'PieChart'"
+    >
+    </google-chart>
+  </div>
+</div>

@@ -54,9 +54,10 @@ import { ResizableModule } from 'angular-resizable-element';
 import {MatRippleModule} from '@angular/material/core';
 import { ReportErrorDialogComponent } from './reports/report-error-dialog/report-error-dialog.component';
 import { QuickRefComponent } from './home/quick-ref/quick-ref.component';
-import { ExploreDataComponent } from './home/explore-data/explore-data.component';
 import { UserGuideComponent } from './home/user-guide/user-guide.component';
 import {GoogleChartsModule} from 'angular-google-charts';
+import { RepExploreDataComponent } from './rep-explore-data/rep-explore-data.component';
+import { RepExploreDataPanelComponent } from './rep-explore-data/rep-explore-data-panel/rep-explore-data-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -73,9 +74,9 @@ const appRoutes: Routes = [
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
   { path: 'samplerep', component: RepSampleComponent },
   { path: 'generep', component: RepGeneTableComponent },
+  { path: 'datarep', component: RepExploreDataComponent},
   { path: 'reports', component: ReportsComponent },
   { path: 'quick-ref', component: QuickRefComponent },
-  { path: 'explore-data', component: ExploreDataComponent },
   { path: 'user-guide', component: UserGuideComponent },
 ];
 
@@ -107,8 +108,9 @@ const appRoutes: Routes = [
     SafePipe,
     ReportErrorDialogComponent,
     QuickRefComponent,
-    ExploreDataComponent,
     UserGuideComponent,
+    RepExploreDataComponent,
+    RepExploreDataPanelComponent,
   ],
   imports: [
     BrowserModule,

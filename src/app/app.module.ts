@@ -58,6 +58,7 @@ import { UserGuideComponent } from './home/user-guide/user-guide.component';
 import {GoogleChartsModule} from 'angular-google-charts';
 import { RepExploreDataComponent } from './rep-explore-data/rep-explore-data.component';
 import { RepExploreDataPanelComponent } from './rep-explore-data/rep-explore-data-panel/rep-explore-data-panel.component';
+import { LicensingComponent } from './home/licensing/licensing.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -78,6 +79,7 @@ const appRoutes: Routes = [
   { path: 'reports', component: ReportsComponent },
   { path: 'quick-ref', component: QuickRefComponent },
   { path: 'user-guide', component: UserGuideComponent },
+  { path: 'licensing', component: LicensingComponent },
 ];
 
 @NgModule({
@@ -111,6 +113,7 @@ const appRoutes: Routes = [
     UserGuideComponent,
     RepExploreDataComponent,
     RepExploreDataPanelComponent,
+    LicensingComponent,
   ],
   imports: [
     BrowserModule,

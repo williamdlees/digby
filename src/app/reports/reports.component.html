@@ -1,9 +1,15 @@
 <app-gene-table-selector [showGenomic] = true [showRepseq]=true></app-gene-table-selector>
 <div>
   <h2>VDJbase Reports</h2>
-  <p>Some reports run just against AIRR-Seq or genomic data, while some will run on both. Please select above the species and datasets on which you would like to report. You can
-    further refine the samples against which the reports will run by using the filters on the Samples tabs to display just those samples that you wish to be included.
-    To run a report, click on an icon in the Run column corresponding to the output format that you would like (e.g. pdf, on-screen, Excel)</p>
+  <p>Currently available reports run against AIRR-Seq data sets. Reports that run against genomic datasets, or that combine data of both types, will be added in due course.</p>
+
+  <p>Please select above the species and datasets on which you would like to report. Multiple datasets from the same species can be selected. </p>
+
+  <p>You can refine the samples against which the reports will run by using filters in the Samples windows to display just those samples that you wish to be included.</p>
+
+  <p>To run the report, click on an icon in the Run column corresponding to the output format that you would like (e.g. pdf, on-screen, Excel)</p>
+
+  <p><a href="assets/doc/report_documentation.pdf">Click here</a> for report documentation.</p>
 
   <h2>Reports using just AIRR-seq Sample Data</h2>
   <mat-table [dataSource]="repListDataSource">

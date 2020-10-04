@@ -11,12 +11,150 @@
     </div>
   </div>
 
-  <div class="container" *ngIf="!loading && !error">
-    <google-chart #chart
-       [title]="'Condition (% individuals)'"
-       [data]="datasetInfo['condition_count']"
-       [type]="'PieChart'"
-    >
-    </google-chart>
-  </div>
+  <ng-container *ngIf="!loading && !error">
+    <h2 class="mt-5">Datasets available for species <span class="font-italic">{{species}}</span></h2>
+
+    <div class="container">
+      <mat-table #datasetInfoTable [dataSource]="datasetDescriptions">
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef style="width: 30% !important; flex: 0 0 30% !important;">
+            Name
+          </mat-header-cell>
+          <mat-cell *matCellDef="let desc" style="width: 30% !important; flex: 0 0 30% !important;">{{desc.dataset}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="desc">
+          <mat-header-cell *matHeaderCellDef>
+            Description
+          </mat-header-cell>
+          <mat-cell *matCellDef="let desc">{{desc.description}}</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['name', 'desc']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'desc']" ></mat-row>
+      </mat-table>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && !error && datasetInfo">
+      <h2 class="mt-5">Summary of dataset {{dataset}}: {{datasetInfo['total_samples']}} samples from {{datasetInfo['total_subjects']}} subjects</h2>
+      <p class="font-italic">{{datasetInfo['description']}}</p>
+
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <google-chart
+           [type]="'BarChart'"
+           [title]="'Sex (no. of individuals)'"
+           [data]="datasetInfo['sex_count']"
+           [options]="{legend: {position: 'none'}}"
+        >
+        </google-chart>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <google-chart
+           [type]="'PieChart'"
+           [title]="'Condition (% individuals)'"
+           [data]="datasetInfo['condition_count']"
+           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+           [width]="'100%'"
+        >
+        </google-chart>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <google-chart
+           [type]="'PieChart'"
+           [title]="'B Cell Type (% samples)'"
+           [data]="datasetInfo['celltype_count']"
+           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+        >
+        </google-chart>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-12">
+        <google-chart
+           [type]="'PieChart'"
+           [title]="'Tissue (% samples)'"
+           [data]="datasetInfo['tissue_count']"
+           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+        >
+        </google-chart>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading && !error && datasetInfo">
+    <div class="container">
+      <h2 class="mt-5">Studies included in {{dataset}}:</h2>
+
+      <mat-table #datasetStudyTable [dataSource]="datasetInfo['studies']">
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef>
+            Project ID
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">{{study.name}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="accession_id">
+          <mat-header-cell *matHeaderCellDef class="large-col">
+            Accession ID
+          </mat-header-cell>
+          <mat-cell class="large-col" *matCellDef="let study">{{study.accession_id}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="institute">
+          <mat-header-cell *matHeaderCellDef  class="large-col">
+            Institute
+          </mat-header-cell>
+          <mat-cell  class="large-col" *matCellDef="let study">{{study.institute}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="num_subjects">
+          <mat-header-cell *matHeaderCellDef>
+            Subjects
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">{{study.num_subjects}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="num_samples">
+          <mat-header-cell *matHeaderCellDef>
+            Samples
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">{{study.num_samples}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="paper">
+          <mat-header-cell *matHeaderCellDef>
+            Paper
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">
+            <a *ngIf="study.reference.includes('http')" href={{study.reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            <span *ngIf="!study.reference.includes('http')"> {{study.reference}}</span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="study_data">
+          <mat-header-cell *matHeaderCellDef>
+            Study Data
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">
+            <a *ngIf="study.accession_reference.includes('http')" href={{study.accession_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            <span *ngIf="!study.accession_reference.includes('http')"> {{study.accession_reference}}</span>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'num_samples', 'paper', 'study_data']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'num_samples', 'paper', 'study_data']" ></mat-row>
+      </mat-table>
+    </div>
+  </ng-container>>
+
+  <ng-container *ngIf="!loading && !error && !datasetInfo">
+    <div class="container">
+      <p>Please select a single dataset to see its statistics and composition</p>
+    </div>
+  </ng-container>
 </div>

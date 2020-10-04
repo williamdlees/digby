@@ -24,7 +24,9 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   repSeqs: { id: number, text: string }[] = [];
   selectedGen: { id: number, text: string }[] = [];
   selectedRep: { id: number, text: string }[] = [];
+  repDatasetDescriptions: { dataset: string, description: string }[] = [];
   isFetching: boolean;
+  initializing: boolean = false;
   error = null;
   geneTableServiceSubscription = null;
   genDropdownSettings: IDropdownSettings = {
@@ -63,6 +65,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         .subscribe(
           (sel: GeneTableSelection) => {
             if (!this.species) {
+              this.initializing = true;
               this.updateSpecies(sel);
 
             } else if (sel.species && (!this.selectedSpecies || sel.species !== this.selectedSpecies.name)) {
@@ -82,6 +85,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
           }
         );
     });
+
   }
 
   updateSpecies(selection) {
@@ -175,13 +179,15 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.isFetching = false;
       this.repSeqs = [];
       this.selectedRep = [];
+      this.repDatasetDescriptions = resp;
 
       let id = 1;
       for (const ref of resp) {
-        this.repSeqs.push({id, text: ref});
+        const dsName = ref.dataset;
+        this.repSeqs.push({id, text: dsName});
 
-        if (selectedNames.indexOf(ref) >= 0) {
-          this.selectedRep.push({id, text: ref});
+        if (selectedNames.indexOf(dsName) >= 0) {
+          this.selectedRep.push({id, text: dsName});
         }
 
         id = id + 1;
@@ -221,9 +227,11 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   repSeqChange() {
-    if (symmetricDifference(new Set(this.geneTableService.selection.value.repSeqs), new Set(this.selectedRep.map((x) => (x.text)))).size) {
+    if (symmetricDifference(new Set(this.geneTableService.selection.value.repSeqs), new Set(this.selectedRep.map((x) => (x.text)))).size || this.initializing) {
       this.onSelectionChange();
     }
+
+    this.initializing = false;  // the flag is a bit of a hack but we need to make sure the descriptions get refreshed the first time through
   }
 
   refSeqChange() {
@@ -238,6 +246,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         species: this.selectedSpecies.name,
         refSeqs: this.selectedGen.map(x => x.text),
         repSeqs: this.selectedRep.map(x => x.text),
+        repDatasetDescriptions: this.repDatasetDescriptions,
       });
     }
   }

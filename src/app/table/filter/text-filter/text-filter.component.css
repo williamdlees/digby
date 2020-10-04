@@ -22,3 +22,7 @@ outline-style: none !important;
 .multiselect-item-checkbox {
   padding: 0px 10px !important;
 }
+
+p,li {
+  font-size: 0.9rem !important;
+}

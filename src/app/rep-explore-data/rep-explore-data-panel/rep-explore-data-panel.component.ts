@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {GeneTableSelection} from '../../gene-table-selector/gene-table-selector.model';
 import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-selector.service';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
+import { GoogleChartsModule } from 'angular-google-charts';
+import {MatTable} from '@angular/material/table';
+
 
 @Component({
   selector: 'app-rep-explore-data-panel',
   templateUrl: './rep-explore-data-panel.component.html',
-  styleUrls: ['./rep-explore-data-panel.component.scss']
+  styleUrls: ['./rep-explore-data-panel.component.css'],
+  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
+
 export class RepExploreDataPanelComponent implements OnInit {
   geneTableServiceSubscription = null;
   species = null;
   dataset = null;
+  datasetDescriptions = null;
   datasetInfo = null;
   loading = false;
   error = null;
+  @ViewChild('datasetInfoTable') datasetInfoTable: MatTable<any>;
 
   constructor(
     private geneTableService: GeneTableSelectorService,
@@ -30,10 +37,12 @@ export class RepExploreDataPanelComponent implements OnInit {
           (sel: GeneTableSelection) => {
             this.species = sel.species;
             this.dataset = sel.repSeqs;
+            this.datasetDescriptions = sel.repDatasetDescriptions;
+            this.datasetInfoTable.renderRows();
             this.datasetInfo = null;
 
-            if (this.dataset.length > 0) {
-            this.error = null;
+            if (this.dataset.length === 1) {
+              this.error = null;
               this.loading = true;
               this.repseqService.getDataSetInfoApi(this.species, this.dataset[0]).subscribe( (info) => {
                 this.loading = false;
@@ -41,10 +50,10 @@ export class RepExploreDataPanelComponent implements OnInit {
               });
             }
           },
-          error => {
-            this.error = error;
-          }
-        );
+         error => {
+          this.error = error;
+        }
+      );
     });
   }
 

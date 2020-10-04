@@ -1,0 +1,9 @@
+.small-col {
+  width: 6% !important;
+  flex: 0 0 6% !important;
+}
+
+.large-col {
+  width: 15% !important;
+  flex: 0 0 15% !important;
+}

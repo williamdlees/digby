@@ -3,3 +3,8 @@ button:focus, button:active:focus, button.active:focus {
 outline: none !important;
 outline-style: none !important;
 }
+
+
+p,li {
+  font-size: 0.9rem !important;
+}

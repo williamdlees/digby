@@ -2,7 +2,7 @@
 
 import { Injectable} from '@angular/core';
 import { GenSampleFilter} from './gen-sample-filter.model';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

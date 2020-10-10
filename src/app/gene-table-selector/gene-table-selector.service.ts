@@ -1,6 +1,6 @@
 import { Injectable} from '@angular/core';
 import {GeneTableSelection} from './gene-table-selector.model';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

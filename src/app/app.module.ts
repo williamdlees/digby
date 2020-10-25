@@ -59,6 +59,7 @@ import {GoogleChartsModule} from 'angular-google-charts';
 import { RepExploreDataComponent } from './rep-explore-data/rep-explore-data.component';
 import { RepExploreDataPanelComponent } from './rep-explore-data/rep-explore-data-panel/rep-explore-data-panel.component';
 import { LicensingComponent } from './home/licensing/licensing.component';
+import { ReportRunDialogComponent } from './reports/report-run-dialog/report-run-dialog.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -114,6 +115,7 @@ const appRoutes: Routes = [
     RepExploreDataComponent,
     RepExploreDataPanelComponent,
     LicensingComponent,
+    ReportRunDialogComponent,
   ],
   imports: [
     BrowserModule,

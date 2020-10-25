@@ -1,0 +1,17 @@
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Preparing Report - {{reportTitle}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="this.activeModal.close({status: 'Cancelled'})">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="statusText !== ''">{{statusText}}</div>
+    <div *ngIf="errorText !== ''">{{errorText}}</div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="this.activeModal.close({status: 'Cancelled'})">Cancel</button>
+    <div *ngIf="enableRetry">
+      <button type="button" class="btn btn-outline-dark" (click)="this.requestReport()">Retry</button>
+    </div>
+  </div>
+

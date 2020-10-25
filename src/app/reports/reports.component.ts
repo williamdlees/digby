@@ -4,7 +4,7 @@ import {ReportsListDataSource} from './reports-list-data.source';
 import {ReportsService} from '../../../dist/digby-swagger-client';
 import {catchError, filter, flatMap, map, toArray} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/collections';
-import {defer, EMPTY, Observable} from 'rxjs';
+import {defer, EMPTY, Observable, of, Subscription} from 'rxjs';
 import {ReportList} from './reports-list.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportParamsDialogComponent} from './report-params-dialog/report-params-dialog.component';
@@ -16,7 +16,8 @@ import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.mod
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { pollUntil } from '../shared/poll-until-rxjs';
-import {ajax} from 'rxjs/ajax';
+import {ReportRunDialogComponent} from './report-run-dialog/report-run-dialog.component';
+import {ReportRequestService} from './report-request-service';
 
 @Component({
   selector: 'app-reports',
@@ -34,6 +35,10 @@ export class ReportsComponent implements OnInit, OnDestroy {
   globalReportFilterParamsSubscription = null;
   repSampleFilters = [];
   globalReportFilters = null;
+  reportRequest = null;
+  reportWindow = null;
+  lastReportInfo = '';
+  private reportResult$Subscription: Subscription;
 
   constructor(
     private modalService: NgbModal,
@@ -74,6 +79,29 @@ export class ReportsComponent implements OnInit, OnDestroy {
         this.globalReportFilters = globalReportFilters;
       }
     );
+
+    this.reportRequest = new ReportRequestService(this.reportsService);
+    this.reportResult$Subscription = this.reportRequest.reportResult$.subscribe(
+      (result) => {
+        if(this.reportWindow) {
+          if (result.status === 'PENDING') {
+            if (result.info === this.lastReportInfo) {
+              this.reportWindow.document.getElementById('status_line').innerHTML =
+                this.reportWindow.document.getElementById('status_line').innerHTML + '.';
+            } else {
+              this.reportWindow.document.getElementById('status_line').innerHTML = result.info;
+              this.lastReportInfo = result.info;
+            }
+          } else if (result.status === 'FAILURE') {
+            this.reportWindow.close()
+            this.reportWindow = null;
+            this.displayError(result.info);
+          } else if (result.status === 'SUCCESS') {
+            this.reportWindow.location = result.response.results.url;
+          }
+        }
+      }
+    );
   }
 
   ngOnDestroy(): void {
@@ -83,8 +111,6 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   runReport(report, format) {
-    console.log('Run report: ' + report.name + ' to ' + format);
-
     if (report.params.length > 0 || report.filter_params) {
       const modalRef = this.modalService.open(ReportParamsDialogComponent, {size: 'm'});
       modalRef.componentInstance.report = report;
@@ -114,70 +140,72 @@ export class ReportsComponent implements OnInit, OnDestroy {
     }
   }
 
-
   private sendReportRequest(report, format, params) {
-    const reportWindow = window.open('', '_blank');
-    reportWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" ' +
-      'integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">' +
-      '<h3>Running your report...</h3>' +
-      '<div  class="spinner-border" role="status"> ' +
-      '<span class="sr-only">Loading...</span> ' +
-      '</div>');
+    params = JSON.stringify(params);
+    const species = this.geneTableSelection.species;
+    const genSeqs = this.geneTableSelection.refSeqs.join(',');
+    const genFilters = JSON.stringify(this.genSampleFilters);
+    const repSeqs = this.geneTableSelection.repSeqs.join(',');
+    const repFilters = JSON.stringify(this.repSampleFilters);
 
-    this.reportsService.getReportsRunApi(
-      report.name,
-      format,
-      this.geneTableSelection.species,
-      this.geneTableSelection.refSeqs.join(','),
-      JSON.stringify(this.genSampleFilters),
-      this.geneTableSelection.repSeqs.join(','),
-      JSON.stringify(this.repSampleFilters),
-      JSON.stringify(params)
-    ).subscribe((reportResponse) => {
-      const jobId = reportResponse.id;
-      console.log('job id:' + jobId);
+    if (format !== 'html') {
+      this.sendDownloadReportRequest(report, format, species, genSeqs, genFilters, repSeqs, repFilters, params);
+    } else {
+      this.sendHtmlReportRequest(report, format, species, genSeqs, genFilters, repSeqs, repFilters, params)
+    }
+  }
 
-      let pollCount = 0;
+  private sendDownloadReportRequest(report, format: string, species: string, genSeqs: string, genFilters: string, repSeqs: string,
+                                    repFilters: string, params: string) {
+    const modalRef = this.modalService.open(ReportRunDialogComponent, {size: 'm'});
+    modalRef.componentInstance.report = report;
+    modalRef.componentInstance.format = format;
+    modalRef.componentInstance.species = species;
+    modalRef.componentInstance.genSeqs = genSeqs;
+    modalRef.componentInstance.genFilters = genFilters;
+    modalRef.componentInstance.repSeqs = repSeqs;
+    modalRef.componentInstance.repFilters = repFilters;
+    modalRef.componentInstance.params = params;
 
-      this.fetchReportStatus(jobId)
-        .pipe(pollUntil(3000, 40, (response) => {
-          console.log(response.status + ': ' + pollCount);
-          pollCount += 1;
-          return (response.status === 'SUCCESS' || response.status === 'FAILURE');
-        }))
-        .subscribe((response) => {
-            console.log('status: ' + response.status);
-            if (response.status === 'SUCCESS') {
-              if (response.results.status === 'ok') {
-                this.showResult(response.results, reportWindow);
-              } else {
-                this.displayError(reportWindow, report, {status: response.results.description});
-              }
-            } else {
-              this.displayError(reportWindow, report, 'return code:' + response.status + ' ' + response.description);
-            }
-          },
-          (error) => {
-            console.log('error: poll count exceeded');
-            this.displayError(reportWindow, report, {status: 'Timeout waiting for report'});
-          }
-        );
-    },
-      (error) => {
-        console.log('error from run request');
-        this.displayError(reportWindow, report, error);
+    modalRef.result.then((response) => {
+      if (response.status === 'SUCCESS') {
+      const token = 'my JWT';
+      const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
+      this.httpClient.get(response.results.url, {headers, responseType: 'blob' as 'json'}).subscribe(
+        (rep: any) => {
+          const dataType = rep.type;
+          const downloadLink = document.createElement('a');
+          downloadLink.href = window.URL.createObjectURL(rep);
+          downloadLink.setAttribute('download', response.results.filename);
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+        });
       }
+    });
+  }
+
+
+  private sendHtmlReportRequest(report, format: string, species: string, genSeqs: string, genFilters: string, repSeqs: string,
+                                    repFilters: string, params: string) {
+    this.reportWindow = window.open('', '_blank');
+
+    this.reportWindow.document.write(
+      '<h3>Preparing your report...</h3>' +
+      '<p id="status_line"></p>'
     );
+
+    this.reportRequest.requestReport(report.name, format, species, genSeqs, genFilters, repSeqs, repFilters, params);
   }
 
   private fetchReportStatus(jobId) {
     return defer(() =>
       this.reportsService.getReportsStatus(jobId)
-    ).pipe(catchError(() => EMPTY));
+    ).pipe(catchError(err => {console.log('error fetching report status', err); return of({status: 'FAILURE'}); }));
   }
 
   private showResult(response, reportWindow: Window) {
     if (!response.filename) {
+      reportWindow.focus();
       reportWindow.location = response.url;
     } else {
       reportWindow.close();
@@ -195,25 +223,12 @@ export class ReportsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private displayError(reportWindow: Window, report, error) {
-    reportWindow.close();
+  private displayError(error) {
     const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
-    modalRef.componentInstance.report = 'Error running ' + report.title;
+    modalRef.componentInstance.report = 'Error running report';
+    modalRef.componentInstance.errorMessage = error;
 
-    if ('error' in error && 'message' in error.error && error.error.message) {
-      modalRef.componentInstance.errorMessage = error.error.message;
-    } else if ('statusText' in error && error.statusText) {
-      modalRef.componentInstance.errorMessage = error.status + '. ' + error.name + ': ' + error.statusText;
-    } else {
-      modalRef.componentInstance.errorMessage = error.status;
-    }
-
-    modalRef.result.then(
-      (result) => {
-      },
-      () => {
-      }
-    );
+    modalRef.result.then();
   }
 }
 

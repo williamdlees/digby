@@ -1,6 +1,7 @@
 export interface RepSequence {
   sequences: [{
     name: string;
+    gene_name: string;
     pipeline_name: string;
     seq: string;
     seq_len: number;

@@ -53,6 +53,20 @@
             <mat-cell *matCellDef="let seq" (click)="onCellClick(seq, 'seq')" class="large-col">{{seq.name}}</mat-cell>
         </ng-container>
 
+         <ng-container matColumnDef="gene_name">
+            <mat-header-cell *matHeaderCellDef  mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'gene_name')"
+			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+              Gene Name
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'gene_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let seq"  class="small-col">
+              {{seq.gene_name}}
+              <button class="btn btn-sm btn-solid-icon" style="" [matMenuTriggerFor]="geneMenu" [matMenuTriggerData]="{seq: seq}">
+                <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
+              </button>
+            </mat-cell>
+        </ng-container>
+
          <ng-container matColumnDef="pipeline_name">
             <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'pipeline_name')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
@@ -173,3 +187,30 @@
       </div>
   </div>
 </div>
+
+<mat-menu #geneMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+  <ng-template matMenuContent let-seq="seq">
+    <div class="container">
+      <div class="row ml-1 mr-2">
+        <b>{{seq.gene_name}} allelic variation</b>
+      </div>
+      <div class="row ml-1 mr-2 mb-1">
+        IgSNPer Analysis
+        <ng-container *ngIf="seq['igsnper_plot_path'].length > 0">
+          <span>&nbsp;&nbsp;</span>
+          <a href="{{ seq['igsnper_plot_path'] }}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="seq['igsnper_plot_path'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-1 mr-2 mb-1">
+        IgSNPer documentation
+        <span>&nbsp;&nbsp;</span>
+        <a href="https://github.com/Immunotools/IgSNPer" target="_blank">
+          <i class="fa fa-desktop" style="line-height: inherit;"></i>
+        </a>
+      </div>
+    </div>
+  </ng-template>
+</mat-menu>

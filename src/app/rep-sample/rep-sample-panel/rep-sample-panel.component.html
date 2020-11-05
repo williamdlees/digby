@@ -542,13 +542,23 @@
           <span>&nbsp;&nbsp;</span>Not available
         </ng-container>
       </div>
-      <div class="row ml-4 mr-2 mb-4">
+      <div class="row ml-4 mr-2 mb-1">
          OGRDBStats plots
         <span>&nbsp;&nbsp;</span>
         <ng-container *ngIf="sample.genotypes['ogrdbplot'].length > 0">
           <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
         </ng-container>
         <ng-container *ngIf="sample.genotypes['ogrdbplot'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
+      <div class="row ml-4 mr-2 mb-4">
+         IgSNPer report (for sample S1)
+        <span>&nbsp;&nbsp;</span>
+        <ng-container *ngIf="sample.genotypes['igsnper'].length > 0">
+          <a href="{{ sample.genotypes['path']+sample.genotypes['igsnper'] }}" download="{{ sample.name + '_igsnper.tsv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.genotypes['igsnper'].length === 0">
           <span>&nbsp;&nbsp;</span>Not available
         </ng-container>
       </div>
@@ -563,6 +573,13 @@
         OGRDBstats documentation
         <span>&nbsp;&nbsp;</span>
         <a href="https://github.com/airr-community/ogrdbstats" target="_blank">
+          <i class="fa fa-desktop" style="line-height: inherit;"></i>
+        </a>
+      </div>
+      <div class="row ml-1 mr-2 mb-1">
+        IgSNPer documentation
+        <span>&nbsp;&nbsp;</span>
+        <a href="https://github.com/Immunotools/IgSNPer" target="_blank">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
         </a>
       </div>

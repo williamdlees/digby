@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiBasePath: 'http://localhost:5000/api',
-  igvBasePath: 'http://localhost:5000/static/gff',
+  apiBasePath: location.protocol + '//' + location.hostname + ':5000/api',
+  igvBasePath: location.protocol + '//' + location.hostname + ':5000/static/gff',
 };
 
 /*

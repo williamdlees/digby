@@ -66,6 +66,7 @@ export function apiConfigFactory(): Configuration  {
     // set configuration parameters here.
     basePath: environment.apiBasePath,
   };
+
   return new Configuration(params);
 }
 

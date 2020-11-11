@@ -73,7 +73,7 @@
               Primer Name
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'pipeline_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let seq">{{seq.pipeline_name}}</mat-cell>
+            <mat-cell *matCellDef="let seq" class="small-col">{{seq.pipeline_name}}</mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="seq">

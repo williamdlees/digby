@@ -40,7 +40,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 
   species = null;
-  refName = null;
+  assemblyName = null;
 
   constructor(private geneTableService: GeneTableSelectorService,
               private route: ActivatedRoute) {
@@ -65,10 +65,10 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.species = null;
     }
 
-    if (this.selection.datasets.length > 0) {
-      this.refName = this.selection.datasets[0].replace(' ', '_');
+    if (this.selection.assemblies.length > 0) {
+      this.assemblyName = this.selection.assemblies[0].replace(' ', '_');
     } else {
-      this.refName = null;
+      this.assemblyName = null;
     }
 
     if (this.browser) {
@@ -76,7 +76,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.browser = null;
     }
 
-    if (this.species && this.refName) {
+    if (this.species && this.assemblyName) {
       this.buildBrowser();
     }
   }
@@ -88,11 +88,11 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       {
         reference: {
           id: this.species,
-          fastaURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.fasta.fai'
+          fastaURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.fasta',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.fasta.fai'
         },
         search: {
-          url: environment.apiBasePath +  '/genomic/feature_pos/' + this.species + '/' + this.refName + '/$FEATURE$'
+          url: environment.apiBasePath +  '/genomic/feature_pos/' + this.species + '/' + this.assemblyName + '/$FEATURE$'
         }
     }).then((browser) => {
       delay(0);
@@ -100,21 +100,21 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.browser.loadTrack({
         name: 'Genes',
         type: 'annotation',
-        url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.gff3',
+        url: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.gff3',
       }).then(() => {
         this.browser.loadTrack({
           name: 'Samples',
           type: 'alignment',
           format: 'bam',
-          url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '.bam.bai'
+          url: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.bam',
+          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.bam.bai'
         }).then(() => {
           this.browser.loadTrack({
             name: 'Refs',
             type: 'alignment',
             format: 'bam',
-            url: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam',
-            indexURL: environment.igvBasePath + '/' + this.species + '_' + this.refName + '_imgt.bam.bai',
+            url: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '_imgt.bam',
+            indexURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '_imgt.bam.bai',
           });
         });
       });

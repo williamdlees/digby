@@ -17,16 +17,19 @@ import {GeneTableSelection} from './gene-table-selector.model';
 })
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   @Input() showGenomic: boolean;
+  @Input() showAssembly: boolean;
   @Input() showRepseq: boolean;
   species = null;
   selectedSpecies = null;
   datasets: { id: number, text: string }[] = [];
+  assemblies: { id: number, text: string }[] = [];
   repSeqs: { id: number, text: string }[] = [];
   selectedGen: { id: number, text: string }[] = [];
+  selectedAssembly: { id: number, text: string }[] = [];
   selectedRep: { id: number, text: string }[] = [];
   repDatasetDescriptions: { dataset: string, description: string }[] = [];
   isFetching: boolean;
-  initializing: boolean = false;
+  initializing = false;
   error = null;
   geneTableServiceSubscription = null;
   genDropdownSettings: IDropdownSettings = {
@@ -111,7 +114,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         id = id + 1;
       }
 
-      this.updateGen(selection.refSeqs);
+      this.updateGen(selection.datasets);
       this.updateRep(selection.repSeqs);
 
     }, error => {
@@ -150,10 +153,52 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         this.selectedGen.push(this.datasets[0]);
       }
 
+      this.updateAssemblies(this.geneTableService.selection.value.assemblies);
      }, error => {
         this.isFetching = false;
         this.error = error.message;
       });
+  }
+
+  updateAssemblies(selectedNames: string[]) {
+    if (this.selectedGen.length > 0) {
+      this.genomicService.getAssemblyApi(this.selectedSpecies.name, this.selectedGen.map(x => x.text).join())
+        .pipe(
+          retryWithBackoff(),
+          catchError(err => {
+            this.isFetching = false;
+            this.error = err;
+            return EMPTY;
+          })
+        )
+        .subscribe((resp) => {
+          this.isFetching = false;
+          this.assemblies = [];
+          this.selectedAssembly = [];
+
+          let id = 1;
+          for (const ref of resp) {
+            this.assemblies.push({id, text: ref.assembly});
+
+            if (selectedNames && selectedNames.indexOf(ref.ref_seq) >= 0) {
+              this.selectedAssembly.push({id, text: ref.dataset});
+            }
+
+            id = id + 1;
+          }
+
+          if (this.selectedAssembly.length === 0 && this.assemblies.length > 0) {
+            this.selectedAssembly.push(this.assemblies[0]);
+          }
+
+        }, error => {
+          this.isFetching = false;
+          this.error = error.message;
+        });
+    } else {
+      this.assemblies = [];
+      this.selectedAssembly = [];
+    }
   }
 
 
@@ -219,6 +264,14 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
     this.initializing = false;  // the flag is a bit of a hack but we need to make sure the descriptions get refreshed the first time through
   }
 
+  assemblyChange() {
+    if (symmetricDifference(new Set(this.geneTableService.selection.value.repSeqs), new Set(this.selectedAssembly.map((x) => (x.text)))).size || this.initializing) {
+      this.onSelectionChange();
+    }
+
+    this.initializing = false;  // the flag is a bit of a hack but we need to make sure the descriptions get refreshed the first time through
+  }
+
   refSeqChange() {
     if (symmetricDifference(new Set(this.geneTableService.selection.value.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
       this.onSelectionChange();
@@ -230,6 +283,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.geneTableService.selection.next({
         species: this.selectedSpecies.name,
         datasets: this.selectedGen.map(x => x.text),
+        assemblies: this.selectedAssembly.map(x => x.text),
         repSeqs: this.selectedRep.map(x => x.text),
         repDatasetDescriptions: this.repDatasetDescriptions,
       });

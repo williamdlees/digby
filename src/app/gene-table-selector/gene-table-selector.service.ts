@@ -9,6 +9,7 @@ export class GeneTableSelectorService {
   selection = new BehaviorSubject<GeneTableSelection>({
     species: 'Human',
     datasets: [],
+    assemblies: [],
     repSeqs: ['Human_IGH'],
     repDatasetDescriptions: [{ dataset: 'Human_IGH', description: ''}],
   });

@@ -25,6 +25,22 @@
       </ng-multiselect-dropdown>
     </div>
   </div>
+  <div class="col-auto my-1" *ngIf="showAssembly">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="selectAssembly" style="height: 38px">Genomic Assemblies</label>
+      </div>
+      <ng-multiselect-dropdown id="selectAssembly"
+        [class]="'selector-dropdown'"
+        [settings] = genDropdownSettings
+        [data] = assemblies
+        [(ngModel)] = selectedAssembly
+        [placeholder] = "'Select Datasets'"
+        (ngModelChange)="assemblyChange()"
+      >
+      </ng-multiselect-dropdown>
+    </div>
+  </div>
   <div class="col-auto my-1" *ngIf="showRepseq">
     <div class="input-group">
       <div class="input-group-prepend">

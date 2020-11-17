@@ -56,6 +56,53 @@ export class GenomicService {
 
 
     /**
+     * Returns the list of annotated assemblies for the selected species and datasets
+     * 
+     * @param species 
+     * @param dataSets 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAssemblyApi(species: string, dataSets: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getAssemblyApi(species: string, dataSets: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getAssemblyApi(species: string, dataSets: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getAssemblyApi(species: string, dataSets: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getAssemblyApi.');
+        }
+
+        if (dataSets === null || dataSets === undefined) {
+            throw new Error('Required parameter dataSets was null or undefined when calling getAssemblyApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/assemblies/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataSets))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of data sets for the selected species
      * 
      * @param species 
@@ -140,48 +187,6 @@ export class GenomicService {
         ];
 
         return this.httpClient.get<any>(`${this.basePath}/genomic/feature_pos/${encodeURIComponent(String(species))}/${encodeURIComponent(String(refSeqName))}/${encodeURIComponent(String(featureString))}`,
-            {
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Returns the list of annotated reference sequences for the selected species
-     * 
-     * @param species 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getRefSeqApi(species: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getRefSeqApi(species: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getRefSeqApi(species: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getRefSeqApi(species: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (species === null || species === undefined) {
-            throw new Error('Required parameter species was null or undefined when calling getRefSeqApi.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // to determine the Accept header
-        let httpHeaderAccepts: string[] = [
-            'application/json'
-        ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected != undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-
-        return this.httpClient.get<any>(`${this.basePath}/genomic/ref_seqs/${encodeURIComponent(String(species))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

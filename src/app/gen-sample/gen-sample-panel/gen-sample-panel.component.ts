@@ -177,7 +177,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   loadSequencesPage() {
     if (this.selection) {
       this.dataSource.loadGenSamples(this.selection.species,
-        this.selection.refSeqs.join(),
+        this.selection.datasets.join(),
         this.paginator.pageIndex,
         this.paginator.pageSize,
         JSON.stringify(this.filters),

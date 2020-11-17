@@ -65,8 +65,8 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.species = null;
     }
 
-    if (this.selection.refSeqs.length > 0) {
-      this.refName = this.selection.refSeqs[0].replace(' ', '_');
+    if (this.selection.datasets.length > 0) {
+      this.refName = this.selection.datasets[0].replace(' ', '_');
     } else {
       this.refName = null;
     }

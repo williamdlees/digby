@@ -8,7 +8,7 @@ import { BehaviorSubject } from 'rxjs';
 export class GeneTableSelectorService {
   selection = new BehaviorSubject<GeneTableSelection>({
     species: 'Human',
-    refSeqs: [],
+    datasets: [],
     repSeqs: ['Human_IGH'],
     repDatasetDescriptions: [{ dataset: 'Human_IGH', description: ''}],
   });

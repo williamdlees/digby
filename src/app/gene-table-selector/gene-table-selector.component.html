@@ -17,7 +17,7 @@
       <ng-multiselect-dropdown id="selectGenomic"
         [class]="'selector-dropdown'"
         [settings] = genDropdownSettings
-        [data] = refSeqs
+        [data] = datasets
         [(ngModel)] = selectedGen
         [placeholder] = "'Select Datasets'"
         (ngModelChange)="refSeqChange()"

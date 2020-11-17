@@ -44,10 +44,10 @@ export class ReportsListDataSource implements DataSource<ReportList> {
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
 
-        console.log("requesting reports list for " + this.geneTableSelection.species + ", " + this.geneTableSelection.refSeqs.join(',') + ", " + this.geneTableSelection.repSeqs.join(','));
+        console.log("requesting reports list for " + this.geneTableSelection.species + ", " + this.geneTableSelection.datasets.join(',') + ", " + this.geneTableSelection.repSeqs.join(','));
 
         this.reportsService.getReportsApi(
-          this.geneTableSelection.species, this.geneTableSelection.refSeqs.join(','), this.geneTableSelection.repSeqs.join(',')
+          this.geneTableSelection.species, this.geneTableSelection.datasets.join(','), this.geneTableSelection.repSeqs.join(',')
         ).pipe(
           retryWithBackoff(),
           catchError(error => {

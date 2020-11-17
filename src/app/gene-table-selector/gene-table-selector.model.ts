@@ -1,6 +1,6 @@
 export class GeneTableSelection {
   species: string;
-  refSeqs: string[];
+  datasets: string[];
   repSeqs: string[];
   repDatasetDescriptions: { dataset: string, description: string}[];
 }

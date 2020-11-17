@@ -143,7 +143,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   private sendReportRequest(report, format, params) {
     params = JSON.stringify(params);
     const species = this.geneTableSelection.species;
-    const genSeqs = this.geneTableSelection.refSeqs.join(',');
+    const genSeqs = this.geneTableSelection.datasets.join(',');
     const genFilters = JSON.stringify(this.genSampleFilters);
     const repSeqs = this.geneTableSelection.repSeqs.join(',');
     const repFilters = JSON.stringify(this.repSampleFilters);

@@ -79,7 +79,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         this.geneTableServiceSubscription = this.geneTableService.source
           .subscribe(
             (sel: GeneTableSelection) => {
-              if (sel.species && sel.refSeqs) {
+              if (sel.species && sel.datasets) {
                 this.selection = sel;
                 this.paginator.firstPage();
                 this.table.renderRows();
@@ -185,7 +185,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     if (this.selection) {
       this.dataSource.loadGeneSequences(
         this.selection.species,
-        this.selection.refSeqs.join(),
+        this.selection.datasets.join(),
         this.paginator.pageIndex,
         this.paginator.pageSize,
         JSON.stringify(this.filters),

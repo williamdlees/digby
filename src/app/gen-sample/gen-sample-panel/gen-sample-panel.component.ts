@@ -34,7 +34,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: GenSampleDataSource;
 
-  displayedColumns = ['name', 'type', 'date', 'study_name', 'institute', 'researcher', 'reference', 'contact', 'accession_id', 'accession_reference'];
+  displayedColumns = ['name', 'type', 'date', 'study_name', 'institute', 'researcher', 'reference', 'contact', 'assembly_id', 'assembly_reference'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;

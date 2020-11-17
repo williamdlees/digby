@@ -7,7 +7,7 @@
    {id: 'researcher', name: 'Researcher', hidden: false},
    {id: 'reference', name: 'Reference', hidden: false},
    {id: 'contact', name: 'Contact', hidden: false},
-   {id: 'accession_id', name: 'Accession ID', hidden: false},
-   {id: 'accession_reference', name: 'Accession Ref', hidden: false},
+   {id: 'assembly_id', name: 'Accession ID', hidden: false},
+   {id: 'assembly_reference', name: 'Accession Ref', hidden: false},
    {id: 'report', name: 'Report', hidden: false},
  ];

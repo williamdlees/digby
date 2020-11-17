@@ -124,34 +124,34 @@
             <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.contact}}</mat-cell>
         </ng-container>
 
-         <ng-container matColumnDef="accession_id">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'accession_id')"
+         <ng-container matColumnDef="assembly_id">
+            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_id')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Accession ID
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'accession_id'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              Assembly ID
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_id'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
             <mat-cell *matCellDef="let sample">
-              <ng-container *ngIf="sample.accession_id.startsWith('http')">
-                <a href={{sample.accession_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+              <ng-container *ngIf="sample.assembly_id.startsWith('http')">
+                <a href={{sample.assembly_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
               </ng-container>
-              <ng-container *ngIf="!sample.accession_id.startsWith('http')">
-                {{sample.accession_id}}
+              <ng-container *ngIf="!sample.assembly_id.startsWith('http')">
+                {{sample.assembly_id}}
               </ng-container>
             </mat-cell>
         </ng-container>
 
-         <ng-container matColumnDef="accession_reference">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'accession_reference')"
+         <ng-container matColumnDef="assembly_reference">
+            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_reference')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Accession Ref
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'accession_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              Assembly Ref
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
             <mat-cell *matCellDef="let sample">
-              <ng-container *ngIf="sample.accession_reference.startsWith('http')">
-                <a href={{sample.accession_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+              <ng-container *ngIf="sample.assembly_reference.startsWith('http')">
+                <a href={{sample.assembly_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
               </ng-container>
-              <ng-container *ngIf="!sample.accession_reference.startsWith('http')">
-                {{sample.accession_reference}}
+              <ng-container *ngIf="!sample.assembly_reference.startsWith('http')">
+                {{sample.assembly_reference}}
               </ng-container>
             </mat-cell>
         </ng-container>

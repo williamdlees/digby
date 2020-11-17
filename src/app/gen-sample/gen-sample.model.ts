@@ -7,6 +7,6 @@ export interface GenSample {
     researcher: string;
     reference: string;
     contact: string;
-    accession_id: string;
-    accession_reference: string;
+    assembly_id: string;
+    assembly_reference: string;
 }

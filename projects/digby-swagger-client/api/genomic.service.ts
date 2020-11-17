@@ -56,6 +56,48 @@ export class GenomicService {
 
 
     /**
+     * Returns the list of data sets for the selected species
+     * 
+     * @param species 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getDataSetApi(species: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getDataSetApi(species: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getDataSetApi(species: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getDataSetApi(species: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getDataSetApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/data_sets/${encodeURIComponent(String(species))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the position of the first feature matching the specified string
      * 
      * @param species 

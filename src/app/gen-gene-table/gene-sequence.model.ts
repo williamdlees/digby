@@ -4,6 +4,8 @@ export interface GeneSequence {
     imgt_name: string;
     type: string;
     novel: boolean;
+    deleted: boolean;
+    functional: string;
     sequence: string;
     sequence_full: string;
     gapped_sequence: string;

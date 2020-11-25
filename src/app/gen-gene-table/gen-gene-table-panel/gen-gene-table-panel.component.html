@@ -84,6 +84,17 @@
             </mat-cell>
         </ng-container>
 
+        <ng-container matColumnDef="functional">
+            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'functional')"
+			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+              Functional
+            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'functional'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sequence" class="small-col">
+              {{sequence.functional}}
+            </mat-cell>
+        </ng-container>
+
         <ng-container matColumnDef="deleted">
             <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'deleted')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">

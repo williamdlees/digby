@@ -9,5 +9,8 @@
    {id: 'contact', name: 'Contact', hidden: false},
    {id: 'assembly_id', name: 'Accession ID', hidden: false},
    {id: 'assembly_reference', name: 'Accession Ref', hidden: false},
+   {id: 'chromosome', name: 'Chromosome', hidden: false},
+   {id: 'assembly_start', name: 'Chr Start', hidden: false},
+   {id: 'assembly_end', name: 'Chr End', hidden: false},
    {id: 'report', name: 'Report', hidden: false},
  ];

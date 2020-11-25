@@ -9,4 +9,7 @@ export interface GenSample {
     contact: string;
     assembly_id: string;
     assembly_reference: string;
+    chromosome: string;
+    assembly_start: bigint;
+    assembly_end: bigint;
 }

@@ -141,12 +141,12 @@
         </ng-container>
 
          <ng-container matColumnDef="assembly_reference">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_reference')"
+            <mat-header-cell class="small-col" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_reference')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
               Assembly Ref
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sample">
+            <mat-cell class="small-col" *matCellDef="let sample">
               <ng-container *ngIf="sample.assembly_reference.startsWith('http')">
                 <a href={{sample.assembly_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
               </ng-container>
@@ -155,6 +155,40 @@
               </ng-container>
             </mat-cell>
         </ng-container>
+
+         <ng-container matColumnDef="chromosome">
+            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'chromosome')"
+			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+              Chromosome
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'chromosome'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell  class="small-col" *matCellDef="let sample">
+                {{sample.chromosome}}
+            </mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="assembly_start">
+            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_start')"
+			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+              Chr Start
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_start'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample">
+                {{sample.assembly_start}}
+            </mat-cell>
+        </ng-container>
+
+         <ng-container matColumnDef="assembly_end">
+            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_end')"
+			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+              Chr End
+             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_end'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let sample">
+                {{sample.assembly_end}}
+            </mat-cell>
+        </ng-container>
+
 
          <ng-container matColumnDef="report">
             <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'report')"

@@ -50,7 +50,7 @@
               Name
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let seq" (click)="onCellClick(seq, 'seq')" class="large-col">{{seq.name}}</mat-cell>
+            <mat-cell *matCellDef="let seq" (click)="onSequenceClick(seq)" class="large-col">{{seq.name}}</mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="gene_name">
@@ -59,7 +59,7 @@
               Gene Name
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'gene_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let seq"  class="small-col">
+            <mat-cell *matCellDef="let seq" >
               {{seq.gene_name}}
               <button class="btn btn-sm btn-solid-icon" style="" [matMenuTriggerFor]="geneMenu" [matMenuTriggerData]="{seq: seq}">
                 <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
@@ -68,7 +68,7 @@
         </ng-container>
 
          <ng-container matColumnDef="pipeline_name">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'pipeline_name')"
+            <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'pipeline_name')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
               Primer Name
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'pipeline_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -82,7 +82,7 @@
               Sequence
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'seq'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let seq" (click)="onCellClick(seq, 'seq')" class="small-col mat-ellipsis">{{seq.seq}}</mat-cell>
+            <mat-cell *matCellDef="let seq" (click)="onSequenceClick(seq)" class="small-col mat-ellipsis">{{seq.seq}}</mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="seq_len">
@@ -95,12 +95,12 @@
         </ng-container>
 
          <ng-container matColumnDef="similar">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'similar')"
+            <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'similar')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
               Similar
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'similar'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let seq" >{{seq.similar}}</mat-cell>
+            <mat-cell *matCellDef="let seq"  class="small-col">{{seq.similar}}</mat-cell>
         </ng-container>
 
          <ng-container matColumnDef="appears">
@@ -167,8 +167,8 @@
         </ng-container>
 
          <ng-container matColumnDef="notes_count">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'notes_count')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}" class="small-col">
+            <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'notes_count')"
+			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
               Notes
              <app-filter #filterComponent="menuInOtherComponent" [columnName]="'notes_count'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>

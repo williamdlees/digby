@@ -10,5 +10,7 @@
   </pre>
 </div>
 <div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" [disabled] ="!gappedAvailable" (click)="onGappedClick($event.target)">Gapped</button>
+  <button type="button" class="btn btn-outline-dark" (click)="onFastaClick($event.target)">FASTA</button>
   <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
 </div>

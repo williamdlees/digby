@@ -195,15 +195,10 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     }
   }
 
-  onCellClick(seq, type) {
+  onSequenceClick(seq) {
     const modalRef = this.modalService.open(SeqModalComponent, { size: 'lg'});
     modalRef.componentInstance.name = seq.name;
-
-    if (type === 'seq') {
-      modalRef.componentInstance.content = seq.sequence;
-    } else {
-      modalRef.componentInstance.content = seq.gapped_sequence;
-    }
+    modalRef.componentInstance.content = {ungapped: seq.sequence, gapped: seq.gapped_sequence};
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {

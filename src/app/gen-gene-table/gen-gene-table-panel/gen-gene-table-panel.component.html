@@ -113,16 +113,16 @@
               Sequence
             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col mat-ellipsis" (click)="onCellClick(sequence, 'seq')">{{sequence.sequence}}</mat-cell>
+            <mat-cell *matCellDef="let sequence" class="small-col mat-ellipsis" (click)="onSequenceClick(sequence)">{{sequence.sequence}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="gapped_sequence">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'gapped_sequence')"
+            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'gapped_sequence')"
 			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
               Gapped
             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'gapped_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
             </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col mat-ellipsis" (click)="onCellClick(sequence, 'gapped')">{{sequence.gapped_sequence}}</mat-cell>
+            <mat-cell *matCellDef="let sequence" class="mat-ellipsis" (click)="onSequenceClick(sequence)">{{sequence.gapped_sequence}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="feature">
@@ -210,5 +210,7 @@
 
         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
-    </mat-table>
+      </mat-table>
+    </div>
+  </div>
 </div>

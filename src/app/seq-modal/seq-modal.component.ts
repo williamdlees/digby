@@ -15,26 +15,45 @@ export class SeqModalComponent implements OnInit {
   displayContent: string;
   width = 50;
   gapped = false;
+  fasta = false;
+  gappedAvailable = false;
 
   constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit() {
     // format display_content from the sequence in content
     // options tbd...
-    this.format_nuc_sequence();
+
+    this.gappedAvailable = this.content.gapped && this.content.gapped.length > 0;
+    this.format_sequence();
   }
 
-  format_nuc_sequence() {
+  format_sequence() {
     let ind = 1;
     this.displayContent = '';
+    let content = '';
 
-    if (this.content) {
-      for (const frag of this.chunkSubstr(this.content, this.width)) {
-        this.displayContent += _.padEnd(ind.toString(), 5);
+    if (this.gapped) {
+      content = this.content.gapped ? this.content.gapped : '';
+    } else {
+      content = this.content.ungapped ? this.content.ungapped : '';
+    }
 
-        if (frag.length > 10) {
-          this.displayContent += _.repeat(' ', frag.length - 10) + _.padStart((ind + frag.length - 1).toString(), 5) + '<br>' + frag + '<br><br>'
-          ind += frag.length;
+    if (content) {
+      if(this.fasta) {
+        this.displayContent += '>' + this.name + '<br>';
+      }
+
+      for (const frag of this.chunkSubstr(content, this.width)) {
+        if (this.fasta) {
+          this.displayContent += frag + '<br>';
+        } else {
+          this.displayContent += _.padEnd(ind.toString(), 5);
+
+          if (frag.length > 10) {
+            this.displayContent += _.repeat(' ', frag.length - 10) + _.padStart((ind + frag.length - 1).toString(), 5) + '<br>' + frag + '<br><br>'
+            ind += frag.length;
+          }
         }
       }
     }
@@ -51,5 +70,17 @@ export class SeqModalComponent implements OnInit {
     }
 
     return chunks;
+  }
+
+  onGappedClick(element) {
+    this.gapped = !this.gapped;
+    element.textContent = this.gapped ? 'Ungapped' : 'Gapped';
+    this.format_sequence();
+  }
+
+  onFastaClick(element) {
+    this.fasta = !this.fasta;
+    element.textContent = this.fasta ? 'Numbered' : 'FASTA';
+    this.format_sequence();
   }
 }

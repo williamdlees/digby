@@ -196,12 +196,14 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     modalRef.componentInstance.notes = seq.notes;
   }
 
-  onCellClick(seq, type) {
+  onSequenceClick(seq) {
     const modalRef = this.modalService.open(SeqModalComponent, {size: 'lg'});
     modalRef.componentInstance.name = seq.name;
 
-    if (type === 'seq') {
-      modalRef.componentInstance.content = seq.seq;
+    if (seq.seq.indexOf('.') < 0) {
+      modalRef.componentInstance.content = {ungapped: seq.seq, gapped: ''};
+    } else {
+      modalRef.componentInstance.content = {ungapped: seq.seq.replace(/\./g, ''), gapped: seq.seq};
     }
   }
 

@@ -45,7 +45,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   choices$Subscription = null;
   loading$Subscription = null;
   genSampleSelectedServiceSubscription = null;
-  selectedSampleIds: string[] = [];
+  selectedSampleIds = [];
+  samplesSelected = false;
   isSelectedGenesChecked = false;
   resizeEvents = new Map();
   clearSubject = new BehaviorSubject<null>(null);
@@ -119,6 +120,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         this.genSampleSelectedServiceSubscription = this.genSampleSelectedService.source.subscribe(
           selectedIds => {
             this.selectedSampleIds = selectedIds.ids;
+            this.samplesSelected = Object.keys(this.selectedSampleIds).length > 0;
 
             if (this.isSelectedGenesChecked) {
               this.onSelectedIdsChange(null);

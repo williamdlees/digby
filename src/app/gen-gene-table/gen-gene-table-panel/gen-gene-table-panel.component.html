@@ -30,7 +30,7 @@
     </button>
   </div>
 
-  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="selectedSampleIds.length">
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="samplesSelected">
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
         [(ngModel)]="isSelectedGenesChecked"

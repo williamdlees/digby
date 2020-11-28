@@ -107,7 +107,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
         this.choices$Subscription = this.dataSource.choices$.subscribe(
           choices => {
             if (this.filters.length > 0 && !this.isSelectedSamplesChecked) {
-              this.genSampleSelectedService.selection.next({ids: choices.id});
+              this.genSampleSelectedService.selection.next({ids: choices.names_by_dataset});
             } else {
               this.genSampleSelectedService.selection.next({ids: []});
             }

@@ -63,14 +63,12 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.genSampleFilterSubscription = this.genSampleFilterService.source.subscribe(
       filters => {
         this.genSampleFilters = filters.filters;
-        console.log('genSampleFilter length: ' + this.genSampleFilters.length);
       }
     );
 
     this.repSampleFilterSubscription = this.repSampleFilterService.source.subscribe(
       filters => {
         this.repSampleFilters = filters.filters;
-        console.log('repSampleFilter length: ' + this.repSampleFilters.length);
       }
     );
 

@@ -33,7 +33,6 @@ export class ReportsListDataSource implements DataSource<ReportList> {
       this.geneTableServiceSubscription = this.geneTableService.source
         .subscribe(
           (sel: GeneTableSelection) => {
-            console.log('GeneTableSelection changed. Reloading global filters');
             this.geneTableSelection = sel;
             this.reload();
           }
@@ -43,8 +42,6 @@ export class ReportsListDataSource implements DataSource<ReportList> {
     reload(): void {
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
-
-        console.log("requesting reports list for " + this.geneTableSelection.species + ", " + this.geneTableSelection.datasets.join(',') + ", " + this.geneTableSelection.repSeqs.join(','));
 
         this.reportsService.getReportsApi(
           this.geneTableSelection.species, this.geneTableSelection.datasets.join(','), this.geneTableSelection.repSeqs.join(',')

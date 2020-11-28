@@ -34,7 +34,6 @@ export class GenSampleInfoComponent implements OnInit {
         return([]);
       }),
       finalize(() => {
-        console.log('component finalised');
         this.loading = false;
       })
     )

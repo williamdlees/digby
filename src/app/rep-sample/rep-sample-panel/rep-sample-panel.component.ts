@@ -283,18 +283,15 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       reportParams
     ).subscribe((reportResponse) => {
       const jobId = reportResponse.id;
-      console.log('job id:' + jobId);
 
       let pollCount = 0;
 
       this.fetchReportStatus(jobId)
         .pipe(pollUntil(3000, 40, (response) => {
-          console.log(response.status + ': ' + pollCount);
           pollCount += 1;
           return (response.status === 'SUCCESS' || response.status === 'FAILURE');
         }))
         .subscribe((response) => {
-            console.log('status: ' + response.status);
             if (response.status === 'SUCCESS') {
               if (response.results.status === 'ok') {
                 this.showResult(response.results, reportWindow);
@@ -306,13 +303,11 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
             }
           },
           (error) => {
-            console.log('error: poll count exceeded');
             this.displayError(reportWindow, report, {status: 'Timeout waiting for report'});
           }
         );
     },
       (error) => {
-        console.log('error from run request');
         this.displayError(reportWindow, report, error);
       }
     );

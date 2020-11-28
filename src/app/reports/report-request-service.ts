@@ -53,7 +53,6 @@ export class ReportRequestService {
 
         this.fetchReportStatus(jobId)
           .pipe(pollUntil(3000, 40, (response) => {
-            console.log(response.status + ': ' + this.pollCount);
             if (response.status === 'PENDING') {
               if (response.info) {
                 this.reportResultSubject.next({status: response.status, info: response.info.stage, response});
@@ -80,12 +79,10 @@ export class ReportRequestService {
             }
           },
         (error) => {
-          console.log('error: poll count exceeded', error);
           this.reportResultSubject.next({ status: 'FAILURE', info: 'Timeout waiting for report', response: null});
         });
       },
         (error) => {
-          console.log('error from run request', error);
           this.reportResultSubject.next({ status: 'FAILURE', info: 'Error: ' + this.formatError(error), response: null});
           this.pollCount = 999;
         }
@@ -97,7 +94,6 @@ export class ReportRequestService {
       this.reportsService.getReportsStatus(jobId)
     ).pipe(
       catchError(err => {
-        console.log('error fetching report status', err);
         return of({status: 'FAILURE', description: this.formatError(err) });
       })
     );

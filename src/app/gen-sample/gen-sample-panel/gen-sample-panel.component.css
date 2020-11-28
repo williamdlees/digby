@@ -29,6 +29,12 @@ mwlResizable {
   box-sizing: border-box;
 }
 
+
+.mat-paginator-range-label {
+  margin: 0px 0px !important;
+}
+
+
 	mat-cell,
 	mat-footer-cell,
 	mat-header-cell {

@@ -9,7 +9,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {columnInfo} from './rep-gene-table-panel-cols';
 import {FilterMode} from '../../table/filter/filter-mode.enum';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
@@ -49,6 +49,8 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   repSampleSelectedServiceSubscription = null;
   resizeEvents = new Map();
   samplesSelected: boolean = false;
+  clearSubject = new BehaviorSubject<null>(null);
+  clear$ = this.clearSubject.asObservable();
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -137,6 +139,12 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     }
   }
 
+  clearSelection() {
+    this.filters = [];
+    this.clearSubject.next(null);
+    this.loadSequencesPage();
+  }
+
   applyFilter(columnPredicate: ColumnPredicate) {
     for (let i = this.filters.length - 1; i >= 0; i--) {
       if (this.filters[i].field === columnPredicate.field) {
@@ -205,6 +213,9 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     } else {
       modalRef.componentInstance.content = {ungapped: seq.seq.replace(/\./g, ''), gapped: seq.seq};
     }
+  }
+
+  onAppearancesClick(seq) {
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {

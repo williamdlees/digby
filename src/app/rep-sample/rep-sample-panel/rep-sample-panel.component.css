@@ -84,3 +84,7 @@ mwlResizable {
   white-space: nowrap;
   display: inline-block;
 }
+
+.mat-paginator-range-label {
+  margin: 0px 0px !important;
+}

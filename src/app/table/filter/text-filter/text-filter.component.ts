@@ -11,7 +11,7 @@ import {FilterImplementation} from '../filter-implementation';
 import {ColumnPredicate} from '../column-predicate';
 import {IChoices} from '../ichoices';
 import {Observable} from 'rxjs';
-import {IDropdownSettings} from 'ng-multiselect-dropdown';
+import {IDropdownSettings, MultiSelectComponent} from 'ng-multiselect-dropdown';
 
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
@@ -34,8 +34,10 @@ class Operator {
 })
 export class TextFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
+  @ViewChild(MultiSelectComponent) ngMultiSelect;
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
+  @Input() clear$: Observable<null>;
   @Input() showTextFilter = true;
   @Input() showSort = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
@@ -73,11 +75,22 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
         }
       });
     }
+    if (this.clear$) {
+      this.clear$.subscribe((c) => {
+          this.selectedOperator = null;
+          this.selectedSort = null;
+          this.selectedItems = [];
+          this.filterCleared = true;
+      });
+    }
   }
 
   onValidation() {
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   onClearFilter() {
@@ -85,22 +98,35 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
     this.filterCleared = true;
   }
 
+  onClearSelection() {
+    this.selectedItems = [];
+  }
+
   onSortAsc() {
     this.selectedSort = 'asc';
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   onSortDesc() {
     this.selectedSort = 'desc';
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   onSortClear() {
     this.selectedSort = null;
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   generatePredicate(): ColumnPredicate {

@@ -72,10 +72,10 @@ export function apiConfigFactory(): Configuration  {
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'genesample', component: GenSampleComponent },
+  { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent },
   { path: 'genetable', component: GenGeneTableComponent },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
-  { path: 'samplerep', component: RepSampleComponent },
+  { path: 'samplerep/:onlySelectedSamples', component: RepSampleComponent },
   { path: 'generep', component: RepGeneTableComponent },
   { path: 'datarep', component: RepExploreDataComponent},
   { path: 'reports', component: ReportsComponent },

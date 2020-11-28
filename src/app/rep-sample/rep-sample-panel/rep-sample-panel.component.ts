@@ -9,7 +9,7 @@ import {RepSampleDataSource} from '../rep-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
-import {defer, EMPTY, Observable} from 'rxjs';
+import {BehaviorSubject, defer, EMPTY, Observable, Subscription} from 'rxjs';
 import { columnInfo } from './rep-sample-panel-cols';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -24,6 +24,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ReportErrorDialogComponent} from '../../reports/report-error-dialog/report-error-dialog.component';
 import {pollUntil} from '../../shared/poll-until-rxjs';
 import {catchError} from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-sample-rep-panel',
@@ -38,6 +39,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: RepSampleDataSource;
+  params$: Subscription;    // params for the route
 
   displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'genotypes', 'haplotypes'];
   allColumns = columnInfo;
@@ -54,6 +56,8 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   choices$Subscription = null;
   loading$Subscription = null;
   resizeEvents = new Map();
+  clearSubject = new BehaviorSubject<null>(null);
+  clear$ = this.clearSubject.asObservable();
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -64,6 +68,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private tableParamsStorageService: TableParamsStorageService,
               private reportsService: ReportsService,
               private httpClient: HttpClient,
+              private route: ActivatedRoute,
               ) {
 
   }
@@ -71,6 +76,17 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   ngOnInit() {
     this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'rep-sample-table-widths');
     this.dataSource = new RepSampleDataSource(this.repseqService);
+
+    this.params$ = this.route.params.subscribe(params => {
+      if (params.onlySelectedSamples === 'true') {
+        this.isSelectedSamplesChecked = true;
+        this.onSelectedSamplesChange();
+      }
+      else if (params.onlySelectedSamples === 'false') {
+        this.isSelectedSamplesChecked = false;
+        this.onSelectedSamplesChange();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -118,14 +134,14 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           selectedNames => {
             this.selectedSequenceNames = selectedNames.names;
             if (this.isSelectedSamplesChecked) {
-              this.onSelectedSamplesChange(null);
+              this.onSelectedSamplesChange();
             }
           }
         );
       });
   }
 
-  onSelectedSamplesChange(state) {
+  onSelectedSamplesChange() {
     if (this.isSelectedSamplesChecked && this.selectedSequenceNames.length) {
       this.applyFilter(
         {
@@ -141,6 +157,12 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           sort: {order: ''}
         });
     }
+  }
+
+  clearSelection() {
+    this.filters = [];
+    this.clearSubject.next(null);
+    this.loadSequencesPage();
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {

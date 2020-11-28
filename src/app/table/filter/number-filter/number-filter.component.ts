@@ -29,6 +29,7 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
+  @Input() clear$: Observable<null>;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   selectedOperator: Operator;
@@ -64,11 +65,22 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
         }
       });
     }
+    if (this.clear$) {
+      this.clear$.subscribe((c) => {
+          this.selectedOperator = null;
+          this.selectedSort = null;
+          this.selectedItems = [];
+          this.filterCleared = true;
+      });
+    }
   }
 
   onValidation() {
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   onClearFilter() {
@@ -76,22 +88,35 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
     this.filterCleared = true;
   }
 
+  onClearSelection() {
+    this.selectedItems = [];
+  }
+
   onSortAsc() {
     this.selectedSort = 'asc';
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   onSortDesc() {
     this.selectedSort = 'desc';
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
   onSortClear() {
     this.selectedSort = null;
     this.predicateEmitter.emit(this.generatePredicate());
-    this.matMenuTrigger.closed.emit();
+
+    if (this.matMenuTrigger) {
+      this.matMenuTrigger.closed.emit();
+    }
   }
 
  generatePredicate(): ColumnPredicate {

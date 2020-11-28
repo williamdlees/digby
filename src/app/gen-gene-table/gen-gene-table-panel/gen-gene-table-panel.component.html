@@ -1,5 +1,4 @@
-
-<div class="container-fluid">
+<div class="row">
   <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
     <span class="sr-only">Loading...</span>
   </div>
@@ -10,207 +9,213 @@
       <p>{{dataSource.error$ | async}}</p>
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col-md-3" style="align-items: center; justify-content: flex-start; display: flex;">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
-          [disabled]="!selectedSampleIds.length"
-          [(ngModel)]="isSelectedGenesChecked"
-          (change)="(onSelectedIdsChange(isSelectedGenesChecked))"
-        >
-        <label class="form-check-label" for="chk-selected-items">
-          Only alleles present in selected samples
-        </label>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()">
+      <mat-icon class="primary-icon"  style="">delete_sweep</mat-icon>
+      <span class="header-text">Clear filters</span>
+    </button>
+  </div>
 
-    <div class="col-md-2" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-      <button digby-table-column-sorter
-         [(columns)]="displayedColumns"
-         [columnInfo]="allColumns"
-         [saveName]="'gen-gene-table'"
-         (columnsChange)="updateColumnData($event)" >
-         <mat-icon class="primary-icon"  style="">view_column</mat-icon>
-        <span class="header-text">Arrange Columns</span>
-      </button>
-    </div>
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+    <button digby-table-column-sorter
+       [(columns)]="displayedColumns"
+       [columnInfo]="allColumns"
+       [saveName]="'gen-gene-table'"
+       (columnsChange)="updateColumnData($event)" >
+       <mat-icon class="primary-icon"  style="">view_column</mat-icon>
+      <span class="header-text">Arrange Columns</span>
+    </button>
+  </div>
 
-    <div class="col-md-7">
-      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="selectedSampleIds.length">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+        [(ngModel)]="isSelectedGenesChecked"
+        (change)="(onSelectedIdsChange(isSelectedGenesChecked))"
+      >
+      <label class="form-check-label" for="chk-selected-items">
+        Only alleles from selected samples
+      </label>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <mat-table [dataSource]="dataSource">
+  <div class="col-auto ml-auto">
+    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
+  </div>
+</div>
 
-        <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'name')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Name
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence">{{sequence.name}}</mat-cell>
-        </ng-container>
+<div class="row">
+  <div class="col">
+    <mat-table [dataSource]="dataSource">
 
-        <ng-container matColumnDef="imgt_name">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'imgt_name')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              IMGT Name
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'imgt_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence">{{sequence.imgt_name}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'name')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Name
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence">{{sequence.name}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="type">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'type')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Type
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.type}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="imgt_name">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'imgt_name')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            IMGT Name
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'imgt_name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence">{{sequence.imgt_name}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="novel">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'novel')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Novel
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'novel'" [filterMode]="filterModeEnum.BOOL_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">
-              <i *ngIf="sequence.novel" class="fa fa-check" style="line-height: inherit;"></i>
-              <i *ngIf="!sequence.novel" class="fa fa-times" style="line-height: inherit;"></i>
-            </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="type">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'type')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Type
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.type}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="functional">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'functional')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Functional
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'functional'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">
-              {{sequence.functional}}
-            </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="novel">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'novel')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Novel
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'novel'" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">
+            <i *ngIf="sequence.novel" class="fa fa-check" style="line-height: inherit;"></i>
+            <i *ngIf="!sequence.novel" class="fa fa-times" style="line-height: inherit;"></i>
+          </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="deleted">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'deleted')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Deleted
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'deleted'" [filterMode]="filterModeEnum.BOOL_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">
-              <i *ngIf="sequence.deleted" class="fa fa-check" style="line-height: inherit;"></i>
-              <i *ngIf="!sequence.deleted" class="fa fa-times" style="line-height: inherit;"></i>
-            </mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="functional">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'functional')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Functional
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'functional'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">
+            {{sequence.functional}}
+          </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="sequence">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'sequence')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Sequence
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col mat-ellipsis" (click)="onSequenceClick(sequence)">{{sequence.sequence}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="deleted">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'deleted')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Deleted
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'deleted'" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">
+            <i *ngIf="sequence.deleted" class="fa fa-check" style="line-height: inherit;"></i>
+            <i *ngIf="!sequence.deleted" class="fa fa-times" style="line-height: inherit;"></i>
+          </mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="gapped_sequence">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'gapped_sequence')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Gapped
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'gapped_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="mat-ellipsis" (click)="onSequenceClick(sequence)">{{sequence.gapped_sequence}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="sequence">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'sequence')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Sequence
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col mat-ellipsis" (click)="onSequenceClick(sequence)">{{sequence.sequence}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="feature">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'feature')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Feature
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'feature'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence">{{sequence.feature}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="gapped_sequence">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'gapped_sequence')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Gapped
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'gapped_sequence'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="mat-ellipsis" (click)="onSequenceClick(sequence)">{{sequence.gapped_sequence}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="start">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'start')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Start
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'start'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence">{{sequence.start}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="feature">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'feature')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Feature
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'feature'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence">{{sequence.feature}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="end">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'end')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              End
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'end'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence">{{sequence.end}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="start">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'start')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Start
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'start'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence">{{sequence.start}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="score">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'score')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Score
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'score'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.score}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="end">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'end')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            End
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'end'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence">{{sequence.end}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="strand">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'strand')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Strand
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'strand'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.strand}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="score">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'score')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Score
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'score'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.score}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="frame">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'frame')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Frame
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'frame'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.frame}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="strand">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'strand')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Strand
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'strand'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.strand}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="refseq_name">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'refseq_name')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Reference
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence">{{sequence.refseq_name}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="frame">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'frame')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Frame
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'frame'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.frame}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="sample_count">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'sample_count')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Samples
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sample_count'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.sample_count}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="refseq_name">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'refseq_name')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Reference
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'refseq_name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence">{{sequence.refseq_name}}</mat-cell>
+      </ng-container>
 
-        <ng-container matColumnDef="appearances">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'appearances')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Appearances
-            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appearances'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.appearances}}</mat-cell>
-        </ng-container>
+      <ng-container matColumnDef="sample_count">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'sample_count')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Samples
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'sample_count'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.sample_count}}</mat-cell>
+      </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+      <ng-container matColumnDef="appearances">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'appearances')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Appearances
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appearances'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.appearances}}</mat-cell>
+      </ng-container>
 
-        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
 
-      </mat-table>
-    </div>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+    </mat-table>
   </div>
 </div>

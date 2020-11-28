@@ -15,8 +15,8 @@
         </a>
         <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
           <a ngbDropdownItem class="dropdown-item" routerLink="./datarep" (click)="isMenuCollapsed = true">Explore AIRR-Seq Data</a>
-          <a ngbDropdownItem class="dropdown-item" routerLink="./samplerep" (click)="isMenuCollapsed = true">AIRR-seq Samples</a>
-          <a ngbDropdownItem class="dropdown-item" routerLink="./generep" (click)="isMenuCollapsed = true">AIRR-seq Genes</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['./samplerep', 'null']" (click)="isMenuCollapsed = true">Samples</a>
+          <a ngbDropdownItem class="dropdown-item" routerLink="./generep" (click)="isMenuCollapsed = true">Germline Genes</a>
         </div>
       </li>
       <li ngbDropdown class="nav-item dropdown">
@@ -24,9 +24,9 @@
           Genomic Data
         </a>
         <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-          <a ngbDropdownItem class="dropdown-item" routerLink="./genesample" (click)="isMenuCollapsed = true">Genomic Samples</a>
-          <a ngbDropdownItem class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genomic Genes</a>
-          <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'Human_IGH']" (click)="isMenuCollapsed = true">Genomic Gene Browser</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genesample', 'null']" (click)="isMenuCollapsed = true">Samples</a>
+          <a ngbDropdownItem class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genes</a>
+          <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'Human_IGH']" (click)="isMenuCollapsed = true">Gene Browser</a>
         </div>
       </li>
       <li ngbNavItem class="nav-item" routerLinkActive="active">

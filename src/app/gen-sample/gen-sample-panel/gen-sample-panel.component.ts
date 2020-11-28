@@ -8,7 +8,7 @@ import {GenSampleDataSource} from '../gen-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
-import { Observable } from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import { columnInfo } from './gen-sample-panel-cols';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { GenSampleInfoComponent } from '../gen-sample-info/gen-sample-info.component';
@@ -18,6 +18,7 @@ import {GenSampleSelectedService} from '../gen-sample-selected.service';
 import {GenSampleFilterService} from '../gen-sample-filter.service';
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
   dataSource: GenSampleDataSource;
+  params$: Subscription;    // params for the route
 
   displayedColumns = ['name', 'type', 'date', 'study_name', 'institute', 'researcher', 'reference', 'contact', 'assembly_id', 'assembly_reference'];
   allColumns = columnInfo;
@@ -49,6 +51,8 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   selectedSequenceNames: string[] = [];
   isSelectedSamplesChecked = false;
   resizeEvents = new Map();
+  clearSubject = new BehaviorSubject<null>(null);
+  clear$ = this.clearSubject.asObservable();
 
   constructor(private genSampleService: GenomicService,
               private geneTableService: GeneTableSelectorService,
@@ -56,7 +60,8 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private genGeneSelectedService: GenGeneSelectedService,
               private genSampleSelectedService: GenSampleSelectedService,
               private genSampleFilterService: GenSampleFilterService,
-              private tableParamsStorageService: TableParamsStorageService
+              private tableParamsStorageService: TableParamsStorageService,
+              private route: ActivatedRoute,
               ) {
 
   }
@@ -64,6 +69,17 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   ngOnInit() {
     this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'gen-sample-table-widths');
     this.dataSource = new GenSampleDataSource(this.genSampleService);
+
+    this.params$ = this.route.params.subscribe(params => {
+      if (params.onlySelectedSamples === 'true') {
+        this.isSelectedSamplesChecked = true;
+        this.onSelectedSamplesChange();
+      }
+      else if (params.onlySelectedSamples === 'false') {
+        this.isSelectedSamplesChecked = false;
+        this.onSelectedSamplesChange();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -111,14 +127,14 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
             this.selectedSequenceNames = selectedNames.names;
 
             if (this.isSelectedSamplesChecked) {
-              this.onSelectedSamplesChange(null);
+              this.onSelectedSamplesChange();
             }
           }
         );
       });
   }
 
-  onSelectedSamplesChange(state) {
+  onSelectedSamplesChange() {
     if (this.isSelectedSamplesChecked && this.selectedSequenceNames.length) {
       this.applyFilter(
         {
@@ -134,6 +150,12 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           sort: {order: ''}
         });
     }
+  }
+
+  clearSelection() {
+    this.filters = [];
+    this.clearSubject.next(null);
+    this.loadSequencesPage();
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {

@@ -10,7 +10,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {columnInfo} from './gene-table-panel-cols';
 import {FilterMode} from '../../table/filter/filter-mode.enum';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import { GenGeneSelectedService } from '../gen-gene-selected.service'
@@ -48,6 +48,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   selectedSampleIds: string[] = [];
   isSelectedGenesChecked = false;
   resizeEvents = new Map();
+  clearSubject = new BehaviorSubject<null>(null);
+  clear$ = this.clearSubject.asObservable();
 
   constructor(private genomicService: GenomicService,
               private geneTableService: GeneTableSelectorService,
@@ -142,6 +144,12 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
           sort: {order: ''}
         });
     }
+  }
+
+  clearSelection() {
+    this.filters = [];
+    this.clearSubject.next(null);
+    this.loadSequencesPage();
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {

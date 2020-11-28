@@ -1,5 +1,4 @@
-
-<div class="container-fluid">
+<div class="row">
   <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
     <span class="sr-only">Loading...</span>
   </div>
@@ -10,216 +9,222 @@
       <p>{{dataSource.error$ | async}}</p>
     </div>
   </div>
+</div>
 
-  <div class="row">
-    <div class="col-md-3" style="align-items: center; justify-content: flex-start; display: flex;">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
-          [disabled]="!selectedSequenceNames.length"
-          [(ngModel)]="isSelectedSamplesChecked"
-          (change)="(onSelectedSamplesChange(isSelectedSamplesChecked))"
-        >
-        <label class="form-check-label" for="chk-selected-items">
-          Only samples with selected alleles
-        </label>
-      </div>
-    </div>
+<div class="row">
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()">
+      <mat-icon class="primary-icon"  style="">delete_sweep</mat-icon>
+      <span class="header-text">Clear filters</span>
+    </button>
+  </div>
 
-    <div class="col-md-2" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-      <button digby-table-column-sorter
-         [(columns)]="displayedColumns"
-         [columnInfo]="allColumns"
-         [saveName]="'rep-sample-table'"
-         (columnsChange)="updateColumnData($event)" id="colbutton">
-         <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
-      </button>
-        <label class="form-check-label" for="colbutton">Arrange Columns</label>
-    </div>
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+    <button digby-table-column-sorter
+       [(columns)]="displayedColumns"
+       [columnInfo]="allColumns"
+       [saveName]="'rep-sample-table'"
+       (columnsChange)="updateColumnData($event)" id="colbutton">
+       <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
+    </button>
+      <label class="form-check-label" for="colbutton">Arrange Columns</label>
+  </div>
 
-    <div class="col-md-7">
-      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="selectedSequenceNames.length">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+        [(ngModel)]="isSelectedSamplesChecked"
+        (change)="(onSelectedSamplesChange())"
+      >
+      <label class="form-check-label" for="chk-selected-items">
+        Only samples with selected alleles
+      </label>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <mat-table [dataSource]="dataSource">
-         // Sample
-         <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'name')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Sample Name
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-           <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)"><b>{{sample.name}}</b></mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="type">
-            <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'type')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Type
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  class="small-col" (click)="showInfo(sample)">{{sample.type}}</mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="date">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'date')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Date
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'date'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  class="small-col" (click)="showInfo(sample)">{{sample.date}}</mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="study_name">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'study_name')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Study Name
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'study_name'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.study_name}}</mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="institute">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'institute')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Institute
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'institute'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.institute}}</mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="researcher">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'researcher')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Researcher
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'researcher'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.researcher}}</mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="reference">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'reference')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Reference
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample" class="small-col">
-              <ng-container *ngIf="sample.reference.startsWith('http')">
-                <a href={{sample.reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-              </ng-container>
-              <ng-container *ngIf="!sample.reference.startsWith('http')">
-                {{sample.reference}}
-              </ng-container>
-            </mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="contact">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'contact')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Contact
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'contact'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.contact}}</mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="assembly_id">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_id')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Assembly ID
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_id'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample">
-              <ng-container *ngIf="sample.assembly_id.startsWith('http')">
-                <a href={{sample.assembly_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-              </ng-container>
-              <ng-container *ngIf="!sample.assembly_id.startsWith('http')">
-                {{sample.assembly_id}}
-              </ng-container>
-            </mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="assembly_reference">
-            <mat-header-cell class="small-col" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_reference')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Assembly Ref
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell class="small-col" *matCellDef="let sample">
-              <ng-container *ngIf="sample.assembly_reference.startsWith('http')">
-                <a href={{sample.assembly_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-              </ng-container>
-              <ng-container *ngIf="!sample.assembly_reference.startsWith('http')">
-                {{sample.assembly_reference}}
-              </ng-container>
-            </mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="chromosome">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'chromosome')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Chromosome
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'chromosome'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell  class="small-col" *matCellDef="let sample">
-                {{sample.chromosome}}
-            </mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="assembly_start">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_start')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Chr Start
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_start'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample">
-                {{sample.assembly_start}}
-            </mat-cell>
-        </ng-container>
-
-         <ng-container matColumnDef="assembly_end">
-            <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_end')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Chr End
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_end'" [filterMode]="filterModeEnum.NUMBER_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample">
-                {{sample.assembly_end}}
-            </mat-cell>
-        </ng-container>
-
-
-         <ng-container matColumnDef="report">
-            <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'report')"
-			 [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-              Report
-             <app-filter #filterComponent="menuInOtherComponent" [columnName]="'report'" [filterMode]="filterModeEnum.TEXT_MODE" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let sample" class="small-col">
-              <ng-container *ngIf="sample.report.length > 0">
-                <ng-container *ngIf="sample.report.indexOf('IGenotyper') >= 0">
-                  <button class="btn btn-sm btn-solid-icon" style=""[matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: sample}">
-                    <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
-                  </button>
-                </ng-container>
-                <ng-container *ngIf="sample.report.indexOf('IGenotyper') < 0">
-                  <a href={{sample.report}} target="_blank"><i class="fa fa-folder fa-5" style="line-height: inherit;"></i></a>
-                </ng-container>
-              </ng-container>
-              <ng-container *ngIf="sample.report.length === 0">
-                NA
-              </ng-container>
-            </mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
-
-        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-
-      </mat-table>
-      </div>
+  <div class="col-auto ml-auto">
+    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
   </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <mat-table [dataSource]="dataSource">
+       // Sample
+       <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'name')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Sample Name
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+         <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)"><b>{{sample.name}}</b></mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="type">
+          <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'type')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Type
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  class="small-col" (click)="showInfo(sample)">{{sample.type}}</mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="date">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'date')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Date
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'date'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  class="small-col" (click)="showInfo(sample)">{{sample.date}}</mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="study_name">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'study_name')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Study Name
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'study_name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.study_name}}</mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="institute">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'institute')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Institute
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'institute'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.institute}}</mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="researcher">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'researcher')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Researcher
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'researcher'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.researcher}}</mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="reference">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'reference')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Reference
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'reference'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample" class="small-col">
+            <ng-container *ngIf="sample.reference.startsWith('http')">
+              <a href={{sample.reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            </ng-container>
+            <ng-container *ngIf="!sample.reference.startsWith('http')">
+              {{sample.reference}}
+            </ng-container>
+          </mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="contact">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'contact')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Contact
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'contact'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.contact}}</mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="assembly_id">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_id')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Assembly ID
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_id'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample">
+            <ng-container *ngIf="sample.assembly_id.startsWith('http')">
+              <a href={{sample.assembly_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            </ng-container>
+            <ng-container *ngIf="!sample.assembly_id.startsWith('http')">
+              {{sample.assembly_id}}
+            </ng-container>
+          </mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="assembly_reference">
+          <mat-header-cell class="small-col" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_reference')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Assembly Ref
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_reference'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell class="small-col" *matCellDef="let sample">
+            <ng-container *ngIf="sample.assembly_reference.startsWith('http')">
+              <a href={{sample.assembly_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            </ng-container>
+            <ng-container *ngIf="!sample.assembly_reference.startsWith('http')">
+              {{sample.assembly_reference}}
+            </ng-container>
+          </mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="chromosome">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'chromosome')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Chromosome
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'chromosome'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell  class="small-col" *matCellDef="let sample">
+              {{sample.chromosome}}
+          </mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="assembly_start">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_start')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Chr Start
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_start'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample">
+              {{sample.assembly_start}}
+          </mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="assembly_end">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'assembly_end')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Chr End
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'assembly_end'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample">
+              {{sample.assembly_end}}
+          </mat-cell>
+      </ng-container>
+
+
+       <ng-container matColumnDef="report">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'report')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Report
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'report'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample" class="small-col">
+            <ng-container *ngIf="sample.report.length > 0">
+              <ng-container *ngIf="sample.report.indexOf('IGenotyper') >= 0">
+                <button class="btn btn-sm btn-solid-icon" style=""[matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: sample}">
+                  <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="sample.report.indexOf('IGenotyper') < 0">
+                <a href={{sample.report}} target="_blank"><i class="fa fa-folder fa-5" style="line-height: inherit;"></i></a>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="sample.report.length === 0">
+              NA
+            </ng-container>
+          </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
+
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+    </mat-table>
+    </div>
 </div>
 
 

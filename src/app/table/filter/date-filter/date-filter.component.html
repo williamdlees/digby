@@ -12,19 +12,19 @@
     <form class="col-12" >
       <div class="row">
         <div class="col-6" style="padding-left: 0px">
-          <button mat-button (click)="onSortAsc()">Sort Ascending</button>
+          <button class="float-left" mat-button (click)="onSortAsc()">Sort Ascending</button>
         </div>
         <div class="col-6" style="text-align: right">
-          <button mat-flat-button color="primary"  (click)="onValidation()">
+          <button class="float-right" mat-flat-button color="primary"  (click)="onValidation()">
             OK
           </button>
         </div>
       </div>
       <div class="row">
-        <button mat-button (click)="onSortDesc()">Sort Descending</button>
+        <button class="float-left" mat-button (click)="onSortDesc()">Sort Descending</button>
       </div>
       <div class="row" *ngIf="selectedSort">
-        <button mat-button  (click)="onSortClear()">Clear Sort</button>
+        <button class="float-left" mat-button  (click)="onSortClear()">Clear Sort</button>
       </div>
 
       <div class="row">
@@ -66,6 +66,12 @@
         </div>
         <div class="dropdown-divider"></div>
       </ng-container>
+
+      <div *ngIf="selectedItems.length">
+        <div class="row">
+          <button mat-button  (click)="onClearSelection()">Clear Selection</button>
+        </div>
+      </div>
 
       <div>
         <ng-multiselect-dropdown name="multi"  class="col-12"

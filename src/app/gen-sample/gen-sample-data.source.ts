@@ -43,6 +43,7 @@ export class GenSampleDataSource implements DataSource<GenSample> {
           )
           .subscribe((sequence) => {
             this.totalItems = sequence.total_items;
+            console.log('next gen sample: ' + sequence.total_items);
             this.choicesSubject.next(sequence.uniques);
             this.genSampleSubject.next(sequence.samples);
           });

@@ -18,6 +18,7 @@ import {GenSampleSelectedService} from '../../gen-sample/gen-sample-selected.ser
 import { ResizeEvent } from 'angular-resizable-element';
 import { TableParamsStorageService } from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -55,13 +56,16 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   clear$ = this.clearSubject.asObservable();
   setFilterSubject = new BehaviorSubject<any>(null);
   setFilter$ = this.setFilterSubject.asObservable();
+  redirectOnLoad = null;
 
   constructor(private genomicService: GenomicService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private genGeneSelectedService: GenGeneSelectedService,
               private tableParamsStorageService: TableParamsStorageService,
-              private genSampleSelectedService: GenSampleSelectedService) {
+              private genSampleSelectedService: GenSampleSelectedService,
+              private router: Router,
+  ) {
   }
 
 
@@ -99,6 +103,12 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         loading => {
           if (!loading) {
             this.applyResizes();
+
+            if (this.redirectOnLoad) {
+              const r = this.redirectOnLoad;
+              this.redirectOnLoad = null;
+              this.router.navigate(r);
+            }
           }
         }
       );
@@ -239,6 +249,11 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     const modalRef = this.modalService.open(SeqModalComponent, { size: 'lg'});
     modalRef.componentInstance.name = seq.name;
     modalRef.componentInstance.content = {ungapped: seq.sequence, gapped: seq.gapped_sequence};
+  }
+
+  onAppearancesClick(seq) {
+    this.redirectOnLoad = ['./genesample', 'true'];
+    this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '', postfix: '' }, op1: seq.name, op2: ''});
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {

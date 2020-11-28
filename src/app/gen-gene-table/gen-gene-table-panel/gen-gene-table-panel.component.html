@@ -214,7 +214,7 @@
             Appearances
           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appearances'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
-          <mat-cell *matCellDef="let sequence" class="small-col">{{sequence.appearances}}</mat-cell>
+          <mat-cell *matCellDef="let sequence" (click)="onAppearancesClick(sequence)" class="small-col" style="cursor: pointer;">{{sequence.appearances}}</mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>

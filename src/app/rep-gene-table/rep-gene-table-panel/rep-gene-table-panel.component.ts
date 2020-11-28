@@ -19,6 +19,7 @@ import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component'
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -55,13 +56,16 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   clear$ = this.clearSubject.asObservable();
   setFilterSubject = new BehaviorSubject<any>(null);
   setFilter$ = this.setFilterSubject.asObservable();
+  redirectOnLoad = null;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private repGeneSelectedService: RepGeneSelectedService,
               private repSampleSelectedService: RepSampleSelectedService,
-              private tableParamsStorageService: TableParamsStorageService) {
+              private tableParamsStorageService: TableParamsStorageService,
+              private router: Router,
+  ) {
   }
 
   ngOnInit() {
@@ -109,6 +113,12 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         loading => {
           if (!loading) {
             this.applyResizes();
+
+            if (this.redirectOnLoad) {
+              const r = this.redirectOnLoad;
+              this.redirectOnLoad = null;
+              this.router.navigate(r);
+            }
           }
         }
       );
@@ -247,6 +257,8 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   onAppearancesClick(seq) {
+    this.redirectOnLoad = ['./samplerep', 'true'];
+    this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '', postfix: '' }, op1: seq.name, op2: ''});
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {

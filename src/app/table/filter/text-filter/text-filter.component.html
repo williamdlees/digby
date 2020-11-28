@@ -38,7 +38,7 @@
         <div class="row">
         <div class="dropdown-divider"></div>
         <mat-form-field class="col-12">
-          <mat-select placeholder="Select Filter" [(value)]="selectedOperator">
+          <mat-select placeholder="Select Filter" [(value)]="selectedOperator" [compareWith]="compareFn">
             <mat-option *ngFor="let operator of operatorList" [value]="operator">
               {{operator.name}}
             </mat-option>

@@ -84,3 +84,9 @@ mwlResizable {
 .mat-paginator-range-label {
   margin: 0px 0px !important;
 }
+
+.searchbox {
+  border-color: rgb(206,212, 255);
+  border-width: 1px;
+  border-style: solid;
+}

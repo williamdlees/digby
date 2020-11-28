@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef} from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -10,13 +10,14 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {columnInfo} from './gene-table-panel-cols';
 import {FilterMode} from '../../table/filter/filter-mode.enum';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, fromEvent, Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import { GenGeneSelectedService } from '../gen-gene-selected.service'
 import {GenSampleSelectedService} from '../../gen-sample/gen-sample-selected.service';
 import { ResizeEvent } from 'angular-resizable-element';
 import { TableParamsStorageService } from '../../table/table-params-storage-service';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
+  @ViewChild('searchBox', { static: true }) searchBox: ElementRef;
   dataSource: GeneSequenceDataSource;
 
   displayedColumns = [];
@@ -51,6 +53,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   resizeEvents = new Map();
   clearSubject = new BehaviorSubject<null>(null);
   clear$ = this.clearSubject.asObservable();
+  setFilterSubject = new BehaviorSubject<any>(null);
+  setFilter$ = this.setFilterSubject.asObservable();
 
   constructor(private genomicService: GenomicService,
               private geneTableService: GeneTableSelectorService,
@@ -74,60 +78,71 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   ngAfterViewInit() {
-      this.paginatorSubscription = this.paginator.page
-        .subscribe(() => this.loadSequencesPage());
+    this.paginatorSubscription = this.paginator.page
+      .subscribe(() => this.loadSequencesPage());
 
-      // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
-      setTimeout(() => {
-        this.geneTableServiceSubscription = this.geneTableService.source
-          .subscribe(
-            (sel: GeneTableSelection) => {
-              if (sel.species && sel.datasets) {
-                this.selection = sel;
-                this.paginator.firstPage();
-                this.table.renderRows();
-                this.loadSequencesPage();
-              }
-            }
-          );
-
-        this.loading$Subscription = this.dataSource.loading$.subscribe(
-          loading => {
-            if (!loading) {
-              this.applyResizes();
+    // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
+    setTimeout(() => {
+      this.geneTableServiceSubscription = this.geneTableService.source
+        .subscribe(
+          (sel: GeneTableSelection) => {
+            if (sel.species && sel.datasets) {
+              this.selection = sel;
+              this.paginator.firstPage();
+              this.table.renderRows();
+              this.loadSequencesPage();
             }
           }
         );
 
-        this.choices$Subscription = this.dataSource.choices$.subscribe(
-          choices => {
-            if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
-              this.genGeneSelectedService.selection.next({names: choices.name});
-            } else {
-              this.genGeneSelectedService.selection.next({names: []});
-            }
+      this.loading$Subscription = this.dataSource.loading$.subscribe(
+        loading => {
+          if (!loading) {
+            this.applyResizes();
           }
-        );
+        }
+      );
 
-        this.loading$Subscription = this.dataSource.loading$.subscribe(
-          loading => {
-            if (!loading) {
-              this.applyResizes();
-            }
+      this.choices$Subscription = this.dataSource.choices$.subscribe(
+        choices => {
+          if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
+            this.genGeneSelectedService.selection.next({names: choices.name});
+          } else {
+            this.genGeneSelectedService.selection.next({names: []});
           }
-        );
+        }
+      );
 
-        this.genSampleSelectedServiceSubscription = this.genSampleSelectedService.source.subscribe(
-          selectedIds => {
-            this.selectedSampleIds = selectedIds.ids;
-            this.samplesSelected = Object.keys(this.selectedSampleIds).length > 0;
-
-            if (this.isSelectedGenesChecked) {
-              this.onSelectedIdsChange(null);
-            }
+      this.loading$Subscription = this.dataSource.loading$.subscribe(
+        loading => {
+          if (!loading) {
+            this.applyResizes();
           }
-        );
-      });
+        }
+      );
+
+      this.genSampleSelectedServiceSubscription = this.genSampleSelectedService.source.subscribe(
+        selectedIds => {
+          this.selectedSampleIds = selectedIds.ids;
+          this.samplesSelected = Object.keys(this.selectedSampleIds).length > 0;
+
+          if (this.isSelectedGenesChecked) {
+            this.onSelectedIdsChange(null);
+          }
+        }
+      );
+    });
+
+    fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
+      map((event: any) => {
+        return event.target.value;
+      })
+      // , filter(res => res.length > 2)
+      , debounceTime(1000)
+      , distinctUntilChanged()
+      ).subscribe((text: string) => {
+        this.quickSearch(text);
+    });
   }
 
   onSelectedIdsChange(state) {
@@ -148,9 +163,15 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     }
   }
 
+  quickSearch(searchString) {
+    this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: searchString, op2: ''});
+    this.loadSequencesPage();
+  }
+
   clearSelection() {
     this.filters = [];
     this.clearSubject.next(null);
+    this.searchBox.nativeElement.value = '';
     this.loadSequencesPage();
   }
 
@@ -158,6 +179,15 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     for (let i = this.filters.length - 1; i >= 0; i--) {
       if (this.filters[i].field === columnPredicate.field) {
         this.filters.splice(i, 1);
+      }
+
+      if (!(columnPredicate.field === 'name'
+        && columnPredicate.predicates.length === 1
+        &&  columnPredicate.predicates[0].op === 'like'
+      // @ts-ignore
+        && columnPredicate.predicates[0].value === '%' + this.searchBox.nativeElement.value + '%'
+      )) {
+        this.searchBox.nativeElement.value = '';
       }
     }
 

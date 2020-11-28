@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -9,7 +9,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTable} from '@angular/material/table';
 import {columnInfo} from './rep-gene-table-panel-cols';
 import {FilterMode} from '../../table/filter/filter-mode.enum';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, fromEvent, Observable} from 'rxjs';
 import {IChoices} from '../../table/filter/ichoices';
 import {ColumnPredicate} from '../../table/filter/column-predicate';
 import {RepSequenceDataSource} from '../rep-sequence.datasource';
@@ -18,6 +18,7 @@ import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.ser
 import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component';
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
+import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
+  @ViewChild('searchBox', { static: true }) searchBox: ElementRef;
   dataSource: RepSequenceDataSource;
 
   displayedColumns = ['name', 'pipeline_name', 'seq', 'seq_len', 'similar', 'appears', 'is_single_allele', 'low_confidence', 'novel', 'max_kdiff'];
@@ -48,9 +50,11 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   isSelectedGenesChecked = false;
   repSampleSelectedServiceSubscription = null;
   resizeEvents = new Map();
-  samplesSelected: boolean = false;
+  samplesSelected = false;
   clearSubject = new BehaviorSubject<null>(null);
   clear$ = this.clearSubject.asObservable();
+  setFilterSubject = new BehaviorSubject<any>(null);
+  setFilter$ = this.setFilterSubject.asObservable();
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -73,6 +77,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   ngAfterViewInit() {
+
     this.paginatorSubscription = this.paginator.page
       .subscribe(() => this.loadSequencesPage());
 
@@ -119,6 +124,17 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       );
     });
+
+    fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
+      map((event: any) => {
+        return event.target.value;
+      })
+      // , filter(res => res.length > 2)
+      , debounceTime(1000)
+      , distinctUntilChanged()
+      ).subscribe((text: string) => {
+        this.quickSearch(text);
+    });
   }
 
   onSelectedIdsChange() {
@@ -139,9 +155,15 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     }
   }
 
+  quickSearch(searchString) {
+    this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: searchString, op2: ''});
+    this.loadSequencesPage();
+  }
+
   clearSelection() {
     this.filters = [];
     this.clearSubject.next(null);
+    this.searchBox.nativeElement.value = '';
     this.loadSequencesPage();
   }
 
@@ -149,6 +171,15 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     for (let i = this.filters.length - 1; i >= 0; i--) {
       if (this.filters[i].field === columnPredicate.field) {
         this.filters.splice(i, 1);
+      }
+
+      if (!(columnPredicate.field === 'name'
+        && columnPredicate.predicates.length === 1
+        &&  columnPredicate.predicates[0].op === 'like'
+      // @ts-ignore
+        && columnPredicate.predicates[0].value === '%' + this.searchBox.nativeElement.value + '%'
+      )) {
+        this.searchBox.nativeElement.value = '';
       }
     }
 
@@ -219,7 +250,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {
-    if (event.edges.right) {
+    if(event.edges.right) {
       const cssValue = event.rectangle.width + 'px';
       this.updateColumnWidth(columnName, cssValue);
       this.resizeEvents.set(columnName, cssValue);
@@ -228,7 +259,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   applyResizes(): void {
-    for (const [columnName, cssValue] of this.resizeEvents) {
+    for(const [columnName, cssValue] of this.resizeEvents) {
       this.updateColumnWidth(columnName, cssValue);
     }
   }

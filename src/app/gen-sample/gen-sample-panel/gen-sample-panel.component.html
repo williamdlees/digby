@@ -12,6 +12,11 @@
 </div>
 
 <div class="row">
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+    <span class="header-text">Quick search:&nbsp;</span>
+    <input class="searchBox" #searchBox>
+  </div>
+
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
     <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()">
       <mat-icon class="primary-icon"  style="">delete_sweep</mat-icon>
@@ -55,7 +60,7 @@
           <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'name')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
             Sample Name
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)"><b>{{sample.name}}</b></mat-cell>
       </ng-container>

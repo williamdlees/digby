@@ -20,6 +20,7 @@ export class FilterComponent implements OnInit {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Input() clear$: Observable<null>;
+  @Input() setFilter$: Observable<any>;
   @Input() filterMode: FilterMode;
   @Input() showTextFilter = true;
   @Input() showSort = true;
@@ -37,6 +38,7 @@ export class FilterComponent implements OnInit {
       columnName: this.columnName,
       choices$: this.choices$,
       clear$: this.clear$,
+      setFilter$: this.setFilter$,
       showTextFilter: this.showTextFilter,
       showSort: this.showSort,
     };

@@ -38,6 +38,7 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Input() clear$: Observable<null>;
+  @Input() setFilter$: Observable<any>;
   @Input() showTextFilter = true;
   @Input() showSort = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
@@ -81,6 +82,23 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
           this.selectedSort = null;
           this.selectedItems = [];
           this.filterCleared = true;
+      });
+    }
+    if (this.setFilter$) {
+      this.setFilter$.subscribe((filter) => {
+        if (filter) {
+          if (filter.op1.length > 0) {
+            this.selectedOperator = filter.operator;
+            this.operand1Input = filter.op1;
+            this.operand2Input = filter.op2;
+            this.onValidation();
+          } else {
+            this.selectedOperator = null;
+            this.operand1Input = '';
+            this.operand2Input = '';
+            this.onValidation();
+          }
+        }
       });
     }
   }
@@ -151,5 +169,12 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
     }
 
     return pred;
+  }
+
+  // compare functions to set values in mat-select:  https://github.com/angular/components/issues/10214
+  compareFn: ((f1: any, f2: any) => boolean) | null = this.compareByValue;
+
+  compareByValue(f1: any, f2: any) {
+    return f1 && f2 && f1.name === f2.name;
   }
 }

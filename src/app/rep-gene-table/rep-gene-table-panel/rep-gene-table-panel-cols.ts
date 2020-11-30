@@ -1,6 +1,6 @@
  export const columnInfo = [
    {id: 'name', name: 'Name', hidden: false},
-   {id: 'gene_name', name: 'Gene Name', hidden: false},
+   {id: 'gene_name', name: 'Gene Name', hidden: true},
    {id: 'pipeline_name', name: 'Pipeline Alias', hidden: true},
    {id: 'seq', name: 'Sequence', hidden: false},
    {id: 'seq_len', name: 'Seq Length', hidden: false},

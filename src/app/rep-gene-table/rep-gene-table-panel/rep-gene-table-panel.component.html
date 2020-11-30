@@ -83,7 +83,7 @@
        <ng-container matColumnDef="pipeline_name">
           <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'pipeline_name')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-            Primer Name
+            Pipeline Alias
            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'pipeline_name'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
           <mat-cell *matCellDef="let seq" class="small-col">{{seq.pipeline_name}}</mat-cell>
@@ -110,7 +110,7 @@
        <ng-container matColumnDef="similar">
           <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'similar')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-            Similar
+            Identical
            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'similar'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
           <mat-cell *matCellDef="let seq"  class="small-col">{{seq.similar}}</mat-cell>
@@ -122,18 +122,17 @@
             Appearances
            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'appears'" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
-          <mat-cell *matCellDef="let seq" (click)="onAppearancesClick(seq)" class="small-col">{{seq.appears}}</mat-cell>
+          <mat-cell *matCellDef="let seq" (click)="onAppearancesClick(seq)" class="small-col" style="cursor: pointer;">{{seq.appears}}</mat-cell>
       </ng-container>
 
        <ng-container matColumnDef="is_single_allele">
           <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'is_single_allele')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}" class="small-col">
-            Single Allele
+            Unambiguous Allele
            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'is_single_allele'" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
           <mat-cell  class="small-col" *matCellDef="let seq">
             <i *ngIf="seq.is_single_allele" class="fa fa-check" style="line-height: inherit;"></i>
-            <i *ngIf="!seq.is_single_allele" class="fa fa-times" style="line-height: inherit;"></i>
           </mat-cell>
       </ng-container>
 
@@ -145,7 +144,6 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let seq" class="small-col">
             <i *ngIf="seq.low_confidence" class="fa fa-check" style="line-height: inherit;"></i>
-            <i *ngIf="!seq.low_confidence" class="fa fa-times" style="line-height: inherit;"></i>
           </mat-cell>
       </ng-container>
 
@@ -157,7 +155,6 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let seq" class="small-col">
             <i *ngIf="seq.novel" class="fa fa-check" style="line-height: inherit;"></i>
-            <i *ngIf="!seq.novel" class="fa fa-times" style="line-height: inherit;"></i>
           </mat-cell>
       </ng-container>
 

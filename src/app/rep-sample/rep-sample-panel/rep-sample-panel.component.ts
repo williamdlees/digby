@@ -220,6 +220,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     }
 
     this.repSampleFilterService.selection.next({filters: this.filters});
+    this.paginator.pageIndex = 0;
     this.loadSequencesPage();
   }
 

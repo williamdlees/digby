@@ -42,7 +42,7 @@
         (change)="(onSelectedSamplesChange())"
       >
       <label class="form-check-label" for="chk-selected-items">
-        Only samples with selected alleles
+        Only records with selected alleles
       </label>
     </div>
   </div>
@@ -59,19 +59,19 @@
        <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'name')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-            Sample Name
+            Record Name
            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'name'" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)"><b>{{sample.name}}</b></mat-cell>
       </ng-container>
 
        <ng-container matColumnDef="type">
-          <mat-header-cell *matHeaderCellDef class="small-col" mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'type')"
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'type')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
             Type
            <app-filter #filterComponent="menuInOtherComponent" [columnName]="'type'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
           </mat-header-cell>
-          <mat-cell *matCellDef="let sample"  class="small-col" (click)="showInfo(sample)">{{sample.type}}</mat-cell>
+          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.type}}</mat-cell>
       </ng-container>
 
        <ng-container matColumnDef="date">

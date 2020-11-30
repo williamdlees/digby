@@ -209,6 +209,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.sorts.push(columnPredicate.sort);
     }
 
+    this.paginator.pageIndex = 0;
     this.loadSequencesPage();
   }
 

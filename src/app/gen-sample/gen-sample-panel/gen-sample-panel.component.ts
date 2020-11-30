@@ -212,6 +212,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     }
 
     this.genSampleFilterService.selection.next({filters: this.filters});
+    this.paginator.pageIndex = 0;
     this.loadSequencesPage();
   }
 

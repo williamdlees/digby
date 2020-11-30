@@ -217,6 +217,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.sorts.push(columnPredicate.sort);
     }
 
+    this.paginator.pageIndex = 0;
     this.loadSequencesPage();
   }
 

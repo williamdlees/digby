@@ -91,7 +91,6 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let sequence" class="small-col">
             <i *ngIf="sequence.novel" class="fa fa-check" style="line-height: inherit;"></i>
-            <i *ngIf="!sequence.novel" class="fa fa-times" style="line-height: inherit;"></i>
           </mat-cell>
       </ng-container>
 
@@ -114,7 +113,6 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let sequence" class="small-col">
             <i *ngIf="sequence.deleted" class="fa fa-check" style="line-height: inherit;"></i>
-            <i *ngIf="!sequence.deleted" class="fa fa-times" style="line-height: inherit;"></i>
           </mat-cell>
       </ng-container>
 

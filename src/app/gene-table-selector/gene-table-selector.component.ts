@@ -42,6 +42,16 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
     allowSearchFilter: true
   };
 
+  genAssemblyDropdownSettings: IDropdownSettings = {
+    singleSelection: true,
+    idField: 'id',
+    textField: 'text',
+    selectAllText: 'Select All',
+    unSelectAllText: 'UnSelect All',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
+
   repDropdownSettings: IDropdownSettings = {
     singleSelection: false,
     idField: 'id',

@@ -7,13 +7,5 @@
    {id: 'deleted', name: 'Deleted', hidden: false},
    {id: 'sequence', name: 'Sequence', hidden: false},
    {id: 'gapped_sequence', name: 'Gapped', hidden: true},
-   {id: 'feature', name: 'Feature', hidden: false},
-   {id: 'start', name: 'Start', hidden: false},
-   {id: 'end', name: 'End', hidden: false},
-   {id: 'score', name: 'Score', hidden: true},
-   {id: 'strand', name: 'Strand', hidden: false},
-   {id: 'frame', name: 'Frame', hidden: false},
-   {id: 'refseq_name', name: 'Reference', hidden: false},
-   {id: 'sample_count', name: 'Samples', hidden: false},
    {id: 'appearances', name: 'Appearances', hidden: false},
 ];

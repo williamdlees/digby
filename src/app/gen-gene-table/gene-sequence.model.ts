@@ -7,9 +7,9 @@ export interface GeneSequence {
     deleted: boolean;
     functional: string;
     sequence: string;
-    sequence_full: string;
     gapped_sequence: string;
-    gapped_sequence_full: string;
+    appearances: string;
+    sample_id: string;
   }];
   total_items: number;
   page_size: number;

@@ -156,7 +156,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   onSelectedIdsChange(state) {
-    if (this.isSelectedGenesChecked && this.selectedSampleIds.length) {
+    if (this.isSelectedGenesChecked && this.samplesSelected) {
       this.applyFilter(
         {
           field: 'sample_id',

@@ -260,6 +260,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   onResizeEnd(event: ResizeEvent, columnName): void {
     if (event.edges.right) {
       const cssValue = event.rectangle.width + 'px';
+      console.log('resizeEnd: updating ' + columnName + 'from ' + this.resizeEvents.get(columnName) + ' to ' + cssValue);
       this.updateColumnWidth(columnName, cssValue);
       this.resizeEvents.set(columnName, cssValue);
       this.tableParamsStorageService.saveInfo(this.resizeEvents, 'rep-sample-table-widths');
@@ -267,6 +268,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   applyResizes(): void {
+    console.log('in applyResize');
     for (const [columnName, cssValue] of this.resizeEvents) {
       this.updateColumnWidth(columnName, cssValue);
     }

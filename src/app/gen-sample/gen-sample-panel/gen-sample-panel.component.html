@@ -200,6 +200,28 @@
           </mat-cell>
       </ng-container>
 
+       <ng-container matColumnDef="annot_method">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'annot_method')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Annotation Method
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'annot_method'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample">
+              {{sample.annot_method}}
+          </mat-cell>
+      </ng-container>
+
+       <ng-container matColumnDef="annot_ref">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'annot_ref')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Annotation Ref
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'annot_ref'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample">
+              {{sample.annot_ref}}
+          </mat-cell>
+      </ng-container>
+
 
        <ng-container matColumnDef="report">
           <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'report')"
@@ -209,14 +231,9 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let sample" class="small-col">
             <ng-container *ngIf="sample.report.length > 0">
-              <ng-container *ngIf="sample.report.indexOf('IGenotyper') >= 0">
                 <button class="btn btn-sm btn-solid-icon" style=""[matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: sample}">
                   <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
                 </button>
-              </ng-container>
-              <ng-container *ngIf="sample.report.indexOf('IGenotyper') < 0">
-                <a href={{sample.report}} target="_blank"><i class="fa fa-folder fa-5" style="line-height: inherit;"></i></a>
-              </ng-container>
             </ng-container>
             <ng-container *ngIf="sample.report.length === 0">
               NA
@@ -240,18 +257,32 @@
         <div class="row ml-1 mr-2">
           <b>{{sample.name}}</b>
         </div>
-        <div class="row ml-1 mr-2 mb-1">
-          IGenotyper Report
-        </div>
-        <div class="row ml-4 mr-2 mb-0 align-middle">
-          Genotype Analysis<span>&nbsp;&nbsp;</span><a href="{{sample.report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-        </div>
-        <div class="row ml-4 mr-2 mb-1">
-          Haplotype<span>&nbsp;&nbsp;</span>
-          <a href="{{sample.hap_report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-          <span>&nbsp;&nbsp;</span>
-          <a href="{{sample.hap_report.encodeURI}}" download="{{sample.name + '_haplotype.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-        </div>
+        <ng-container *ngIf="sample.annot_method=='IGenotyper'">
+          <div class="row ml-1 mr-2 mb-1">
+            IGenotyper Report
+          </div>
+          <div class="row ml-4 mr-2 mb-0 align-middle">
+            Genotype Analysis<span>&nbsp;&nbsp;</span><a href="{{sample.report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          </div>
+          <div class="row ml-4 mr-2 mb-1">
+            Haplotype<span>&nbsp;&nbsp;</span>
+            <a href="{{sample.hap_report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+            <span>&nbsp;&nbsp;</span>
+            <a href="{{sample.hap_report.encodeURI}}" download="{{sample.name + '_haplotype.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="sample.annot_method=='VDJbase'">
+          <div class="row ml-2 mr-2 mb-1">
+            VDJbase Annotation Report
+          </div>
+          <div class="row ml-4 mr-2 mb-0 align-middle">
+            Features<span>&nbsp;&nbsp;</span><a href="{{sample.report}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          </div>
+          <div class="row ml-4 mr-2 mb-1">
+            Documentation<span>&nbsp;&nbsp;</span>
+            <a href="{{sample.annot_ref}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          </div>
+        </ng-container>
       </div>
     </ng-template>
   </div>

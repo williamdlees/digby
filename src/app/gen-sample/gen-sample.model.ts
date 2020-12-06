@@ -12,4 +12,7 @@ export interface GenSample {
     chromosome: string;
     assembly_start: bigint;
     assembly_end: bigint;
+    report: string;
+    annot_method: string;
+    annot_ref: string;
 }

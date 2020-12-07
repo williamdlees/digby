@@ -176,6 +176,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     this.filters = [];
     this.clearSubject.next(null);
     this.searchBox.nativeElement.value = '';
+    this.genSampleFilterService.selection.next({filters: this.filters});
     this.loadSequencesPage();
   }
 

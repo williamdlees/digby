@@ -184,6 +184,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     this.filters = [];
     this.clearSubject.next(null);
     this.searchBox.nativeElement.value = '';
+    this.repSampleFilterService.selection.next({filters: this.filters});
     this.loadSequencesPage();
   }
 

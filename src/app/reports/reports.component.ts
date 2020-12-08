@@ -7,15 +7,12 @@ import {DataSource} from '@angular/cdk/collections';
 import {defer, Observable, of, Subscription} from 'rxjs';
 import {ReportList} from './reports-list.model';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ReportParamsDialogComponent} from './report-params-dialog/report-params-dialog.component';
 import {GenSampleFilterService} from '../gen-sample/gen-sample-filter.service';
 import {RepSampleFilterService} from '../rep-sample/rep-sample-filter.service';
 import {GeneTableSelectorService} from '../gene-table-selector/gene-table-selector.service';
 import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.model';
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ReportRunDialogComponent} from './report-run-dialog/report-run-dialog.component';
-import {ReportRequestService} from './report-request-service';
 import {ReportRunService} from './report-run.service';
 
 @Component({
@@ -79,7 +76,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
   runReport(report, format) {
     this.reportRunService.runReport(report, format, this.geneTableSelection.species,
       this.geneTableSelection.datasets, this.genSampleFilters,
-      this.geneTableSelection.repSeqs, this.repSampleFilters);
+      this.geneTableSelection.repSeqs, this.repSampleFilters,
+      null);
   }
 
   private displayError(error) {

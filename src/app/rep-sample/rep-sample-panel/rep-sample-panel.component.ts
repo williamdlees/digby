@@ -26,6 +26,7 @@ import {pollUntil} from '../../shared/poll-until-rxjs';
 import {catchError} from 'rxjs/operators';
 import {ActivatedRoute} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {ReportRunService} from '../../reports/report-run.service';
 
 
 @Component({
@@ -74,6 +75,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private reportsService: ReportsService,
               private httpClient: HttpClient,
               private route: ActivatedRoute,
+              private reportRunService: ReportRunService,
               ) {
 
   }
@@ -284,8 +286,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     }
   }
 
-  // this code is duplicated in the reports compnent. Really needs breaking out into a service.
-
   sendReportRequest(report, format, params) {
     try {
       params = JSON.parse(params);
@@ -294,104 +294,17 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       return;
     }
 
-    const reportWindow = window.open('', '_blank');
-    reportWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" ' +
-      'integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">' +
-      '<h3>Running your report...</h3>' +
-      '<div  class="spinner-border" role="status"> ' +
-      '<span class="sr-only">Loading...</span> ' +
-      '</div>');
-
-    let reportParams = '[]';
+    let reportParams = {};
+    let title = '';
     if (report === 'rep_single_haplotype') {
-      reportParams = '{"haplo_gene":"' + params.hap_gene + '"}';
-    }
-
-    this.reportsService.getReportsRunApi(
-      report,
-      format,
-      params.species,
-      '',
-      '[]',
-      params.repSeqs,
-      '[{"field":"name","op":"in","value":["' + params.name + '"]}]',
-      reportParams
-    ).subscribe((reportResponse) => {
-      const jobId = reportResponse.id;
-
-      let pollCount = 0;
-
-      this.fetchReportStatus(jobId)
-        .pipe(pollUntil(3000, 40, (response) => {
-          pollCount += 1;
-          return (response.status === 'SUCCESS' || response.status === 'FAILURE');
-        }))
-        .subscribe((response) => {
-            if (response.status === 'SUCCESS') {
-              if (response.results.status === 'ok') {
-                this.showResult(response.results, reportWindow);
-              } else {
-                this.displayError(reportWindow, report, {status: response.results.description});
-              }
-            } else {
-              this.displayError(reportWindow, report, 'return code:' + response.status + ' ' + response.description);
-            }
-          },
-          (error) => {
-            this.displayError(reportWindow, report, {status: 'Timeout waiting for report'});
-          }
-        );
-    },
-      (error) => {
-        this.displayError(reportWindow, report, error);
-      }
-    );
-  }
-
-  private fetchReportStatus(jobId) {
-    return defer(() =>
-      this.reportsService.getReportsStatus(jobId)
-    ).pipe(catchError(() => EMPTY));
-  }
-
-  private showResult(response, reportWindow: Window) {
-    if (!response.filename) {
-      reportWindow.location = response.url;
+      title = 'Haplotype Report';
+      reportParams = {haplo_gene: params.hap_gene};
     } else {
-      reportWindow.close();
-      const token = 'my JWT';
-      const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
-      this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
-        (rep: any) => {
-          const dataType = rep.type;
-          const downloadLink = document.createElement('a');
-          downloadLink.href = window.URL.createObjectURL(rep);
-          downloadLink.setAttribute('download', response.filename);
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-        });
-    }
-  }
-
-  private displayError(reportWindow: Window, report, error) {
-    reportWindow.close();
-    const modalRef = this.modalService.open(ReportErrorDialogComponent, {size: 'm'});
-    modalRef.componentInstance.report = 'Error running ' + report.title;
-
-    if ('error' in error && 'message' in error.error && error.error.message) {
-      modalRef.componentInstance.errorMessage = error.error.message;
-    } else if ('statusText' in error && error.statusText) {
-      modalRef.componentInstance.errorMessage = error.status + '. ' + error.name + ': ' + error.statusText;
-    } else {
-      modalRef.componentInstance.errorMessage = error.status;
+      title = 'Genotype Report';
     }
 
-    modalRef.result.then(
-      (result) => {
-      },
-      () => {
-      }
-    );
+    this.reportRunService.runReport({name: report, title, filter_params: []}, format, params.species,
+      [], [], params.repSeqs, [{field: 'name', op: 'in', value : [params.name]}], reportParams);
   }
 }
 

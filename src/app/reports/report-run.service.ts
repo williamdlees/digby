@@ -57,34 +57,40 @@ export class ReportRunService {
     );
   }
 
-  runReport(report, format, species, genDataSets, genSampleFilters, repDataSets, repSampleFilters) {
-    if (report.params.length > 0 || report.filter_params) {
-      const modalRef = this.modalService.open(ReportParamsDialogComponent, {size: 'm'});
-      modalRef.componentInstance.report = report;
+  runReport(report, format, species, genDataSets, genSampleFilters, repDataSets, repSampleFilters, reportParams) {
+    if (!reportParams) {      // if the params aren't pre-cooked, check if this report requires them and, if so, display a dialog
+      if (report.params.length > 0 || report.filter_params) {
+        const modalRef = this.modalService.open(ReportParamsDialogComponent, {size: 'm'});
+        modalRef.componentInstance.report = report;
 
-      let filterParams = null;
+        let filterParams = null;
 
-      if (report.filter_params) {
-        if (report.scope.length > 1) {
-          filterParams = this.globalReportFilters.combined;
-        } else if (report.scope.indexOf('rep_sample') >= 0) {
-          filterParams = this.globalReportFilters.rep;
-        } else {
-          filterParams = this.globalReportFilters.gen;
+        if (report.filter_params) {
+          if (report.scope.length > 1) {
+            filterParams = this.globalReportFilters.combined;
+          } else if (report.scope.indexOf('rep_sample') >= 0) {
+            filterParams = this.globalReportFilters.rep;
+          } else {
+            filterParams = this.globalReportFilters.gen;
+          }
         }
+
+        modalRef.componentInstance.filterParams = filterParams;
+
+        modalRef.result.then((result) => {
+          if (result) {
+            this.sendReportRequest(report, format, species, result, genDataSets, genSampleFilters, repDataSets, repSampleFilters);
+          }
+        }, () => {
+        });
+        return;
+
+      } else {
+        reportParams = {};
       }
-
-      modalRef.componentInstance.filterParams = filterParams;
-
-      modalRef.result.then((result) => {
-        if (result) {
-          this.sendReportRequest(report, format, species, result, genDataSets, genSampleFilters, repDataSets, repSampleFilters);
-        }
-      }, () => {
-      });
-    } else {
-      this.sendReportRequest(report, format, species, {}, genDataSets, genSampleFilters, repDataSets, repSampleFilters);
     }
+
+    this.sendReportRequest(report, format, species, reportParams, genDataSets, genSampleFilters, repDataSets, repSampleFilters);
   }
 
   private sendReportRequest(report, format, species, params, genDataSets, genSampleFilters, repDataSets, repSampleFilters) {

@@ -22,7 +22,6 @@ import {ReportRunService} from './report-run.service';
   selector: 'app-reports',
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
-  providers: [ReportRunService]
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<string>;
@@ -32,12 +31,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   genSampleFilterSubscription = null;
   genSampleFilters = [];
   repSampleFilterSubscription = null;
-  globalReportFilterParamsSubscription = null;
   repSampleFilters = [];
   globalReportFilters = null;
   reportRequest = null;
-  reportWindow = null;
-  lastReportInfo = '';
   private reportResult$Subscription: Subscription;
 
   constructor(
@@ -70,35 +66,6 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.repSampleFilterSubscription = this.repSampleFilterService.source.subscribe(
       filters => {
         this.repSampleFilters = filters.filters;
-      }
-    );
-
-    this.globalReportFilterParamsSubscription = this.reportsListDataSource.globalReportFilterParams$.subscribe(
-      globalReportFilters => {
-        this.globalReportFilters = globalReportFilters;
-      }
-    );
-
-    this.reportRequest = new ReportRequestService(this.reportsService);
-    this.reportResult$Subscription = this.reportRequest.reportResult$.subscribe(
-      (result) => {
-        if (this.reportWindow) {
-          if (result.status === 'PENDING') {
-            if (result.info === this.lastReportInfo) {
-              this.reportWindow.document.getElementById('status_line').innerHTML =
-                this.reportWindow.document.getElementById('status_line').innerHTML + '.';
-            } else {
-              this.reportWindow.document.getElementById('status_line').innerHTML = result.info;
-              this.lastReportInfo = result.info;
-            }
-          } else if (result.status === 'FAILURE') {
-            this.reportWindow.close();
-            this.reportWindow = null;
-            this.displayError(result.info);
-          } else if (result.status === 'SUCCESS') {
-            this.reportWindow.location = result.response.results.url;
-          }
-        }
       }
     );
   }

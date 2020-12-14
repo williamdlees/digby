@@ -310,6 +310,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       title = 'Genotype Report';
       params = JSON.parse(params);
       sampleFilter = [{field: 'name', op: 'in', value : [params.name]}];
+      reportParams = {};
       repSeqs = params.repSeqs;
     } else if (report === 'download_rep_data') {
       title = 'Download Data';

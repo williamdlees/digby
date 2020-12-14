@@ -45,7 +45,11 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
             .subscribe((sequence) => {
               this.totalItems = sequence.total_items;
               this.choicesSubject.next(sequence.uniques);
-              this.geneSequenceSubject.next(sequence.sequences);
+              if (sequence !== undefined && sequence.hasOwnProperty('sequences')) {
+                this.geneSequenceSubject.next(sequence.sequences);
+              } else {
+                this.geneSequenceSubject.next([]);
+              }
             });
         } else {
           this.loadingSubject.next(false);

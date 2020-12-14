@@ -18,7 +18,8 @@ import {GenSampleSelectedService} from '../../gen-sample/gen-sample-selected.ser
 import { ResizeEvent } from 'angular-resizable-element';
 import { TableParamsStorageService } from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
+import {ReportRunService} from '../../reports/report-run.service';
 
 
 @Component({
@@ -65,6 +66,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
               private tableParamsStorageService: TableParamsStorageService,
               private genSampleSelectedService: GenSampleSelectedService,
               private router: Router,
+              private reportRunService: ReportRunService,
   ) {
   }
 
@@ -137,10 +139,20 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
           this.samplesSelected = Object.keys(this.selectedSampleIds).length > 0;
 
           if (this.isSelectedGenesChecked) {
+            if (!this.samplesSelected) {
+              this.isSelectedGenesChecked = false;
+            }
+
             this.onSelectedIdsChange(null);
           }
         }
       );
+
+      this.router.events.subscribe((val) => {
+        if (val instanceof NavigationEnd) {
+          this.applyResizes();
+        }
+      });
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
@@ -279,6 +291,15 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       const currentEl = columnElts[i] as HTMLDivElement;
       currentEl.style.width = cssValue;
     }
+  }
+
+  sendReportRequest(report, format, params) {
+    const datasets = this.selection.datasets;
+    const title = 'Download';
+    params.filters = this.filters;
+
+    this.reportRunService.runReport({name: report, title, filter_params: []}, format, this.selection.species,
+      datasets, [], [], [], params);
   }
 }
 

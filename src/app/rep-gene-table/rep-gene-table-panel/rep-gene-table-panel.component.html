@@ -36,6 +36,13 @@
     </button>
   </div>
 
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+    <button style="border-width: 0px; background-color: transparent;" [matMenuTriggerFor]="downloadMenu" id="downloadbutton">
+      <mat-icon class="primary-icon"  style="">cloud_download</mat-icon>
+    </button>
+    <label class="form-check-label" for="downloadbutton">Download</label>
+  </div>
+
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="samplesSelected">
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
@@ -43,7 +50,7 @@
         (change)="(onSelectedIdsChange())"
       >
       <label class="form-check-label" for="chk-selected-items">
-        Only alleles from selected samples
+        Only genes from selected samples
       </label>
     </div>
   </div>
@@ -217,11 +224,40 @@
         </ng-container>
       </div>
       <div class="row ml-1 mr-2 mb-1">
-        IgSNPer documentation
+        IgSNPer explained
         <span>&nbsp;&nbsp;</span>
         <a href="https://github.com/Immunotools/IgSNPer" target="_blank">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
         </a>
+      </div>
+    </div>
+  </ng-template>
+</mat-menu>
+
+
+<mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+  <ng-template matMenuContent>
+    <div class="container">
+      <div class="row ml-1 mr-2">
+        <b>Download data for selected genes</b>
+      </div>
+      <div class="row ml-4 mr-2 mb-0 align-middle">
+        Ungapped sequences (fasta)
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Ungapped sequences (fasta)'})">
+            <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
+      </div>
+      <div class="row ml-4 mr-2 mb-0 align-middle">
+        Gapped sequences (fasta)
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Gapped sequences (fasta)'})">
+            <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
+      </div>
+      <div class="row ml-4 mr-2 mb-0 align-middle">
+        Gene information (csv)
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Gene information (csv)'})">
+            <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
       </div>
     </div>
   </ng-template>

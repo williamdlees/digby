@@ -44,7 +44,11 @@ export class GenSampleDataSource implements DataSource<GenSample> {
           .subscribe((sequence) => {
             this.totalItems = sequence.total_items;
             this.choicesSubject.next(sequence.uniques);
-            this.genSampleSubject.next(sequence.samples);
+            if (sequence !== undefined && sequence.hasOwnProperty('samples')) {
+              this.genSampleSubject.next(sequence.samples);
+            } else {
+              this.genSampleSubject.next([]);
+            }
           });
         } else {
           this.loadingSubject.next(false);

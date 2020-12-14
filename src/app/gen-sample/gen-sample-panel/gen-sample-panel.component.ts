@@ -18,8 +18,9 @@ import {GenSampleSelectedService} from '../gen-sample-selected.service';
 import {GenSampleFilterService} from '../gen-sample-filter.service';
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
-import {ActivatedRoute, ParamMap} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {ReportRunService} from '../../reports/report-run.service';
 
 
 @Component({
@@ -66,6 +67,8 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private genSampleFilterService: GenSampleFilterService,
               private tableParamsStorageService: TableParamsStorageService,
               private route: ActivatedRoute,
+              private reportRunService: ReportRunService,
+              private router: Router,
               ) {
 
   }
@@ -75,7 +78,9 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     this.dataSource = new GenSampleDataSource(this.genSampleService);
 
     this.params$ = this.route.params.subscribe(params => {
+      console.log('route params');
       if (params.onlySelectedSamples === 'true') {
+        console.log('checking box');
         this.isSelectedSamplesChecked = true;
         this.onSelectedSamplesChange();
       }
@@ -131,10 +136,19 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           this.selectedSequenceNames = selectedNames.names;
 
           if (this.isSelectedSamplesChecked) {
+            if (this.selectedSequenceNames.length === 0) {
+              this.isSelectedSamplesChecked = false;
+            }
+
             this.onSelectedSamplesChange();
           }
         }
       );
+      this.router.events.subscribe((val) => {
+        if (val instanceof NavigationEnd) {
+          this.applyResizes();
+        }
+      });
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
@@ -272,6 +286,15 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       const currentEl = columnElts[i] as HTMLDivElement;
       currentEl.style.width = cssValue;
     }
+  }
+
+  sendReportRequest(report, format, params) {
+    const datasets = this.selection.datasets;
+    const title = 'Download';
+    params.filters = this.filters;
+
+    this.reportRunService.runReport({name: report, title, filter_params: []}, format, this.selection.species,
+      datasets, this.filters, [], [], params);
   }
 }
 

@@ -19,10 +19,10 @@
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()">
+    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()" id="deleteButton">
       <mat-icon class="primary-icon"  style="">delete_sweep</mat-icon>
-      <span class="header-text">Clear filters</span>
     </button>
+    <label class="form-check-label" for="deleteButton">Clear filters</label>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
@@ -36,6 +36,13 @@
       <label class="form-check-label" for="colbutton">Arrange Columns</label>
   </div>
 
+  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
+    <button style="border-width: 0px; background-color: transparent;" [matMenuTriggerFor]="downloadMenu" id="downloadbutton">
+      <mat-icon class="primary-icon"  style="">cloud_download</mat-icon>
+    </button>
+    <label class="form-check-label" for="downloadbutton">Download</label>
+  </div>
+
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="selectedSequenceNames.length">
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
@@ -43,7 +50,7 @@
           (change)="(onSelectedSamplesChange())"
         >
         <label class="form-check-label" for="chk-selected-items">
-          Only samples with selected alleles
+          Only samples with selected genes
         </label>
     </div>
   </div>
@@ -499,7 +506,7 @@
         </ng-container>
       </div>
       <div class="row ml-1 mr-2 mb-1">
-        RAbHIT documentation
+        RAbHIT explained
         <span>&nbsp;&nbsp;</span>
         <a href="https://pubmed.ncbi.nlm.nih.gov/31173062" target="_blank">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
@@ -577,14 +584,14 @@
       </div>
       -->
       <div class="row ml-1 mr-2 mb-1">
-        TIgGER documentation
+        TIgGER explained
         <span>&nbsp;&nbsp;</span>
         <a href="https://pubmed.ncbi.nlm.nih.gov/30814994" target="_blank">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
         </a>
       </div>
       <div class="row ml-1 mr-2 mb-1">
-        OGRDBstats documentation
+        OGRDBstats explained
         <span>&nbsp;&nbsp;</span>
         <a href="https://github.com/airr-community/ogrdbstats" target="_blank">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
@@ -592,7 +599,7 @@
       </div>
       <!--
       <div class="row ml-1 mr-2 mb-1">
-        IgSNPer documentation
+        IgSNPer explained
         <span>&nbsp;&nbsp;</span>
         <a href="https://github.com/Immunotools/IgSNPer" target="_blank">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
@@ -602,3 +609,26 @@
     </div>
   </ng-template>
 </mat-menu>
+
+<mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+  <ng-template matMenuContent>
+    <div class="container">
+      <div class="row ml-1 mr-2">
+        <b>Download data for selected samples</b>
+      </div>
+      <div class="row ml-4 mr-2 mb-0 align-middle">
+        Sample info (csv)
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Sample info (CSV)'})">
+            <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i> </button>
+      </div>
+      <div class="row ml-4 mr-2 mb-0 align-middle">
+        Sample data (zip)
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'zip', {type:'Sample files (ZIP)'})">
+            <i class="fa fa-file-zip-o" style="line-height: inherit;" ></i> </button>
+      </div>
+    </div>
+  </ng-template>
+</mat-menu>
+

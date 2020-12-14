@@ -48,10 +48,10 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
   operand2Input = '';
   filterCleared = false;
   operatorList: Operator[] = [
-    { name: 'Begins with', operands: 2, operator: 'like', postfix: '%' },
-    { name: 'Ends with', operands: 2, operator: 'like', prefix: '%' },
-    { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' },
-    { name: 'Matches', operands: 2, operator: 'like' },
+    { name: 'Begins with', operands: 2, operator: 'ilike', postfix: '%' },
+    { name: 'Ends with', operands: 2, operator: 'ilike', prefix: '%' },
+    { name: 'Includes', operands: 2, operator: 'ilike', prefix: '%', postfix: '%' },
+    { name: 'Matches', operands: 2, operator: 'ilike' },
   ];
   selectedSort = null;
   choices: { id: number, text: string }[];

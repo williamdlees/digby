@@ -45,7 +45,12 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
             .subscribe((sequence) => {
               this.totalItems = sequence.total_items;
               this.choicesSubject.next(sequence.uniques);
-              this.repSequenceSubject.next(sequence.samples);
+
+              if (sequence !== undefined && sequence.hasOwnProperty('samples')) {
+                this.repSequenceSubject.next(sequence.samples);
+              } else {
+                this.repSequenceSubject.next([]);
+              }
             });
         } else {
           this.loadingSubject.next(false);

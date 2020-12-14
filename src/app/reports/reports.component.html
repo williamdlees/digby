@@ -9,7 +9,7 @@
 
   <p>To run the report, click on an icon in the Run column corresponding to the output format that you would like (e.g. pdf, on-screen, Excel)</p>
 
-  <p><a href="assets/doc/report_documentation.pdf">Click here</a> for report documentation.</p>
+  <p><a href="assets/doc/report_documentation.pdf">Click here</a> for explanation of reports.</p>
 
   <h2>Reports using just AIRR-seq Sample Data</h2>
   <mat-table [dataSource]="repListDataSource">
@@ -45,6 +45,11 @@
         <ng-container *ngIf="rep.format.indexOf('xls') >= 0">
           <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
             <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
+          </button>
+        </ng-container>
+        <ng-container *ngIf="rep.format.indexOf('file') >= 0">
+          <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
+            <i class="fa fa-save" style="line-height: inherit;"></i>
           </button>
         </ng-container>
       </mat-cell>

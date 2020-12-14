@@ -16,7 +16,6 @@ export class TableParamsStorageService {
         try {
           let kvs = JSON.parse(loadedInfo);
           kvs = new Map(kvs);
-          console.log('table storage: returning stored settings for ' + saveName);
           return kvs;
         } catch {
           loadedInfo = null;
@@ -24,7 +23,6 @@ export class TableParamsStorageService {
       }
 
       if (!loadedInfo && saveName) {
-        console.log('table storage: saving and returning defaults for ' + saveName);
         this.saveInfo(columnInfo, saveName);
       }
       return columnInfo;
@@ -38,7 +36,6 @@ export class TableParamsStorageService {
         return;
       }
 
-      console.log('table storage: saving settings for ' + saveName);
 
       const xx = Array.from(columnInfo);
       const kvs = JSON.stringify(xx);

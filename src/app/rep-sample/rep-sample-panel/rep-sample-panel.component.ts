@@ -24,7 +24,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ReportErrorDialogComponent} from '../../reports/report-error-dialog/report-error-dialog.component';
 import {pollUntil} from '../../shared/poll-until-rxjs';
 import {catchError} from 'rxjs/operators';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {ReportRunService} from '../../reports/report-run.service';
 
@@ -44,7 +44,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild('searchBox', { static: true }) searchBox: ElementRef;
   dataSource: RepSampleDataSource;
   params$: Subscription;    // params for the route
-
   displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'genotypes', 'haplotypes'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
@@ -76,6 +75,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private httpClient: HttpClient,
               private route: ActivatedRoute,
               private reportRunService: ReportRunService,
+              private router: Router,
               ) {
 
   }
@@ -141,10 +141,20 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
         selectedNames => {
           this.selectedSequenceNames = selectedNames.names;
           if (this.isSelectedSamplesChecked) {
+            if (this.selectedSequenceNames.length === 0) {
+              this.isSelectedSamplesChecked = false;
+            }
+
             this.onSelectedSamplesChange();
           }
         }
       );
+
+      this.router.events.subscribe((val) => {
+        if (val instanceof NavigationEnd) {
+          this.applyResizes();
+        }
+      });
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
@@ -263,7 +273,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   onResizeEnd(event: ResizeEvent, columnName): void {
     if (event.edges.right) {
       const cssValue = event.rectangle.width + 'px';
-      console.log('resizeEnd: updating ' + columnName + 'from ' + this.resizeEvents.get(columnName) + ' to ' + cssValue);
       this.updateColumnWidth(columnName, cssValue);
       this.resizeEvents.set(columnName, cssValue);
       this.tableParamsStorageService.saveInfo(this.resizeEvents, 'rep-sample-table-widths');
@@ -271,7 +280,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   applyResizes(): void {
-    console.log('in applyResize');
     for (const [columnName, cssValue] of this.resizeEvents) {
       this.updateColumnWidth(columnName, cssValue);
     }
@@ -287,25 +295,31 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   sendReportRequest(report, format, params) {
-    try {
-      params = JSON.parse(params);
-    } catch {
-      console.log('Error parsing genotype report request parameters');
-      return;
-    }
 
-    let reportParams = {};
+    let reportParams: any;
+    let sampleFilter = [];
+    let repSeqs = this.selection.repSeqs;
     let title = '';
     if (report === 'rep_single_haplotype') {
       title = 'Haplotype Report';
+      params = JSON.parse(params);
+      sampleFilter = [{field: 'name', op: 'in', value : [params.name]}];
       reportParams = {haplo_gene: params.hap_gene};
-    } else {
+      repSeqs = params.repSeqs;
+    } else if (report === 'rep_single_genotype') {
       title = 'Genotype Report';
+      params = JSON.parse(params);
+      sampleFilter = [{field: 'name', op: 'in', value : [params.name]}];
+      repSeqs = params.repSeqs;
+    } else if (report === 'download_rep_data') {
+      title = 'Download Data';
+      reportParams = params;
+      sampleFilter = this.filters;
     }
 
-    this.reportRunService.runReport({name: report, title, filter_params: []}, format, params.species,
-      [], [], params.repSeqs, [{field: 'name', op: 'in', value : [params.name]}], reportParams);
-  }
+    this.reportRunService.runReport({name: report, title, filter_params: []}, format, this.selection.species,
+      [], [], repSeqs, sampleFilter, reportParams);
+    }
 }
 
 

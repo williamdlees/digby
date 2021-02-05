@@ -21,6 +21,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   @Input() showRepseq: boolean;
   species = null;
   selectedSpecies = null;
+  notifiedUpdates =  { species: false, refSeq: false, repSeq: false, assemblies: false };
   datasets: { id: number, text: string }[] = [];
   assemblies: { id: number, text: string }[] = [];
   repSeqs: { id: number, text: string }[] = [];
@@ -94,6 +95,10 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
               if (sel.datasets && symmetricDifference(new Set(sel.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
                 this.selectedGen = this.datasets.filter((r) => sel.datasets.indexOf(r.text) >= 0);
               }
+
+              if (sel.assemblies && symmetricDifference(new Set(sel.assemblies), new Set(this.selectedAssembly.map((x) => (x.text)))).size) {
+                this.selectedAssembly = this.assemblies.filter((r) => sel.assemblies.indexOf(r.text) >= 0);
+              }
             }
           }
         );
@@ -126,7 +131,6 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
       this.updateGen(selection.datasets);
       this.updateRep(selection.repSeqs);
-
     }, error => {
       this.isFetching = false;
       this.error = error.message;
@@ -162,6 +166,9 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       if (this.selectedGen.length === 0 && this.datasets.length > 0) {
         this.selectedGen.push(this.datasets[0]);
       }
+
+      this.notifiedUpdates.refSeq = true;
+      this.onSelectionChange();
 
       this.updateAssemblies(this.geneTableService.selection.value.assemblies);
      }, error => {
@@ -209,6 +216,9 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.assemblies = [];
       this.selectedAssembly = [];
     }
+
+    this.notifiedUpdates.assemblies = true;
+    this.onSelectionChange();
   }
 
 
@@ -243,6 +253,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       if (this.selectedRep.length === 0 && this.repSeqs.length > 0) {
         this.selectedRep.push(this.repSeqs[0]);
       }
+      this.notifiedUpdates.repSeq = true;
+      this.onSelectionChange();
    }, error => {
         this.isFetching = false;
         this.error = error.message;
@@ -255,6 +267,10 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   speciesChange() {
+    this.notifiedUpdates.species = true;
+    this.selectedGen = [];
+    this.selectedRep = [];
+    this.selectedAssembly = [];
     if (this.selectedSpecies.name !== 'None') {
       if (this.geneTableService.selection.value.species === this.selectedSpecies.name) {
         this.updateGen(this.geneTableService.selection.value.datasets);
@@ -267,6 +283,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   repSeqChange() {
+    this.notifiedUpdates.repSeq = true;
     if (symmetricDifference(new Set(this.geneTableService.selection.value.repSeqs), new Set(this.selectedRep.map((x) => (x.text)))).size || this.initializing) {
       this.onSelectionChange();
     }
@@ -275,6 +292,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   assemblyChange() {
+    this.notifiedUpdates.repSeq = true;
     if (symmetricDifference(new Set(this.geneTableService.selection.value.repSeqs), new Set(this.selectedAssembly.map((x) => (x.text)))).size || this.initializing) {
       this.onSelectionChange();
     }
@@ -283,13 +301,24 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   refSeqChange() {
+    this.notifiedUpdates.refSeq = true;
     if (symmetricDifference(new Set(this.geneTableService.selection.value.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
       this.onSelectionChange();
     }
   }
 
   onSelectionChange() {
+    // if the species has changed, don't notify an update until we have updates to the other selections
+    if (this.notifiedUpdates.species) {
+      if (!this.notifiedUpdates.repSeq || !this.notifiedUpdates.refSeq  || !this.notifiedUpdates.assemblies) {
+        return;
+      }
+    }
+    console.log(`selectionChange: species ${this.notifiedUpdates.species} repSeq ${this.notifiedUpdates.repSeq} refSeq ${this.notifiedUpdates.refSeq} assemblies ${this.notifiedUpdates.assemblies}`);
+
     if (this.selectedSpecies) {
+      this.notifiedUpdates = { species: false, refSeq: false, repSeq: false, assemblies: false };
+      console.log(`sp ${this.selectedSpecies.name} ref ${this.selectedGen.map(x => x.text)} ass ${this.selectedAssembly.map(x => x.text)} rep ${this.selectedRep.map(x => x.text)}`);
       this.geneTableService.selection.next({
         species: this.selectedSpecies.name,
         datasets: this.selectedGen.map(x => x.text),
@@ -297,6 +326,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         repSeqs: this.selectedRep.map(x => x.text),
         repDatasetDescriptions: this.repDatasetDescriptions,
       });
+
     }
   }
 }

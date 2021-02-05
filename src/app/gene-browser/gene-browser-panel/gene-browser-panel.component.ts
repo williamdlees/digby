@@ -77,6 +77,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
     }
 
     if (this.species && this.assemblyName) {
+
       this.buildBrowser();
     }
   }

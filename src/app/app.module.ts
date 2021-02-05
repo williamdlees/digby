@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -9,7 +9,7 @@ import { GenGeneTableComponent } from './gen-gene-table/gen-gene-table.component
 
 import { ApiModule, Configuration, ConfigurationParameters } from 'dist/digby-swagger-client';
 import { HomeComponent } from './home/home.component';
-import {RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
+import {Router, RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
 import { environment } from '../environments/environment';
 import {GenGeneTablePanelComponent} from './gen-gene-table/gen-gene-table-panel/gen-gene-table-panel.component';
@@ -60,6 +60,7 @@ import { RepExploreDataComponent } from './rep-explore-data/rep-explore-data.com
 import { RepExploreDataPanelComponent } from './rep-explore-data/rep-explore-data-panel/rep-explore-data-panel.component';
 import { LicensingComponent } from './home/licensing/licensing.component';
 import { ReportRunDialogComponent } from './reports/report-run-dialog/report-run-dialog.component';
+import * as Sentry from '@sentry/angular';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -146,7 +147,10 @@ const appRoutes: Routes = [
   providers: [
     RequestCache,
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
-    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy }
+    { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
+    { provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false, }), },
+    { provide: Sentry.TraceService, deps: [Router], },
+    { provide: APP_INITIALIZER, useFactory: () => () => {}, deps: [Sentry.TraceService], multi: true, },
   ],
   bootstrap: [AppComponent],
   entryComponents: [SeqModalComponent, RepSampleInfoComponent],

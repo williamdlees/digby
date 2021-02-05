@@ -68,7 +68,7 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
   ngOnInit() {
     if (this.choices$) {
       this.choices$.subscribe((c) => {
-        if (c[this.columnName]) {
+        if (typeof c !== 'undefined' && c[this.columnName]) {
           this.choices = [];
           for (let i = 0; i < c[this.columnName].length; i++) {
             this.choices.push({ id: i, text: c[this.columnName][i] });

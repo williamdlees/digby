@@ -38,7 +38,10 @@ export class RepExploreDataPanelComponent implements OnInit {
             this.species = sel.species;
             this.dataset = sel.repSeqs;
             this.datasetDescriptions = sel.repDatasetDescriptions;
-            this.datasetInfoTable.renderRows();
+
+            if(typeof this.datasetInfoTable !== 'undefined') {
+              this.datasetInfoTable.renderRows();
+            }
             this.datasetInfo = null;
 
             if (this.dataset.length === 1) {

@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class RepGeneSelectedService {
-  selection = new BehaviorSubject<RepGeneSelected>({names: []});
+  selection = new BehaviorSubject<RepGeneSelected>({names: [], onlySelected: false});
   source = this.selection.asObservable();
 
   constructor() {

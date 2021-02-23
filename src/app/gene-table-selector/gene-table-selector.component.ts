@@ -314,11 +314,9 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
         return;
       }
     }
-    console.log(`selectionChange: species ${this.notifiedUpdates.species} repSeq ${this.notifiedUpdates.repSeq} refSeq ${this.notifiedUpdates.refSeq} assemblies ${this.notifiedUpdates.assemblies}`);
 
     if (this.selectedSpecies) {
       this.notifiedUpdates = { species: false, refSeq: false, repSeq: false, assemblies: false };
-      console.log(`sp ${this.selectedSpecies.name} ref ${this.selectedGen.map(x => x.text)} ass ${this.selectedAssembly.map(x => x.text)} rep ${this.selectedRep.map(x => x.text)}`);
       this.geneTableService.selection.next({
         species: this.selectedSpecies.name,
         datasets: this.selectedGen.map(x => x.text),

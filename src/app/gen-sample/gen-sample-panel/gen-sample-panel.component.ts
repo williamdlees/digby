@@ -76,19 +76,6 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   ngOnInit() {
     this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'gen-sample-table-widths');
     this.dataSource = new GenSampleDataSource(this.genSampleService);
-
-    this.params$ = this.route.params.subscribe(params => {
-      console.log('route params');
-      if (params.onlySelectedSamples === 'true') {
-        console.log('checking box');
-        this.isSelectedSamplesChecked = true;
-        this.onSelectedSamplesChange();
-      }
-      else if (params.onlySelectedSamples === 'false') {
-        this.isSelectedSamplesChecked = false;
-        this.onSelectedSamplesChange();
-      }
-    });
   }
 
   ngOnDestroy() {
@@ -135,13 +122,14 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
         selectedNames => {
           this.selectedSequenceNames = selectedNames.names;
 
-          if (this.isSelectedSamplesChecked) {
-            if (this.selectedSequenceNames.length === 0) {
+          if (this.isSelectedSamplesChecked && this.selectedSequenceNames.length === 0) {
               this.isSelectedSamplesChecked = false;
-            }
-
-            this.onSelectedSamplesChange();
+          } else if (selectedNames.onlySelected) {
+              this.isSelectedSamplesChecked = true;
           }
+
+          this.onSelectedSamplesChange();
+
         }
       );
       this.router.events.subscribe((val) => {

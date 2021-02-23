@@ -83,17 +83,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   ngOnInit() {
     this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'rep-sample-table-widths');
     this.dataSource = new RepSampleDataSource(this.repseqService);
-
-    this.params$ = this.route.params.subscribe(params => {
-      if (params.onlySelectedSamples === 'true') {
-        this.isSelectedSamplesChecked = true;
-        this.onSelectedSamplesChange();
-      }
-      else if (params.onlySelectedSamples === 'false') {
-        this.isSelectedSamplesChecked = false;
-        this.onSelectedSamplesChange();
-      }
-    });
   }
 
   ngOnDestroy() {
@@ -118,7 +107,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           }
         );
 
-
       this.choices$Subscription = this.dataSource.choices$.subscribe(
         choices => {
           if (this.filters.length > 0 && !this.isSelectedSamplesChecked) {
@@ -140,13 +128,13 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.repGeneSelectedServiceSubscription = this.repGeneSelectedService.source.subscribe(
         selectedNames => {
           this.selectedSequenceNames = selectedNames.names;
-          if (this.isSelectedSamplesChecked) {
-            if (this.selectedSequenceNames.length === 0) {
+          if (this.isSelectedSamplesChecked && this.selectedSequenceNames.length === 0) {
               this.isSelectedSamplesChecked = false;
-            }
-
-            this.onSelectedSamplesChange();
+          } else if (selectedNames.onlySelected) {
+              this.isSelectedSamplesChecked = true;
           }
+
+          this.onSelectedSamplesChange();
         }
       );
 

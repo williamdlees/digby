@@ -58,6 +58,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   setFilterSubject = new BehaviorSubject<any>(null);
   setFilter$ = this.setFilterSubject.asObservable();
   redirectOnLoad = null;
+  onlySelectedSamplesSet = false;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -104,9 +105,10 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.choices$Subscription = this.dataSource.choices$.subscribe(
         choices => {
           if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
-            this.repGeneSelectedService.selection.next({names: choices.name});
+            this.repGeneSelectedService.selection.next({names: choices.name, onlySelected: this.onlySelectedSamplesSet});
           } else {
-            this.repGeneSelectedService.selection.next({names: []});
+            this.onlySelectedSamplesSet = false;
+            this.repGeneSelectedService.selection.next({names: [], onlySelected: this.onlySelectedSamplesSet});
           }
         }
       );
@@ -274,7 +276,9 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   onAppearancesClick(seq) {
+    this.onlySelectedSamplesSet = true;
     this.redirectOnLoad = ['./samplerep', 'true'];
+
     this.setFilterSubject.next({
       operator: {name: 'Includes', operands: 2, operator: 'like', prefix: '', postfix: ''},
       op1: seq.name,

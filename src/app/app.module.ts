@@ -83,6 +83,7 @@ const appRoutes: Routes = [
   { path: 'quick-ref', component: QuickRefComponent },
   { path: 'user-guide', component: UserGuideComponent },
   { path: 'licensing', component: LicensingComponent },
+  { path: '**', component: HomeComponent },
 ];
 
 @NgModule({

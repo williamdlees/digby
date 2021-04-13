@@ -6,7 +6,6 @@ import { Integrations } from '@sentry/tracing';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-
 Sentry.init({
   dsn: 'https://dea64cb99f074f61afd6888ff45fa3f7@o515727.ingest.sentry.io/5620970',
   integrations: [

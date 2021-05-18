@@ -127,6 +127,11 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
       this.repGeneSelectedServiceSubscription = this.repGeneSelectedService.source.subscribe(
         selectedNames => {
+          if (arraysEqual(this.selectedSequenceNames, selectedNames.names)) {
+            console.log('---');
+            return;
+          }
+
           this.selectedSequenceNames = selectedNames.names;
           if (this.isSelectedSamplesChecked && this.selectedSequenceNames.length === 0) {
               this.isSelectedSamplesChecked = false;
@@ -318,4 +323,8 @@ function difference(setA, setB) {
         diff.delete(elem);
     }
     return diff;
+}
+
+function arraysEqual(a1, a2) {
+  return a1.length === a2.length && a1.every((v) => a2.includes(v));
 }

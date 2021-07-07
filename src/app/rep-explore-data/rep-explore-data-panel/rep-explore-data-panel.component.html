@@ -66,7 +66,7 @@
       <div class="col-lg-3 col-md-6 col-sm-12">
         <google-chart
            [type]="'PieChart'"
-           [title]="'B Cell Type (% samples)'"
+           [title]="'Cell Type (% samples)'"
            [data]="datasetInfo['celltype_count']"
            [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
         >
@@ -88,6 +88,7 @@
   <ng-container *ngIf="!loading && !error && datasetInfo">
     <div class="container">
       <h2 class="mt-5">Studies included in {{dataset}}:</h2>
+      <p>Samples may be omitted from VDJbase if the associated set of reads is too small for analysis. </p>
 
       <mat-table #datasetStudyTable [dataSource]="datasetInfo['studies']">
         <ng-container matColumnDef="name">
@@ -118,11 +119,25 @@
           <mat-cell *matCellDef="let study">{{study.num_subjects}}</mat-cell>
         </ng-container>
 
+        <ng-container matColumnDef="subjects_in_vdjbase">
+          <mat-header-cell *matHeaderCellDef>
+            Subjects in VDJbase
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">{{study.subjects_in_vdjbase}}</mat-cell>
+        </ng-container>
+
         <ng-container matColumnDef="num_samples">
           <mat-header-cell *matHeaderCellDef>
             Samples
           </mat-header-cell>
           <mat-cell *matCellDef="let study">{{study.num_samples}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="samples_in_vdjbase">
+          <mat-header-cell *matHeaderCellDef>
+            Samples in VDJbase
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study">{{study.samples_in_vdjbase}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="paper">
@@ -145,9 +160,9 @@
           </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'num_samples', 'paper', 'study_data']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper', 'study_data']; sticky: true " class="mat-elevation-z1"></mat-header-row>
 
-        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'num_samples', 'paper', 'study_data']" ></mat-row>
+        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper', 'study_data']" ></mat-row>
       </mat-table>
     </div>
   </ng-container>>

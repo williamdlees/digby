@@ -78,6 +78,7 @@ const appRoutes: Routes = [
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
   { path: 'samplerep/:onlySelectedSamples', component: RepSampleComponent },
   { path: 'generep', component: RepGeneTableComponent },
+  { path: 'generep/:species/:dataset/:alleleName', component: RepGeneTableComponent },
   { path: 'datarep', component: RepExploreDataComponent},
   { path: 'reports', component: ReportsComponent },
   { path: 'quick-ref', component: QuickRefComponent },

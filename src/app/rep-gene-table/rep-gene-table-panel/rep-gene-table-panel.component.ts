@@ -1,5 +1,15 @@
 /* tslint:disable:max-line-length */
-import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  ViewEncapsulation,
+  ElementRef,
+  AfterViewChecked
+} from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -19,7 +29,7 @@ import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component'
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
 
 
@@ -59,6 +69,8 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   setFilter$ = this.setFilterSubject.asObservable();
   redirectOnLoad = null;
   onlySelectedSamplesSet = false;
+  params = null;
+  paramState = 'pre selection'
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -68,7 +80,9 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
               private tableParamsStorageService: TableParamsStorageService,
               private router: Router,
               private reportRunService: ReportRunService,
+              private route: ActivatedRoute,
  ) {
+    this.route.params.subscribe(params => this.params = params);
   }
 
   ngOnInit() {
@@ -90,6 +104,8 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
     setTimeout(() => {
+      this.paramState = 'pre selection';
+
       this.geneTableServiceSubscription = this.geneTableService.source
         .subscribe(
           (sel: GeneTableSelection) => {
@@ -152,6 +168,25 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
           this.applyResizes();
         }
       });
+
+      setTimeout(() => {
+        if (typeof(this.params.species) !== 'undefined') {
+          if (this.paramState == 'pre selection') {
+            this.paramState = 'post selection';
+            this.geneTableService.selection.next({
+              species: this.params.species,
+              datasets: this.selection.datasets,
+              assemblies: this.selection.assemblies,
+              repSeqs: [this.params.dataset],
+              repDatasetDescriptions: this.selection.repDatasetDescriptions,
+            });
+            setTimeout(() => {
+              this.searchBox.nativeElement.value = this.params.alleleName;
+              this.quickSearch(this.params.alleleName);
+            });
+          }
+        }
+      }, 5000);
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
@@ -159,7 +194,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         return event.target.value;
       })
       // , filter(res => res.length > 2)
-      , debounceTime(1000)
+      , debounceTime(750)
       , distinctUntilChanged()
     ).subscribe((text: string) => {
       this.quickSearch(text);

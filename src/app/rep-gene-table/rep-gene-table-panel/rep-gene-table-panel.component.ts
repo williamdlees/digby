@@ -183,10 +183,10 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
             setTimeout(() => {
               this.searchBox.nativeElement.value = this.params.alleleName;
               this.quickSearch(this.params.alleleName);
-            });
+            }, 2000);
           }
         }
-      }, 5000);
+      }, 2000);
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(

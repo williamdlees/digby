@@ -12,6 +12,7 @@ import {ColumnPredicate} from '../column-predicate';
 import {IChoices} from '../ichoices';
 import {Observable} from 'rxjs';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
+import { MatMenuModule} from '@angular/material/menu';
 
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output

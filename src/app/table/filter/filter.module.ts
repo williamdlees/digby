@@ -44,11 +44,7 @@ import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
     MatDatepickerModule,
     MatNativeDateModule,
     NgMultiSelectDropDownModule,
-    DynamicModule.withComponents([
-      TextFilterComponent,
-      NumberFilterComponent,
-      DateFilterComponent,
-      ])
+    DynamicModule,
   ],
   declarations: [TextFilterComponent, BoolFilterComponent, NumberFilterComponent, DateFilterComponent, FilterComponent, ],
   providers: [MatNativeDateModule,

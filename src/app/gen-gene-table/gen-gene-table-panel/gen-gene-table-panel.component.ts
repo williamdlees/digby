@@ -137,6 +137,11 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
       this.genSampleSelectedServiceSubscription = this.genSampleSelectedService.source.subscribe(
         selectedIds => {
+          // check if selection really has changed
+          if (sampleIdsEqual(selectedIds.ids, this.selectedSampleIds)) {
+            return;
+          }
+
           this.selectedSampleIds = selectedIds.ids;
           this.samplesSelected = Object.keys(this.selectedSampleIds).length > 0;
 
@@ -324,3 +329,14 @@ function difference(setA, setB) {
     return diff;
 }
 
+function arraysEqual(a1, a2) {
+  return a1.length === a2.length && a1.every((v) => a2.includes(v));
+}
+
+function sampleIdsEqual(id1, id2) {
+  if (!arraysEqual(Object.keys(id1), Object.keys(id2))) {
+    return false;
+  }
+
+  return Object.keys(id1).every((v) => arraysEqual(id1[v], id2[v]));
+}

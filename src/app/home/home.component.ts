@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import {WordpressService} from "./wordpress.service";
 
@@ -14,10 +14,11 @@ export class HomeComponent implements OnInit {
   loadedHelpPosts = [];
   loadingHelp = false;
   errorHelp = null;
+  wpConfig = null;
 
   constructor( private wordpressService: WordpressService ) {  }
 
-  ngOnInit() {
+  fillNews() {
     this.loadingNews = true;
     this.wordpressService.fetchNews().subscribe(
       posts => {
@@ -30,6 +31,9 @@ export class HomeComponent implements OnInit {
         this.loadingNews = false;
       }
     );
+  }
+
+  fillHelp() {
     this.loadingHelp = true;
     this.wordpressService.fetchHelp().subscribe(
       posts => {
@@ -44,4 +48,17 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  ngOnInit() {
+      this.wordpressService.init().subscribe(
+        resp => {
+          this.wpConfig = resp;
+          this.fillNews();
+          this.fillHelp();
+        },
+      error => {
+        this.errorHelp = error;
+        console.log('error in main')
+      }
+    );
+  }
 }

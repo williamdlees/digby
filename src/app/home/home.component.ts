@@ -1,6 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { Subscription } from 'rxjs';
 import {WordpressService} from "./wordpress.service";
+import {AuthService} from "../auth/auth.service";
+import {SysConfig} from "../auth/sysconfig.model";
+
 
 @Component({
   selector: 'app-home',
@@ -14,9 +17,10 @@ export class HomeComponent implements OnInit {
   loadedHelpPosts = [];
   loadingHelp = false;
   errorHelp = null;
-  wpConfig = null;
+  wpConfig = new SysConfig(true, '', '', '');
 
-  constructor( private wordpressService: WordpressService ) {  }
+  constructor( private wordpressService: WordpressService,
+               private authService: AuthService ) {  }
 
   fillNews() {
     this.loadingNews = true;
@@ -49,11 +53,17 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.wordpressService.init().subscribe(
-        resp => {
-          this.wpConfig = resp;
-          this.fillNews();
-          this.fillHelp();
+    console.log("home ngoninit");
+      this.wordpressService.sysConfig.subscribe(
+        sysConfig => {
+          console.log("home has an updated config");
+          if (sysConfig.wp_rest != '') {
+            this.wpConfig = sysConfig;
+            this.fillNews();
+            this.fillHelp();
+          } else {
+            console.log("config is empty");
+          }
         },
       error => {
         this.errorHelp = error;

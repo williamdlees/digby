@@ -1,11 +1,14 @@
 // Collect recent posts from Wordpress
 
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {EMPTY, Observable, Subject, throwError} from 'rxjs';
+import {BehaviorSubject, EMPTY, Observable, Subject, throwError} from 'rxjs';
 import {map, catchError} from "rxjs/operators";
 import {retryWithBackoff} from "../shared/retry_with_backoff";
 import { SystemService } from '../../../dist/digby-swagger-client';
+import {SysConfig} from "../auth/sysconfig.model";
+import {AuthService} from "../auth/auth.service";
+
 
 
 @Injectable({
@@ -13,26 +16,23 @@ import { SystemService } from '../../../dist/digby-swagger-client';
 })
 export class WordpressService {
   private config = null;
+  sysConfig = new BehaviorSubject<SysConfig>(new SysConfig(true, '', '', ''));
 
-  constructor(private httpClient: HttpClient, private systemService: SystemService) {
+  constructor(private httpClient: HttpClient,
+              private systemService: SystemService,
+              private authService: AuthService) {
 
+    this.init();
   }
 
   init() {
-    if (this.config) {
-      return new Observable(this.config)
-    } else {
-      return this.systemService.getConfigApi().pipe(
-        retryWithBackoff(),
-        map(resp => {
-          this.config = resp;
-          return resp;
-        }),
-        catchError(error => {
-          return throwError(error);
-        })
-      )
-    }
+    console.log("wordpress init started");
+    this.authService.sysConfig
+      .subscribe( sysConfig => {
+        console.log("wordpress init got config update");
+      this.config = sysConfig;
+      this.sysConfig.next(sysConfig);
+    });
   }
 
   fetchNews() {

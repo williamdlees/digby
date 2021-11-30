@@ -61,6 +61,11 @@ import { RepExploreDataPanelComponent } from './rep-explore-data/rep-explore-dat
 import { LicensingComponent } from './home/licensing/licensing.component';
 import { ReportRunDialogComponent } from './reports/report-run-dialog/report-run-dialog.component';
 import * as Sentry from '@sentry/angular';
+import { AuthComponent } from './auth/auth.component';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import {appInitializer} from "./auth/auth.initializer";
+import {AuthService} from "./auth/auth.service";
+import {AuthGuard} from "./auth/auth.guard";
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -72,19 +77,20 @@ export function apiConfigFactory(): Configuration  {
 }
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent },
-  { path: 'genetable', component: GenGeneTableComponent },
-  { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent },
-  { path: 'samplerep/:onlySelectedSamples', component: RepSampleComponent },
-  { path: 'generep', component: RepGeneTableComponent },
-  { path: 'generep/:species/:dataset/:alleleName', component: RepGeneTableComponent },
-  { path: 'datarep', component: RepExploreDataComponent},
-  { path: 'reports', component: ReportsComponent },
-  { path: 'quick-ref', component: QuickRefComponent },
-  { path: 'user-guide', component: UserGuideComponent },
-  { path: 'licensing', component: LicensingComponent },
-  { path: '**', component: HomeComponent },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent, canActivate: [AuthGuard] },
+  { path: 'genetable', component: GenGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
+  { path: 'samplerep/:onlySelectedSamples', component: RepSampleComponent, canActivate: [AuthGuard] },
+  { path: 'generep', component: RepGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'generep/:species/:dataset/:alleleName', component: RepGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'datarep', component: RepExploreDataComponent, canActivate: [AuthGuard] },
+  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+  { path: 'quick-ref', component: QuickRefComponent, canActivate: [AuthGuard] },
+  { path: 'user-guide', component: UserGuideComponent, canActivate: [AuthGuard] },
+  { path: 'licensing', component: LicensingComponent, canActivate: [AuthGuard] },
+  { path: 'auth', component: AuthComponent },
+  { path: '**', component: HomeComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -120,6 +126,7 @@ const appRoutes: Routes = [
     RepExploreDataPanelComponent,
     LicensingComponent,
     ReportRunDialogComponent,
+    AuthComponent,
   ],
   imports: [
     BrowserModule,
@@ -148,11 +155,14 @@ const appRoutes: Routes = [
   ],
   providers: [
     RequestCache,
+    AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
     { provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false, }), },
     { provide: Sentry.TraceService, deps: [Router], },
     { provide: APP_INITIALIZER, useFactory: () => () => {}, deps: [Sentry.TraceService], multi: true, },
+    { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AuthService], multi: true, },
   ],
   bootstrap: [AppComponent],
   entryComponents: [SeqModalComponent, RepSampleInfoComponent],

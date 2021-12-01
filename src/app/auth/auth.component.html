@@ -29,6 +29,18 @@
           required
         />
       </div>
+      <div class="checkbox">
+        <label>
+        <input
+          type="checkbox"
+          id="stay"
+          name="stay"
+          [checked] = "stay_logged"
+          [(ngModel)]="stay_logged"
+        />
+        Stay logged in on this computer
+        </label>
+      </div>
       <div>
         <button
           class="btn btn-primary"

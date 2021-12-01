@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService, AuthResponseData } from './auth.service';
+import {take} from "rxjs/operators";
 
 @Component({
   selector: 'app-auth',
@@ -12,11 +13,14 @@ import { AuthService, AuthResponseData } from './auth.service';
 export class AuthComponent implements OnInit{
   isLoading = false;
   error: string = null;
+  stay_logged = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
-    this.authService.user.subscribe(user => {
+    this.authService.user
+      .pipe(take(1))
+      .subscribe(user => {
       if (user.accessToken) {
         this.router.navigate(['/']);
       }
@@ -33,7 +37,7 @@ export class AuthComponent implements OnInit{
     let authObs: Observable<AuthResponseData>;
 
     this.isLoading = true;
-    authObs = this.authService.login(userName, password);
+    authObs = this.authService.login(userName, password, this.stay_logged);
 
     authObs.subscribe(
       resData => {

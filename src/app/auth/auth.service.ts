@@ -51,7 +51,7 @@ export class AuthService {
       );
   }
 
-  login(userName: string, password: string) {
+  login(userName: string, password: string, stay: boolean) {
     return this.systemService.getLoginApi(
       userName,
       password
@@ -65,6 +65,7 @@ export class AuthService {
             resData.access_token_lifetime,
             resData.refresh_token,
             resData.refresh_token_lifetime,
+            stay,
           );
         })
       );
@@ -108,13 +109,13 @@ export class AuthService {
     console.log('auth.autoLogin succeeded');
   }
 
-  // called when the refresh token expires
+  // called when the refresh token expires or user logs out
   logout() {
     console.log('in auth.logout: refresh token expired');
     this.userData = new User(true, '', '',null, '', null);
     this.user.next(this.userData);
     this.router.navigate(['/']);
-    localStorage.removeItem('userData');
+    localStorage.removeItem('authData');
 
     if (this.accessTokenExpirationTimer) {
       clearTimeout(this.accessTokenExpirationTimer);
@@ -175,6 +176,7 @@ export class AuthService {
     accessTokenExpiresIn: number,
     refreshToken: string,
     refreshTokenExpiresIn: number,
+    stay: boolean,
   ) {
     console.log('in auth.handleauthentication');
     const accessTokenExpirationDate = new Date(new Date().getTime() + accessTokenExpiresIn * 1000);
@@ -184,7 +186,10 @@ export class AuthService {
     this.userData = user;
     this.autoLogout(refreshTokenExpiresIn * 1000);
     this.autoRefresh(accessTokenExpiresIn * 1000);
-    localStorage.setItem('authData', JSON.stringify(user));
+
+    if (stay) {
+      localStorage.setItem('authData', JSON.stringify(user));
+    }
   }
 
   private handleRefresh(

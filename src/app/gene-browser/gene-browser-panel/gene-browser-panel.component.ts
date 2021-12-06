@@ -6,6 +6,8 @@ import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-s
 import {ActivatedRoute} from '@angular/router';
 import igv from 'src/assets/js/igv.js';
 import { delay } from 'rxjs/operators';
+import {AuthService} from "../../auth/auth.service";
+import {User} from "../../auth/user.model";
 
 // declare var igv: any;
 declare var $: any;
@@ -35,15 +37,18 @@ const options = {
 export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   browser = null;
   geneTableServiceSubscription = null;
+  authServiceSubscription = null;
 
   @Input() selection: GeneTableSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 
   species = null;
   assemblyName = null;
+  user = null;
 
   constructor(private geneTableService: GeneTableSelectorService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -52,10 +57,20 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.selection = sel;
       this.reconfigureBrowser();
     });
+
+    this.authServiceSubscription = this.authService.user.subscribe(
+      (user: User) => {
+        this.user = user;
+        if (user.accessToken) {
+          igv.setOauthToken(user.accessToken, location.hostname)
+        }
+      }
+    )
   }
 
   ngOnDestroy() {
     this.geneTableServiceSubscription.unsubscribe();
+    this.authServiceSubscription.unsubscribe();
   }
 
   reconfigureBrowser() {
@@ -82,10 +97,10 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
     }
   }
 
-
   buildBrowser() {
     delay(0);
-    igv.createBrowser($('#igvdiv'),
+    const div = document.getElementById('igvdiv');
+    igv.createBrowser(div,
       {
         reference: {
           id: this.species,

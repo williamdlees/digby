@@ -36,6 +36,7 @@ export class AuthService {
       .pipe(
         catchError(err => {
           console.log("error in getconfigapi call");
+          console.log(err);
           return throwError(err);
         }),
         tap((sysConfig) => {

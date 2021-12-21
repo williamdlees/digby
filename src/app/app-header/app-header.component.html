@@ -9,7 +9,7 @@
           <a class="nav-link" ngbNavLink  style="padding: 0" routerLink="/">
             <img class="navbar-brand" src="./assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
         </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayLogout">
+        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
           <a ngbDropdownToggle class="nav-link " id="navbarAIRRSeq" role="button">
             AIRR-Seq Data
           </a>
@@ -19,7 +19,7 @@
             <a ngbDropdownItem class="dropdown-item" routerLink="./generep" (click)="isMenuCollapsed = true">Germline Genes</a>
           </div>
         </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayLogout">
+        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
           <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Genomic Data
           </a>
@@ -29,10 +29,10 @@
             <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'Human_IGH']" (click)="isMenuCollapsed = true">Gene Browser</a>
           </div>
         </li>
-        <li ngbNavItem class="nav-item" routerLinkActive="active" *ngIf="displayLogout">
+        <li ngbNavItem class="nav-item" routerLinkActive="active" *ngIf="displayProtected">
           <a class="nav-link" ngbNavLink routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
         </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayLogout">
+        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
           <a ngbDropdownToggle class="nav-link " id="navbarHelpAbout" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Help / About
           </a>

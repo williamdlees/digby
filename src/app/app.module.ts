@@ -60,7 +60,6 @@ import { RepExploreDataComponent } from './rep-explore-data/rep-explore-data.com
 import { RepExploreDataPanelComponent } from './rep-explore-data/rep-explore-data-panel/rep-explore-data-panel.component';
 import { LicensingComponent } from './home/licensing/licensing.component';
 import { ReportRunDialogComponent } from './reports/report-run-dialog/report-run-dialog.component';
-import * as Sentry from '@sentry/angular';
 import { AuthComponent } from './auth/auth.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import {appInitializer} from "./auth/auth.initializer";
@@ -159,9 +158,6 @@ const appRoutes: Routes = [
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
-    { provide: ErrorHandler, useValue: Sentry.createErrorHandler({ showDialog: false, }), },
-    { provide: Sentry.TraceService, deps: [Router], },
-    { provide: APP_INITIALIZER, useFactory: () => () => {}, deps: [Sentry.TraceService], multi: true, },
     { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AuthService], multi: true, },
   ],
   bootstrap: [AppComponent],

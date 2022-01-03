@@ -1,18 +1,21 @@
 export interface GenSample {
-    name: string;
-    type: string;
-    date: string;
-    study_name: string;
-    institute: string;
-    researcher: string;
-    reference: string;
-    contact: string;
-    assembly_id: string;
-    assembly_reference: string;
-    chromosome: string;
-    assembly_start: bigint;
-    assembly_end: bigint;
-    report: string;
-    annot_method: string;
-    annot_ref: string;
+  id: string;
+  identifier: string;
+  name_in_study: string;
+  age: number;
+  sex: string;
+  annotation_path: string;
+  annotation_method: string;
+  annotation_format: string;
+  annotation_reference: string;
+
+  study_name: string;
+  study_date: string;
+  institute: string;
+  study_description: string;
+  researcher: string;
+  reference: string;
+  contact: string;
+
+  dataset: string;
 }

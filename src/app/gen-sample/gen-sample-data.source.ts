@@ -22,16 +22,12 @@ export class GenSampleDataSource implements DataSource<GenSample> {
 
     }
 
-    loadGenSamples(species: string, refSeq: string, pageIndex: number, pageSize: number, filter: string, sortBy: string, cols: string) {
-
-        // request Human_IGH in place of any Test entry
-        refSeq = refSeq.split(',').map((x) => x === 'Test' ? (species === 'Human' ? 'Human_IGH' : 'GU129139') : x).join();
-
+    loadGenSamples(species: string, datasets: string, pageIndex: number, pageSize: number, filter: string, sortBy: string, cols: string) {
         this.loadingSubject.next(true);
         this.errorSubject.next(null);
 
-        if (species && refSeq) {
-          this.genomicService.getSamplesApi(species, refSeq, pageIndex, pageSize, filter, sortBy, cols).pipe(
+        if (species && datasets) {
+          this.genomicService.getSubjectsApi(species, datasets, pageIndex, pageSize, filter, sortBy, cols).pipe(
             retryWithBackoff(),
             catchError(error => {
               this.errorSubject.next(error);
@@ -44,7 +40,7 @@ export class GenSampleDataSource implements DataSource<GenSample> {
           .subscribe((sequence) => {
             this.totalItems = sequence.total_items;
             this.choicesSubject.next(sequence.uniques);
-            if (sequence !== undefined && sequence.hasOwnProperty('samples')) {
+            if (sequence && sequence.hasOwnProperty('samples')) {
               this.genSampleSubject.next(sequence.samples);
             } else {
               this.genSampleSubject.next([]);

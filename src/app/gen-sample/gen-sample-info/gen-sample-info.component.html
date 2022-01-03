@@ -13,7 +13,7 @@
 
 <ng-container *ngIf="!loading && !error">
   <div class="modal-header">
-    <h3 class="modal-title">Sample Details - {{sampleName}}</h3>
+    <h3 class="modal-title">Sample Details - {{sampleInfo.identifier}}</h3>
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -32,14 +32,10 @@
       </div>
       <div class="row">
         <div class="col-sm">
-          <h4>Sample</h4>
-          <ul>Sample Name: {{sampleInfo.name}}</ul>
-          <ul>Sample Description: {{sampleInfo.sample_description}}</ul>
-          <ul>Assembly ID: {{sampleInfo.assembly_id}}</ul>
-          <ul>Assembly Ref: <a href={{sampleInfo.assembly_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
-          <ul>Chromosome: {{sampleInfo.chromosome}}</ul>
-          <ul>Chr start: {{sampleInfo.assembly_start}}</ul>
-          <ul>Chr end: {{sampleInfo.assembly_end}}</ul>
+          <h4>Subject</h4>
+          <ul>Name in Study: {{sampleInfo.name_in_study}}</ul>
+          <ul>Age: {{sampleInfo.sample_age}}</ul>
+          <ul>Sex: {{sampleInfo.sex}}</ul>
         </div>
       </div>
     </div>

@@ -12,9 +12,9 @@ import {retryWithBackoff} from '../../shared/retry_with_backoff';
 })
 
 export class GenSampleInfoComponent implements OnInit {
-  @Input() sampleName;
+  @Input() subjectName;
   @Input() species;
-  @Input() studyName;
+  @Input() dataset;
   loading = false;
   error = null;
   sampleInfo = null;
@@ -27,7 +27,7 @@ export class GenSampleInfoComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.genSampleService.getSampleInfoApi(this.species, this.studyName, this.sampleName).pipe(
+    this.genSampleService.getSubjectInfoApi(this.species, this.dataset, this.subjectName).pipe(
       retryWithBackoff(),
       catchError(error => {
         this.error.next(error);

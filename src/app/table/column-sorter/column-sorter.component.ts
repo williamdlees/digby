@@ -50,11 +50,13 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName);
+    const iNew = new Set(this.columnInfo.map((x) => x.id));
+    const iSaved = new Set(savedInfo.map((x) => x.id));
     const sNew = new Set(this.columnInfo.map((x) => x.name));
     const sSaved = new Set(savedInfo.map((x) => x.name));
     this.initialColumnInfo = this.columnInfo;
 
-    if (!symmetricDifference(sNew, sSaved).size) {
+    if (!symmetricDifference(sNew, sSaved).size && !symmetricDifference(iNew, iSaved).size) {
       this.columnInfo = savedInfo;
     }
 

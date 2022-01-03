@@ -39,7 +39,8 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   dataSource: GenSampleDataSource;
   params$: Subscription;    // params for the route
 
-  displayedColumns = ['name', 'type', 'date', 'study_name', 'institute', 'researcher', 'reference', 'contact', 'assembly_id', 'assembly_reference'];
+  displayedColumns = ['identifier', 'name_in_study', 'age', 'sex', 'annotation_path', 'annotation_method',
+    'annotation_format', 'annotation_reference', 'study_name', 'study_date', 'study_description', 'researcher', 'reference', 'contact', 'dataset'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -247,9 +248,9 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
   showInfo(sample) {
     const modalRef = this.modalService.open(GenSampleInfoComponent, { size: 'xl'});
-    modalRef.componentInstance.sampleName = sample.name;
+    modalRef.componentInstance.subjectName = sample.identifier;
     modalRef.componentInstance.species = this.selection.species;
-    modalRef.componentInstance.studyName = sample.study_name;
+    modalRef.componentInstance.dataset = sample.dataset;
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {

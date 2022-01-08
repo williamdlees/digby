@@ -43,6 +43,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 
   species = null;
+  dataset = null;
   assemblyName = null;
   user = null;
 
@@ -75,9 +76,15 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
 
   reconfigureBrowser() {
     if (this.selection.species) {
-      this.species = this.selection.species.replace(' ', '_');
+      this.species = this.selection.species ;
     } else {
       this.species = null;
+    }
+
+    if (this.selection.datasets) {
+      this.dataset = this.selection.datasets[0];
+    } else {
+      this.dataset = null;
     }
 
     if (this.selection.assemblies.length > 0) {
@@ -91,24 +98,26 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.browser = null;
     }
 
-    if (this.species && this.assemblyName) {
-
+    if (this.species && this.dataset && this.assemblyName) {
       this.buildBrowser();
     }
   }
 
   buildBrowser() {
     delay(0);
+    console.log(this.species);
+    const dataPath = environment.igvBasePath + '/' + this.species.replace(' ', '_') + '/' + this.dataset + '/' + this.species.replace(' ', '_') + '_' + this.assemblyName;
+    console.log('BuildBrowser: ' + dataPath);
     const div = document.getElementById('igvdiv');
     igv.createBrowser(div,
       {
         reference: {
           id: this.species,
-          fastaURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.fasta',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.fasta.fai'
+          fastaURL: dataPath + '.fasta',
+          indexURL: dataPath + '.fasta.fai'
         },
         search: {
-          url: environment.apiBasePath +  '/genomic/feature_pos/' + this.species + '/' + this.assemblyName + '/$FEATURE$'
+          url: environment.apiBasePath +  '/genomic/feature_pos/' + this.species + '/' + this.dataset + '/' + this.assemblyName + '/$FEATURE$'
         }
     }).then((browser) => {
       delay(0);
@@ -116,21 +125,22 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
       this.browser.loadTrack({
         name: 'Genes',
         type: 'annotation',
-        url: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.gff3',
+        url: dataPath + '.gff3',
+        height: 100,
       }).then(() => {
         this.browser.loadTrack({
           name: 'Samples',
           type: 'alignment',
           format: 'bam',
-          url: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.bam',
-          indexURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '.bam.bai'
+          url: dataPath + '.bam',
+          indexURL: dataPath + '.bam.bai'
         }).then(() => {
           this.browser.loadTrack({
             name: 'Refs',
             type: 'alignment',
             format: 'bam',
-            url: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '_imgt.bam',
-            indexURL: environment.igvBasePath + '/' + this.species + '_' + this.assemblyName + '_imgt.bam.bai',
+            url: dataPath + '_imgt.bam',
+            indexURL: dataPath + '_imgt.bam.bai',
           });
         });
       });

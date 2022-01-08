@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiBasePath: location.protocol + '//' + location.hostname + ':5000/api',
-  igvBasePath: location.protocol + '//' + location.hostname + ':5000/static/gff',
+  igvBasePath: location.protocol + '//' + location.hostname + ':5000/static/study_data/Genomic/samples',
 };
 
 /*

@@ -252,12 +252,6 @@
           <div class="row ml-4 mr-2 mb-0 align-middle">
             Genotype Analysis<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
           </div>
-          <div class="row ml-4 mr-2 mb-1">
-            Haplotype<span>&nbsp;&nbsp;</span>
-            <a href="{{sample.hap_report}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-            <span>&nbsp;&nbsp;</span>
-            <a href="{{sample.hap_report.encodeURI}}" download="{{sample.name + '_haplotype.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </div>
         </ng-container>
         <ng-container *ngIf="sample.annotation_method=='VDJbase'">
           <div class="row ml-2 mr-2 mb-1">

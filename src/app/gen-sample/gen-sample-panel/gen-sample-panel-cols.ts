@@ -12,6 +12,7 @@
    {id: 'study_description', name: 'Study Description', hidden: false},
    {id: 'institute', name: 'Institute', hidden: false},
    {id: 'researcher', name: 'Researcher', hidden: true},
+   {id: 'contact', name: 'Contact', hidden: true},
    {id: 'reference', name: 'Reference', hidden: true},
    {id: 'dataset', name: 'Dataset', hidden: true},
  ];

@@ -9,7 +9,8 @@ export interface GeneSequence {
     sequence: string;
     gapped_sequence: string;
     appearances: string;
-    sample_id: string;
+    subject_id: string;
+    dataset: string;
   }];
   total_items: number;
   page_size: number;

@@ -195,6 +195,15 @@
           <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.researcher}}</mat-cell>
       </ng-container>
 
+       <ng-container matColumnDef="contact">
+          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'contact')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Contact
+           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'contact'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.contact}}</mat-cell>
+      </ng-container>
+
        <ng-container matColumnDef="reference">
           <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'reference')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
@@ -209,15 +218,6 @@
               {{sample.reference}}
             </ng-container>
           </mat-cell>
-      </ng-container>
-
-       <ng-container matColumnDef="contact">
-          <mat-header-cell *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'contact')"
-     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-            Contact
-           <app-filter #filterComponent="menuInOtherComponent" [columnName]="'contact'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let sample"  (click)="showInfo(sample)">{{sample.contact}}</mat-cell>
       </ng-container>
 
        <ng-container matColumnDef="dataset">

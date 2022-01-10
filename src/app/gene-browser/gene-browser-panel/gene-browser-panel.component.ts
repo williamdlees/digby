@@ -133,16 +133,19 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
           type: 'alignment',
           format: 'bam',
           url: dataPath + '.bam',
-          indexURL: dataPath + '.bam.bai'
-        }).then(() => {
+          indexURL: dataPath + '.bam.bai',
+          height: 500,
+        })
+        /*  .then(() => {
           this.browser.loadTrack({
             name: 'Refs',
             type: 'alignment',
             format: 'bam',
             url: dataPath + '_imgt.bam',
             indexURL: dataPath + '_imgt.bam.bai',
+            height: 500,
           });
-        });
+        }); */
       });
     });
   }

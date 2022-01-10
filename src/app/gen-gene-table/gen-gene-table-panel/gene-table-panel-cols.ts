@@ -8,4 +8,5 @@
    {id: 'sequence', name: 'Sequence', hidden: false},
    {id: 'gapped_sequence', name: 'Gapped', hidden: true},
    {id: 'appearances', name: 'Appearances', hidden: false},
+   {id: 'dataset', name: 'Dataset', hidden: true},
 ];

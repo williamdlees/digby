@@ -6,6 +6,7 @@ export interface GeneSequence {
     novel: boolean;
     deleted: boolean;
     functional: string;
+    notes: string,
     sequence: string;
     gapped_sequence: string;
     appearances: string;

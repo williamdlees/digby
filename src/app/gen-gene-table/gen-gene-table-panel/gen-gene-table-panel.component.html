@@ -112,6 +112,17 @@
           </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="notes">
+          <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'notes')"
+     [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
+            Notes
+          <app-filter #filterComponent="menuInOtherComponent" [columnName]="'notes'" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+          </mat-header-cell>
+          <mat-cell *matCellDef="let sequence" class="small-col">
+            {{sequence.notes}}
+          </mat-cell>
+      </ng-container>
+
       <ng-container matColumnDef="deleted">
           <mat-header-cell *matHeaderCellDef mwlResizable class="small-col" [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, 'deleted')"
      [resizeEdges]="{bottom: false, right: true, top: false, left: true}">

@@ -51,9 +51,10 @@ export class SeqModalComponent implements OnInit {
           this.displayContent += _.padEnd(ind.toString(), 5);
 
           if (frag.length > 10) {
-            this.displayContent += _.repeat(' ', frag.length - 10) + _.padStart((ind + frag.length - 1).toString(), 5) + '<br>' + frag + '<br><br>'
-            ind += frag.length;
+            this.displayContent += _.repeat(' ', frag.length - 10) + _.padStart((ind + frag.length - 1).toString(), 5)
           }
+          this.displayContent += '<br>' + frag + '<br><br>'
+          ind += frag.length;
         }
       }
     }

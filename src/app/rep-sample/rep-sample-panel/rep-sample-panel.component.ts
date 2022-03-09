@@ -44,7 +44,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild('searchBox', { static: true }) searchBox: ElementRef;
   dataSource: RepSampleDataSource;
   params$: Subscription;    // params for the route
-  displayedColumns = ['name', 'status', 'tissue', 'combined_cell_type', 'row_reads', 'sequencing_length', 'umi', 'genotypes', 'haplotypes'];
+  displayedColumns = ['name', 'chain', 'row_reads'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;

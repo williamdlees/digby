@@ -44,7 +44,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild('searchBox', { static: true }) searchBox: ElementRef;
   dataSource: RepSampleDataSource;
   params$: Subscription;    // params for the route
-  displayedColumns = ['name', 'chain', 'row_reads'];
+  displayedColumns = ['sample_name', 'lab_name', 'reads'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -258,7 +258,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
   showInfo(sample) {
     const modalRef = this.modalService.open(RepSampleInfoComponent, { size: 'xl'});
-    modalRef.componentInstance.sampleName = sample.name;
+    modalRef.componentInstance.sampleName = sample.sample_name;
     modalRef.componentInstance.species = this.selection.species;
     modalRef.componentInstance.dataset = sample.dataset;
   }

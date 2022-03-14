@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
+import {cloneDeep} from "lodash";
 
 function symmetricDifference(setA, setB) {
     const _difference = new Set(setA);
@@ -43,6 +44,9 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   saveName?: string;
   @Input()
   columnInfo: ColumnInfo[];
+  selectedColumnInfo: ColumnInfo[];
+  classifiedColumnInfo: { [section: string] : ColumnInfo[]};
+  sections: string[];
 
   private initialColumnInfo: ColumnInfo[];
 
@@ -54,12 +58,14 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
     const iSaved = new Set(savedInfo.map((x) => x.id));
     const sNew = new Set(this.columnInfo.map((x) => x.name));
     const sSaved = new Set(savedInfo.map((x) => x.name));
-    this.initialColumnInfo = this.columnInfo;
+    this.initialColumnInfo = cloneDeep(this.columnInfo);
 
     if (!symmetricDifference(sNew, sSaved).size && !symmetricDifference(iNew, iSaved).size) {
       this.columnInfo = savedInfo;
     }
 
+    this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    this.reorderColumns();
     this.emitColumns(false);
   }
 
@@ -67,19 +73,47 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
     this.elementRef.nativeElement.classList += 'va-mat-button-no-input';
   }
 
+  // put selected columns at the front
+  reorderColumns(): void {
+    let newColumnInfo = this.selectedColumnInfo;
+    newColumnInfo = newColumnInfo.concat(this.columnInfo.filter(el => el.hidden));
+
+    this.classifiedColumnInfo = {};
+    if ('section' in this.columnInfo[0]) {
+     for (const el of this.columnInfo) {
+       if (el.hidden) {
+         if (!(el.section in this.classifiedColumnInfo)) {
+           this.classifiedColumnInfo[el.section] = [];
+         }
+         this.classifiedColumnInfo[el.section].push(el)
+       }
+     }
+    } else {
+      this.classifiedColumnInfo['Selection'] = this.columnInfo.filter(el => el.hidden);
+    }
+
+    this.sections = Object.keys(this.classifiedColumnInfo)
+    this.columnInfo = newColumnInfo;
+  }
+
   columnMenuDropped(event: CdkDragDrop<any>): void {
-    moveItemInArray(this.columnInfo, event.item.data.columnIndex, event.currentIndex);
+    moveItemInArray(this.selectedColumnInfo, event.item.data.columnIndex, event.currentIndex);
+    this.reorderColumns();
     this.emitColumns(true);
   }
 
   toggleSelectedColumn(columnId: string) {
     const colFound = this.columnInfo.find(col => col.id === columnId);
     colFound.hidden = !colFound.hidden;
+    this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    this.reorderColumns();
     this.emitColumns(true);
   }
 
   onResetColumns() {
-    this.columnInfo = this.initialColumnInfo;
+    this.columnInfo = cloneDeep(this.initialColumnInfo);
+    this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    this.reorderColumns();
     this.emitColumns(true);
   }
 

@@ -65,6 +65,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import {appInitializer} from "./auth/auth.initializer";
 import {AuthService} from "./auth/auth.service";
 import {AuthGuard} from "./auth/auth.guard";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -151,6 +152,7 @@ const appRoutes: Routes = [
     ObserversModule,
     ResizableModule,
     GoogleChartsModule,
+    MatTooltipModule,
   ],
   providers: [
     RequestCache,

@@ -4,6 +4,8 @@ export interface ColumnInfo {
   id: string;
   name: string;
   hidden: boolean;
+  section?: string;
+  description?: string;
 }
 
 @Injectable()

@@ -57,3 +57,18 @@
 .cdk-drag-animating {
   transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+.digby-table-undragable {
+  padding: 0px 0px 0px 32px !important;
+}
+
+.digby-table-section-header {
+  line-height: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0px 0px 0px 8px !important;
+}
+
+.digby-table-tooltip {
+  font-size: 14px;
+}

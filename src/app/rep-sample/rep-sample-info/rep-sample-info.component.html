@@ -22,59 +22,28 @@
   <div class="modal-body">
     <div class="container">
       <div class="row">
-        <div class="col-sm">
-          <h4>Study</h4>
-          <ul>Lab Address: {{sampleInfo.institute}}</ul>
-          <ul>Researcher: {{sampleInfo.researcher}}</ul>
-          <ul>Number of subjects: {{sampleInfo.num_subjects}}</ul>
-          <ul>Number of samples: {{sampleInfo.num_samples}}</ul>
-          <ul>Publication: <a href={{sampleInfo.study_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
-          <ul>Contact Info: <a href={{sampleInfo.study_contact}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
-          <ul>Accession ID: {{sampleInfo.study_acc_id}}</ul>
-        </div>
-        <div class="col-sm">
-          <h4>Subject</h4>
-          <ul>ID here: {{sampleInfo.name}}</ul>
-          <ul>ID in study: {{sampleInfo.name_in_paper}}</ul>
-          <ul>Sex: {{sampleInfo.sex}}</ul>
-          <ul>Age: {{sampleInfo.age}}</ul>
-          <ul>Ethnicity: {{sampleInfo.ethnic}}</ul>
-          <ul>Study cohort: {{sampleInfo.cohort}}</ul>
-          <ul>Condition: {{sampleInfo.status}}</ul>
-        </div>
-        <div class="col-sm">
-          <h4>Tissue Processing</h4>
-          <ul>Species: {{sampleInfo.species}}</ul>
-          <ul>Tissue: {{sampleInfo.tissue}}</ul>
-          <ul>Cell type: {{sampleInfo.cell_type}}</ul>
-          <ul>Cell subset: {{sampleInfo.sub_cell_type}}</ul>
-          <ul>Isotype: {{sampleInfo.isotype}}</ul>
-          <ul>Number of cells:</ul>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm">
-          <h4>Sequence Protocols</h4>
-          <ul>UMI barcode: {{sampleInfo.umi}}</ul>
-          <ul>Target substrate: {{sampleInfo.helix}}</ul>
-          <ul>Platform: {{sampleInfo.seq_platform}}</ul>
-          <ul>Read length: {{sampleInfo.sequencing_length}}</ul>
-          <ul>Reverse PCR primer loc: {{sampleInfo.primer_3_loc}}</ul>
-          <ul>Forward PCR primer loc: {{sampleInfo.primer_5_loc}}</ul>
-        </div>
-        <div class="col-sm">
-          <h4>Inference Pipeline</h4>
-          <ul>Version: {{sampleInfo.pipeline_name}}</ul>
-          <ul>Aligner: {{sampleInfo.aligner_tool}}  v. {{sampleInfo.aligner_ver}}</ul>
-          <ul>Germline Set: {{sampleInfo.aligner_reference}}</ul>
-          <ul>Genotyping tool: {{sampleInfo.geno_tool}} v. {{sampleInfo.geno_ver}}</ul>
-          <ul>Haplotyping tool: {{sampleInfo.haplotype_tool}} v. {{sampleInfo.haplotype_ver}}</ul>
-        </div>
-        <div class="col-sm">
-        </div>
+        <ng-container *ngFor="let section of ['Study', 'Sample', 'Patient', 'TissuePro', 'SeqProtocol', 'DataPro', 'GenoDetection']">
+          <div class="col-4">
+            <h4><b>{{section}}</b></h4>
+            <div *ngFor="let col of allColumns">
+              <div *ngIf="col.section === section">
+                <div *ngIf="sampleInfo[col.id]; else nullVal">
+                  <div *ngIf="col.type === 'string' && sampleInfo[col.id].startsWith('http'); else plainVal">
+                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> <a href={{sampleInfo[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
+                  </div>
+                  <ng-template #plainVal>
+                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> {{sampleInfo[col.id]}}</ul>
+                  </ng-template>
+                </div>
+                <ng-template #nullVal>
+                  <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> </ul>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
-
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

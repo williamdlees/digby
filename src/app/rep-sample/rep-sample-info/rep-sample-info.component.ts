@@ -3,7 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {catchError, finalize} from 'rxjs/operators';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
-
+import { columnInfo } from '../rep-sample-panel/rep-sample-panel-cols';
 
 @Component({
   selector: 'app-sample-rep-info',
@@ -18,6 +18,7 @@ export class RepSampleInfoComponent implements OnInit {
   loading = false;
   error = null;
   sampleInfo = null;
+  allColumns = columnInfo;
 
   constructor(public activeModal: NgbActiveModal,
               private modalService: NgbModal,

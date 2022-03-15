@@ -1,10 +1,19 @@
 
 // Material table column definitions
 
-// This file is created programmatically by db/vdjbase_create_digby_panel_cols.py. DO NOT UPDATE BY HAND. 
+// This file is created programmatically by db/vdjbase_create_digby_panel_cols.py. DO NOT UPDATE BY HAND.
 
 export const columnInfo = [
+    // default columns, in order, hidden=false
+    {id: 'sample_name', name: 'Sample name', section: 'Sample', hidden: false, type: 'string', size: 'small-col', description: 'Sample name as allocated by VDJbase', example: ''},
+    {id: 'reads', name: 'VDJbase reads', section: 'Sample', hidden: false, type: 'integer', size: 'small-col', description: 'Reads processed by VDJbase pipeline', example: ''},
+    {id: 'lab_name', name: 'Lab name', section: 'Study', hidden: false, type: 'string', size: 'large-col', description: 'Department of data collector', example: 'Department for Planar Immunology'},
+    {id: 'study_id', name: 'Study ID', section: 'Study', hidden: false, type: 'string', size: 'large-col', description: 'Unique ID assigned by study registry', example: 'PRJNA001'},
+    {id: 'tissue_label', name: 'Tissue', section: 'TissuePro', hidden: false, type: 'string', size: 'small-col', description: 'Label of the concept in the respective ontology', example: ''},
+    {id: 'genotypes', name: 'Genotype report', section: 'Sample', hidden: false, type: 'genotype', size: 'small-col', description: 'Links to genotype reports', example: ''},
+    {id: 'haplotypes', name: 'Haplotype reports', section: 'Sample', hidden: false, type: 'haplotype', size: 'large-col', description: 'Links to haplotype reports', example: ''},
 
+    // other columns, hidden= true. ORder will be determined by section
     {id: 'repertoire_id', name: 'Repertoire ID', section: 'Sample', hidden: true, type: 'string', size: 'small-col', description: 'Identifier for the repertoire object. This identifier should be globally unique so that repertoires from multiple studies can be combined together without conflict. The repertoire_id is used to link other AIRR data to a Repertoire. Specifically, the Rearrangements Schema includes repertoire_id for referencing the specific Repertoire for that Rearrangement.', example: ''},
     {id: 'repertoire_name', name: 'Repertoire name', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Short generic display name for the repertoire', example: ''},
     {id: 'repertoire_description', name: 'Repertoire description', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Generic repertoire description', example: ''},
@@ -27,13 +36,8 @@ export const columnInfo = [
     {id: 'read_direction', name: 'Read direction', section: 'Sample', hidden: true, type: 'string', size: 'small-col', description: 'Read direction for the raw reads or sequences. The first file in paired-read sequencing.', example: 'forward'},
     {id: 'paired_filename', name: 'Paired file name', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'File name for the second file in paired-read sequencing', example: 'MS10R-NMonson-C7JR9_S1_R2_001.fastq'},
     {id: 'paired_read_direction', name: 'Paired read direction', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Read direction for the second file in paired-read sequencing', example: 'reverse'},
-    {id: 'sample_name', name: 'Sample name', section: 'Sample', hidden: false, type: 'string', size: 'small-col', description: 'Sample name as allocated by VDJbase', example: ''},
-    {id: 'reads', name: 'VDJbase reads', section: 'Sample', hidden: false, type: 'integer', size: 'small-col', description: 'Reads processed by VDJbase pipeline', example: ''},
-    {id: 'genotypes', name: 'Genotype report', section: 'Sample', hidden: false, type: 'genotype', size: 'small-col', description: 'Links to genotype reports', example: ''},
-    {id: 'haplotypes', name: 'Haplotype reports', section: 'Sample', hidden: false, type: 'haplotype', size: 'large-col', description: 'Links to haplotype reports', example: ''},
     {id: 'igsnper_plot_path', name: 'Igsnper plot path', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Path for igsnper plot', example: ''},
     {id: 'sample_group', name: 'Sample group', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Sample group', example: ''},
-    {id: 'study_id', name: 'Study ID', section: 'Study', hidden: true, type: 'string', size: 'small-col', description: 'Unique ID assigned by study registry', example: 'PRJNA001'},
     {id: 'study_title', name: 'Study title', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Descriptive study title', example: 'Effects of sun light exposure of the Treg repertoire'},
     {id: 'study_type_id', name: 'Study type ID', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'CURIE of the concept, encoding the ontology and the local ID', example: ''},
     {id: 'study_type_label', name: 'Study type', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Label of the concept in the respective ontology', example: ''},
@@ -42,7 +46,6 @@ export const columnInfo = [
     {id: 'grants', name: 'Grant funding agency', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Funding agencies and grant numbers', example: 'NIH, award number R01GM987654'},
     {id: 'study_contact', name: 'Contact information (study)', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Full contact information of the contact persons for this study This should include an e-mail address and a persistent identifier such as an ORCID ID.', example: 'Dr. P. Stibbons, p.stibbons@unseenu.edu, https://orcid.org/0000-0002-1825-0097'},
     {id: 'collected_by', name: 'Contact  (data collection)', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Full contact information of the data collector, i.e. the person who is legally responsible for data collection and release. This should include an e-mail address.', example: 'Dr. P. Stibbons, p.stibbons@unseenu.edu'},
-    {id: 'lab_name', name: 'Lab name', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Department of data collector', example: 'Department for Planar Immunology'},
     {id: 'lab_address', name: 'Lab address', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Institution and institutional address of data collector', example: 'School of Medicine, Unseen University, Ankh-Morpork, Disk World'},
     {id: 'submitted_by', name: 'Contact  (data deposition)', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Full contact information of the data depositor, i.e. the person submitting the data to a repository. This is supposed to be a short-lived and technical role until the submission is relased.', example: 'Adrian Turnipseed, a.turnipseed@unseenu.edu'},
     {id: 'pub_ids', name: 'Relevant publications', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'Publications describing the rationale and/or outcome of the study', example: 'PMID:85642'},
@@ -83,7 +86,6 @@ export const columnInfo = [
     {id: 'medical_history', name: 'Other relevant medical history', section: 'Patient', hidden: true, type: 'string', size: 'large-col', description: 'Medical history of subject that is relevant to assess the course of disease and/or treatment', example: 'MGUS, first diagnosed 5 years prior'},
     {id: 'genotype_process', name: 'Genotype acquisition process', section: 'Patient', hidden: true, type: 'string', size: 'large-col', description: 'Information on how the genotype was acquired. Controlled vocabulary.', example: 'repertoire_sequencing'},
     {id: 'patient_name', name: 'Subject name', section: 'Patient', hidden: true, type: 'string', size: 'small-col', description: 'Subject name as allocated by VDJbase', example: ''},
-    {id: 'tissue_label', name: 'Tissue', section: 'TissuePro', hidden: false, type: 'string', size: 'small-col', description: 'Label of the concept in the respective ontology', example: ''},
     {id: 'tissue_processing', name: 'Tissue processing', section: 'TissuePro', hidden: true, type: 'string', size: 'large-col', description: 'Enzymatic digestion and/or physical methods used to isolate cells from sample', example: 'Collagenase A/Dnase I digested, followed by Percoll gradient'},
     {id: 'cell_subset_id', name: 'Cell subset ID', section: 'TissuePro', hidden: true, type: 'string', size: 'large-col', description: 'CURIE of the concept, encoding the ontology and the local ID', example: ''},
     {id: 'cell_subset_label', name: 'Cell subset', section: 'TissuePro', hidden: true, type: 'string', size: 'small-col', description: 'Label of the concept in the respective ontology', example: ''},

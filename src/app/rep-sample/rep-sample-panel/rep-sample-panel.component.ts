@@ -44,7 +44,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   @ViewChild('searchBox', { static: true }) searchBox: ElementRef;
   dataSource: RepSampleDataSource;
   params$: Subscription;    // params for the route
-  displayedColumns = ['sample_name', 'reads', 'lab_name', 'study_id', 'tissue_label', 'genotypes', 'haplotypes'];
+  displayedColumns = ['sample_name', 'reads', 'lab_name', 'study_id', 'tissue_label', 'genotype', 'haplotypes'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -296,13 +296,13 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     if (report === 'rep_single_haplotype') {
       title = 'Haplotype Report';
       params = JSON.parse(params);
-      sampleFilter = [{field: 'name', op: 'in', value : [params.name]}];
+      sampleFilter = [{field: 'sample_name', op: 'in', value : [params.name]}];
       reportParams = {haplo_gene: params.hap_gene, sort_order: params.sort_order};
       repSeqs = params.repSeqs;
     } else if (report === 'rep_single_genotype') {
       title = 'Genotype Report';
       params = JSON.parse(params);
-      sampleFilter = [{field: 'name', op: 'in', value : [params.name]}];
+      sampleFilter = [{field: 'sample_name', op: 'in', value : [params.name]}];
       reportParams = {sort_order: params.sort_order};
       repSeqs = params.repSeqs;
     } else if (report === 'download_rep_data') {

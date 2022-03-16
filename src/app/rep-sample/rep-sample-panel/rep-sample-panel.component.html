@@ -71,7 +71,7 @@
                 {{col.name}}
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
               </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
+              <mat-cell class="{{col.size}}" *matCellDef="let item" (click)="showInfo(item)">
                   {{item[col.id]}}
               </mat-cell>
             </ng-container>

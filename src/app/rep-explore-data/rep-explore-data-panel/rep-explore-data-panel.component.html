@@ -95,21 +95,21 @@
           <mat-header-cell *matHeaderCellDef>
             Project ID
           </mat-header-cell>
-          <mat-cell *matCellDef="let study">{{study.name}}</mat-cell>
+          <mat-cell *matCellDef="let study">{{study.study_name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="accession_id">
           <mat-header-cell *matHeaderCellDef class="large-col">
             Accession ID
           </mat-header-cell>
-          <mat-cell class="large-col" *matCellDef="let study">{{study.accession_id}}</mat-cell>
+          <mat-cell class="large-col" *matCellDef="let study">{{study.study_id}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="institute">
           <mat-header-cell *matHeaderCellDef  class="large-col">
-            Institute
+            Lab
           </mat-header-cell>
-          <mat-cell  class="large-col" *matCellDef="let study">{{study.institute}}</mat-cell>
+          <mat-cell  class="large-col" *matCellDef="let study">{{study.lab_name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="num_subjects">
@@ -145,8 +145,8 @@
             Paper
           </mat-header-cell>
           <mat-cell *matCellDef="let study">
-            <a *ngIf="study.reference.includes('http')" href={{study.reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-            <span *ngIf="!study.reference.includes('http')"> {{study.reference}}</span>
+            <a *ngIf="study.pub_ids && study.pub_ids.includes('http')" href={{study.pub_ids}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            <span *ngIf="(!study.pub_ids || !study.pub_ids.includes('http'))"> {{study.pub_ids}}</span>
           </mat-cell>
         </ng-container>
 
@@ -155,8 +155,8 @@
             Study Data
           </mat-header-cell>
           <mat-cell *matCellDef="let study">
-            <a *ngIf="study.accession_reference.includes('http')" href={{study.accession_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-            <span *ngIf="!study.accession_reference.includes('http')"> {{study.accession_reference}}</span>
+            <a *ngIf="study.accession_reference && study.accession_reference.includes('http')" href={{study.accession_reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            <span *ngIf="(!study.accession_reference || !study.accession_reference.includes('http'))"> {{study.accession_reference}}</span>
           </mat-cell>
         </ng-container>
 

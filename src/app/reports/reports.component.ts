@@ -23,6 +23,7 @@ import {ReportRunService} from './report-run.service';
 export class ReportsComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<string>;
   displayedColumns = ['thumbnail', 'title', 'description', 'actions'];
+  reportSections = null;
   geneTableServiceSubscription = null;
   geneTableSelection: GeneTableSelection = null;
   genSampleFilterSubscription = null;
@@ -40,10 +41,15 @@ export class ReportsComponent implements OnInit, OnDestroy {
     private repSampleFilterService: RepSampleFilterService,
     private genSampleFilterService: GenSampleFilterService,
     public repListDataSource: RepOnlyDataSource,
+    public genOrRepListDataSource: GenOrRepDataSource,
     private reportsListDataSource: ReportsListDataSource,
     private httpClient: HttpClient,
     private reportRunService: ReportRunService,
   ) {
+      this.reportSections = [
+        {source: repListDataSource, title: 'Reports using just AIRR-seq Sample Data', empty: 'Select AIRR-Seq data sets to see reports in this section'},
+        {source: genOrRepListDataSource, title: 'Reports using either AIRR-Seq or genomic data, or both', empty: 'Select some data sets to see reports in this section'}
+      ]
   }
 
   ngOnInit(): void {
@@ -103,6 +109,28 @@ export class RepOnlyDataSource  extends DataSource<any> {
   connect(): Observable<ReportList[]> {
     return this.reportsListDataSource.connect().pipe(
       map(data => data.filter(item => item.scope.indexOf('rep_sample') >= 0))
+    );
+  }
+
+  disconnect(): void {
+  }
+
+}
+
+@Injectable({ providedIn: 'any'})
+export class GenOrRepDataSource  extends DataSource<any> {
+
+  constructor(
+    private reportsService: ReportsService,
+    private geneTableService: GeneTableSelectorService,
+    private reportsListDataSource: ReportsListDataSource
+  ) {
+    super();
+  }
+
+  connect(): Observable<ReportList[]> {
+    return this.reportsListDataSource.connect().pipe(
+      map(data => data.filter(item => item.scope.indexOf('gen_or_rep_sample') >= 0))
     );
   }
 

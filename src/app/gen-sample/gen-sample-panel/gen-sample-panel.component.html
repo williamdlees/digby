@@ -90,10 +90,10 @@
                 </div>
                 <div *ngIf="col.id !== 'report'">
                   <mat-cell class="{{col.size}}" *matCellDef="let item">
-                    <ng-container *ngIf="item[col.id].startsWith('http')">
+                    <ng-container *ngIf="item[col.id] && item[col.id].startsWith('http')">
                       <a href={{item[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
                     </ng-container>
-                    <ng-container *ngIf="!item[col.id].startsWith('http')">
+                    <ng-container *ngIf="!(item[col.id] && item[col.id].startsWith('http'))">
                       {{item[col.id]}}
                     </ng-container>
                   </mat-cell>

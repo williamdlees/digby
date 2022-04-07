@@ -108,7 +108,7 @@ export class RepOnlyDataSource  extends DataSource<any> {
 
   connect(): Observable<ReportList[]> {
     return this.reportsListDataSource.connect().pipe(
-      map(data => data.filter(item => item.scope.indexOf('rep_sample') >= 0))
+      map(data => data.filter(item => item.scope.indexOf('rep_sample') >= 0 && !(item.scope.indexOf('gen_sample') >= 0)))
     );
   }
 
@@ -130,7 +130,7 @@ export class GenOrRepDataSource  extends DataSource<any> {
 
   connect(): Observable<ReportList[]> {
     return this.reportsListDataSource.connect().pipe(
-      map(data => data.filter(item => item.scope.indexOf('gen_or_rep_sample') >= 0))
+      map(data => data.filter(item => item.scope.indexOf('rep_sample') >= 0 && item.scope.indexOf('gen_sample') >= 0))
     );
   }
 

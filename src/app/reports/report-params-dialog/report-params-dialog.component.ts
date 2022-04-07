@@ -38,17 +38,15 @@ export class ReportParamsDialogComponent implements OnInit {
     });
 
     if (this.report.filter_params) {
-      console.log("adding params)");
-      this.filterParams.forEach(t => {
-        this.add_fields(t, group);
-      });
+      for (let key in this.filterParams) {
+        this.add_fields(this.filterParams[key], group);
+      }
     }
 
     this.myFormGroup = new FormGroup(group);
   }
 
   private add_fields(t, group) {
-    console.log("adding field");
     if (t.type === 'select' && t.options.length > 0) {
       group[t.id] = new FormControl(t.options[0]);
     } else {

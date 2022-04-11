@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {ReportParamsDialogComponent} from './report-params-dialog/report-params-dialog.component';
+import {Injectable} from '@angular/core';
+import {ReportParamsDialogComponent, SampleCoverage} from './report-params-dialog/report-params-dialog.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportRunDialogComponent} from './report-run-dialog/report-run-dialog.component';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
@@ -76,6 +76,13 @@ export class ReportRunService {
         }
 
         modalRef.componentInstance.filterParams = filterParams;
+
+        modalRef.componentInstance.sampleCoverage = {
+          genomic: genDataSets,
+          genomicScope: genSampleFilters.length == 0 ? 'all' : 'selected',
+          AIRRSeq: repDataSets,
+          AIRRSeqScope: repSampleFilters.length == 0 ? 'all' : 'selected',
+        };
 
         modalRef.result.then((result) => {
           if (result) {

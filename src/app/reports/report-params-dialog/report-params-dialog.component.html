@@ -6,6 +6,7 @@
     </button>
   </div>
   <div class="modal-body">
+    <div style="margin-bottom: 15px">{{scopeText}}</div>
       <form [formGroup]="myFormGroup" (ngSubmit)="onSubmit()">
         <div *ngFor="let form_elem of params">
           <div [ngSwitch]="form_elem.type">

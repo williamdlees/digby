@@ -16,6 +16,12 @@
                 <input id="{{form_elem.id}}" type="text" formControlName="{{form_elem.id}}"/>
               </div>
             </div>
+            <div *ngSwitchCase="'multiTextBox'">
+              <div class="form-group">
+                <label for="{{form_elem.id}}">{{ form_elem.label }}: </label>
+                <textarea id="{{form_elem.id}}" formControlName="{{form_elem.id}}" rows="10" style="width: 100%"></textarea>
+              </div>
+            </div>
             <div *ngSwitchCase="'number'">
               <div class="form-group"  style="margin-top: 1rem; margin-bottom: 0rem !important;">
                 <label for="{{form_elem.id}}">{{ form_elem.label }}: &nbsp;&nbsp;&nbsp;</label>

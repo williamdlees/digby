@@ -16,7 +16,6 @@ outline-style: none !important;
 
 .filter-dropdown .dropdown-btn {
   border: none !important;
-  padding: 0px 0px !important;
 }
 
 .multiselect-item-checkbox {
@@ -26,3 +25,12 @@ outline-style: none !important;
 p,li {
   font-size: 0.9rem !important;
 }
+
+.selected-item-container {
+  padding: 0px 0px 0px 0px !important;
+}
+
+.dropdown-multiselect--active, .multiselect-dropdown {
+  padding: 0px 8px 0px 8px !important;
+}
+

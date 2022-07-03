@@ -13,7 +13,6 @@ import {
 } from '@angular/core';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
-import {cloneDeep} from "lodash";
 
 function symmetricDifference(setA, setB) {
     const _difference = new Set(setA);
@@ -58,7 +57,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
     const iSaved = new Set(savedInfo.map((x) => x.id));
     const sNew = new Set(this.columnInfo.map((x) => x.name));
     const sSaved = new Set(savedInfo.map((x) => x.name));
-    this.initialColumnInfo = cloneDeep(this.columnInfo);
+    this.initialColumnInfo = this.columnInfo.map(a => {return {...a}});
 
     if (!symmetricDifference(sNew, sSaved).size && !symmetricDifference(iNew, iSaved).size) {
       this.columnInfo = savedInfo;
@@ -111,7 +110,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   }
 
   onResetColumns() {
-    this.columnInfo = cloneDeep(this.initialColumnInfo);
+    this.columnInfo = this.initialColumnInfo.map(a => {return {...a}});
     this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
     this.reorderColumns();
     this.emitColumns(true);

@@ -1,6 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import * as _ from 'lodash';
 
 
 @Component({
@@ -48,10 +47,10 @@ export class SeqModalComponent implements OnInit {
         if (this.fasta) {
           this.displayContent += frag + '<br>';
         } else {
-          this.displayContent += _.padEnd(ind.toString(), 5);
+          this.displayContent += ind.toString().padEnd(5);
 
           if (frag.length > 10) {
-            this.displayContent += _.repeat(' ', frag.length - 10) + _.padStart((ind + frag.length - 1).toString(), 5)
+            this.displayContent += ' '.repeat(frag.length - 10) + (ind + frag.length - 1).toString().padStart(5)
           }
           this.displayContent += '<br>' + frag + '<br><br>'
           ind += frag.length;

@@ -12,6 +12,7 @@ export interface GeneSequence {
     appearances: string;
     subject_id: string;
     dataset: string;
+    gene_name: string;
   }];
   total_items: number;
   page_size: number;

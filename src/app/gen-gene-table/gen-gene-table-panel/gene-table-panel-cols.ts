@@ -10,4 +10,5 @@
    {id: 'gapped_sequence', name: 'Gapped', hidden: true, type: 'string', size: 'small-col', description: 'IMGT-gapped sequence of the allele (click to display)'},
    {id: 'appearances', name: 'Appearances', hidden: false, type: 'integer', size: 'small-col', description: 'Number of subjects in which the allele has been inferred (click for list)'},
    {id: 'dataset', name: 'Dataset', hidden: true, type: 'string', size: 'small-col', description: 'The dataset in which the allele was determined'},
+   {id: 'gene_name', name: 'Gene Name', hidden: true, type: 'string', size: 'small-col', description: 'The name of the gene in which the allele is found'},
 ];

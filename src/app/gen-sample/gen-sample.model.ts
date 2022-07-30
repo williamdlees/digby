@@ -8,6 +8,10 @@ export interface GenSample {
   annotation_method: string;
   annotation_format: string;
   annotation_reference: string;
+  self_ethnicity: string;
+  grouped_ethnicity: string;
+  IGH_coverage: number;
+  sequencing_platform: string;
 
   study_name: string;
   study_date: string;

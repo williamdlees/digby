@@ -3,7 +3,7 @@ import { GenomicService } from '../../../dist/digby-swagger-client';
 import { RepseqService } from '../../../dist/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
-import { catchError  } from 'rxjs/operators';
+import {catchError, debounceTime} from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import {HttpErrorResponse} from '@angular/common/http';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
@@ -76,7 +76,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.geneTableServiceSubscription = this.geneTableService.source
-        .subscribe(
+        .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             if (!this.species) {
               this.initializing = true;
@@ -304,6 +304,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
     this.notifiedUpdates.refSeq = true;
     if (symmetricDifference(new Set(this.geneTableService.selection.value.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
       this.onSelectionChange();
+      this.updateAssemblies([]);
     }
   }
 

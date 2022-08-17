@@ -5,7 +5,7 @@ import { GeneTableSelection } from '../../gene-table-selector/gene-table-selecto
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {ActivatedRoute} from '@angular/router';
 import igv from 'src/assets/js/igv.js';
-import { delay } from 'rxjs/operators';
+import {debounceTime, delay} from 'rxjs/operators';
 import {AuthService} from "../../auth/auth.service";
 import {User} from "../../auth/user.model";
 
@@ -53,7 +53,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.geneTableServiceSubscription = this.geneTableService.source.subscribe(
+    this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(2000)).subscribe(
     (sel: GeneTableSelection) => {
       this.selection = sel;
       this.reconfigureBrowser();

@@ -107,7 +107,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.paramState = 'pre selection';
 
       this.geneTableServiceSubscription = this.geneTableService.source
-        .subscribe(
+        .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             if (sel.species && sel.repSeqs) {
               this.selection = sel;

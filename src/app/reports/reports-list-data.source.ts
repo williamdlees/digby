@@ -1,7 +1,7 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Observable, BehaviorSubject, of, EMPTY} from 'rxjs';
 import { ReportsService } from '../../../dist/digby-swagger-client';
-import {catchError, finalize} from 'rxjs/operators';
+import {catchError, debounceTime, finalize} from 'rxjs/operators';
 import {GlobalReportFilterParams, ReportList} from './reports-list.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';
 import {MatTableDataSource} from '@angular/material/table';
@@ -31,7 +31,7 @@ export class ReportsListDataSource implements DataSource<ReportList> {
 
     load(): void {
       this.geneTableServiceSubscription = this.geneTableService.source
-        .subscribe(
+        .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             this.geneTableSelection = sel;
             this.reload();

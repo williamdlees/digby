@@ -4,6 +4,7 @@ import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-sel
 import { RepseqService } from '../../../../dist/digby-swagger-client';
 import { GoogleChartsModule } from 'angular-google-charts';
 import {MatTable} from '@angular/material/table';
+import {debounceTime} from "rxjs/operators";
 
 
 @Component({
@@ -33,7 +34,7 @@ export class RepExploreDataPanelComponent implements OnInit {
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
     setTimeout(() => {
       this.geneTableServiceSubscription = this.geneTableService.source
-        .subscribe(
+        .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             this.species = sel.species;
             this.dataset = sel.repSeqs;

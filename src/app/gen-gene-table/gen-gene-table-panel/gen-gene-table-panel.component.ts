@@ -91,7 +91,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
     setTimeout(() => {
       this.geneTableServiceSubscription = this.geneTableService.source
-        .subscribe(
+        .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             if (sel.species && sel.datasets) {
               this.selection = sel;

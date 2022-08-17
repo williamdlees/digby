@@ -2,7 +2,7 @@ import {Component, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core
 import {MatTable} from '@angular/material/table';
 import {ReportsListDataSource} from './reports-list-data.source';
 import {ReportsService} from '../../../dist/digby-swagger-client';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, debounceTime, map} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/collections';
 import {defer, Observable, of, Subscription} from 'rxjs';
 import {ReportList} from './reports-list.model';
@@ -54,7 +54,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.geneTableServiceSubscription = this.geneTableService.source
-      .subscribe(
+      .pipe(debounceTime(500)).subscribe(
         (sel: GeneTableSelection) => {
           this.geneTableSelection = sel;
         }

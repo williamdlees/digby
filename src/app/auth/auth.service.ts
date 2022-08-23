@@ -40,7 +40,7 @@ export class AuthService {
           return throwError(err);
         }),
         tap((sysConfig) => {
-          console.log('auth: calling config api')
+          //console.log('auth: calling config api')
           this.sysConfig.next(sysConfig)
           this.userData = new User( sysConfig.app_protected,'Anonymous', '', null, '', null);
           this.user.next(this.userData);
@@ -73,7 +73,7 @@ export class AuthService {
   }
 
   autoLogin() {
-    console.log('in auth.autoLogin: checking for stored token');
+    //console.log('in auth.autoLogin: checking for stored token');
 
     const authData: {
       userName: string;
@@ -83,7 +83,7 @@ export class AuthService {
       _refreshTokenExpirationDate: string;
     } = JSON.parse(localStorage.getItem('authData'));
     if (!authData) {
-      console.log("stored token not found");
+      //console.log("stored token not found");
       return;
     }
 
@@ -97,7 +97,7 @@ export class AuthService {
     );
 
     if (loadedUser.refreshToken) {
-      console.log("Loaded valid refresh token from store: refreshing access")
+      //console.log("Loaded valid refresh token from store: refreshing access")
       this.user.next(loadedUser);
       this.userData = loadedUser;
       const refreshTokenExpirationDuration =
@@ -107,12 +107,12 @@ export class AuthService {
       this.autoLogout(refreshTokenExpirationDuration);
     }
 
-    console.log('auth.autoLogin succeeded');
+    //console.log('auth.autoLogin succeeded');
   }
 
   // called when the refresh token expires or user logs out
   logout() {
-    console.log('in auth.logout: refresh token expired');
+    //console.log('in auth.logout: refresh token expired');
     this.userData = new User(true, '', '',null, '', null);
     this.user.next(this.userData);
     this.router.navigate(['/']);
@@ -131,7 +131,7 @@ export class AuthService {
 
   // set up the timer for refresh token expiry
   autoLogout(refreshTokenExpirationDuration: number) {
-    console.log('in auth.autologout');
+    //console.log('in auth.autologout');
     this.refreshTokenExpirationTimer = setTimeout(() => {
       this.logout;
     }, refreshTokenExpirationDuration);
@@ -139,16 +139,16 @@ export class AuthService {
 
   // called when the access token expires
   refresh() {
-    console.log('in auth.refresh: refreshing access token');
+    //console.log('in auth.refresh: refreshing access token');
     this.systemService.getRefreshApi()
       .pipe(
         catchError(err => {
-          console.log("error refreshing access token");
+          //console.log("error refreshing access token");
           this.logout();
           return throwError(err);
         }),
       ).subscribe(resData => {
-          console.log("refreshed access token");
+          //console.log("refreshed access token");
           this.handleRefresh(
             resData.access_token,
             resData.access_token_lifetime,
@@ -158,13 +158,13 @@ export class AuthService {
 
   // set up the timer for access token expiry
   autoRefresh(accessTokenExpirationDuration: number) {
-    console.log('in auth.autorefresh');
+    //console.log('in auth.autorefresh');
 
     if (this.accessTokenExpirationTimer) {
       clearTimeout(this.accessTokenExpirationTimer);
     }
 
-    console.log("setting access token timer");
+    //console.log("setting access token timer");
 
     this.accessTokenExpirationTimer = setTimeout(() => {
       this.refresh();
@@ -179,7 +179,7 @@ export class AuthService {
     refreshTokenExpiresIn: number,
     stay: boolean,
   ) {
-    console.log('in auth.handleauthentication');
+    //console.log('in auth.handleauthentication');
     const accessTokenExpirationDate = new Date(new Date().getTime() + accessTokenExpiresIn * 1000);
     const refreshTokenExpirationDate = new Date(new Date().getTime() + refreshTokenExpiresIn * 1000);
     const user = new User(true, userName, accessToken, accessTokenExpirationDate, refreshToken, refreshTokenExpirationDate);
@@ -197,7 +197,7 @@ export class AuthService {
     accessToken: string,
     accessTokenExpiresIn: number,
   ) {
-    console.log('in handlerefresh');
+    //console.log('in handlerefresh');
     this.userData.accessToken = accessToken;
     this.userData.accessTokenExpirationDate = new Date(new Date().getTime() + accessTokenExpiresIn * 1000);
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthService} from "../auth/auth.service";
-import {Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,7 @@ export class AppHeaderComponent implements OnInit {
   public displayProtected = true;
 
   constructor(private authService: AuthService,
-              private router: Router,) {}
+              private router: Router) {}
 
   ngOnInit() {
     this.authService.user.subscribe(user => {
@@ -38,7 +39,7 @@ export class AppHeaderComponent implements OnInit {
           }
         }
       }
-    )
+    );
   }
 
   onLogout() {

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, Injectable, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { GenomicService } from '../../../dist/digby-swagger-client';
 import { RepseqService } from '../../../dist/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
@@ -15,6 +15,11 @@ import {GeneTableSelection} from './gene-table-selector.model';
   styleUrls: ['./gene-table-selector.component.css'],
   encapsulation: ViewEncapsulation.None
 })
+
+@Injectable({
+  providedIn: 'root'
+})
+
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   @Input() showGenomic: boolean;
   @Input() showAssembly: boolean;
@@ -75,6 +80,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     setTimeout(() => {
+      // this does the heavy work of keeping the selectors on each active page in sync.
+      // note that the *active* selector will have its choices updated on the fly. The others rely on this event.
       this.geneTableServiceSubscription = this.geneTableService.source
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
@@ -84,8 +91,13 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
             } else if (sel.species && (!this.selectedSpecies || sel.species !== this.selectedSpecies.name)) {
               this.selectedSpecies = this.species.filter((s) => s.name === sel.species)[0];
+
               this.updateGen(sel.datasets);
               this.updateRep(sel.repSeqs);
+
+              // if the genomic locus has changed, we need to update the genomic and assembly choices
+            } else if (sel.datasets && symmetricDifference(new Set(sel.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
+              this.updateGen(sel.datasets);
 
             } else {
               if (sel.repSeqs && symmetricDifference(new Set(sel.repSeqs), new Set(this.selectedRep.map((x) => (x.text)))).size) {
@@ -99,6 +111,11 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
               if (sel.assemblies && symmetricDifference(new Set(sel.assemblies), new Set(this.selectedAssembly.map((x) => (x.text)))).size) {
                 this.selectedAssembly = this.assemblies.filter((r) => sel.assemblies.indexOf(r.text) >= 0);
               }
+            }
+
+            // not sure why this is needed, but if we have some assembly choices and noe are selected, select one
+            if (!this.selectedAssembly || this.selectedAssembly.length == 0 && this.assemblies.length > 0) {
+              this.selectedAssembly.push(this.assemblies[0]);
             }
           }
         );
@@ -156,7 +173,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       for (const ref of resp) {
         this.datasets.push({id, text: ref.dataset});
 
-        if (selectedNames && selectedNames.indexOf(ref.ref_seq) >= 0) {
+        if (selectedNames && selectedNames.indexOf(ref.dataset) >= 0) {
           this.selectedGen.push({id, text: ref.dataset});
         }
 
@@ -303,8 +320,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   refSeqChange() {
     this.notifiedUpdates.refSeq = true;
     if (symmetricDifference(new Set(this.geneTableService.selection.value.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
-      this.onSelectionChange();
       this.updateAssemblies([]);
+      this.onSelectionChange();
     }
   }
 
@@ -318,6 +335,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
     if (this.selectedSpecies) {
       this.notifiedUpdates = { species: false, refSeq: false, repSeq: false, assemblies: false };
+
       this.geneTableService.selection.next({
         species: this.selectedSpecies.name,
         datasets: this.selectedGen.map(x => x.text),

@@ -28,10 +28,10 @@ export class AuthGuard implements CanActivate {
       map(user => {
         const isAuth = (!user || !user.appProtected || user.accessToken);
         if (isAuth) {
-          console.log("guards open");
+          //console.log("guards open");
           return true;
         }
-        console.log("guarding non-login routes");
+        //console.log("guarding non-login routes");
         return this.router.createUrlTree(['/auth']);
       })
       // tap(isAuth => {

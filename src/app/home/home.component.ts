@@ -31,7 +31,6 @@ export class HomeComponent implements OnInit {
       },
       error => {
         this.errorNews = error;
-        console.log('error in main')
         this.loadingNews = false;
       }
     );
@@ -46,17 +45,14 @@ export class HomeComponent implements OnInit {
       },
       error => {
         this.errorHelp = error;
-        console.log('error in main')
         this.loadingHelp = false;
       }
     );
   }
 
   ngOnInit() {
-    console.log("home ngoninit");
       this.wordpressService.sysConfig.subscribe(
         sysConfig => {
-          console.log("home has an updated config");
           if (sysConfig.wp_rest != '') {
             this.wpConfig = sysConfig;
             this.fillNews();
@@ -67,7 +63,6 @@ export class HomeComponent implements OnInit {
         },
       error => {
         this.errorHelp = error;
-        console.log('error in main')
       }
     );
   }

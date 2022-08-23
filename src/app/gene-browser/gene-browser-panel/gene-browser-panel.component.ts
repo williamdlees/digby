@@ -1,5 +1,5 @@
 /* tslint:disable:only-arrow-functions */
-import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -53,7 +53,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(2000)).subscribe(
+    this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(500)).subscribe(
     (sel: GeneTableSelection) => {
       this.selection = sel;
       this.reconfigureBrowser();
@@ -66,7 +66,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
           igv.setOauthToken(user.accessToken, location.hostname)
         }
       }
-    )
+    );
   }
 
   ngOnDestroy() {
@@ -105,10 +105,16 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
 
   buildBrowser() {
     delay(0);
-    console.log(this.species);
     const dataPath = environment.igvBasePath + '/' + this.species.replace(' ', '_') + '/' + this.dataset + '/' + this.species.replace(' ', '_') + '_' + this.assemblyName;
-    console.log('BuildBrowser: ' + dataPath);
     const div = document.getElementById('igvdiv');
+
+    if (div == null) {      // will happen if page is not displayed
+      this.browser = null;
+      return;
+    }
+
+    console.log('BuildBrowser: ' + dataPath);
+
     igv.createBrowser(div,
       {
         reference: {

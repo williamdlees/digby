@@ -128,7 +128,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.repGeneSelectedServiceSubscription = this.repGeneSelectedService.source.subscribe(
         selectedNames => {
           if (arraysEqual(this.selectedSequenceNames, selectedNames.names)) {
-            console.log('---');
             return;
           }
 

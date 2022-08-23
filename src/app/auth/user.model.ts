@@ -10,7 +10,7 @@ export class User {
 
   get accessToken() {
     if (!this._accessTokenExpirationDate || new Date() > this._accessTokenExpirationDate) {
-      console.log("access token expired in User");
+      //console.log("access token expired in User");
       return null;
     }
     return this._accessToken;

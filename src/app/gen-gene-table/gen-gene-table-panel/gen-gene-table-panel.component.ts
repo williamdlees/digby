@@ -121,8 +121,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
           if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
             this.genGeneSelectedService.selection.next({names: choices.name, onlySelected: this.onlySelectedSamplesSet});
           } else {
-            this.onlySelectedSamplesSet = false;
-            this.genGeneSelectedService.selection.next({names: [], onlySelected: this.onlySelectedSamplesSet});
+            //this.onlySelectedSamplesSet = false;
+            //this.genGeneSelectedService.selection.next({names: [], onlySelected: this.onlySelectedSamplesSet});
           }
         }
       );

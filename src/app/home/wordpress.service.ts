@@ -26,10 +26,8 @@ export class WordpressService {
   }
 
   init() {
-    console.log("wordpress init started");
     this.authService.sysConfig
       .subscribe( sysConfig => {
-        console.log("wordpress init got config update");
       this.config = sysConfig;
       this.sysConfig.next(sysConfig);
     });

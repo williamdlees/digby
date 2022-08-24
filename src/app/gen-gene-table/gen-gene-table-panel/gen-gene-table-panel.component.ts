@@ -43,8 +43,10 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   paginatorSubscription = null;
   geneTableServiceSubscription = null;
   filterModeEnum = FilterMode;
-  filters = [];
-  sorts = [];
+  //filters = [{'field': 'type', 'op': 'ilike', 'value': '%REGION%'}];
+  filters = []
+  //filters = [{field: 'name', predicates: [], sort: {order: 'asc'}}];
+  sorts = []
   choices$: Observable<IChoices>;
   choices$Subscription = null;
   loading$Subscription = null;
@@ -57,6 +59,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   clear$ = this.clearSubject.asObservable();
   setFilterSubject = new BehaviorSubject<any>(null);
   setFilter$ = this.setFilterSubject.asObservable();
+  setTypeFilterSubject = new BehaviorSubject<any>(null);
+  setTypeFilter$ = this.setTypeFilterSubject.asObservable();
   redirectOnLoad = null;
   onlySelectedSamplesSet = false;
 
@@ -160,6 +164,11 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
           this.applyResizes();
         }
       });
+
+      // Set up initial search order and filter conditions
+      const searchOrder = {field: 'name', predicates: [], sort: {field: 'name', order: 'asc'}}
+      this.applyFilter(searchOrder);
+      this.setTypeFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: 'REGION', op2: ''});
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(

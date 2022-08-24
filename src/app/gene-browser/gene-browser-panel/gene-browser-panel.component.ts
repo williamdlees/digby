@@ -53,7 +53,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(500)).subscribe(
+    this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(1000)).subscribe(
     (sel: GeneTableSelection) => {
       this.selection = sel;
       this.reconfigureBrowser();
@@ -82,7 +82,12 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
     }
 
     if (this.selection.datasets) {
-      this.dataset = this.selection.datasets[0];
+      if (this.selection.datasets.length > 1) {
+        this.dataset = null;
+      } else {
+        this.dataset = this.selection.datasets[0];
+      }
+
     } else {
       this.dataset = null;
     }

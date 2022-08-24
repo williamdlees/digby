@@ -94,18 +94,14 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
               this.updateGen(sel.datasets);
               this.updateRep(sel.repSeqs);
-
               // if the genomic locus has changed, we need to update the genomic and assembly choices
             } else if (sel.datasets && symmetricDifference(new Set(sel.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
-              this.updateGen(sel.datasets);
+              this.selectedGen = this.datasets.filter((r) => sel.datasets.indexOf(r.text) >= 0);
+              this.updateAssemblies(sel.assemblies);
 
             } else {
               if (sel.repSeqs && symmetricDifference(new Set(sel.repSeqs), new Set(this.selectedRep.map((x) => (x.text)))).size) {
                 this.selectedRep = this.repSeqs.filter((r) => sel.repSeqs.indexOf(r.text) >= 0);
-              }
-
-              if (sel.datasets && symmetricDifference(new Set(sel.datasets), new Set(this.selectedGen.map((x) => (x.text)))).size) {
-                this.selectedGen = this.datasets.filter((r) => sel.datasets.indexOf(r.text) >= 0);
               }
 
               if (sel.assemblies && symmetricDifference(new Set(sel.assemblies), new Set(this.selectedAssembly.map((x) => (x.text)))).size) {
@@ -113,9 +109,10 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
               }
             }
 
-            // not sure why this is needed, but if we have some assembly choices and noe are selected, select one
-            if (!this.selectedAssembly || this.selectedAssembly.length == 0 && this.assemblies.length > 0) {
+            // not sure why this is needed, but if we have some assembly choices and none are selected, select exactly one
+            if (this.assemblies.length > 0 && (!this.selectedAssembly || (this.selectedAssembly.length != 1))) {
               this.selectedAssembly.push(this.assemblies[0]);
+              console.log("1");
             }
           }
         );

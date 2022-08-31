@@ -142,20 +142,35 @@
         <div class="row ml-1 mr-2">
           <b>{{sample.name}}</b>
         </div>
+        <div class="row ml-1 mr-2 mb-1">
+          Genotype Analysis
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample)">
+            <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
+          </button>
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample)">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </button>
+        </div>
         <ng-container *ngIf="sample.annotation_method=='IGenotyper'">
           <div class="row ml-1 mr-2 mb-1">
-            IGenotyper Report
+            IGenotyper
           </div>
           <div class="row ml-4 mr-2 mb-0 align-middle">
-            Genotype Analysis<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+            Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          </div>
+          <div class="row ml-4 mr-2 mb-1">
+            Documentation<span>&nbsp;&nbsp;</span>
+            <a href="{{sample.annotation_reference}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
           </div>
         </ng-container>
         <ng-container *ngIf="sample.annotation_method=='VDJbase'">
           <div class="row ml-2 mr-2 mb-1">
-            VDJbase Annotation Report
+            VDJbase
           </div>
           <div class="row ml-4 mr-2 mb-0 align-middle">
-            Features<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
           </div>
           <div class="row ml-4 mr-2 mb-1">
             Documentation<span>&nbsp;&nbsp;</span>

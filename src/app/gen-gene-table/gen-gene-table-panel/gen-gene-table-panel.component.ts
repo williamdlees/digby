@@ -43,9 +43,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   paginatorSubscription = null;
   geneTableServiceSubscription = null;
   filterModeEnum = FilterMode;
-  //filters = [{'field': 'type', 'op': 'ilike', 'value': '%REGION%'}];
   filters = []
-  //filters = [{field: 'name', predicates: [], sort: {order: 'asc'}}];
   sorts = []
   choices$: Observable<IChoices>;
   choices$Subscription = null;

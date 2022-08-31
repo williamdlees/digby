@@ -287,7 +287,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   sendReportRequest(report, format, params) {
-
     let reportParams: any;
     let sampleFilter = [];
     let repSeqs = this.selection.repSeqs;

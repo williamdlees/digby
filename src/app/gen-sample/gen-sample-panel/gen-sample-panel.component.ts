@@ -278,12 +278,24 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   sendReportRequest(report, format, params) {
+    let reportParams = {};
     const datasets = this.selection.datasets;
-    const title = 'Download';
-    params.filters = this.filters;
+    let sampleFilter = {};
+    let title = '';
+
+    if (report == 'rep_single_genotype') {
+      title = 'Genotype Report';
+      sampleFilter = [{field: 'identifier', op: 'in', value : [params.identifier]}];
+      reportParams = {sort_order: 'Locus'};
+    } else if (report == 'download_gen_data') {
+      title = 'Download';
+      sampleFilter = this.filters;
+      params.filters = this.filters;
+      reportParams = params;
+    }
 
     this.reportRunService.runReport({name: report, title, filter_params: []}, format, this.selection.species,
-      datasets, this.filters, [], [], params);
+      datasets, sampleFilter, [], [], reportParams);
   }
 }
 

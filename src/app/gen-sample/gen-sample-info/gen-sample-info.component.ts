@@ -3,6 +3,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {catchError, finalize} from 'rxjs/operators';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
+import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
 
 
 @Component({
@@ -18,6 +19,7 @@ export class GenSampleInfoComponent implements OnInit {
   loading = false;
   error = null;
   sampleInfo = null;
+  allColumns = columnInfo;
 
   constructor(public activeModal: NgbActiveModal,
               private modalService: NgbModal,

@@ -21,25 +21,28 @@
   <div class="modal-body">
     <div class="container">
       <div class="row">
-        <div class="col-sm">
-          <h4>Study</h4>
-          <ul>Institute: {{sampleInfo.institute}}</ul>
-          <ul>Researcher: {{sampleInfo.researcher}}</ul>
-          <ul>Study Description: {{sampleInfo.study_description}}</ul>
-          <ul>Publication: <a href={{sampleInfo.reference}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
-          <ul>Contact Info: {{sampleInfo.contact}}</ul>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm">
-          <h4>Subject</h4>
-          <ul>Name in Study: {{sampleInfo.name_in_study}}</ul>
-          <ul>Age: {{sampleInfo.sample_age}}</ul>
-          <ul>Sex: {{sampleInfo.sex}}</ul>
-        </div>
+        <ng-container *ngFor="let section of ['Study', 'Sample', 'Subject']">
+          <div class="col-4">
+            <h4><b>{{section}}</b></h4>
+            <div *ngFor="let col of allColumns">
+              <div *ngIf="col.section === section">
+                <div *ngIf="sampleInfo[col.id]; else nullVal">
+                  <div *ngIf="col.type === 'string' && sampleInfo[col.id].startsWith('http'); else plainVal">
+                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> <a href={{sampleInfo[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
+                  </div>
+                  <ng-template #plainVal>
+                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> {{sampleInfo[col.id]}}</ul>
+                  </ng-template>
+                </div>
+                <ng-template #nullVal>
+                  <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> </ul>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </ng-container>
       </div>
     </div>
-
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>

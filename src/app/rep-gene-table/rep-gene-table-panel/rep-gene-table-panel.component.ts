@@ -29,6 +29,7 @@ import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component'
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import 'rxjs/add/observable/interval';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
 
@@ -71,6 +72,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   onlySelectedSamplesSet = false;
   params = null;
   paramState = 'pre selection'
+  selectionLoadTimer = null;
 
   constructor(private repseqService: RepseqService,
               private geneTableService: GeneTableSelectorService,
@@ -110,6 +112,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             if (sel.species && sel.repSeqs) {
+              console.log("setting selection");
               this.selection = sel;
               this.paginator.firstPage();
               this.table.renderRows();
@@ -163,30 +166,19 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       );
 
+      this.selectionLoadTimer = Observable.interval(2000)
+        .subscribe(() => {
+          if (typeof this.params.species !== "undefined") {
+            this.setSelectionFromParams();
+            this.selectionLoadTimer.unsubscribe();
+          }
+      });
+
       this.router.events.subscribe((val) => {
         if (val instanceof NavigationEnd) {
           this.applyResizes();
         }
       });
-
-      setTimeout(() => {
-        if (typeof(this.params.species) !== 'undefined') {
-          if (this.paramState == 'pre selection') {
-            this.paramState = 'post selection';
-            this.geneTableService.selection.next({
-              species: this.params.species,
-              datasets: this.selection.datasets,
-              assemblies: this.selection.assemblies,
-              repSeqs: [this.params.dataset],
-              repDatasetDescriptions: this.selection.repDatasetDescriptions,
-            });
-            setTimeout(() => {
-              this.searchBox.nativeElement.value = this.params.alleleName;
-              this.quickSearch(this.params.alleleName);
-            }, 2000);
-          }
-        }
-      }, 2000);
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
@@ -199,6 +191,34 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     ).subscribe((text: string) => {
       this.quickSearch(text);
     });
+  }
+
+  setSelectionFromParams() {
+    console.log("setting timeout for species/dataset setting");
+    if (this.selection) {
+      setTimeout(() => {
+        console.log("setting species/dataset from url params");
+        if (typeof this.params.species !== "undefined") {
+          if (this.paramState == "pre selection") {
+            this.paramState = "post selection";
+            this.geneTableService.selection.next({
+              species: this.params.species,
+              datasets: this.selection.datasets,
+              assemblies: this.selection.assemblies,
+              repSeqs: [this.params.dataset],
+              repDatasetDescriptions: this.selection.repDatasetDescriptions,
+            });
+            setTimeout(() => {
+              console.log("setting allele from url params");
+              this.searchBox.nativeElement.value = this.params.alleleName;
+              this.quickSearch(this.params.alleleName);
+            }, 2000);
+          }
+        }
+      }, 1000);
+    } else {
+      console.log("no selection yet");
+    }
   }
 
   onSelectedIdsChange() {

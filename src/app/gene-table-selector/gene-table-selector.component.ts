@@ -237,6 +237,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
 
   updateRep(selectedNames: string[]) {
+    console.log("updating rep selection in GeneTableSelectorComponent");
     this.repseqService.getDataSetApi(this.selectedSpecies.name)
       .pipe(
         retryWithBackoff(),

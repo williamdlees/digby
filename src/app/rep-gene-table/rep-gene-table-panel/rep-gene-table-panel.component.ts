@@ -189,20 +189,6 @@ export class RepGeneTablePanelComponent
           }
         });
 
-      // if the url specified a particular dataset and allele to display,
-      // wait for initialisation to settle, then set the selection
-
-      this.selectionLoadTimer = Observable.interval(2000).subscribe(() => {
-        this.selectionLoadTimerCount += 1;
-        if (this.selectionLoadTimerCount > 10) {
-          this.selectionLoadTimer.unsubscribe();
-        }
-        else if (typeof this.params.species !== "undefined") {
-          // this.setSelectionFromParams();
-          this.selectionLoadTimer.unsubscribe();
-        }
-      });
-
       this.router.events.subscribe((val) => {
         if (val instanceof NavigationEnd) {
           this.applyResizes();

@@ -35,20 +35,33 @@ import {ReportRunService} from '../../reports/report-run.service';
 
 
 @Component({
-  selector: 'app-rep-gene-table-panel',
-  templateUrl: './rep-gene-table-panel.component.html',
-  styleUrls: ['./rep-gene-table-panel.component.css'],
+  selector: "app-rep-gene-table-panel",
+  templateUrl: "./rep-gene-table-panel.component.html",
+  styleUrls: ["./rep-gene-table-panel.component.css"],
   providers: [TableParamsStorageService],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+  encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
 })
-export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy {
+export class RepGeneTablePanelComponent
+  implements AfterViewInit, OnInit, OnDestroy
+{
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
-  @ViewChild('searchBox', {static: true}) searchBox: ElementRef;
+  @ViewChild("searchBox", { static: true }) searchBox: ElementRef;
   dataSource: RepSequenceDataSource;
 
-  displayedColumns = ['name', 'pipeline_name', 'seq', 'seq_len', 'similar', 'appears', 'is_single_allele', 'low_confidence', 'novel', 'max_kdiff'];
+  displayedColumns = [
+    "name",
+    "pipeline_name",
+    "seq",
+    "seq_len",
+    "similar",
+    "appears",
+    "is_single_allele",
+    "low_confidence",
+    "novel",
+    "max_kdiff",
+  ];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -71,24 +84,29 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   redirectOnLoad = null;
   onlySelectedSamplesSet = false;
   params = null;
-  paramState = 'pre selection'
+  paramState = "pre selection";
   selectionLoadTimer = null;
+  selectionLoadTimerCount = 1;
 
-  constructor(private repseqService: RepseqService,
-              private geneTableService: GeneTableSelectorService,
-              private modalService: NgbModal,
-              private repGeneSelectedService: RepGeneSelectedService,
-              private repSampleSelectedService: RepSampleSelectedService,
-              private tableParamsStorageService: TableParamsStorageService,
-              private router: Router,
-              private reportRunService: ReportRunService,
-              private route: ActivatedRoute,
- ) {
-    this.route.params.subscribe(params => this.params = params);
+  constructor(
+    private repseqService: RepseqService,
+    private geneTableService: GeneTableSelectorService,
+    private modalService: NgbModal,
+    private repGeneSelectedService: RepGeneSelectedService,
+    private repSampleSelectedService: RepSampleSelectedService,
+    private tableParamsStorageService: TableParamsStorageService,
+    private router: Router,
+    private reportRunService: ReportRunService,
+    private route: ActivatedRoute
+  ) {
+    this.route.params.subscribe((params) => (this.params = params));
   }
 
   ngOnInit() {
-    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'rep-gene-table-widths');
+    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(
+      this.resizeEvents,
+      "rep-gene-table-widths"
+    );
     this.dataSource = new RepSequenceDataSource(this.repseqService);
   }
 
@@ -100,40 +118,46 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   ngAfterViewInit() {
-
-    this.paginatorSubscription = this.paginator.page
-      .subscribe(() => this.loadSequencesPage());
+    this.paginatorSubscription = this.paginator.page.subscribe(() =>
+      this.loadSequencesPage()
+    );
 
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
     setTimeout(() => {
-      this.paramState = 'pre selection';
+      this.paramState = "pre selection";
 
       this.geneTableServiceSubscription = this.geneTableService.source
-        .pipe(debounceTime(500)).subscribe(
-          (sel: GeneTableSelection) => {
-            if (sel.species && sel.repSeqs) {
-              console.log("setting selection");
-              this.selection = sel;
-              this.paginator.firstPage();
-              this.table.renderRows();
-              this.loadSequencesPage();
-            }
+        .pipe(debounceTime(500))
+        .subscribe((sel: GeneTableSelection) => {
+          if (sel.species && sel.repSeqs) {
+            console.log("setting selection");
+            this.selection = sel;
+            this.paginator.firstPage();
+            this.table.renderRows();
+            this.loadSequencesPage();
+            this.setSelectionFromParams();
           }
-        );
+        });
 
       this.choices$Subscription = this.dataSource.choices$.subscribe(
-        choices => {
+        (choices) => {
           if (this.filters.length > 0 && !this.isSelectedGenesChecked) {
-            this.repGeneSelectedService.selection.next({names: choices.name, onlySelected: this.onlySelectedSamplesSet});
+            this.repGeneSelectedService.selection.next({
+              names: choices.name,
+              onlySelected: this.onlySelectedSamplesSet,
+            });
           } else {
             this.onlySelectedSamplesSet = false;
-            this.repGeneSelectedService.selection.next({names: [], onlySelected: this.onlySelectedSamplesSet});
+            this.repGeneSelectedService.selection.next({
+              names: [],
+              onlySelected: this.onlySelectedSamplesSet,
+            });
           }
         }
       );
 
       this.loading$Subscription = this.dataSource.loading$.subscribe(
-        loading => {
+        (loading) => {
           if (!loading) {
             this.applyResizes();
 
@@ -146,8 +170,8 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       );
 
-      this.repSampleSelectedServiceSubscription = this.repSampleSelectedService.source.subscribe(
-        selectedIds => {
+      this.repSampleSelectedServiceSubscription =
+        this.repSampleSelectedService.source.subscribe((selectedIds) => {
           // check if selection really has changed
           if (sampleIdsEqual(selectedIds.ids, this.selectedSampleIds)) {
             return;
@@ -163,15 +187,20 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
             this.onSelectedIdsChange();
           }
-        }
-      );
+        });
 
-      this.selectionLoadTimer = Observable.interval(2000)
-        .subscribe(() => {
-          if (typeof this.params.species !== "undefined") {
-            this.setSelectionFromParams();
-            this.selectionLoadTimer.unsubscribe();
-          }
+      // if the url specified a particular dataset and allele to display,
+      // wait for initialisation to settle, then set the selection
+
+      this.selectionLoadTimer = Observable.interval(2000).subscribe(() => {
+        this.selectionLoadTimerCount += 1;
+        if (this.selectionLoadTimerCount > 10) {
+          this.selectionLoadTimer.unsubscribe();
+        }
+        else if (typeof this.params.species !== "undefined") {
+          // this.setSelectionFromParams();
+          this.selectionLoadTimer.unsubscribe();
+        }
       });
 
       this.router.events.subscribe((val) => {
@@ -181,16 +210,18 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       });
     });
 
-    fromEvent(this.searchBox.nativeElement, 'keyup').pipe(
-      map((event: any) => {
-        return event.target.value;
-      })
-      // , filter(res => res.length > 2)
-      , debounceTime(750)
-      , distinctUntilChanged()
-    ).subscribe((text: string) => {
-      this.quickSearch(text);
-    });
+    fromEvent(this.searchBox.nativeElement, "keyup")
+      .pipe(
+        map((event: any) => {
+          return event.target.value;
+        }),
+        // , filter(res => res.length > 2)
+        debounceTime(750),
+        distinctUntilChanged()
+      )
+      .subscribe((text: string) => {
+        this.quickSearch(text);
+      });
   }
 
   setSelectionFromParams() {
@@ -215,7 +246,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
             }, 2000);
           }
         }
-      }, 1000);
+      }, 500);
     } else {
       console.log("no selection yet");
     }
@@ -223,27 +254,33 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
   onSelectedIdsChange() {
     if (this.isSelectedGenesChecked && this.samplesSelected) {
-      this.applyFilter(
-        {
-          field: 'sample_id',
-          predicates: [{field: 'sample_id', op: 'in', value: this.selectedSampleIds}],
-          sort: {order: ''}
-        });
+      this.applyFilter({
+        field: "sample_id",
+        predicates: [
+          { field: "sample_id", op: "in", value: this.selectedSampleIds },
+        ],
+        sort: { order: "" },
+      });
     } else {
-      this.applyFilter(
-        {
-          field: 'sample_id',
-          predicates: [],
-          sort: {order: ''}
-        });
+      this.applyFilter({
+        field: "sample_id",
+        predicates: [],
+        sort: { order: "" },
+      });
     }
   }
 
   quickSearch(searchString) {
     this.setFilterSubject.next({
-      operator: {name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%'},
+      operator: {
+        name: "Includes",
+        operands: 2,
+        operator: "like",
+        prefix: "%",
+        postfix: "%",
+      },
       op1: searchString,
-      op2: ''
+      op2: "",
     });
     this.loadSequencesPage();
   }
@@ -251,7 +288,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   clearSelection() {
     this.filters = [];
     this.clearSubject.next(null);
-    this.searchBox.nativeElement.value = '';
+    this.searchBox.nativeElement.value = "";
     this.loadSequencesPage();
   }
 
@@ -261,13 +298,17 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         this.filters.splice(i, 1);
       }
 
-      if (!(columnPredicate.field === 'name'
-        && columnPredicate.predicates.length === 1
-        && columnPredicate.predicates[0].op === 'like'
-        // @ts-ignore
-        && columnPredicate.predicates[0].value === '%' + this.searchBox.nativeElement.value + '%'
-      )) {
-        this.searchBox.nativeElement.value = '';
+      if (
+        !(
+          columnPredicate.field === "name" &&
+          columnPredicate.predicates.length === 1 &&
+          columnPredicate.predicates[0].op === "like" &&
+          // @ts-ignore
+          columnPredicate.predicates[0].value ===
+            "%" + this.searchBox.nativeElement.value + "%"
+        )
+      ) {
+        this.searchBox.nativeElement.value = "";
       }
     }
 
@@ -296,8 +337,8 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     const sDisplayed = new Set(this.displayedColumns);
 
     const deleted = difference(sLoaded, sDisplayed);
-    this.filters = this.filters.filter((x) => !(deleted.has(x.field)));
-    this.sorts = this.sorts.filter((x) => !(deleted.has(x.field)));
+    this.filters = this.filters.filter((x) => !deleted.has(x.field));
+    this.sorts = this.sorts.filter((x) => !deleted.has(x.field));
 
     this.loadSequencesPage();
   }
@@ -311,7 +352,7 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         JSON.stringify(this.sorts),
         this.paginator.pageIndex,
         this.paginator.pageSize,
-        JSON.stringify(this.displayedColumns),
+        JSON.stringify(this.displayedColumns)
       );
     }
 
@@ -319,39 +360,53 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   showNotes(seq) {
-    const modalRef = this.modalService.open(RepGeneNotesComponent, {size: 'lg'});
+    const modalRef = this.modalService.open(RepGeneNotesComponent, {
+      size: "lg",
+    });
     modalRef.componentInstance.sequenceName = seq.name;
     modalRef.componentInstance.notes = seq.notes;
   }
 
   onSequenceClick(seq) {
-    const modalRef = this.modalService.open(SeqModalComponent, {size: 'lg'});
+    const modalRef = this.modalService.open(SeqModalComponent, { size: "lg" });
     modalRef.componentInstance.name = seq.name;
 
-    if (seq.seq.indexOf('.') < 0) {
-      modalRef.componentInstance.content = {ungapped: seq.seq, gapped: ''};
+    if (seq.seq.indexOf(".") < 0) {
+      modalRef.componentInstance.content = { ungapped: seq.seq, gapped: "" };
     } else {
-      modalRef.componentInstance.content = {ungapped: seq.seq.replace(/\./g, ''), gapped: seq.seq};
+      modalRef.componentInstance.content = {
+        ungapped: seq.seq.replace(/\./g, ""),
+        gapped: seq.seq,
+      };
     }
   }
 
   onAppearancesClick(seq) {
     this.onlySelectedSamplesSet = true;
-    this.redirectOnLoad = ['./samplerep', 'true'];
+    this.redirectOnLoad = ["./samplerep", "true"];
 
     this.setFilterSubject.next({
-      operator: {name: 'Includes', operands: 2, operator: 'like', prefix: '', postfix: ''},
+      operator: {
+        name: "Includes",
+        operands: 2,
+        operator: "like",
+        prefix: "",
+        postfix: "",
+      },
       op1: seq.name,
-      op2: ''
+      op2: "",
     });
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {
     if (event.edges.right) {
-      const cssValue = event.rectangle.width + 'px';
+      const cssValue = event.rectangle.width + "px";
       this.updateColumnWidth(columnName, cssValue);
       this.resizeEvents.set(columnName, cssValue);
-      this.tableParamsStorageService.saveInfo(this.resizeEvents, 'rep-gene-table-widths');
+      this.tableParamsStorageService.saveInfo(
+        this.resizeEvents,
+        "rep-gene-table-widths"
+      );
     }
   }
 
@@ -362,7 +417,9 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    const columnElts = document.getElementsByClassName(
+      "mat-column-" + columnName
+    );
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < columnElts.length; i++) {
       const currentEl = columnElts[i] as HTMLDivElement;
@@ -372,11 +429,19 @@ export class RepGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
   sendReportRequest(report, format, params) {
     const datasets = this.selection.repSeqs;
-    const title = 'Download';
+    const title = "Download";
     params.filters = this.filters;
 
-    this.reportRunService.runReport({name: report, title, filter_params: []}, format, this.selection.species,
-      [], [], datasets, [], params);
+    this.reportRunService.runReport(
+      { name: report, title, filter_params: [] },
+      format,
+      this.selection.species,
+      [],
+      [],
+      datasets,
+      [],
+      params
+    );
   }
 }
 

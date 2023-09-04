@@ -13,7 +13,7 @@ import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
 })
 
 export class GenSampleInfoComponent implements OnInit {
-  @Input() subjectName;
+  @Input() sampleName;
   @Input() species;
   @Input() dataset;
   loading = false;
@@ -29,7 +29,7 @@ export class GenSampleInfoComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.genSampleService.getSubjectInfoApi(this.species, this.dataset, this.subjectName).pipe(
+    this.genSampleService.getSubjectInfoApi(this.species, this.dataset, this.sampleName).pipe(
       retryWithBackoff(),
       catchError(error => {
         this.error.next(error);

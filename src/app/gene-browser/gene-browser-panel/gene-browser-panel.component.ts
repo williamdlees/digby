@@ -45,6 +45,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   species = null;
   dataset = null;
   assemblyName = null;
+  assemblyPath = null;
   user = null;
 
   constructor(private geneTableService: GeneTableSelectorService,
@@ -93,8 +94,11 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
     }
 
     if (this.selection.assemblies.length > 0) {
-      this.assemblyName = this.selection.assemblies[0].replace(' ', '_');
+      this.assemblyName = this.selection.assemblies[0];
+      this.assemblyPath = this.selection.assemblies[0].replace(' ', '_');
+      this.assemblyPath = this. assemblyName.split(':')[0];
     } else {
+      this.assemblyPath = null;
       this.assemblyName = null;
     }
 
@@ -110,7 +114,7 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
 
   buildBrowser() {
     delay(0);
-    const dataPath = environment.igvBasePath + '/' + this.species.replace(' ', '_') + '/' + this.dataset + '/' + this.species.replace(' ', '_') + '_' + this.assemblyName;
+    const dataPath = environment.igvBasePath + '/' + this.species.replace(' ', '_') + '/' + this.dataset + '/' + this.species.replace(' ', '_') + '_' + this.assemblyPath;
     const div = document.getElementById('igvdiv');
 
     if (div == null) {      // will happen if page is not displayed

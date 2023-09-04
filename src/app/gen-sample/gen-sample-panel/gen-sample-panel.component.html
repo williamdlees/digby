@@ -62,17 +62,15 @@
 <div class="row">
   <div class="col">
     <mat-table [dataSource]="dataSource">
-
-
       <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string')">
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
                 {{col.name}}
-                <div *ngIf="col.id === 'identifier'" >
+                <div *ngIf="col.id === 'sample_identifier'" >
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
-                <div *ngIf="col.id !== 'identifier'" >
+                <div *ngIf="col.id !== 'sample_identifier'" >
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
               </mat-header-cell>
@@ -88,12 +86,12 @@
                     </ng-container>
                   </mat-cell>
                 </div>
-                <div *ngIf="col.id === 'identifier'">
+                <div *ngIf="col.id === 'sample_identifier'">
                   <mat-cell class="{{col.size}}" *matCellDef="let item" (click)="showInfo(item)">
                     {{item[col.id]}}
                   </mat-cell>
                 </div>
-                <div *ngIf="col.id !== 'annotation_path' && col.id !== 'identifier'">
+                <div *ngIf="col.id !== 'annotation_path' && col.id !== 'sample_identifier'">
                   <mat-cell class="{{col.size}}" *matCellDef="let item">
                     <ng-container *ngIf="item[col.id] && item[col.id].startsWith('http')">
                       <a href={{item[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>

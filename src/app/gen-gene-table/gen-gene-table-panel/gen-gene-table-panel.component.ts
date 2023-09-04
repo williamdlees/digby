@@ -185,14 +185,14 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     if (this.isSelectedGenesChecked && this.samplesSelected) {
       this.applyFilter(
         {
-          field: 'subject_id',
-          predicates: [{field: 'subject_id', op: 'in', value: this.selectedSampleIds}],
+          field: 'sample_identfier',
+          predicates: [{field: 'sample_identifier', op: 'in', value: this.selectedSampleIds}],
           sort: {order: ''}
         });
     } else {
       this.applyFilter(
         {
-          field: 'subject_id',
+          field: 'sample_identifier',
           predicates: [],
           sort: {order: ''}
         });

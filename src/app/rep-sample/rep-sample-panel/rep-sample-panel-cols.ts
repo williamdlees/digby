@@ -1,7 +1,7 @@
 
 // Material table column definitions
 
-// This file is created programmatically by db/vdjbase_create_digby_panel_cols.py. DO NOT UPDATE BY HAND. 
+// This file is created programmatically by db/vdjbase_create_digby_panel_cols.py. DO NOT UPDATE BY HAND.
 
 export const columnInfo = [
 

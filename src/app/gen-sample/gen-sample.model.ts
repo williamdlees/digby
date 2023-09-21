@@ -1,6 +1,6 @@
 export interface GenSample {
   id: string;
-  identifier: string;
+  sample_identifier: string;
   name_in_study: string;
   mother_in_study: string;
   father_in_study: string;

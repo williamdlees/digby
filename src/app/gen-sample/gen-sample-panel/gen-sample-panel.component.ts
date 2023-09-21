@@ -39,7 +39,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   dataSource: GenSampleDataSource;
   params$: Subscription;    // params for the route
 
-  displayedColumns = ['identifier', 'name_in_study', 'age', 'sex', 'annotation_path', 'annotation_method',
+  displayedColumns = ['sample_identifier', 'name_in_study', 'age', 'sex', 'annotation_path', 'annotation_method',
     'annotation_format', 'annotation_reference', 'study_name', 'study_date', 'study_description', 'researcher', 'reference', 'contact', 'dataset'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
@@ -285,7 +285,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
     if (report == 'rep_single_genotype') {
       title = 'Genotype Report';
-      sampleFilter = [{field: 'identifier', op: 'in', value : [params.identifier]}];
+      sampleFilter = [{field: 'sample_identifier', op: 'in', value : [params.sample_identifier]}];
       reportParams = {sort_order: 'Locus'};
     } else if (report == 'download_gen_data') {
       title = 'Download';

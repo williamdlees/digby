@@ -92,17 +92,17 @@
 
       <mat-table #datasetStudyTable [dataSource]="datasetInfo['studies']">
         <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef class="small-col">
+          <mat-header-cell *matHeaderCellDef class="explore-small-col">
             Project ID
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="small-col">{{study.study_name}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.study_name}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="accession_id">
-          <mat-header-cell *matHeaderCellDef class="small-col">
+          <mat-header-cell *matHeaderCellDef class="explore-small-col">
             Accession ID
           </mat-header-cell>
-          <mat-cell class="small-col" *matCellDef="let study">
+          <mat-cell class="explore-small-col" *matCellDef="let study">
             <ng-container *ngIf="study.study_id">
               <ng-container *ngFor="let study_id of study.study_id.split(',')">
                 <a *ngIf="study_id.includes('http')" href={{study_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
@@ -113,45 +113,45 @@
         </ng-container>
 
         <ng-container matColumnDef="institute">
-          <mat-header-cell *matHeaderCellDef  class="large-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-large-col">
             Lab
           </mat-header-cell>
-          <mat-cell  class="large-col" *matCellDef="let study">{{study.lab_address}}</mat-cell>
+          <mat-cell  class="explore-large-col" *matCellDef="let study">{{study.lab_address}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="num_subjects">
-          <mat-header-cell *matHeaderCellDef  class="small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Subjects
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="small-col">{{study.num_subjects}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_subjects}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="subjects_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Subjects in VDJbase
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="small-col">{{study.subjects_in_vdjbase}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.subjects_in_vdjbase}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="num_samples">
-          <mat-header-cell *matHeaderCellDef  class="small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Samples
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="small-col">{{study.num_samples}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_samples}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="samples_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Samples in VDJbase
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="small-col">{{study.samples_in_vdjbase}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.samples_in_vdjbase}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="paper" >
-          <mat-header-cell *matHeaderCellDef  class="small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Paper
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="small-col">
+          <mat-cell *matCellDef="let study"  class="explore-small-col">
             <ng-container *ngIf="study.pub_ids">
               <ng-container *ngFor="let pub_id of study.pub_ids.split(',')">
                 <a *ngIf="pub_id.includes('http')" href={{pub_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
@@ -166,7 +166,7 @@
         <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper']" ></mat-row>
       </mat-table>
     </div>
-  </ng-container>>
+  </ng-container>
 
   <ng-container *ngIf="!loading && !error && !datasetInfo">
     <div class="container">

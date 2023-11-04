@@ -7,8 +7,7 @@ import {
   ViewChild,
   AfterViewInit,
   ViewEncapsulation,
-  ElementRef,
-  AfterViewChecked
+  ElementRef
 } from '@angular/core';
 import { RepseqService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
@@ -97,8 +96,9 @@ export class RepGeneTablePanelComponent
     private tableParamsStorageService: TableParamsStorageService,
     private router: Router,
     private reportRunService: ReportRunService,
-    private route: ActivatedRoute
-  ) {
+    private route: ActivatedRoute,
+    private el: ElementRef,
+    ) {
     this.route.params.subscribe((params) => (this.params = params));
   }
 
@@ -403,9 +403,7 @@ export class RepGeneTablePanelComponent
   }
 
   updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = document.getElementsByClassName(
-      "mat-column-" + columnName
-    );
+    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < columnElts.length; i++) {
       const currentEl = columnElts[i] as HTMLDivElement;

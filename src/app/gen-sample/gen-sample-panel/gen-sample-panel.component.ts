@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {MatPaginator} from '@angular/material/paginator';
@@ -70,6 +70,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private route: ActivatedRoute,
               private reportRunService: ReportRunService,
               private router: Router,
+              private el: ElementRef,
               ) {
 
   }
@@ -269,7 +270,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < columnElts.length; i++) {
       const currentEl = columnElts[i] as HTMLDivElement;

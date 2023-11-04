@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -70,6 +70,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
               private genSampleSelectedService: GenSampleSelectedService,
               private router: Router,
               private reportRunService: ReportRunService,
+              private el: ElementRef,
   ) {
   }
 
@@ -301,7 +302,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < columnElts.length; i++) {
       const currentEl = columnElts[i] as HTMLDivElement;

@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import {ReportsService, RepseqService} from '../../../../dist/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -9,9 +9,8 @@ import {RepSampleDataSource} from '../rep-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { IChoices } from '../../table/filter/ichoices';
-import {BehaviorSubject, defer, EMPTY, fromEvent, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, fromEvent, Observable, Subscription} from 'rxjs';
 import { columnInfo } from './rep-sample-panel-cols';
-import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.component';
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
@@ -19,13 +18,9 @@ import { RepSampleSelectedService } from '../rep-sample-selected.service';
 import {RepSampleFilterService} from '../rep-sample-filter.service';
 import {ResizeEvent} from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
-import {MatMenuTrigger} from '@angular/material/menu';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ReportErrorDialogComponent} from '../../reports/report-error-dialog/report-error-dialog.component';
-import {pollUntil} from '../../shared/poll-until-rxjs';
-import {catchError} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {ReportRunService} from '../../reports/report-run.service';
 
 
@@ -34,7 +29,7 @@ import {ReportRunService} from '../../reports/report-run.service';
   templateUrl: './rep-sample-panel.component.html',
   styleUrls: ['./rep-sample-panel.component.css'],
   providers: [TableParamsStorageService],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+  encapsulation: ViewEncapsulation.None,   // needed for css styling on mat-menu-panel
 })
 
 export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -76,6 +71,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private route: ActivatedRoute,
               private reportRunService: ReportRunService,
               private router: Router,
+              private el: ElementRef,
               ) {
 
   }
@@ -144,7 +140,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
       this.router.events.subscribe((val) => {
         if (val instanceof NavigationEnd) {
-          this.applyResizes();
+          //this.applyResizes();      don't think this is doing anything useful
         }
       });
     });
@@ -278,7 +274,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = document.getElementsByClassName('mat-column-' + columnName);
+    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
     // tslint:disable-next-line:prefer-for-of
     for (let i = 0; i < columnElts.length; i++) {
       const currentEl = columnElts[i] as HTMLDivElement;

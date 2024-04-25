@@ -249,7 +249,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
   showInfo(sample) {
     const modalRef = this.modalService.open(GenSampleInfoComponent, { size: 'xl'});
-    modalRef.componentInstance.sampleName = sample.sample_identifier;
+    modalRef.componentInstance.sampleName = sample.sample_name;
     modalRef.componentInstance.species = this.selection.species;
     modalRef.componentInstance.dataset = sample.dataset;
   }

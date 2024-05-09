@@ -9,7 +9,8 @@ import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
 @Component({
   selector: 'app-gen-sample-info',
   templateUrl: './gen-sample-info.component.html',
-  styleUrls: ['./gen-sample-info.component.css']
+  styleUrls: ['./gen-sample-info.component.css'],
+  encapsulation: ViewEncapsulation.None   // needed for css styling
 })
 
 export class GenSampleInfoComponent implements OnInit {

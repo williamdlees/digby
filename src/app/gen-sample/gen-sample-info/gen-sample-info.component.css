@@ -1,0 +1,18 @@
+ul {
+  margin-bottom: 0.2rem !important;
+}
+
+h4 {
+  margin-top: 1rem !important;
+  margin-bottom: 0.2rem !important;
+}
+
+.cdk-overlay-container {
+  font-size: 14px !important;
+  z-index: 1100 !important;
+}
+
+.digby-table-tooltip {
+  font-size: 14px;
+}
+

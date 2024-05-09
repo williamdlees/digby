@@ -163,6 +163,10 @@
           <div class="row ml-4 mr-2 mb-0 align-middle">
             Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
           </div>
+          <div class="row ml-4 mr-2 mb-0 align-middle">
+            Contigs: BAM<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            <span>&nbsp;&nbsp;</span>BAI<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path.replace('.bam', '.bam.bai')}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          </div>
           <div class="row ml-4 mr-2 mb-1">
             Documentation<span>&nbsp;&nbsp;</span>
             <a href="{{sample.annotation_reference}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>

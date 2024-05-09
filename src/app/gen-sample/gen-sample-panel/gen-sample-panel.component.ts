@@ -39,8 +39,8 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   dataSource: GenSampleDataSource;
   params$: Subscription;    // params for the route
 
-  displayedColumns = ['sample_identifier', 'name_in_study', 'age', 'sex', 'annotation_path', 'annotation_method',
-    'annotation_format', 'annotation_reference', 'study_name', 'study_date', 'study_description', 'researcher', 'reference', 'contact', 'dataset'];
+  displayedColumns = ['sample_name', 'study_name', 'age', 'sex', 'annotation_path',
+    'study_name', 'study_description'];
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;

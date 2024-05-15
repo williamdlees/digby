@@ -286,7 +286,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
 
     if (report == 'rep_single_genotype') {
       title = 'Genotype Report';
-      sampleFilter = [{field: 'sample_identifier', op: 'in', value : [params.sample_identifier]}];
+      sampleFilter = [{field: 'sample_id', op: 'in', value : [params.sample_id]}];
       reportParams = {sort_order: 'Locus'};
     } else if (report == 'download_gen_data') {
       title = 'Download';

@@ -26,7 +26,7 @@
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
             <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genesample', 'null']" (click)="isMenuCollapsed = true">Samples</a>
             <a ngbDropdownItem class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genes</a>
-            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'Human_IGH']" (click)="isMenuCollapsed = true">Gene Browser</a>
+            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'IGH']" (click)="isMenuCollapsed = true">Gene Browser</a>
           </div>
         </li>
         <li ngbNavItem class="nav-item" routerLinkActive="active" *ngIf="displayProtected">

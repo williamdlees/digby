@@ -26,7 +26,7 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
     loadGeneSequences(species: string, refSeq: string, pageIndex: number, pageSize: number, filter: string, sortBy: string, cols: string) {
 
         // request Human_IGH in place of any Test entry
-        refSeq = refSeq === 'Test' ? 'Human_IGH' : refSeq;
+        refSeq = refSeq === 'Test' ? 'IGH' : refSeq;
 
         this.loadingSubject.next(true);
         this.errorSubject.next(null);

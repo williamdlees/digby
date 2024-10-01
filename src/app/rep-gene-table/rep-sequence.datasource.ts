@@ -26,7 +26,7 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
     loadRepSequences(species: string, refSeq: string, filter: string, sortBy: string, pageIndex: number, pageSize: number, cols: string) {
 
         // request Human_IGH in place of any Test entry
-        refSeq = refSeq.split(',').map((x) => x === 'Test' ? 'Human_IGH' : x).join();
+        refSeq = refSeq.split(',').map((x) => x === 'Test' ? 'IGH' : x).join();
 
         this.loadingSubject.next(true);
         this.errorSubject.next(null);

@@ -10,8 +10,8 @@ export class GeneTableSelectorService {
     species: 'Human',
     datasets: [],
     assemblies: [],
-    repSeqs: ['Human_IGH'],
-    repDatasetDescriptions: [{ dataset: 'Human_IGH', description: ''}],
+    repSeqs: ['IGH'],
+    repDatasetDescriptions: [{ dataset: 'IGH', description: ''}],
   });
   source = this.selection.asObservable();
 

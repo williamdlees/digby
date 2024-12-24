@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {debounceTime} from 'rxjs/operators';
 import {AuthService} from "../auth/auth.service";
-import {NavigationEnd, Router} from "@angular/router";
-import {filter} from "rxjs/operators";
+import {Router} from "@angular/router";
+import { GeneTableSelection } from '../gene-table-selector/gene-table-selector.model';
+import { GeneTableSelectorService } from '../gene-table-selector/gene-table-selector.service';
+
 
 @Component({
   selector: 'app-header',
@@ -14,9 +17,13 @@ export class AppHeaderComponent implements OnInit {
   public displayLogin = false;
   public displayLogout = false
   public displayProtected = true;
+  geneTableServiceSubscription = null;
+  @ViewChild('assemblies_present') assemblies_present: boolean = false;
 
   constructor(private authService: AuthService,
-              private router: Router) {}
+              private router: Router,
+              private geneTableService: GeneTableSelectorService) {
+  }
 
   ngOnInit() {
     this.authService.user.subscribe(user => {
@@ -40,6 +47,15 @@ export class AppHeaderComponent implements OnInit {
         }
       }
     );
+
+    this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(1000)).subscribe(
+    (sel: GeneTableSelection) => {
+      console.log(`assemblies notified to app-header: ${sel.assemblies}`);
+      this.assemblies_present = false;
+      if (sel && sel.assemblies.length > 0) {
+        this.assemblies_present = true;
+      }
+    });
   }
 
   onLogout() {

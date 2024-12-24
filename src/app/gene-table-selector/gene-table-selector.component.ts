@@ -182,9 +182,9 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       }
 
       this.notifiedUpdates.refSeq = true;
-      this.onSelectionChange();
 
       this.updateAssemblies(this.geneTableService.selection.value.assemblies);
+      this.onSelectionChange();
      }, error => {
         this.isFetching = false;
         this.error = error.message;
@@ -222,6 +222,13 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
             this.selectedAssembly.push(this.assemblies[0]);
           }
 
+          if (this.assemblies.length === 0) {
+
+          } else {
+            this.notifiedUpdates.assemblies = true;
+            this.onSelectionChange();
+          }
+
         }, error => {
           this.isFetching = false;
           this.error = error.message;
@@ -231,8 +238,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.selectedAssembly = [];
     }
 
-    this.notifiedUpdates.assemblies = true;
     this.onSelectionChange();
+    this.notifiedUpdates.assemblies = true;
   }
 
 

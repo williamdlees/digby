@@ -66,6 +66,8 @@ import {appInitializer} from "./auth/auth.initializer";
 import {AuthService} from "./auth/auth.service";
 import {AuthGuard} from "./auth/auth.guard";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { GenExploreDataComponent } from './gen-explore-data/gen-explore-data.component';
+import { GenExploreDataPanelComponent } from './gen-explore-data/gen-explore-data-panel/gen-explore-data-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -78,14 +80,19 @@ export function apiConfigFactory(): Configuration  {
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent, canActivate: [AuthGuard] },
-  { path: 'genetable', component: GenGeneTableComponent, canActivate: [AuthGuard] },
-  { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
+  // AIRR-seq menu
+  { path: 'datarep', component: RepExploreDataComponent, canActivate: [AuthGuard] },
   { path: 'samplerep/:onlySelectedSamples', component: RepSampleComponent, canActivate: [AuthGuard] },
   { path: 'generep', component: RepGeneTableComponent, canActivate: [AuthGuard] },
   { path: 'generep/:species/:dataset/:alleleName', component: RepGeneTableComponent, canActivate: [AuthGuard] },
-  { path: 'datarep', component: RepExploreDataComponent, canActivate: [AuthGuard] },
+  // Genomics menu
+  { path: 'datagen', component: GenExploreDataComponent, canActivate: [AuthGuard] },
+  { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent, canActivate: [AuthGuard] },
+  { path: 'genetable', component: GenGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
+  // Reports menu
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+  // Help menu
   { path: 'quick-ref', component: QuickRefComponent, canActivate: [AuthGuard] },
   { path: 'user-guide', component: UserGuideComponent, canActivate: [AuthGuard] },
   { path: 'licensing', component: LicensingComponent, canActivate: [AuthGuard] },
@@ -127,6 +134,8 @@ const appRoutes: Routes = [
     LicensingComponent,
     ReportRunDialogComponent,
     AuthComponent,
+    GenExploreDataComponent,
+    GenExploreDataPanelComponent,
   ],
   imports: [
     BrowserModule,

@@ -24,6 +24,7 @@
             Genomic Data
           </a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+            <a ngbDropdownItem class="dropdown-item" routerLink="./datagen" (click)="isMenuCollapsed = true">Explore Genomic Data</a>
             <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genesample', 'null']" (click)="isMenuCollapsed = true">Samples</a>
             <a ngbDropdownItem class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genes</a>
             <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'IGH']" (click)="isMenuCollapsed = true" [disabled]=!assemblies_present>Gene Browser</a>

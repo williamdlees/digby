@@ -56,6 +56,95 @@ export class RepseqService {
 
 
     /**
+     * Returns information on all samples
+     * 
+     * @param species 
+     * @param dataset 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllSamplesInfoApi(species: string, dataset: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getAllSamplesInfoApi(species: string, dataset: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getAllSamplesInfoApi(species: string, dataset: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getAllSamplesInfoApi(species: string, dataset: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getAllSamplesInfoApi.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getAllSamplesInfoApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/all_samples_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Return genotypes for all subjects of the specified species in the specified data type
+     * 
+     * @param species 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllSubjectsGenotypeApi(species: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getAllSubjectsGenotypeApi(species: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getAllSubjectsGenotypeApi(species: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getAllSubjectsGenotypeApi(species: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getAllSubjectsGenotypeApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/all_subjects_genotype/${encodeURIComponent(String(species))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of datasets available for the selected species
      * 
      * @param species 
@@ -135,6 +224,53 @@ export class RepseqService {
         ];
 
         return this.httpClient.get<any>(`${this.basePath}/repseq/dataset_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns the inferred genotype (in MiAIRR format) of the specified sample
+     * 
+     * @param species 
+     * @param subjectName 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getGenotypeApi(species: string, subjectName: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getGenotypeApi(species: string, subjectName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getGenotypeApi(species: string, subjectName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getGenotypeApi(species: string, subjectName: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getGenotypeApi.');
+        }
+
+        if (subjectName === null || subjectName === undefined) {
+            throw new Error('Required parameter subjectName was null or undefined when calling getGenotypeApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/genotype/${encodeURIComponent(String(species))}/${encodeURIComponent(String(subjectName))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

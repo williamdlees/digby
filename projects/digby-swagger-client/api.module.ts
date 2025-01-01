@@ -16,7 +16,7 @@ import { SystemService } from './api/system.service';
     GenomicService,
     ReportsService,
     RepseqService,
-    SystemService]
+    SystemService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders<ApiModule> {

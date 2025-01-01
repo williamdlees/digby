@@ -8,13 +8,13 @@ import {debounceTime} from "rxjs/operators";
 
 
 @Component({
-  selector: 'app-rep-explore-data-panel',
+  selector: 'app-gen-explore-data-panel',
   templateUrl: './gen-explore-data-panel.component.html',
   styleUrls: ['./gen-explore-data-panel.component.css'],
   encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
 })
 
-export class RepExploreDataPanelComponent implements OnInit {
+export class GenExploreDataPanelComponent implements OnInit {
   geneTableServiceSubscription = null;
   species = null;
   dataset = null;

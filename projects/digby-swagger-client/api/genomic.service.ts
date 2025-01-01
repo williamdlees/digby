@@ -56,6 +56,95 @@ export class GenomicService {
 
 
     /**
+     * Returns information on all samples
+     * 
+     * @param species 
+     * @param dataset 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllSamplesInfoApi(species: string, dataset: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getAllSamplesInfoApi(species: string, dataset: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getAllSamplesInfoApi(species: string, dataset: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getAllSamplesInfoApi(species: string, dataset: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getAllSamplesInfoApi.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getAllSamplesInfoApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/all_samples_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Return genotypes for all subjects of the specified species in the specified data type
+     * 
+     * @param species 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAllSubjectsGenotypeApi(species: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getAllSubjectsGenotypeApi(species: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getAllSubjectsGenotypeApi(species: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getAllSubjectsGenotypeApi(species: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getAllSubjectsGenotypeApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/all_subjects_genotype/${encodeURIComponent(String(species))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of annotated assemblies for the selected species and datasets
      * 
      * @param species 
@@ -145,6 +234,53 @@ export class GenomicService {
     }
 
     /**
+     * Returns information and statistics on the dataset
+     * 
+     * @param species 
+     * @param dataset 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getDataSetInfoApi(species: string, dataset: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getDataSetInfoApi(species: string, dataset: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getDataSetInfoApi(species: string, dataset: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getDataSetInfoApi(species: string, dataset: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getDataSetInfoApi.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getDataSetInfoApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/dataset_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the position of the first feature matching the specified string
      * 
      * @param species 
@@ -192,6 +328,53 @@ export class GenomicService {
         ];
 
         return this.httpClient.get<any>(`${this.basePath}/genomic/feature_pos/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}/${encodeURIComponent(String(refSeqName))}/${encodeURIComponent(String(featureString))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns the inferred genotype (in MiAIRR format) of the specified patient
+     * 
+     * @param species 
+     * @param patientName 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getGenotypeApi(species: string, patientName: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getGenotypeApi(species: string, patientName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getGenotypeApi(species: string, patientName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getGenotypeApi(species: string, patientName: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getGenotypeApi.');
+        }
+
+        if (patientName === null || patientName === undefined) {
+            throw new Error('Required parameter patientName was null or undefined when calling getGenotypeApi.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/genomic/genotype/${encodeURIComponent(String(species))}/${encodeURIComponent(String(patientName))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -318,14 +501,14 @@ export class GenomicService {
      * 
      * @param species 
      * @param dataset 
-     * @param subject 
+     * @param sampleId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSubjectInfoApi(species: string, dataset: string, subject: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public getSubjectInfoApi(species: string, dataset: string, subject: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public getSubjectInfoApi(species: string, dataset: string, subject: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public getSubjectInfoApi(species: string, dataset: string, subject: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getSubjectInfoApi(species: string, dataset: string, sampleId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getSubjectInfoApi(species: string, dataset: string, sampleId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getSubjectInfoApi(species: string, dataset: string, sampleId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getSubjectInfoApi(species: string, dataset: string, sampleId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (species === null || species === undefined) {
             throw new Error('Required parameter species was null or undefined when calling getSubjectInfoApi.');
@@ -335,8 +518,8 @@ export class GenomicService {
             throw new Error('Required parameter dataset was null or undefined when calling getSubjectInfoApi.');
         }
 
-        if (subject === null || subject === undefined) {
-            throw new Error('Required parameter subject was null or undefined when calling getSubjectInfoApi.');
+        if (sampleId === null || sampleId === undefined) {
+            throw new Error('Required parameter sampleId was null or undefined when calling getSubjectInfoApi.');
         }
 
         let headers = this.defaultHeaders;
@@ -355,7 +538,7 @@ export class GenomicService {
             'application/json'
         ];
 
-        return this.httpClient.get<any>(`${this.basePath}/genomic/subject_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}/${encodeURIComponent(String(subject))}`,
+        return this.httpClient.get<any>(`${this.basePath}/genomic/subject_info/${encodeURIComponent(String(species))}/${encodeURIComponent(String(dataset))}/${encodeURIComponent(String(sampleId))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

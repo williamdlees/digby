@@ -31,6 +31,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   assemblies: { id: number, text: string }[] = [];
   repSeqs: { id: number, text: string }[] = [];
   selectedGen: { id: number, text: string }[] = [];
+  genDatasetDescriptions: { dataset: string, description: string }[] = [];
   selectedAssembly: { id: number, text: string }[] = [];
   selectedRep: { id: number, text: string }[] = [];
   repDatasetDescriptions: { dataset: string, description: string }[] = [];
@@ -165,6 +166,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.isFetching = false;
       this.datasets = [];
       this.selectedGen = [];
+      this.genDatasetDescriptions = resp;
 
       let id = 1;
       for (const ref of resp) {
@@ -344,6 +346,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.geneTableService.selection.next({
         species: this.selectedSpecies.name,
         datasets: this.selectedGen.map(x => x.text),
+        genDatasetDescriptions: this.genDatasetDescriptions,
         assemblies: this.selectedAssembly.map(x => x.text),
         repSeqs: this.selectedRep.map(x => x.text),
         repDatasetDescriptions: this.repDatasetDescriptions,

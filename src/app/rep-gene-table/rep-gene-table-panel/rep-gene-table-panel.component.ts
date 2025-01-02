@@ -221,6 +221,7 @@ export class RepGeneTablePanelComponent
             this.geneTableService.selection.next({
               species: this.params.species,
               datasets: this.selection.datasets,
+              genDatasetDescriptions: this.selection.genDatasetDescriptions,
               assemblies: this.selection.assemblies,
               repSeqs: [this.params.dataset],
               repDatasetDescriptions: this.selection.repDatasetDescriptions,

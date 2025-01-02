@@ -30,9 +30,16 @@
           <mat-cell *matCellDef="let desc">{{desc.description}}</mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['name', 'desc']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+        <ng-container matColumnDef="updated">
+          <mat-header-cell *matHeaderCellDef>
+            Updated
+          </mat-header-cell>
+          <mat-cell *matCellDef="let desc">{{desc.created}}</mat-cell>
+        </ng-container>
 
-        <mat-row *matRowDef="let row; columns: ['name', 'desc']" ></mat-row>
+        <mat-header-row *matHeaderRowDef="['name', 'desc', 'updated']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'desc', 'updated']" ></mat-row>
       </mat-table>
     </div>
   </ng-container>

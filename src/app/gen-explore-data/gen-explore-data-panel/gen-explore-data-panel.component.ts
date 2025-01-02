@@ -37,8 +37,8 @@ export class GenExploreDataPanelComponent implements OnInit {
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             this.species = sel.species;
-            this.dataset = sel.repSeqs;
-            this.datasetDescriptions = sel.repDatasetDescriptions;
+            this.dataset = sel.datasets;
+            this.datasetDescriptions = sel.genDatasetDescriptions;
 
             if(typeof this.datasetInfoTable !== 'undefined') {
               this.datasetInfoTable.renderRows();

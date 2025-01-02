@@ -30,9 +30,16 @@
           <mat-cell *matCellDef="let desc">{{desc.description}}</mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['name', 'desc']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+        <ng-container matColumnDef="updated">
+          <mat-header-cell *matHeaderCellDef>
+            Updated
+          </mat-header-cell>
+          <mat-cell *matCellDef="let desc">{{desc.created}}</mat-cell>
+        </ng-container>
 
-        <mat-row *matRowDef="let row; columns: ['name', 'desc']" ></mat-row>
+        <mat-header-row *matHeaderRowDef="['name', 'desc', 'updated']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'desc', 'updated']" ></mat-row>
       </mat-table>
     </div>
   </ng-container>
@@ -66,22 +73,14 @@
       <div class="col-lg-3 col-md-6 col-sm-12">
         <google-chart
            [type]="'PieChart'"
-           [title]="'Cell Type (% samples)'"
-           [data]="datasetInfo['celltype_count']"
+           [title]="'Ethnicity'"
+           [data]="datasetInfo['ethnicity']"
            [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+           [width]="'100%'"
         >
         </google-chart>
       </div>
 
-      <div class="col-lg-3 col-md-6 col-sm-12">
-        <google-chart
-           [type]="'PieChart'"
-           [title]="'Tissue (% samples)'"
-           [data]="datasetInfo['tissue_count']"
-           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
-        >
-        </google-chart>
-      </div>
     </div>
   </ng-container>
 
@@ -119,13 +118,6 @@
           <mat-cell  class="explore-large-col" *matCellDef="let study">{{study.lab_address}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="num_subjects">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
-            Subjects
-          </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_subjects}}</mat-cell>
-        </ng-container>
-
         <ng-container matColumnDef="subjects_in_vdjbase">
           <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Subjects in VDJbase
@@ -133,18 +125,11 @@
           <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.subjects_in_vdjbase}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="num_samples">
+        <ng-container matColumnDef="samples_in_vdjbase">
           <mat-header-cell *matHeaderCellDef  class="explore-small-col">
             Samples
           </mat-header-cell>
           <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_samples}}</mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="samples_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
-            Samples in VDJbase
-          </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.samples_in_vdjbase}}</mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="paper" >
@@ -161,9 +146,9 @@
           </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'subjects_in_vdjbase', 'samples_in_vdjbase', 'paper']; sticky: true " class="mat-elevation-z1"></mat-header-row>
 
-        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper']" ></mat-row>
+        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'subjects_in_vdjbase', 'samples_in_vdjbase', 'paper']" ></mat-row>
       </mat-table>
     </div>
   </ng-container>

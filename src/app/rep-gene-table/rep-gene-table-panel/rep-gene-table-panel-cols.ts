@@ -9,7 +9,7 @@
    {id: 'is_single_allele', name: 'Unambiguous Allele', hidden: false, type: 'boolean', size: 'small-col', description: 'True if no other alleles in the reference set have the same sequence'},
    {id: 'low_confidence', name: 'Low Confidence', hidden: false, type: 'boolean', size: 'small-col', description: 'True if the inference of this allele has low confidence markers (see notes)'},
    {id: 'novel', name: 'Novel', hidden: false, type: 'boolean', size: 'small-col', description: 'True if this allele is not in the reference set used by the pipeline'},
-   {id: 'max_kdiff', name: 'Max kDiff', hidden: false, type: 'number', size: 'small-col', description: 'The maximum kdiff value with which this allele was inferred, amongst the samples in which it was found'},
+   {id: 'max_kdiff', name: 'Max score', hidden: false, type: 'number', size: 'small-col', description: 'The maximum score with which this allele was inferred, amongst the samples in which it was found'},
    {id: 'dataset', name: 'Dataset', hidden: false, type: 'string', size: 'small-col', description: 'The dataset in which the allele was determined'},
    {id: 'notes_count', name: 'Notes', hidden: false, type: 'integer', size: 'small-col', description: 'The number of notes raised for this allele across all samples in which it was found (click for list)'},
 ];

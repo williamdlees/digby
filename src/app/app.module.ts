@@ -68,6 +68,8 @@ import {AuthGuard} from "./auth/auth.guard";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { GenExploreDataComponent } from './gen-explore-data/gen-explore-data.component';
 import { GenExploreDataPanelComponent } from './gen-explore-data/gen-explore-data-panel/gen-explore-data-panel.component';
+import { RefbookComponent } from './refbook/refbook.component';
+import { RefbookPanelComponent } from './refbook/refbook-panel/refbook-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -90,7 +92,8 @@ const appRoutes: Routes = [
   { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent, canActivate: [AuthGuard] },
   { path: 'genetable', component: GenGeneTableComponent, canActivate: [AuthGuard] },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
-  // Reports menu
+  // Analysis menu
+  { path: 'reference_book/:species', component: RefbookComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   // Help menu
   { path: 'quick-ref', component: QuickRefComponent, canActivate: [AuthGuard] },
@@ -136,6 +139,8 @@ const appRoutes: Routes = [
     AuthComponent,
     GenExploreDataComponent,
     GenExploreDataPanelComponent,
+    RefbookComponent,
+    RefbookPanelComponent,
   ],
   imports: [
     BrowserModule,

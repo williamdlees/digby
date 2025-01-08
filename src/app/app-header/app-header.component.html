@@ -30,8 +30,14 @@
             <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'IGH']" (click)="isMenuCollapsed = true" [disabled]=!assemblies_present>Gene Browser</a>
           </div>
         </li>
-        <li ngbNavItem class="nav-item" routerLinkActive="active" *ngIf="displayProtected">
-          <a class="nav-link" ngbNavLink routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
+        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
+          <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Analysis
+          </a>
+          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Reference Book</a>
+            <a ngbDropdownItem class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
+          </div>
         </li>
         <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
           <a ngbDropdownToggle class="nav-link " id="navbarHelpAbout" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

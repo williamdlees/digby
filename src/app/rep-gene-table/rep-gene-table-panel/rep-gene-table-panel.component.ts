@@ -38,6 +38,7 @@ import {ReportRunService} from '../../reports/report-run.service';
   templateUrl: "./rep-gene-table-panel.component.html",
   styleUrls: ["./rep-gene-table-panel.component.css"],
   providers: [TableParamsStorageService],
+  
   encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
 })
 export class RepGeneTablePanelComponent
@@ -227,7 +228,7 @@ export class RepGeneTablePanelComponent
               repDatasetDescriptions: this.selection.repDatasetDescriptions,
             });
             setTimeout(() => {
-              console.log("setting allele from url params");
+              console.log("setting species from url params");
               this.searchBox.nativeElement.value = this.params.alleleName;
               this.quickSearch(this.params.alleleName);
             }, 2000);

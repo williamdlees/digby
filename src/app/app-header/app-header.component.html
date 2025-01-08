@@ -35,8 +35,8 @@
             Analysis
           </a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Reference Book</a>
             <a ngbDropdownItem class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
+            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Macaque Reference Book</a>
           </div>
         </li>
         <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">

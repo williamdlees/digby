@@ -55,7 +55,7 @@ export class RefbookPanelComponent implements OnInit, AfterViewInit {
           console.log("pre-selection from valid URL: " + this.params.species);
           this.paramState = "post selection";
           sel.species = this.params.species;
-          this.geneTableService.selection.next(sel);
+          //this.geneTableService.selection.next(sel);
       } else {
         console.log("setSelection post-selection: " + sel.species);
         if (typeof this.selection === "undefined") {

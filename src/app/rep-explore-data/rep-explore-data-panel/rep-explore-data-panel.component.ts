@@ -5,6 +5,7 @@ import { RepseqService } from '../../../../dist/digby-swagger-client';
 import { GoogleChartsModule } from 'angular-google-charts';
 import {MatTable} from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";
+import {environment} from '../../../environments/environment';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class RepExploreDataPanelComponent implements OnInit {
   datasetInfo = null;
   loading = false;
   error = null;
+  apibasePath = environment.apiBasePath
   @ViewChild('datasetInfoTable') datasetInfoTable: MatTable<any>;
 
   constructor(

@@ -269,6 +269,16 @@
           <span>&nbsp;&nbsp;</span>Not available
         </ng-container>
       </div>
+      <div class="row ml-1 mr-2 mb-1">
+        Annotated repertoire
+        <span>&nbsp;&nbsp;</span>
+        <ng-container *ngIf="sample.genotypes['madc_url'].length > 0">
+          <a href="{{ sample.genotypes['madc_url'] }}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+        </ng-container>
+        <ng-container *ngIf="sample.genotypes['madc_url'].length === 0">
+          <span>&nbsp;&nbsp;</span>Not available
+        </ng-container>
+      </div>
       <!--
       <div class="row ml-4 mr-2 mb-4">
          IgSNPer report (for sample S1)

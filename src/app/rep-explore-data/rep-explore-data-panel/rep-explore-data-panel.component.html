@@ -96,6 +96,9 @@
     <div class="container">
       <h2 class="mt-5">Studies included in {{dataset}}:</h2>
       <p>Samples may be omitted from VDJbase if the associated set of reads is too small for analysis. </p>
+      <p>Clicking on the Download Repertoires link will download a script that you can use to download annotated repertoires for all samples in the study.
+        Please note that the server has a download limit, to prevent abuse. If the HTTP code 503 is returned, the server is rate-limited and it will provide an indication of when you can retry.
+      </p>
 
       <mat-table #datasetStudyTable [dataSource]="datasetInfo['studies']">
         <ng-container matColumnDef="name">
@@ -168,9 +171,18 @@
           </mat-cell>
         </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+        <ng-container matColumnDef="repertoires">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+            Download Repertoires
+          </mat-header-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col">
+            <a *ngIf="study.repertoires" href={{apibasePath}}{{study.repertoires}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+          </mat-cell>
+        </ng-container>
 
-        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper']" ></mat-row>
+        <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper', 'repertoires']; sticky: true " class="mat-elevation-z1"></mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper', 'repertoires']" ></mat-row>
       </mat-table>
     </div>
   </ng-container>

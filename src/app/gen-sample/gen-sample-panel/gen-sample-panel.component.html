@@ -172,6 +172,22 @@
             <a href="{{sample.annotation_reference}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
           </div>
         </ng-container>
+        <ng-container *ngIf="sample.annotation_method=='Digger'">
+          <div class="row ml-1 mr-2 mb-1">
+            Digger
+          </div>
+          <div class="row ml-4 mr-2 mb-0 align-middle">
+            Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          </div>
+          <div class="row ml-4 mr-2 mb-0 align-middle">
+            Contigs<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            <span>&nbsp;&nbsp;</span>
+          </div>
+          <div class="row ml-4 mr-2 mb-1">
+            Documentation<span>&nbsp;&nbsp;</span>
+            <a href="{{sample.annotation_reference}}" target="_blank"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          </div>
+        </ng-container>
         <ng-container *ngIf="sample.annotation_method=='VDJbase'">
           <div class="row ml-2 mr-2 mb-1">
             VDJbase

@@ -143,6 +143,9 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           //this.applyResizes();      don't think this is doing anything useful
         }
       });
+
+      const searchOrder = {field: 'sample_name', predicates: [], sort: {field: 'sample_name', order: 'asc'}}
+      this.applyFilter(searchOrder);
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(

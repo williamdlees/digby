@@ -50,7 +50,7 @@ export class AppHeaderComponent implements OnInit {
 
     this.geneTableServiceSubscription = this.geneTableService.source.pipe(debounceTime(1000)).subscribe(
     (sel: GeneTableSelection) => {
-      console.log(`assemblies notified to app-header: ${sel.assemblies}`);
+      // console.log(`assemblies notified to app-header: ${sel.assemblies}`);
       this.assemblies_present = false;
       if (sel && sel.assemblies.length > 0) {
         this.assemblies_present = true;

@@ -59,6 +59,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   setFilter$ = this.setFilterSubject.asObservable();
   setTypeFilterSubject = new BehaviorSubject<any>(null);
   setTypeFilter$ = this.setTypeFilterSubject.asObservable();
+  setFuncFilterSubject = new BehaviorSubject<any>(null);
+  setFuncFilter$ = this.setFuncFilterSubject.asObservable();
   redirectOnLoad = null;
   onlySelectedSamplesSet = false;
 
@@ -165,9 +167,11 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       });
 
       // Set up initial search order and filter conditions
+      console.log('initializing search and filter');
       const searchOrder = {field: 'name', predicates: [], sort: {field: 'name', order: 'asc'}}
       this.applyFilter(searchOrder);
       this.setTypeFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: 'REGION', op2: ''});
+      this.setFuncFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: 'Functional', op2: ''});
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(

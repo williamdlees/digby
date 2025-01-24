@@ -139,6 +139,9 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           this.applyResizes();
         }
       });
+
+      const searchOrder = {field: 'sample_name', predicates: [], sort: {field: 'sample_name', order: 'asc'}}
+      this.applyFilter(searchOrder);
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(

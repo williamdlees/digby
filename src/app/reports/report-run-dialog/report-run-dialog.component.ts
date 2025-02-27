@@ -54,7 +54,7 @@ export class ReportRunDialogComponent implements OnInit {
           this.statusText = '';
           this.errorText = result.info;
           this.enableRetry = true;
-        } else if (result.status === 'SUCCESS') {
+        } else if (result.status === 'ok') {
           this.activeModal.close(result.response);
         }
       }

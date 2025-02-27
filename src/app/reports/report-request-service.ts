@@ -49,55 +49,14 @@ export class ReportRequestService {
       this.repSeqs,
       this.repFilters,
       this.params).subscribe((reportResponse) => {
-        const jobId = reportResponse.id;
-
-        this.fetchReportStatus(jobId)
-          .pipe(pollUntil(3000, 40, (response) => {
-            if (response.status === 'PENDING') {
-              if (response.info) {
-                this.reportResultSubject.next({status: response.status, info: response.info.stage, response});
-              } else {
-                this.reportResultSubject.next({status: response.status, info: response.status, response});
-              }
-            }
-            this.pollCount += 1;
-            return (response.status === 'SUCCESS' || response.status === 'FAILURE');
-          }))
-          .subscribe((response) => {
-            if (response.status === 'SUCCESS') {
-              if (response.results.status === 'ok') {
-                this.reportResultSubject.next({status: response.status, info: '', response});
-              } else {
-                this.reportResultSubject.next({status: 'FAILURE', info: response.results.description, response});
-              }
-            } else {
-              this.reportResultSubject.next({
-                status: 'FAILURE',
-                info: 'return code:' + response.status + ' ' + response.description,
-                response
-              });
-            }
-          },
-        (error) => {
-          this.reportResultSubject.next({ status: 'FAILURE', info: 'Timeout waiting for report', response: null});
-        });
+        this.reportResultSubject.next({status: reportResponse.status, info: '', response: reportResponse});
       },
-        (error) => {
-          this.reportResultSubject.next({ status: 'FAILURE', info: 'Error: ' + this.formatError(error), response: null});
-          this.pollCount = 999;
-        }
+      (error) => {
+        this.reportResultSubject.next({ status: 'FAILURE', info: 'Error: ' + this.formatError(error), response: null});
+        this.pollCount = 999;
+      }
       );
     }
-
-  private fetchReportStatus(jobId) {
-    return defer(() =>
-      this.reportsService.getReportsStatus(jobId)
-    ).pipe(
-      catchError(err => {
-        return of({status: 'FAILURE', description: this.formatError(err) });
-      })
-    );
-  }
 
   private formatError(error) {
     if ('error' in error && 'message' in error.error && error.error.message) {

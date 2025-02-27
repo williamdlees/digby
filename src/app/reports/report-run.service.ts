@@ -49,8 +49,8 @@ export class ReportRunService {
             this.reportWindow.close();
             this.reportWindow = null;
             this.displayError(result.info);
-          } else if (result.status === 'SUCCESS') {
-            this.reportWindow.location = result.response.results.url;
+          } else if (result.status === 'ok') {
+            this.reportWindow.location = result.response.url;
           }
         }
       }
@@ -129,14 +129,14 @@ export class ReportRunService {
     modalRef.componentInstance.params = params;
 
     modalRef.result.then((response) => {
-      if (response.status === 'SUCCESS') {
+      if (response.status === 'ok') {
       const token = 'my JWT';
       const headers = new HttpHeaders().set('authorization', 'Bearer ' + token);
-      this.httpClient.get(response.results.url, {headers, responseType: 'blob' as 'json'}).subscribe(
+      this.httpClient.get(response.url, {headers, responseType: 'blob' as 'json'}).subscribe(
         (rep: any) => {
           const downloadLink = document.createElement('a');
           downloadLink.href = window.URL.createObjectURL(rep);
-          downloadLink.setAttribute('download', response.results.filename);
+          downloadLink.setAttribute('download', response.filename);
           document.body.appendChild(downloadLink);
           downloadLink.click();
         });
@@ -154,6 +154,7 @@ export class ReportRunService {
     );
 
     this.reportRequest.requestReport(report.name, format, species, genSeqs, genFilters, repSeqs, repFilters, params);
+
   }
 
   private displayError(error) {

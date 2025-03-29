@@ -1,3 +1,4 @@
+/*
 export interface RepSequence {
   sequences: [{
     name: string;
@@ -18,4 +19,9 @@ export interface RepSequence {
   total_items: number;
   page_size: number;
   pages: number;
+}
+*/
+export interface RepSequence {
+  sequences: [],
+  extra_cols: [],
 }

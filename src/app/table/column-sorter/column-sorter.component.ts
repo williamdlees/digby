@@ -37,17 +37,42 @@ function symmetricDifference(setA, setB) {
 export class ColumnSorterComponent implements OnInit, AfterViewInit {
   @Output()
   columnsChange: EventEmitter<string[]> = new EventEmitter<string[]>();
-  @Input()
-  columns: string[];
+  //@Input()
+  //columns: string[];
   @Input()
   saveName?: string;
-  @Input()
-  columnInfo: ColumnInfo[];
+  //@Input()
+  //columnInfo: ColumnInfo[];
+
+  private _columns: string[];
+
+  @Input() set columns(value: string[]) {
+
+     this._columns = value;
+  }
+
+  get columns(): string[] {
+
+      return this._columns;
+  }
+
+  private _columnInfo: ColumnInfo[];
+
+  @Input() set columnInfo(value: ColumnInfo[]) {
+
+     this._columnInfo = value;
+     this.onResetColumns();
+  }
+
+  get columnInfo(): ColumnInfo[] {
+
+      return this._columnInfo;
+  }
+
   selectedColumnInfo: ColumnInfo[];
   classifiedColumnInfo: { [section: string] : ColumnInfo[]};
   sections: string[];
-
-  private initialColumnInfo: ColumnInfo[];
+  private internalColumnInfo: ColumnInfo[];
 
   constructor(private elementRef: ElementRef, private columnSorterService: ColumnSorterService) {}
 
@@ -57,13 +82,13 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
     const iSaved = new Set(savedInfo.map((x) => x.id));
     const sNew = new Set(this.columnInfo.map((x) => x.name));
     const sSaved = new Set(savedInfo.map((x) => x.name));
-    this.initialColumnInfo = this.columnInfo.map(a => {return {...a}});
+    this.internalColumnInfo = this.columnInfo.map(a => {return {...a}});
 
     if (!symmetricDifference(sNew, sSaved).size && !symmetricDifference(iNew, iSaved).size) {
-      this.columnInfo = savedInfo;
+      this.internalColumnInfo = savedInfo;
     }
 
-    this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    this.selectedColumnInfo = this.internalColumnInfo.filter(el => !el.hidden);
     this.reorderColumns();
     this.emitColumns(false);
   }
@@ -75,11 +100,11 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   // put selected columns at the front
   reorderColumns(): void {
     let newColumnInfo = this.selectedColumnInfo;
-    newColumnInfo = newColumnInfo.concat(this.columnInfo.filter(el => el.hidden));
+    newColumnInfo = newColumnInfo.concat(this.internalColumnInfo.filter(el => el.hidden));
 
     this.classifiedColumnInfo = {};
-    if ('section' in this.columnInfo[0]) {
-     for (const el of this.columnInfo) {
+    if ('section' in this.internalColumnInfo[0]) {
+     for (const el of this.internalColumnInfo) {
        if (el.hidden) {
          if (!(el.section in this.classifiedColumnInfo)) {
            this.classifiedColumnInfo[el.section] = [];
@@ -88,11 +113,11 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
        }
      }
     } else {
-      this.classifiedColumnInfo['Selection'] = this.columnInfo.filter(el => el.hidden);
+      this.classifiedColumnInfo['Selection'] = this.internalColumnInfo.filter(el => el.hidden);
     }
 
     this.sections = Object.keys(this.classifiedColumnInfo)
-    this.columnInfo = newColumnInfo;
+    this.internalColumnInfo = newColumnInfo;
   }
 
   columnMenuDropped(event: CdkDragDrop<any>): void {
@@ -102,15 +127,15 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   }
 
   toggleSelectedColumn(columnId: string) {
-    const colFound = this.columnInfo.find(col => col.id === columnId);
+    const colFound = this.internalColumnInfo.find(col => col.id === columnId);
     colFound.hidden = !colFound.hidden;
-    this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    this.selectedColumnInfo = this.internalColumnInfo.filter(el => !el.hidden);
     this.reorderColumns();
     this.emitColumns(true);
   }
 
   onResetColumns() {
-    this.columnInfo = this.initialColumnInfo.map(a => {return {...a}});
+    this.internalColumnInfo = this.columnInfo.map(a => {return {...a}});
     this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
     this.reorderColumns();
     this.emitColumns(true);
@@ -118,12 +143,12 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
 
   private emitColumns(saveColumns: boolean) {
     // Only emit the columns on the next animation frame available
-    window.requestAnimationFrame(() => {
-      const foo = this.columnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
-      this.columnsChange.emit(this.columnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
+    setTimeout(() => {
+      const foo = this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
+      this.columnsChange.emit(this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
       if (saveColumns) {
-        this.columnSorterService.saveColumnInfo(this.columnInfo, this.saveName);
+        this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName);
       }
-    });
+    }, 0);
   }
 }

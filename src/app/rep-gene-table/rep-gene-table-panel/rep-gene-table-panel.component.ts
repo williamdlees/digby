@@ -38,7 +38,7 @@ import {ReportRunService} from '../../reports/report-run.service';
   templateUrl: "./rep-gene-table-panel.component.html",
   styleUrls: ["./rep-gene-table-panel.component.css"],
   providers: [TableParamsStorageService],
-  
+
   encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
 })
 export class RepGeneTablePanelComponent
@@ -71,6 +71,8 @@ export class RepGeneTablePanelComponent
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
+  etraCols$: Observable<[]>;
+  extraCols$Subscription = null;
   loading$Subscription = null;
   selectedSampleIds = [];
   isSelectedGenesChecked = false;
@@ -115,6 +117,7 @@ export class RepGeneTablePanelComponent
     this.paginatorSubscription.unsubscribe();
     this.geneTableServiceSubscription.unsubscribe();
     this.choices$Subscription.unsubscribe();
+    this.extraCols$Subscription.unsubscribe();
     this.repSampleSelectedServiceSubscription.unsubscribe();
   }
 
@@ -132,6 +135,9 @@ export class RepGeneTablePanelComponent
         .subscribe((sel: GeneTableSelection) => {
           if (sel.species && sel.repSeqs) {
             console.log("setting selection");
+            this.allColumns = columnInfo;
+            this.allColumns = this.allColumns.filter((x) => !x.id.startsWith("alias_"));
+
             this.selection = sel;
             this.paginator.firstPage();
             this.table.renderRows();
@@ -154,6 +160,13 @@ export class RepGeneTablePanelComponent
               onlySelected: this.onlySelectedSamplesSet,
             });
           }
+        }
+      );
+
+      this.extraCols$Subscription = this.dataSource.extraCols$.subscribe(
+        (extra_cols) => {
+          this.allColumns = columnInfo;
+          this.allColumns = this.allColumns.concat(extra_cols);
         }
       );
 
@@ -328,7 +341,7 @@ export class RepGeneTablePanelComponent
     this.filters = this.filters.filter((x) => !deleted.has(x.field));
     this.sorts = this.sorts.filter((x) => !deleted.has(x.field));
 
-    this.loadSequencesPage();
+    // this.loadSequencesPage();
   }
 
   loadSequencesPage() {
@@ -345,6 +358,7 @@ export class RepGeneTablePanelComponent
     }
 
     this.lastLoadedColumns = this.displayedColumns;
+    console.log("loadSequencesPage");
   }
 
   showNotes(seq) {

@@ -12,4 +12,14 @@
    {id: 'max_kdiff', name: 'Max score', hidden: false, type: 'number', size: 'small-col', description: 'The maximum score with which this allele was inferred, amongst the samples in which it was found'},
    {id: 'dataset', name: 'Dataset', hidden: false, type: 'string', size: 'small-col', description: 'The dataset in which the allele was determined'},
    {id: 'notes_count', name: 'Notes', hidden: false, type: 'integer', size: 'small-col', description: 'The number of notes raised for this allele across all samples in which it was found (click for list)'},
+   /*
+   {id: 'alias_1', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_2', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_3', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_4', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_5', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_6', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_7', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_8', name: '', hidden: true, type: 'string', size: 'small-col', description: ''},
+   {id: 'alias_9', name: '', hidden: true, type: 'string', size: 'small-col', description: ''}, */
 ];

@@ -1,17 +1,19 @@
 
 // Material table column definitions
 
-// This file is created programmatically by db/vdjbase_create_digby_panel_cols.py. DO NOT UPDATE BY HAND.
+// This file is created programmatically by db/vdjbase_create_digby_panel_cols.py. DO NOT UPDATE BY HAND. 
 
 export const columnInfo = [
 
     {id: 'sample_name', name: 'Sample name', section: 'Sample', hidden: false, type: 'string', size: 'small-col', description: 'Sample name as allocated by VDJbase', example: ''},
+    {id: 'ethnicity', name: 'Ethnicity', section: 'Subject', hidden: false, type: 'string', size: 'small-col', description: 'Ethnic group of subject (defined as cultural/language-based membership)', example: 'English, Kurds, Manchu, Yakuts (and other fields from Wikipedia)'},
+    {id: 'race', name: 'Race', section: 'Subject', hidden: false, type: 'string', size: 'small-col', description: 'Racial group of subject (as defined by NIH)', example: 'White, American Indian or Alaska Native, Black, Asian, Native Hawaiian or Other Pacific Islander, Other'},
+    {id: 'subject_id', name: 'Subject ID', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Subject ID assigned by submitter, unique within study', example: 'SUB856413'},
     {id: 'reads', name: 'VDJbase reads', section: 'Sample', hidden: false, type: 'integer', size: 'small-col', description: 'Reads processed by VDJbase pipeline', example: ''},
     {id: 'study_id', name: 'Study ID', section: 'Study', hidden: false, type: 'string', size: 'large-col', description: 'Unique ID assigned by study registry', example: 'PRJNA001'},
     {id: 'tissue_label', name: 'Tissue', section: 'TissuePro', hidden: false, type: 'string', size: 'small-col', description: 'Label of the concept in the respective ontology', example: ''},
     {id: 'complete_sequences', name: 'Complete sequences', section: 'SeqProtocol', hidden: false, type: 'string', size: 'small-col', description: 'To be considered `complete`, the procedure used for library construction MUST generate sequences that 1) include the first V gene codon that encodes the mature polypeptide chain (i.e. after the leader sequence) and 2) include the last complete codon of the J gene (i.e. 1 bp 5" of the J->C splice site) and 3) provide sequence information for all positions between 1) and 2). To be considered `complete & untemplated`, the sections of the sequences defined in points 1) to 3) of the previous sentence MUST be untemplated, i.e. MUST NOT overlap with the primers used in library preparation. `mixed` should only be used if the procedure used for library construction will likely produce multiple categories of sequences in the given experiment. It SHOULD NOT be used as a replacement of a NULL value.', example: 'partial'},
-    {id: 'genotype', name: 'Genotype report', section: 'Sample', hidden: false, type: 'genotype', size: 'small-col', description: 'Links to genotype reports', example: ''},
-    {id: 'haplotypes', name: 'Haplotype reports', section: 'Sample', hidden: false, type: 'haplotype', size: 'large-col', description: 'Links to haplotype reports', example: ''},
+    {id: 'ancestry_population', name: 'Ancestry population', section: 'Subject', hidden: false, type: 'string', size: 'small-col', description: 'Broad geographic origin of ancestry (continent)', example: 'list of continents, mixed or unknown'},
     {id: 'repertoire_id', name: 'Repertoire ID', section: 'Sample', hidden: true, type: 'string', size: 'small-col', description: 'Identifier for the repertoire object. This identifier should be globally unique so that repertoires from multiple studies can be combined together without conflict. The repertoire_id is used to link other AIRR data to a Repertoire. Specifically, the Rearrangements Schema includes repertoire_id for referencing the specific Repertoire for that Rearrangement.', example: ''},
     {id: 'repertoire_name', name: 'Repertoire name', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Short generic display name for the repertoire', example: ''},
     {id: 'repertoire_description', name: 'Repertoire description', section: 'Sample', hidden: true, type: 'string', size: 'large-col', description: 'Generic repertoire description', example: ''},
@@ -55,7 +57,6 @@ export const columnInfo = [
     {id: 'num_samples', name: 'Samples', section: 'Study', hidden: true, type: 'integer', size: 'small-col', description: 'Number of samples in the study', example: ''},
     {id: 'accession_reference', name: 'Study Ref', section: 'Study', hidden: true, type: 'string', size: 'large-col', description: 'URL of the study in the registry', example: ''},
     {id: 'study_name', name: 'Study name', section: 'Study', hidden: true, type: 'string', size: 'small-col', description: 'Study name', example: ''},
-    {id: 'subject_id', name: 'Subject ID', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Subject ID assigned by submitter, unique within study', example: 'SUB856413'},
     {id: 'synthetic', name: 'Synthetic library', section: 'Subject', hidden: true, type: 'boolean', size: 'large-col', description: 'TRUE for libraries in which the diversity has been synthetically generated (e.g. phage display)', example: ''},
     {id: 'species_id', name: 'Species ID', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'CURIE of the concept, encoding the ontology and the local ID', example: ''},
     {id: 'species_label', name: 'Species', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Label of the concept in the respective ontology', example: ''},
@@ -68,14 +69,11 @@ export const columnInfo = [
     {id: 'age_unit_label', name: 'Age unit', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Label of the concept in the respective ontology', example: ''},
     {id: 'age_event', name: 'Age event', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Event in the study schedule to which `Age` refers. For NCBI BioSample this MUST be `sampling`. For other implementations submitters need to be aware that there is currently no mechanism to encode to potential delta between `Age event` and `Sample collection time`, hence the chosen events should be in temporal proximity.', example: 'enrollment'},
     {id: 'age', name: 'Age', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: '', example: ''},
-    {id: 'ancestry_population', name: 'Ancestry population', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Broad geographic origin of ancestry (continent)', example: 'list of continents, mixed or unknown'},
-    {id: 'ethnicity', name: 'Ethnicity', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Ethnic group of subject (defined as cultural/language-based membership)', example: 'English, Kurds, Manchu, Yakuts (and other fields from Wikipedia)'},
-    {id: 'race', name: 'Race', section: 'Subject', hidden: true, type: 'string', size: 'small-col', description: 'Racial group of subject (as defined by NIH)', example: 'White, American Indian or Alaska Native, Black, Asian, Native Hawaiian or Other Pacific Islander, Other'},
     {id: 'strain_name', name: 'Strain name', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Non-human designation of the strain or breed of animal used', example: 'C57BL/6J'},
     {id: 'linked_subjects', name: 'Relation to other subjects', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Subject ID to which `Relation type` refers', example: 'SUB1355648'},
     {id: 'link_type', name: 'Relation type', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Relation between subject and `linked_subjects`, can be genetic or environmental (e.g.exposure)', example: 'father, daughter, household'},
     {id: 'study_group_description', name: 'Study group description', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Designation of study arm to which the subject is assigned to', example: 'control'},
-    {id: 'disease_diagnosis_id', name: 'Diagnosis ID', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'CURIE of the concept, encoding the ontology and the local ID', example: ''},
+    {id: 'disease_diagnosis_id', name: 'Diagnosis', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'CURIE of the concept, encoding the ontology and the local ID', example: ''},
     {id: 'disease_diagnosis_label', name: 'Diagnosis', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Label of the concept in the respective ontology', example: ''},
     {id: 'disease_length', name: 'Length of disease', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Time duration between initial diagnosis and current intervention', example: '23 months'},
     {id: 'disease_stage', name: 'Disease stage', section: 'Subject', hidden: true, type: 'string', size: 'large-col', description: 'Stage of disease at current intervention', example: 'Stage II'},
@@ -129,15 +127,15 @@ export const columnInfo = [
     {id: 'analysis_provenance_id', name: 'Analysis provenance ID', section: 'DataPro', hidden: true, type: 'string', size: 'large-col', description: 'Identifier for machine-readable PROV model of analysis provenance', example: ''},
     {id: 'prepro_tool', name: 'Preprocessing tool', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Preprocessing tool', example: 'PRESTO'},
     {id: 'aligner_tool', name: 'Aligner tool', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Aligner tool', example: 'IgBLAST'},
-    {id: 'aligner_ver', name: 'Aligner version', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Aligner version', example: '1.18'},
+    {id: 'aligner_version', name: 'Aligner version', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Aligner version', example: '1.18'},
     {id: 'aligner_reference_v', name: 'Aligner ref V', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Aligner ref V', example: 'IMGT full - version 2021-06-06'},
     {id: 'aligner_reference_d', name: 'Aligner ref D', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Aligner ref D', example: 'IMGT full - version 2021-06-06'},
     {id: 'aligner_reference_j', name: 'Aligner ref J', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Aligner ref J', example: 'IMGT full - version 2021-06-06'},
-    {id: 'geno_tool', name: 'Genotyping tool', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Genotyping tool', example: 'TIgGER'},
-    {id: 'geno_ver', name: 'Genotyping tool version', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Genotyping tool version', example: '1.2'},
-    {id: 'haplotype_tool', name: 'Haplotyping tool', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Haplotyping tool', example: 'RabHIT'},
-    {id: 'haplotype_ver', name: 'Haplotyping tool version', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Haplotyping tool version', example: '1.2'},
-    {id: 'single_assignment', name: 'Single assignment', section: 'GenoDetection', hidden: true, type: 'boolean', size: 'large-col', description: 'TRUE if the processed reads are restricted to those that have a single V_call', example: 'TRUE'},
+    {id: 'Genotyper_Tool', name: 'Genotyping tool', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Genotyping tool', example: 'TIgGER'},
+    {id: 'Genotyper_Version', name: 'Genotyping tool version', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Genotyping tool version', example: '1.2'},
+    {id: 'Haplotyper_Tool', name: 'Haplotyping tool', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Haplotyping tool', example: 'RabHIT'},
+    {id: 'Haplotyper_Version', name: 'Haplotyping tool version', section: 'GenoDetection', hidden: true, type: 'string', size: 'large-col', description: 'Haplotyping tool version', example: '1.2'},
+    {id: 'Single Assignment', name: 'Single assignment', section: 'GenoDetection', hidden: true, type: 'boolean', size: 'large-col', description: 'TRUE if the processed reads are restricted to those that have a single V_call', example: 'TRUE'},
     {id: 'sample_basis', name: 'Sample basis', section: 'GenoDetection', hidden: true, type: 'string', size: 'small-col', description: 'Repertoire or germline', example: 'Germline'},
 
 ]

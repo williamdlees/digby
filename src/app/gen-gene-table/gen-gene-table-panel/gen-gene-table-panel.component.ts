@@ -61,6 +61,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   setTypeFilter$ = this.setTypeFilterSubject.asObservable();
   setFuncFilterSubject = new BehaviorSubject<any>(null);
   setFuncFilter$ = this.setFuncFilterSubject.asObservable();
+  extraCols$: Observable<[]>;
+  extraCols$Subscription = null;
   redirectOnLoad = null;
   onlySelectedSamplesSet = false;
 
@@ -87,11 +89,12 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.geneTableServiceSubscription.unsubscribe();
     this.choices$Subscription.unsubscribe();
     this.genSampleSelectedServiceSubscription.unsubscribe();
+    this.extraCols$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
     this.paginatorSubscription = this.paginator.page
-      .subscribe(() => this.loadSequencesPage());
+      .subscribe(() => { this.loadSequencesPage(); });
 
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
     setTimeout(() => {
@@ -132,6 +135,12 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       );
 
+      this.extraCols$Subscription = this.dataSource.extraCols$.subscribe(
+        (extra_cols) => {
+          this.allColumns = columnInfo.concat(extra_cols);
+        }
+      );
+
       this.loading$Subscription = this.dataSource.loading$.subscribe(
         loading => {
           if (!loading) {
@@ -167,7 +176,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       });
 
       // Set up initial search order and filter conditions
-      console.log('initializing search and filter');
       const searchOrder = {field: 'name', predicates: [], sort: {field: 'name', order: 'asc'}}
       this.applyFilter(searchOrder);
       this.setTypeFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: 'REGION', op2: ''});
@@ -260,7 +268,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.filters = this.filters.filter((x) => !(deleted.has(x.field)));
     this.sorts = this.sorts.filter((x) => !(deleted.has(x.field)));
 
-    this.loadSequencesPage();
+    this.applyResizes();
   }
 
   loadSequencesPage() {
@@ -275,6 +283,8 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         JSON.stringify(this.displayedColumns)
       );
     }
+
+    this.lastLoadedColumns = this.displayedColumns;
   }
 
   onSequenceClick(seq) {

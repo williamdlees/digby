@@ -3,9 +3,9 @@
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, retryWhen } from 'rxjs/operators';
 
-const DEFAULT_DELAY = 500;
+const DEFAULT_DELAY = 500000;
 const DEFAULT_MAX_RETRIES = 3;
-const DEFAULT_BACKOFF = 1000;
+const DEFAULT_BACKOFF = 1000000;
 
 export function retryWithBackoff(delayMs = DEFAULT_DELAY, maxRetry = DEFAULT_MAX_RETRIES, backoffMs = DEFAULT_BACKOFF) {
   let retries = maxRetry;

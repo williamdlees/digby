@@ -1,3 +1,4 @@
+/*
 export interface GeneSequence {
   sequences: [{
     name: string;
@@ -17,4 +18,9 @@ export interface GeneSequence {
   total_items: number;
   page_size: number;
   pages: number;
+}
+*/
+export interface GeneSequence {
+  sequences: [],
+  extra_cols: [],
 }

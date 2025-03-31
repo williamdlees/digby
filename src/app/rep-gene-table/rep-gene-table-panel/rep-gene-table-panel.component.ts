@@ -71,7 +71,7 @@ export class RepGeneTablePanelComponent
   sorts = [];
   choices$: Observable<IChoices>;
   choices$Subscription = null;
-  etraCols$: Observable<[]>;
+  extraCols$: Observable<[]>;
   extraCols$Subscription = null;
   loading$Subscription = null;
   selectedSampleIds = [];
@@ -122,8 +122,9 @@ export class RepGeneTablePanelComponent
   }
 
   ngAfterViewInit() {
-    this.paginatorSubscription = this.paginator.page.subscribe(() =>
-      this.loadSequencesPage()
+    this.paginatorSubscription = this.paginator.page.subscribe(() => {
+      this.loadSequencesPage();
+    }
     );
 
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
@@ -134,10 +135,6 @@ export class RepGeneTablePanelComponent
         .pipe(debounceTime(500))
         .subscribe((sel: GeneTableSelection) => {
           if (sel.species && sel.repSeqs) {
-            console.log("setting selection");
-            this.allColumns = columnInfo;
-            this.allColumns = this.allColumns.filter((x) => !x.id.startsWith("alias_"));
-
             this.selection = sel;
             this.paginator.firstPage();
             this.table.renderRows();
@@ -165,8 +162,7 @@ export class RepGeneTablePanelComponent
 
       this.extraCols$Subscription = this.dataSource.extraCols$.subscribe(
         (extra_cols) => {
-          this.allColumns = columnInfo;
-          this.allColumns = this.allColumns.concat(extra_cols);
+          this.allColumns = columnInfo.concat(extra_cols);
         }
       );
 
@@ -225,10 +221,8 @@ export class RepGeneTablePanelComponent
   }
 
   setSelectionFromParams() {
-    console.log("setting timeout for species/dataset setting");
     if (this.selection) {
       setTimeout(() => {
-        console.log("setting species/dataset from url params");
         if (typeof this.params.species !== "undefined") {
           if (this.paramState == "pre selection") {
             this.paramState = "post selection";
@@ -241,15 +235,12 @@ export class RepGeneTablePanelComponent
               repDatasetDescriptions: this.selection.repDatasetDescriptions,
             });
             setTimeout(() => {
-              console.log("setting species from url params");
               this.searchBox.nativeElement.value = this.params.alleleName;
               this.quickSearch(this.params.alleleName);
             }, 2000);
           }
         }
       }, 500);
-    } else {
-      console.log("no selection yet");
     }
   }
 
@@ -340,8 +331,9 @@ export class RepGeneTablePanelComponent
     const deleted = difference(sLoaded, sDisplayed);
     this.filters = this.filters.filter((x) => !deleted.has(x.field));
     this.sorts = this.sorts.filter((x) => !deleted.has(x.field));
+    this.applyResizes();
 
-    // this.loadSequencesPage();
+    //this.loadSequencesPage();
   }
 
   loadSequencesPage() {
@@ -358,7 +350,6 @@ export class RepGeneTablePanelComponent
     }
 
     this.lastLoadedColumns = this.displayedColumns;
-    console.log("loadSequencesPage");
   }
 
   showNotes(seq) {

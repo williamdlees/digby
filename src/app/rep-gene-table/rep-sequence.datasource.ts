@@ -5,7 +5,6 @@ import {catchError, finalize} from 'rxjs/operators';
 import {RepSequence} from './rep-sequence.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';
 import {IChoices} from '../table/filter/ichoices';
-import { set } from 'lodash';
 
 
 export class RepSequenceDataSource implements DataSource<RepSequence> {
@@ -43,7 +42,9 @@ export class RepSequenceDataSource implements DataSource<RepSequence> {
               return([]);
             }),
             finalize(() => {
-              this.loadingSubject.next(false);
+              setTimeout(() => {
+                this.loadingSubject.next(false);
+              }, 50);
             })
           )
             .subscribe((sequence) => {

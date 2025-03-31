@@ -5,6 +5,7 @@ import {catchError, finalize} from 'rxjs/operators';
 import {GeneSequence} from './gene-sequence.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';
 import {IChoices} from '../table/filter/ichoices';
+import { set } from 'lodash';
 
 
 export class GeneSequenceDataSource implements DataSource<GeneSequence> {
@@ -13,11 +14,14 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
     private choicesSubject = new BehaviorSubject<IChoices>( {});
     private loadingSubject = new BehaviorSubject<boolean>(false);
     private errorSubject = new BehaviorSubject<string>(null);
+    private extraColsSubject = new BehaviorSubject<[]>([]);
 
     public choices$ = this.choicesSubject.asObservable();
     public loading$ = this.loadingSubject.asObservable();
     public error$ = this.errorSubject.asObservable();
+    public extraCols$ = this.extraColsSubject.asObservable();
     public totalItems = 0;
+    public extra_cols: [] = [];
 
     constructor(private genomicService: GenomicService) {
 
@@ -39,14 +43,26 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
               return([]);
             }),
             finalize(() => {
-              this.loadingSubject.next(false);
+              setTimeout(() => {
+                this.loadingSubject.next(false);
+              }, 50);
             })
           )
             .subscribe((sequence) => {
               this.totalItems = sequence.total_items;
               this.choicesSubject.next(sequence.uniques);
               if (sequence !== undefined && sequence.hasOwnProperty('sequences')) {
-                this.geneSequenceSubject.next(sequence.sequences);
+                if (sequence.hasOwnProperty('extra_cols') && !arraysEqual(this.extra_cols, sequence.extra_cols)) {
+                  this.extra_cols = sequence.extra_cols;
+                } else {
+                  this.extra_cols = [];
+                }
+                this.extraColsSubject.next(this.extra_cols);
+
+                setTimeout(() => {
+                  this.geneSequenceSubject.next(sequence.sequences);
+                }, 50);
+
               } else {
                 this.geneSequenceSubject.next([]);
               }
@@ -70,4 +86,8 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
         this.choicesSubject.complete();
     }
 
+}
+
+function arraysEqual(a1, a2) {
+  return a1.length === a2.length && a1.every((v) => a2.includes(v));
 }

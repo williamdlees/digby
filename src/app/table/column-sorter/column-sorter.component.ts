@@ -61,7 +61,9 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   @Input() set columnInfo(value: ColumnInfo[]) {
 
      this._columnInfo = value;
-     this.onResetColumns();
+     setTimeout(() => {
+      this.onResetColumns();
+     }, 0);
   }
 
   get columnInfo(): ColumnInfo[] {

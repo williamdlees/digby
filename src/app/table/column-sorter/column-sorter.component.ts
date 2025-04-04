@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
+import {areListsEqual} from '../../shared/struct_utils';
 
 function symmetricDifference(setA, setB) {
     const _difference = new Set(setA);
@@ -59,7 +60,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   private _columnInfo: ColumnInfo[];
 
   @Input() set columnInfo(value: ColumnInfo[]) {
-
+     console.log('set columnInfo');
      this._columnInfo = value;
      setTimeout(() => {
       this.onResetColumns();
@@ -137,20 +138,27 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   }
 
   onResetColumns() {
-    this.internalColumnInfo = this.columnInfo.map(a => {return {...a}});
-    this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    const currentColumnIds = this.internalColumnInfo.map(col => col.id);
+    const newColumnIds = this.columnInfo.map(col => col.id);
+
+    if (!areListsEqual(currentColumnIds, newColumnIds)) {
+      this.internalColumnInfo = this.columnInfo.map(a => {return {...a}});
+      this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
+    }
+
     this.reorderColumns();
     this.emitColumns(true);
   }
 
   private emitColumns(saveColumns: boolean) {
     // Only emit the columns on the next animation frame available
-    setTimeout(() => {
+    //setTimeout(() => {
       const foo = this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
+      console.log('emit');
       this.columnsChange.emit(this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
       if (saveColumns) {
         this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName);
       }
-    }, 0);
+    //}, 0);
   }
 }

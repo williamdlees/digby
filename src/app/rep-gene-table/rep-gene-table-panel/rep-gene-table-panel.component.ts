@@ -31,6 +31,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import 'rxjs/add/observable/interval';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
+import {listsOfDictionariesEqual} from '../../shared/struct_utils';
 
 
 @Component({
@@ -83,6 +84,9 @@ export class RepGeneTablePanelComponent
   clear$ = this.clearSubject.asObservable();
   setFilterSubject = new BehaviorSubject<any>(null);
   setFilter$ = this.setFilterSubject.asObservable();
+  loadSequencesSubject = new BehaviorSubject<any>(null);
+  loadSequences$ = this.loadSequencesSubject.asObservable();
+  loadSequences$Subscription = null
   redirectOnLoad = null;
   onlySelectedSamplesSet = false;
   params = null;
@@ -119,11 +123,12 @@ export class RepGeneTablePanelComponent
     this.choices$Subscription.unsubscribe();
     this.extraCols$Subscription.unsubscribe();
     this.repSampleSelectedServiceSubscription.unsubscribe();
+    this.loadSequences$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
     this.paginatorSubscription = this.paginator.page.subscribe(() => {
-      this.loadSequencesPage();
+      this.loadSequencesSubject.next(null);
     }
     );
 
@@ -137,8 +142,8 @@ export class RepGeneTablePanelComponent
           if (sel.species && sel.repSeqs) {
             this.selection = sel;
             this.paginator.firstPage();
-            this.table.renderRows();
-            this.loadSequencesPage();
+            // this.table.renderRows();
+            this.loadSequencesSubject.next(null);
             this.setSelectionFromParams();
           }
         });
@@ -151,11 +156,13 @@ export class RepGeneTablePanelComponent
               onlySelected: this.onlySelectedSamplesSet,
             });
           } else {
+            /*
             this.onlySelectedSamplesSet = false;
             this.repGeneSelectedService.selection.next({
               names: [],
               onlySelected: this.onlySelectedSamplesSet,
             });
+            */
           }
         }
       );
@@ -203,6 +210,10 @@ export class RepGeneTablePanelComponent
         if (val instanceof NavigationEnd) {
           this.applyResizes();
         }
+      });
+
+      this.loadSequences$Subscription = this.loadSequences$.pipe(debounceTime(500)).subscribe(() => {
+        this.loadSequencesPage();
       });
     });
 
@@ -274,17 +285,20 @@ export class RepGeneTablePanelComponent
       op1: searchString,
       op2: "",
     });
-    this.loadSequencesPage();
+    this.loadSequencesSubject.next(null);
   }
 
   clearSelection() {
     this.filters = [];
     this.clearSubject.next(null);
     this.searchBox.nativeElement.value = "";
-    this.loadSequencesPage();
+    this.loadSequencesSubject.next(null);
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {
+    // copy existing filters and sorts so that we can check for changes later
+    const oldFilters = this.filters.slice(0);
+    const oldSorts = this.sorts.slice(0);
     for (let i = this.filters.length - 1; i >= 0; i--) {
       if (this.filters[i].field === columnPredicate.field) {
         this.filters.splice(i, 1);
@@ -320,8 +334,12 @@ export class RepGeneTablePanelComponent
       this.sorts.push(columnPredicate.sort);
     }
 
+    if (listsOfDictionariesEqual(oldFilters, this.filters) && listsOfDictionariesEqual(oldSorts, this.sorts)) {
+      return;
+    }
+
     this.paginator.pageIndex = 0;
-    this.loadSequencesPage();
+    this.loadSequencesSubject.next(null);
   }
 
   updateColumnData(event: any) {
@@ -332,8 +350,6 @@ export class RepGeneTablePanelComponent
     this.filters = this.filters.filter((x) => !deleted.has(x.field));
     this.sorts = this.sorts.filter((x) => !deleted.has(x.field));
     this.applyResizes();
-
-    //this.loadSequencesPage();
   }
 
   loadSequencesPage() {

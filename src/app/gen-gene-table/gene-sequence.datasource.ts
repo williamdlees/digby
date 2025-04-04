@@ -5,7 +5,7 @@ import {catchError, finalize} from 'rxjs/operators';
 import {GeneSequence} from './gene-sequence.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';
 import {IChoices} from '../table/filter/ichoices';
-import { set } from 'lodash';
+import {listsOfDictionariesEqual} from '../shared/struct_utils';
 
 
 export class GeneSequenceDataSource implements DataSource<GeneSequence> {
@@ -52,16 +52,19 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
               this.totalItems = sequence.total_items;
               this.choicesSubject.next(sequence.uniques);
               if (sequence !== undefined && sequence.hasOwnProperty('sequences')) {
-                if (sequence.hasOwnProperty('extra_cols') && !arraysEqual(this.extra_cols, sequence.extra_cols)) {
-                  this.extra_cols = sequence.extra_cols;
-                } else {
+                if (sequence.hasOwnProperty('extra_cols')) {
+                  if (!listsOfDictionariesEqual(this.extra_cols, sequence.extra_cols)) {
+                    this.extra_cols = sequence.extra_cols;
+                    this.extraColsSubject.next(this.extra_cols);
+                  }
+                } else if (this.extra_cols.length > 0) {
                   this.extra_cols = [];
+                  this.extraColsSubject.next(this.extra_cols);
                 }
-                this.extraColsSubject.next(this.extra_cols);
 
                 setTimeout(() => {
                   this.geneSequenceSubject.next(sequence.sequences);
-                }, 50);
+                }, 0);
 
               } else {
                 this.geneSequenceSubject.next([]);
@@ -88,6 +91,3 @@ export class GeneSequenceDataSource implements DataSource<GeneSequence> {
 
 }
 
-function arraysEqual(a1, a2) {
-  return a1.length === a2.length && a1.every((v) => a2.includes(v));
-}

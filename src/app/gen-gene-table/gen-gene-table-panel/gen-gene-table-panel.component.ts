@@ -20,6 +20,7 @@ import { TableParamsStorageService } from '../../table/table-params-storage-serv
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {NavigationEnd, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
+import {listsOfDictionariesEqual} from '../../shared/struct_utils';
 
 
 @Component({
@@ -61,6 +62,9 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   setTypeFilter$ = this.setTypeFilterSubject.asObservable();
   setFuncFilterSubject = new BehaviorSubject<any>(null);
   setFuncFilter$ = this.setFuncFilterSubject.asObservable();
+  loadSequencesSubject = new BehaviorSubject<any>(null);
+  loadSequences$ = this.loadSequencesSubject.asObservable();
+  loadSequences$Subscription = null
   extraCols$: Observable<[]>;
   extraCols$Subscription = null;
   redirectOnLoad = null;
@@ -90,11 +94,14 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.choices$Subscription.unsubscribe();
     this.genSampleSelectedServiceSubscription.unsubscribe();
     this.extraCols$Subscription.unsubscribe();
+    this.loadSequences$Subscription.unsubscribe();
   }
 
   ngAfterViewInit() {
     this.paginatorSubscription = this.paginator.page
-      .subscribe(() => { this.loadSequencesPage(); });
+      .subscribe(() => {
+        this.loadSequencesSubject.next(null);
+      });
 
     // see this note on 'expression changed after it was checked' https://blog.angular-university.io/angular-debugging/
     setTimeout(() => {
@@ -104,8 +111,9 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
             if (sel.species && sel.datasets) {
               this.selection = sel;
               this.paginator.firstPage();
-              this.table.renderRows();
-              this.loadSequencesPage();
+              //this.table.renderRows();
+              console.log('loadSequencesPage: geneTableServiceSubscription');
+              this.loadSequencesSubject.next(null);
             }
           }
         );
@@ -175,6 +183,10 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       });
 
+      this.loadSequences$Subscription = this.loadSequences$.pipe(debounceTime(500)).subscribe(() => {
+        this.loadSequencesPage();
+      });
+
       // Set up initial search order and filter conditions
       const searchOrder = {field: 'name', predicates: [], sort: {field: 'name', order: 'asc'}}
       this.applyFilter(searchOrder);
@@ -214,17 +226,22 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
 
   quickSearch(searchString) {
     this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: searchString, op2: ''});
-    this.loadSequencesPage();
+    console.log('loadSequencesPage 2');
+    this.loadSequencesSubject.next(null);
   }
 
   clearSelection() {
     this.filters = [];
     this.clearSubject.next(null);
     this.searchBox.nativeElement.value = '';
-    this.loadSequencesPage();
+    console.log('loadSequencesPage 3');
+    this.loadSequencesSubject.next(null);
   }
 
   applyFilter(columnPredicate: ColumnPredicate) {
+    // copy existing filters and sorts so that we can check for changes later
+    const oldFilters = this.filters.slice(0);
+    const oldSorts = this.sorts.slice(0);
     for (let i = this.filters.length - 1; i >= 0; i--) {
       if (this.filters[i].field === columnPredicate.field) {
         this.filters.splice(i, 1);
@@ -256,8 +273,12 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.sorts.push(columnPredicate.sort);
     }
 
+    if (listsOfDictionariesEqual(oldFilters, this.filters) && listsOfDictionariesEqual(oldSorts, this.sorts)) {
+      return;
+    }
+
     this.paginator.pageIndex = 0;
-    this.loadSequencesPage();
+    this.loadSequencesSubject.next(null);
   }
 
   updateColumnData(event: any) {
@@ -272,6 +293,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   }
 
   loadSequencesPage() {
+    console.log('loadSequencesPage');
     if (this.selection) {
       this.dataSource.loadGeneSequences(
         this.selection.species,
@@ -362,3 +384,4 @@ function sampleIdsEqual(id1, id2) {
 
   return Object.keys(id1).every((v) => arraysEqual(id1[v], id2[v]));
 }
+

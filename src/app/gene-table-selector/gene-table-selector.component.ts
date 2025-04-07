@@ -122,6 +122,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   updateSpecies(selection) {
+    console.log("updating species selection in GeneTableSelectorComponent");
     this.genomicService.getSpeciesApi()
       .pipe(
         retryWithBackoff(),
@@ -153,6 +154,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   updateGen(selectedNames: string[]) {
+    console.log("updating gen selection in GeneTableSelectorComponent");
     this.genomicService.getDataSetApi(this.selectedSpecies.name)
       .pipe(
         retryWithBackoff(),
@@ -295,15 +297,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
     this.selectedGen = [];
     this.selectedRep = [];
     this.selectedAssembly = [];
-    if (this.selectedSpecies.name !== 'None') {
-      if (this.geneTableService.selection.value.species === this.selectedSpecies.name) {
-        this.updateGen(this.geneTableService.selection.value.datasets);
-        this.updateRep(this.geneTableService.selection.value.repSeqs);
-      } else {
-        this.updateGen([]);
-        this.updateRep([]);
-      }
-    }
+    this.updateGen([]);
+    this.updateRep([]);
   }
 
   repSeqChange() {

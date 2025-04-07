@@ -52,9 +52,11 @@ export class AppHeaderComponent implements OnInit {
     (sel: GeneTableSelection) => {
       // console.log(`assemblies notified to app-header: ${sel.assemblies}`);
       this.assemblies_present = false;
-      if (sel && sel.assemblies.length > 0) {
+      if (!sel || sel.assemblies.length > 0) {
         this.assemblies_present = true;
       }
+
+      console.log(`assemblies present: ${this.assemblies_present}`);
     });
   }
 

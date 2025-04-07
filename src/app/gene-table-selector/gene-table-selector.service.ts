@@ -10,7 +10,7 @@ export class GeneTableSelectorService {
     species: 'Human',
     datasets: [],
     genDatasetDescriptions: [{ dataset: 'IGH', description: ''}],
-    assemblies: [],
+    assemblies: ['igh'],
     repSeqs: ['IGH'],
     repDatasetDescriptions: [{ dataset: 'IGH', description: ''}],
   });

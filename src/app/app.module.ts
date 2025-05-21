@@ -70,6 +70,8 @@ import { GenExploreDataComponent } from './gen-explore-data/gen-explore-data.com
 import { GenExploreDataPanelComponent } from './gen-explore-data/gen-explore-data-panel/gen-explore-data-panel.component';
 import { RefbookComponent } from './refbook/refbook.component';
 import { RefbookPanelComponent } from './refbook/refbook-panel/refbook-panel.component';
+import { DashRefbookComponent } from './dash-refbook/dash-refbook.component';
+import { DashRefbookPanelComponent } from './dash-refbook/dash-refbook-panel/dash-refbook-panel.component';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -94,6 +96,7 @@ const appRoutes: Routes = [
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
   // Analysis menu
   { path: 'reference_book/:species', component: RefbookComponent, canActivate: [AuthGuard] },
+  { path: 'dash_refbook', component: DashRefbookComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   // Help menu
   { path: 'quick-ref', component: QuickRefComponent, canActivate: [AuthGuard] },
@@ -141,6 +144,8 @@ const appRoutes: Routes = [
     GenExploreDataPanelComponent,
     RefbookComponent,
     RefbookPanelComponent,
+    DashRefbookComponent,
+    DashRefbookPanelComponent,
   ],
   imports: [
     BrowserModule,

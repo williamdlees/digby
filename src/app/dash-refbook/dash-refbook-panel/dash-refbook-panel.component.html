@@ -1,0 +1,27 @@
+
+<div class="container-fluid">
+  <div  class="spinner-border" role="status" *ngIf="loading">
+    <span class="sr-only">Loading...</span>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="error">
+    <div class="row">
+      <h4>Error loading table</h4>
+      <p>{{error}}</p>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!loading && !error">
+    <h2 class="mt-5">Datasets available for species <span class="font-italic">{{species}}</span></h2>
+
+  </ng-container>
+
+
+
+  <ng-container *ngIf="!loading && !error && !datasetInfo">
+    <div class="container">
+      <p>Please select a single dataset to see its statistics and composition</p>
+    </div>
+  </ng-container>
+</div>
+

@@ -25,6 +25,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RequestCache } from './shared/http_cache';
 import {CachingInterceptor } from './shared/caching_interceptor';
 import { RepSampleComponent } from './rep-sample/rep-sample.component';
@@ -72,6 +73,9 @@ import { RefbookComponent } from './refbook/refbook.component';
 import { RefbookPanelComponent } from './refbook/refbook-panel/refbook-panel.component';
 import { DashRefbookComponent } from './dash-refbook/dash-refbook.component';
 import { DashRefbookPanelComponent } from './dash-refbook/dash-refbook-panel/dash-refbook-panel.component';
+import { SpeciesGeneSelectorComponent } from './dash-refbook/species-gene-selector/species-gene-selector.component';
+import { DashRefbookOverviewComponent } from './dash-refbook/dash-refbook-overview/dash-refbook-overview.component';
+import { NgChartsModule } from 'ng2-charts';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -146,6 +150,8 @@ const appRoutes: Routes = [
     RefbookPanelComponent,
     DashRefbookComponent,
     DashRefbookPanelComponent,
+    SpeciesGeneSelectorComponent,
+    DashRefbookOverviewComponent,
   ],
   imports: [
     BrowserModule,
@@ -156,6 +162,7 @@ const appRoutes: Routes = [
     NgbModule,
     MatInputModule,
     MatTableModule,
+    MatTabsModule,
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
@@ -172,6 +179,7 @@ const appRoutes: Routes = [
     ResizableModule,
     GoogleChartsModule,
     MatTooltipModule,
+    NgChartsModule
   ],
   providers: [
     RequestCache,

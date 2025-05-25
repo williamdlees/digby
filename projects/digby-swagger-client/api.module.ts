@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { GenomicService } from './api/genomic.service';
+import { RefbookService } from './api/refbook.service';
 import { ReportsService } from './api/reports.service';
 import { RepseqService } from './api/repseq.service';
 import { SystemService } from './api/system.service';
@@ -14,6 +15,7 @@ import { SystemService } from './api/system.service';
   exports:      [],
   providers: [
     GenomicService,
+    RefbookService,
     ReportsService,
     RepseqService,
     SystemService ]

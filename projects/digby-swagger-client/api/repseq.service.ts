@@ -234,6 +234,58 @@ export class RepseqService {
     }
 
     /**
+     * Returns information and statistics on the dataset
+     * 
+     * @param species 
+     * @param studyId 
+     * @param dataset 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getDownloadStudyScript(species: string, studyId: string, dataset: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getDownloadStudyScript(species: string, studyId: string, dataset: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getDownloadStudyScript(species: string, studyId: string, dataset: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getDownloadStudyScript(species: string, studyId: string, dataset: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getDownloadStudyScript.');
+        }
+
+        if (studyId === null || studyId === undefined) {
+            throw new Error('Required parameter studyId was null or undefined when calling getDownloadStudyScript.');
+        }
+
+        if (dataset === null || dataset === undefined) {
+            throw new Error('Required parameter dataset was null or undefined when calling getDownloadStudyScript.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/repseq/download_study_script/${encodeURIComponent(String(species))}/${encodeURIComponent(String(studyId))}/${encodeURIComponent(String(dataset))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the inferred genotype (in MiAIRR format) of the specified sample
      * 
      * @param species 

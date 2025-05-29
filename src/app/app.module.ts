@@ -76,6 +76,12 @@ import { DashRefbookPanelComponent } from './dash-refbook/dash-refbook-panel/das
 import { SpeciesGeneSelectorComponent } from './dash-refbook/species-gene-selector/species-gene-selector.component';
 import { DashRefbookOverviewComponent } from './dash-refbook/dash-refbook-overview/dash-refbook-overview.component';
 import { NgChartsModule } from 'ng2-charts';
+import { DashRefbookAlignmentComponent } from './dash-refbook/dash-refbook-alignment/dash-refbook-alignment.component';
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
+
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -152,6 +158,7 @@ const appRoutes: Routes = [
     DashRefbookPanelComponent,
     SpeciesGeneSelectorComponent,
     DashRefbookOverviewComponent,
+    DashRefbookAlignmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -179,7 +186,8 @@ const appRoutes: Routes = [
     ResizableModule,
     GoogleChartsModule,
     MatTooltipModule,
-    NgChartsModule
+    NgChartsModule,
+    PlotlyModule,
   ],
   providers: [
     RequestCache,

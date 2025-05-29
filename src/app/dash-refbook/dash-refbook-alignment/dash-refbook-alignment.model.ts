@@ -1,5 +1,7 @@
 export class AlignmentData {
-  name: string;
-  seq: string;
-  seq_gapped: string;
-}
+  alleles: {
+    name: string;
+    seq: string;
+    seq_gapped: string;
+  }[];
+};

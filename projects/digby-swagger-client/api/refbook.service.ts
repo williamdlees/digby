@@ -56,6 +56,58 @@ export class RefbookService {
 
 
     /**
+     * Returns sequences of all alleles in an ASC
+     * 
+     * @param species 
+     * @param chain 
+     * @param asc 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getAscSeqs(species: string, chain: string, asc: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public getAscSeqs(species: string, chain: string, asc: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public getAscSeqs(species: string, chain: string, asc: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public getAscSeqs(species: string, chain: string, asc: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (species === null || species === undefined) {
+            throw new Error('Required parameter species was null or undefined when calling getAscSeqs.');
+        }
+
+        if (chain === null || chain === undefined) {
+            throw new Error('Required parameter chain was null or undefined when calling getAscSeqs.');
+        }
+
+        if (asc === null || asc === undefined) {
+            throw new Error('Required parameter asc was null or undefined when calling getAscSeqs.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+
+        return this.httpClient.get<any>(`${this.basePath}/refbook/asc_seqs/${encodeURIComponent(String(species))}/${encodeURIComponent(String(chain))}/${encodeURIComponent(String(asc))}`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Returns the list of ASCs in a given chain for a given species
      * 
      * @param species 

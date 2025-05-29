@@ -102,7 +102,7 @@ constructor(private refbookService: RefbookService) { }
             this.chartData.datasets[0].data = data.genomic_only_counts;
             this.chartData.datasets[1].data = data.vdjbase_only_counts;
             this.chartData.datasets[2].data = data.both_counts;
-            this.chartData = {...this.chartData}; // Create a new object to trigger change detection
+           ; // Create a new object to trigger change detection
             console.log('overviewData', this.overviewData);
           });
     }

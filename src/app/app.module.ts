@@ -72,7 +72,6 @@ import { GenExploreDataPanelComponent } from './gen-explore-data/gen-explore-dat
 import { RefbookComponent } from './refbook/refbook.component';
 import { RefbookPanelComponent } from './refbook/refbook-panel/refbook-panel.component';
 import { DashRefbookComponent } from './dash-refbook/dash-refbook.component';
-import { DashRefbookPanelComponent } from './dash-refbook/dash-refbook-panel/dash-refbook-panel.component';
 import { SpeciesGeneSelectorComponent } from './dash-refbook/species-gene-selector/species-gene-selector.component';
 import { DashRefbookOverviewComponent } from './dash-refbook/dash-refbook-overview/dash-refbook-overview.component';
 import { NgChartsModule } from 'ng2-charts';
@@ -155,7 +154,6 @@ const appRoutes: Routes = [
     RefbookComponent,
     RefbookPanelComponent,
     DashRefbookComponent,
-    DashRefbookPanelComponent,
     SpeciesGeneSelectorComponent,
     DashRefbookOverviewComponent,
     DashRefbookAlignmentComponent,

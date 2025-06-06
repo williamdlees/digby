@@ -1,0 +1,10 @@
+// Fix for Bootstrap 4 :lang() pseudo-class warning in Angular builds
+// This overrides the problematic selector from Bootstrap
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+  content: "Browse";
+}
+
+// Alternative fix without :lang pseudo-class
+.custom-file-input ~ .custom-file-label::after {
+  content: "Browse";
+}

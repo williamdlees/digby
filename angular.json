@@ -38,6 +38,7 @@
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/bootstrap-fixes.scss",
               "src/styles.scss",
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",
               "node_modules/datatables.net-select-dt/css/select.dataTables.css",
@@ -54,8 +55,18 @@
             "extractLicenses": false,
             "buildOptimizer": false,
             "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "optimization": {
+              "scripts": false,
+              "styles": {
+                "minify": false,
+                "inlineCritical": false
+              },
+              "fonts": false
+            },
+            "namedChunks": true,
+            "allowedCommonJsDependencies": [
+              "src/assets/js/igv.js"
+            ]
           },
           "configurations": {
             "production": {

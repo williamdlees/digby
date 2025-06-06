@@ -50,3 +50,6 @@ Thumbs.db
 
 # Module cache
 .cache/
+
+# Angular CLI cache
+.angular/

@@ -28,7 +28,6 @@ import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component'
 import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import 'rxjs/add/observable/interval';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
 import {listsOfDictionariesEqual} from '../../shared/struct_utils';
@@ -480,6 +479,3 @@ function sampleIdsEqual(id1, id2) {
 
   return Object.keys(id1).every((v) => arraysEqual(id1[v], id2[v]));
 }
-
-
-

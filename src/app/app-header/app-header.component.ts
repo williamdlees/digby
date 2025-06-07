@@ -7,9 +7,10 @@ import { GeneTableSelectorService } from '../gene-table-selector/gene-table-sele
 
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './app-header.component.html',
-  styleUrls: ['./app-header.component.css']
+    selector: 'app-header',
+    templateUrl: './app-header.component.html',
+    styleUrls: ['./app-header.component.css'],
+    standalone: false
 })
 
 export class AppHeaderComponent implements OnInit {

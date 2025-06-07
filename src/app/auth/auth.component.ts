@@ -7,8 +7,9 @@ import { AuthService, AuthResponseData } from './auth.service';
 import {take} from "rxjs/operators";
 
 @Component({
-  selector: 'app-auth',
-  templateUrl: './auth.component.html'
+    selector: 'app-auth',
+    templateUrl: './auth.component.html',
+    standalone: false
 })
 export class AuthComponent implements OnInit{
   isLoading = false;

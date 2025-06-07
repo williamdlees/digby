@@ -24,11 +24,12 @@ import {listsOfDictionariesEqual} from '../../shared/struct_utils';
 
 
 @Component({
-  selector: 'app-gene-table-panel',
-  templateUrl: './gen-gene-table-panel.component.html',
-  styleUrls: ['./gen-gene-table-panel.component.css'],
-  encapsulation: ViewEncapsulation.None,   // needed for css styling on mat-menu-panel
-  providers: [TableParamsStorageService],
+    selector: 'app-gene-table-panel',
+    templateUrl: './gen-gene-table-panel.component.html',
+    styleUrls: ['./gen-gene-table-panel.component.css'],
+    encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
+    providers: [TableParamsStorageService],
+    standalone: false
 })
 
 export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDestroy {

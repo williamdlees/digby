@@ -6,10 +6,12 @@ import { RepseqService } from 'projects/digby-swagger-client';
 import { columnInfo } from '../rep-sample-panel/rep-sample-panel-cols';
 
 @Component({
-  selector: 'app-sample-rep-info',
-  templateUrl: './rep-sample-info.component.html',
-  styleUrls: ['./rep-sample-info.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling
+    selector: 'app-sample-rep-info',
+    templateUrl: './rep-sample-info.component.html',
+    styleUrls: ['./rep-sample-info.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling
+    ,
+    standalone: false
 })
 export class RepSampleInfoComponent implements OnInit {
   @Input() sampleName;

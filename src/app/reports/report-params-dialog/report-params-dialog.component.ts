@@ -12,10 +12,12 @@ export interface SampleCoverage {
 }
 
 @Component({
-  selector: 'app-report-params-dialog',
-  templateUrl: './report-params-dialog.component.html',
-  styleUrls: ['./report-params-dialog.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling
+    selector: 'app-report-params-dialog',
+    templateUrl: './report-params-dialog.component.html',
+    styleUrls: ['./report-params-dialog.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling
+    ,
+    standalone: false
 })
 export class ReportParamsDialogComponent implements OnInit {
   @Input() report;

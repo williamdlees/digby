@@ -8,10 +8,12 @@ import {debounceTime} from "rxjs/operators";
 
 
 @Component({
-  selector: 'app-gen-explore-data-panel',
-  templateUrl: './gen-explore-data-panel.component.html',
-  styleUrls: ['./gen-explore-data-panel.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-gen-explore-data-panel',
+    templateUrl: './gen-explore-data-panel.component.html',
+    styleUrls: ['./gen-explore-data-panel.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    standalone: false
 })
 
 export class GenExploreDataPanelComponent implements OnInit {

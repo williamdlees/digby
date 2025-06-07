@@ -28,12 +28,13 @@ function symmetricDifference(setA, setB) {
 }
 
 @Component({
-  selector: 'digby-table-column-sorter, button[digby-table-column-sorter]',
-  templateUrl: './column-sorter.component.html',
-  styleUrls: ['./column-sorter.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ColumnSorterService],
+    selector: 'digby-table-column-sorter, button[digby-table-column-sorter]',
+    templateUrl: './column-sorter.component.html',
+    styleUrls: ['./column-sorter.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ColumnSorterService],
+    standalone: false
 })
 export class ColumnSorterComponent implements OnInit, AfterViewInit {
   @Output()

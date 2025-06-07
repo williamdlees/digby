@@ -25,11 +25,12 @@ import {ReportRunService} from '../../reports/report-run.service';
 
 
 @Component({
-  selector: 'app-sample-rep-panel',
-  templateUrl: './rep-sample-panel.component.html',
-  styleUrls: ['./rep-sample-panel.component.css'],
-  providers: [TableParamsStorageService],
-  encapsulation: ViewEncapsulation.None,   // needed for css styling on mat-menu-panel
+    selector: 'app-sample-rep-panel',
+    templateUrl: './rep-sample-panel.component.html',
+    styleUrls: ['./rep-sample-panel.component.css'],
+    providers: [TableParamsStorageService],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {

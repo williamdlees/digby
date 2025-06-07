@@ -25,11 +25,13 @@ import { set } from 'lodash';
 
 
 @Component({
-  selector: 'app-gen-sample-panel',
-  templateUrl: './gen-sample-panel.component.html',
-  styleUrls: ['./gen-sample-panel.component.css'],
-  providers: [TableParamsStorageService],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-gen-sample-panel',
+    templateUrl: './gen-sample-panel.component.html',
+    styleUrls: ['./gen-sample-panel.component.css'],
+    providers: [TableParamsStorageService],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    standalone: false
 })
 
 export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {

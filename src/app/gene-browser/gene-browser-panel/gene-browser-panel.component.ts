@@ -28,9 +28,10 @@ const options = {
 };
 
 @Component({
-  selector: 'app-gene-browser-panel',
-  templateUrl: './gene-browser-panel.component.html',
-  styleUrls: ['./gene-browser-panel.component.scss']
+    selector: 'app-gene-browser-panel',
+    templateUrl: './gene-browser-panel.component.html',
+    styleUrls: ['./gene-browser-panel.component.scss'],
+    standalone: false
 })
 
 export class GeneBrowserPanelComponent implements OnInit, OnDestroy {

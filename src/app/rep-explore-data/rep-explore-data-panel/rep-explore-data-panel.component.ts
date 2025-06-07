@@ -9,10 +9,12 @@ import {environment} from '../../../environments/environment';
 
 
 @Component({
-  selector: 'app-rep-explore-data-panel',
-  templateUrl: './rep-explore-data-panel.component.html',
-  styleUrls: ['./rep-explore-data-panel.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-rep-explore-data-panel',
+    templateUrl: './rep-explore-data-panel.component.html',
+    styleUrls: ['./rep-explore-data-panel.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    standalone: false
 })
 
 export class RepExploreDataPanelComponent implements OnInit {

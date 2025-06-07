@@ -1,6 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'geneTrunc' })
+@Pipe({
+    name: 'geneTrunc',
+    standalone: false
+})
 export class GeneTruncPipe implements PipeTransform {
   transform(sequence: string) {
     if (!sequence || sequence.length < 15) {

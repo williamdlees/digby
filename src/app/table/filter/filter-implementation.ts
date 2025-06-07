@@ -4,7 +4,8 @@ import { IChoices } from './ichoices';
 import { Observable } from 'rxjs';
 
 @Component({
-  template: ''
+    template: '',
+    standalone: false
 })export class FilterImplementation {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;

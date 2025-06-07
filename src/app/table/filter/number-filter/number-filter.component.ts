@@ -20,10 +20,12 @@ class Operator {
 }
 
 @Component({
-  selector: 'app-number-filter',
-  templateUrl: './number-filter.component.html',
-  styleUrls: ['./number-filter.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-number-filter',
+    templateUrl: './number-filter.component.html',
+    styleUrls: ['./number-filter.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    standalone: false
 })
 export class NumberFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

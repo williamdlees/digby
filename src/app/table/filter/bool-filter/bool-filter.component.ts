@@ -28,10 +28,12 @@ class Operator {
 }
 
 @Component({
-  selector: 'app-bool-filter',
-  templateUrl: './bool-filter.component.html',
-  styleUrls: ['./bool-filter.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-bool-filter',
+    templateUrl: './bool-filter.component.html',
+    styleUrls: ['./bool-filter.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    standalone: false
 })
 export class BoolFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

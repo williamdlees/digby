@@ -34,12 +34,12 @@ import {listsOfDictionariesEqual} from '../../shared/struct_utils';
 
 
 @Component({
-  selector: "app-rep-gene-table-panel",
-  templateUrl: "./rep-gene-table-panel.component.html",
-  styleUrls: ["./rep-gene-table-panel.component.css"],
-  providers: [TableParamsStorageService],
-
-  encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
+    selector: "app-rep-gene-table-panel",
+    templateUrl: "./rep-gene-table-panel.component.html",
+    styleUrls: ["./rep-gene-table-panel.component.css"],
+    providers: [TableParamsStorageService],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class RepGeneTablePanelComponent
   implements AfterViewInit, OnInit, OnDestroy

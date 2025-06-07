@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule, inject, provideAppInitializer } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -184,7 +184,10 @@ const appRoutes: Routes = [
         { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
-        { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AuthService], multi: true, },
+        provideAppInitializer(() => {
+        const initializerFn = (appInitializer)(inject(AuthService));
+        return initializerFn();
+      }),
         provideHttpClient(withInterceptorsFromDi()),
     ] })
 export class AppModule {

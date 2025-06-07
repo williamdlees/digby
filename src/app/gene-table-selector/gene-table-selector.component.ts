@@ -9,10 +9,11 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import {GeneTableSelection} from './gene-table-selector.model';
 
 @Component({
-  selector: 'app-gene-table-selector',
-  templateUrl: './gene-table-selector.component.html',
-  styleUrls: ['./gene-table-selector.component.css'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-gene-table-selector',
+    templateUrl: './gene-table-selector.component.html',
+    styleUrls: ['./gene-table-selector.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {

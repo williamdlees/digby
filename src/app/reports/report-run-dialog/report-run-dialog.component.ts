@@ -8,10 +8,12 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportRequestService} from '../report-request-service';
 
 @Component({
-  selector: 'app-report-run-dialog',
-  templateUrl: './report-run-dialog.component.html',
-  styleUrls: ['./report-run-dialog.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling
+    selector: 'app-report-run-dialog',
+    templateUrl: './report-run-dialog.component.html',
+    styleUrls: ['./report-run-dialog.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling
+    ,
+    standalone: false
 })
 export class ReportRunDialogComponent implements OnInit {
   @Input() report;

@@ -21,10 +21,12 @@ class Operator {
 
 
 @Component({
-  selector: 'app-date-filter',
-  templateUrl: './date-filter.component.html',
-  styleUrls: ['./date-filter.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-date-filter',
+    templateUrl: './date-filter.component.html',
+    styleUrls: ['./date-filter.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    standalone: false
 })
 export class DateFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

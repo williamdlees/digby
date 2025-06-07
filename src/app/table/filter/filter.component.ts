@@ -11,10 +11,11 @@ import { IChoices } from './ichoices';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-filter',
-  templateUrl: './filter.component.html',
-  styleUrls: ['./filter.component.css'],
-  exportAs: 'menuInOtherComponent',
+    selector: 'app-filter',
+    templateUrl: './filter.component.html',
+    styleUrls: ['./filter.component.css'],
+    exportAs: 'menuInOtherComponent',
+    standalone: false
 })
 export class FilterComponent implements OnInit {
   @Input() columnName: string;

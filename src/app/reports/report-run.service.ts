@@ -10,7 +10,8 @@ import {ReportsService} from 'projects/digby-swagger-client';
 import {ReportsListDataSource} from './reports-list-data.source';
 
 @Component({
-  template: ''
+    template: '',
+    standalone: false
 })
 @Injectable({
   providedIn: 'root'

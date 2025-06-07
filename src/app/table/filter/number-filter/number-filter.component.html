@@ -11,8 +11,8 @@
   <div class="content-centered" (click) = "$event.stopPropagation()">
     <form class="col-12" >
       <div class="row">
-        <div class="col-6" style="padding-left: 0px">
-          <button class="float-left" mat-button (click)="onSortAsc()">Sort Ascending</button>
+        <div class="col-6" style="padding-left: 0px; display: flex">
+          <button class="float-left;" mat-button (click)="onSortAsc()">Sort Ascending</button>
         </div>
         <div class="col-6" style="text-align: right">
           <button class="float-right" mat-flat-button color="primary"  (click)="onValidation()">

@@ -18,7 +18,7 @@ import { RepSampleSelectedService } from '../rep-sample-selected.service';
 import {RepSampleFilterService} from '../rep-sample-filter.service';
 import {ResizeEvent} from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {ReportRunService} from '../../reports/report-run.service';

@@ -4,7 +4,7 @@ import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
 import {catchError, debounceTime} from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import {GeneTableSelection} from './gene-table-selector.model';
 

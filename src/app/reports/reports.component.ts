@@ -12,7 +12,7 @@ import {RepSampleFilterService} from '../rep-sample/rep-sample-filter.service';
 import {GeneTableSelectorService} from '../gene-table-selector/gene-table-selector.service';
 import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.model';
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ReportRunService} from './report-run.service';
 
 @Component({

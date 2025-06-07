@@ -23,7 +23,7 @@
     "@angular/router": "~16.2.12",
     "@ng-bootstrap/ng-bootstrap": "^15.1.2",
     "@popperjs/core": "^2.11.8",
-    "angular-google-charts": "^2.2.4",
+    "angular-google-charts": "^16.0.2",
     "angular-resizable-element": "^3.3.3",
     "bootstrap": "^4.4.1",
     "datatables.net": "^1.10.20",
@@ -36,7 +36,6 @@
     "ng-dynamic-component": "^10.8.2",
     "ng-multiselect-dropdown": "^0.3.8",
     "rxjs": "^7.8.1",
-    "rxjs-compat": "^6.6.7",
     "tslib": "^2.4.0",
     "zone.js": "~0.13.3"
   },

@@ -101,18 +101,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "digby:build"
+            "buildTarget": "digby:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "digby:build:production"
+              "buildTarget": "digby:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "digby:build"
+            "buildTarget": "digby:build"
           }
         },
         "test": {

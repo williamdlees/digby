@@ -28,6 +28,11 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              {
+                "glob": "igv.js",
+                "input": "src/static",
+                "output": "./assets/js"
+              },
               "src/jbrowse",
               {
                 "glob": "mdi.svg",
@@ -48,10 +53,8 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
               "node_modules/datatables.net/js/jquery.dataTables.js",
-              "node_modules/datatables.net-select/js/dataTables.select.js",
-              "src/assets/js/igv.js"
+              "node_modules/datatables.net-select/js/dataTables.select.js"
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
             "sourceMap": true,
@@ -63,12 +66,16 @@
               },
               "fonts": false
             },
-            "namedChunks": true,
-            "allowedCommonJsDependencies": [
-              "src/assets/js/igv.js"
-            ]
+            "namedChunks": true
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -96,7 +103,7 @@
               ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -104,10 +111,14 @@
             "buildTarget": "digby:build"
           },
           "configurations": {
+            "development": {
+              "buildTarget": "digby:build:development"
+            },
             "production": {
               "buildTarget": "digby:build:production"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

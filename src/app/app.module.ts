@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { GenGeneTableComponent } from './gen-gene-table/gen-gene-table.component';
 
-import { ApiModule, Configuration, ConfigurationParameters } from 'projects/digby-swagger-client';
+import { ApiModule, Configuration, ConfigurationParameters, BASE_PATH } from 'projects/digby-swagger-client';
 import { HomeComponent } from './home/home.component';
 import {Router, RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
@@ -178,6 +178,7 @@ const appRoutes: Routes = [
     RepseqService,
     SystemService,
     ReportRunService,
+    { provide: BASE_PATH, useValue: environment.apiBasePath },
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },

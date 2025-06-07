@@ -1,13 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
+import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, ErrorHandler, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { GenGeneTableComponent } from './gen-gene-table/gen-gene-table.component';
 
-import { ApiModule, Configuration, ConfigurationParameters } from 'dist/digby-swagger-client';
+import { ApiModule, Configuration, ConfigurationParameters } from 'projects/digby-swagger-client';
 import { HomeComponent } from './home/home.component';
 import {Router, RouteReuseStrategy, RouterModule, Routes} from '@angular/router';
 import { AppHeaderComponent } from './app-header/app-header.component';
@@ -177,6 +177,13 @@ const appRoutes: Routes = [
     { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AuthService], multi: true, },
   ],
   bootstrap: [AppComponent],
+  schemas: [
+    // Add CUSTOM_ELEMENTS_SCHEMA to suppress errors about unknown elements in templates
+    // This is needed for the ResizableModule directives to work with material components
+    // We would need to refactor the code to use the proper directives, but this is a workaround for now
+    // during the Angular upgrade
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
 })
 export class AppModule {
 }

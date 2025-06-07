@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {catchError, map, tap} from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
-import { SystemService } from '../../../dist/digby-swagger-client';
+import { SystemService } from 'projects/digby-swagger-client';
 
 import { User } from './user.model';
 import {SysConfig} from "./sysconfig.model";
@@ -18,7 +18,7 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   sysConfig = new BehaviorSubject<SysConfig>(new SysConfig(true, '', '', ''));

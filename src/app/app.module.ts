@@ -177,8 +177,6 @@ const appRoutes: Routes = [
     { provide: APP_INITIALIZER, useFactory: appInitializer, deps: [AuthService], multi: true, },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [SeqModalComponent, RepSampleInfoComponent],
 })
 export class AppModule {
 }
-

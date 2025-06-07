@@ -34,7 +34,7 @@
     "jquery": "^3.4.1",
     "material-design-icons": "^3.0.1",
     "ng-dynamic-component": "^10.8.2",
-    "ng-multiselect-dropdown": "^0.3.8",
+    "ng-multiselect-dropdown": "^1.0.0",
     "rxjs": "^7.8.1",
     "tslib": "^2.4.0",
     "zone.js": "~0.13.3"

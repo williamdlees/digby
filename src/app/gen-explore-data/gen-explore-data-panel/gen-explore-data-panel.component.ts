@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {GeneTableSelection} from '../../gene-table-selector/gene-table-selector.model';
 import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-selector.service';
-import { GenomicService } from '../../../../dist/digby-swagger-client';
+import { GenomicService } from 'projects/digby-swagger-client';
 import { GoogleChartsModule } from 'angular-google-charts';
 import {MatTable} from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";

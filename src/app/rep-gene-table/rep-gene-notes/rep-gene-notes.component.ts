@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RepseqService } from '../../../../dist/digby-swagger-client';
+import { RepseqService } from 'projects/digby-swagger-client';
 import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({

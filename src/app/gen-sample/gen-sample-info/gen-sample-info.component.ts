@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {catchError, finalize} from 'rxjs/operators';
-import { GenomicService } from '../../../../dist/digby-swagger-client';
+import { GenomicService } from 'projects/digby-swagger-client';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
 

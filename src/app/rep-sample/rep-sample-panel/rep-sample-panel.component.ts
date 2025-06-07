@@ -1,6 +1,6 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
-import {ReportsService, RepseqService} from '../../../../dist/digby-swagger-client';
+import {ReportsService, RepseqService} from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {MatPaginator} from '@angular/material/paginator';
@@ -96,10 +96,14 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.geneTableServiceSubscription = this.geneTableService.source
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
+            console.log("repGeneTableSelectorComponent received selection:", sel.species, sel.datasets[0], sel.repSeqs[0]);
+
             this.selection = sel;
+            this.onSelectedSamplesChange();
             this.paginator.firstPage();
             this.table.renderRows();
             this.loadSequencesPage();
+
           }
         );
 

@@ -38,6 +38,9 @@ export class BoolFilterComponent implements OnInit, FilterImplementation {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Input() clear$: Observable<null>;
+  @Input() setFilter$: Observable<any>;
+  @Input() showTextFilter = true;
+  @Input() showSort = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   filterCleared = false;

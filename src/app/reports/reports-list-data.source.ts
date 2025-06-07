@@ -1,6 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Observable, BehaviorSubject, of, EMPTY} from 'rxjs';
-import { ReportsService } from '../../../dist/digby-swagger-client';
+import { ReportsService } from 'projects/digby-swagger-client';
 import {catchError, debounceTime, finalize} from 'rxjs/operators';
 import {GlobalReportFilterParams, ReportList} from './reports-list.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';

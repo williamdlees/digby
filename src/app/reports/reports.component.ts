@@ -1,7 +1,7 @@
 import {Component, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTable} from '@angular/material/table';
 import {ReportsListDataSource} from './reports-list-data.source';
-import {ReportsService} from '../../../dist/digby-swagger-client';
+import {ReportsService} from 'projects/digby-swagger-client';
 import {catchError, debounceTime, map} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/collections';
 import {defer, Observable, of, Subscription} from 'rxjs';

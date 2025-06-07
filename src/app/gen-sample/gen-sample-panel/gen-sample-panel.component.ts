@@ -12,7 +12,7 @@ import {BehaviorSubject, fromEvent, Observable, Subscription} from 'rxjs';
 import { columnInfo } from './gen-sample-panel-cols';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { GenSampleInfoComponent } from '../gen-sample-info/gen-sample-info.component';
-import { GenomicService } from '../../../../dist/digby-swagger-client';
+import { GenomicService } from 'projects/digby-swagger-client';
 import {GenGeneSelectedService} from '../../gen-gene-table/gen-gene-selected.service';
 import {GenSampleSelectedService} from '../gen-sample-selected.service';
 import {GenSampleFilterService} from '../gen-sample-filter.service';
@@ -21,6 +21,7 @@ import {TableParamsStorageService} from '../../table/table-params-storage-servic
 import {ActivatedRoute, NavigationEnd, ParamMap, Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {ReportRunService} from '../../reports/report-run.service';
+import { set } from 'lodash';
 
 
 @Component({
@@ -225,6 +226,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   updateColumnData(event: any) {
+    console.log("updateColumnData", event);
     const sLoaded = new Set(this.lastLoadedColumns);
     const sDisplayed = new Set(this.displayedColumns);
 
@@ -258,6 +260,7 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   onResizeEnd(event: ResizeEvent, columnName): void {
+
     if (event.edges.right) {
       const cssValue = event.rectangle.width + 'px';
       this.updateColumnWidth(columnName, cssValue);

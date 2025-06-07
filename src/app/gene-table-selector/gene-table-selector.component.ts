@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, Injectable, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import { GenomicService } from '../../../dist/digby-swagger-client';
-import { RepseqService } from '../../../dist/digby-swagger-client';
+import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
 import {catchError, debounceTime} from 'rxjs/operators';
@@ -14,10 +13,6 @@ import {GeneTableSelection} from './gene-table-selector.model';
   templateUrl: './gene-table-selector.component.html',
   styleUrls: ['./gene-table-selector.component.css'],
   encapsulation: ViewEncapsulation.None
-})
-
-@Injectable({
-  providedIn: 'root'
 })
 
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
@@ -86,6 +81,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.geneTableServiceSubscription = this.geneTableService.source
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
+            console.log("GeneTableSelectorComponent received selection:", sel.species, sel.datasets[0], sel.repSeqs[0]);
             if (!this.species) {
               this.initializing = true;
               this.updateSpecies(sel);

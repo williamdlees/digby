@@ -30,6 +30,9 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
   @Input() columnName: string;
   @Input() choices$: Observable<IChoices>;
   @Input() clear$: Observable<null>;
+  @Input() setFilter$: Observable<any>;
+  @Input() showTextFilter = true;
+  @Input() showSort = true;
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   selectedOperator: Operator;
@@ -71,6 +74,23 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
           this.selectedSort = null;
           this.selectedItems = [];
           this.filterCleared = true;
+      });
+    }
+    if (this.setFilter$) {
+      this.setFilter$.subscribe((filter) => {
+        if (filter) {
+          if (filter.op1.length > 0) {
+            this.selectedOperator = filter.operator;
+            this.operand1Input = filter.op1;
+            this.operand2Input = filter.op2;
+            this.onValidation();
+          } else {
+            this.selectedOperator = null;
+            this.operand1Input = '';
+            this.operand2Input = '';
+            this.onValidation();
+          }
+        }
       });
     }
   }

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {GeneTableSelection} from '../../gene-table-selector/gene-table-selector.model';
 import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-selector.service';
 import { RepseqService } from 'projects/digby-swagger-client';
-import { GoogleChartsModule } from 'angular-google-charts';
+import { GoogleChartsModule, ChartType } from 'angular-google-charts';
 import {MatTable} from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";
 import {environment} from '../../../environments/environment';
@@ -23,7 +23,9 @@ export class RepExploreDataPanelComponent implements OnInit {
   datasetInfo = null;
   loading = false;
   error = null;
-  apibasePath = environment.apiBasePath
+  apibasePath = environment.apiBasePath;
+  barChartType = ChartType.BarChart;
+  pieChartType = ChartType.PieChart;
   @ViewChild('datasetInfoTable') datasetInfoTable: MatTable<any>;
 
   constructor(

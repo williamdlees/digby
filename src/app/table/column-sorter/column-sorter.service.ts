@@ -8,6 +8,7 @@ export interface ColumnInfo {
   description?: string;
   size?: string; // 'small-col', 'medium-col', 'large-col'
   type?: string; // 'string', 'number', 'date', etc.
+  preventBeingHidden?: boolean;
 }
 
 @Injectable()

@@ -9,7 +9,7 @@ import {
   ViewEncapsulation,
   ElementRef
 } from '@angular/core';
-import { RepseqService } from '../../../../dist/digby-swagger-client';
+import { RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';

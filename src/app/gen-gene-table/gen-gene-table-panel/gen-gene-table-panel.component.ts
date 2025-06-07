@@ -1,6 +1,6 @@
 /* tslint:disable:max-line-length */
 import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
-import { GenomicService } from '../../../../dist/digby-swagger-client';
+import { GenomicService } from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -384,4 +384,3 @@ function sampleIdsEqual(id1, id2) {
 
   return Object.keys(id1).every((v) => arraysEqual(id1[v], id2[v]));
 }
-

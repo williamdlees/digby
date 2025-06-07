@@ -70,6 +70,8 @@ import { GenExploreDataComponent } from './gen-explore-data/gen-explore-data.com
 import { GenExploreDataPanelComponent } from './gen-explore-data/gen-explore-data-panel/gen-explore-data-panel.component';
 import { RefbookComponent } from './refbook/refbook.component';
 import { RefbookPanelComponent } from './refbook/refbook-panel/refbook-panel.component';
+import { ReportsService, GenomicService, RepseqService, SystemService } from 'projects/digby-swagger-client';
+import { ReportRunService } from './reports/report-run.service';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -171,6 +173,11 @@ const appRoutes: Routes = [
   providers: [
     RequestCache,
     AuthService,
+    ReportsService,
+    GenomicService,
+    RepseqService,
+    SystemService,
+    ReportRunService,
     { provide: HTTP_INTERCEPTORS, useClass: CachingInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
     { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },

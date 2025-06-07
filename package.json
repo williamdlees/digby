@@ -21,7 +21,7 @@
     "@angular/platform-browser": "~17.3.12",
     "@angular/platform-browser-dynamic": "~17.3.12",
     "@angular/router": "~17.3.12",
-    "@ng-bootstrap/ng-bootstrap": "^15.1.2",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@popperjs/core": "^2.11.8",
     "angular-google-charts": "^16.0.2",
     "angular-resizable-element": "^7.0.2",

@@ -1,9 +1,7 @@
 <ng-container>
   <div class="modal-header">
     <h3 class="modal-title">Report Parameters - {{ report.title }}</h3>
-    <button type="button" tabindex="-1" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" tabindex="-1" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div style="margin-bottom: 15px">{{scopeText}}</div>
@@ -46,7 +44,7 @@
             <div *ngSwitchCase="'select'">
               <div class="form-group">
                 <label for="{{form_elem.id}}">{{ form_elem.label }}</label>
-                <select  id="{{form_elem.id}}" class="custom-select" formControlName="{{form_elem.id}}" [value]="form_elem.options[0]">
+                <select  id="{{form_elem.id}}" class="form-select" formControlName="{{form_elem.id}}" [value]="form_elem.options[0]">
                   <option *ngFor="let opt of form_elem.options">
                     {{opt}}
                   </option>

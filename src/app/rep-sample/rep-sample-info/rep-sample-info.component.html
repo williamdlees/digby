@@ -1,6 +1,6 @@
 
   <div  class="spinner-border" role="status" *ngIf="loading">
-    <span class="sr-only">Loading...</span>
+    <span class="visually-hidden">Loading...</span>
   </div>
 
   <div class="alert alert-danger" *ngIf="error">
@@ -15,9 +15,7 @@
 <ng-container *ngIf="!loading && !error">
   <div class="modal-header">
     <h3 class="modal-title">Sample Details - {{sampleName}}</h3>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="container">

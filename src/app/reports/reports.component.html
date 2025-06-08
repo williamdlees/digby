@@ -20,7 +20,7 @@
           <mat-header-cell *matHeaderCellDef> Thumbnail </mat-header-cell>
           <mat-cell *matCellDef="let rep">
             <div *ngIf="rep.thumbnail">
-              <img src='{{rep.thumbnail}}' height='100'>
+              <img src='{{rep.thumbnail}}' height='100' alt='{{rep.title}} report thumbnail'>
             </div>
           </mat-cell>
         </ng-container>
@@ -32,22 +32,22 @@
           <mat-header-cell *matHeaderCellDef> Run </mat-header-cell>
           <mat-cell *matCellDef="let rep">
             <ng-container *ngIf="rep.format.indexOf('pdf') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'pdf')">
+              <button class="btn btn-lg" (click)="runReport(rep, 'pdf')" title="Generate PDF report">
                 <i class="fa fa-file-pdf-o" style="line-height: inherit;"></i>
               </button>
             </ng-container>
             <ng-container *ngIf="rep.format.indexOf('html') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'html')">
+              <button class="btn btn-lg" (click)="runReport(rep, 'html')" title="View report in browser">
                 <i class="fa fa-desktop" style="line-height: inherit;"></i>
               </button>
             </ng-container>
             <ng-container *ngIf="rep.format.indexOf('xls') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
+              <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download Excel report">
                 <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
               </button>
             </ng-container>
             <ng-container *ngIf="rep.format.indexOf('file') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
+              <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download report file">
                 <i class="fa fa-save" style="line-height: inherit;"></i>
               </button>
             </ng-container>

@@ -1,19 +1,15 @@
-<div class="form-row align-items-center">
+<div class="row align-items-center g-2">
   <div class="col-auto my-1">
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="selectSpecies">Species</label>
-      </div>
-      <select class="custom-select" id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
+      <label class="input-group-text" for="selectSpecies">Species</label>
+      <select class="form-select" id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
         <option *ngFor="let s of species" [ngValue]="s">{{s.name}}</option>
       </select>
     </div>
   </div>
   <div class="col-auto my-1" *ngIf="showGenomic">
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="selectGenomic" style="height: 38px">Genomic Sets</label>
-      </div>
+      <label class="input-group-text" for="selectGenomic" style="height: 38px">Genomic Sets</label>
       <ng-multiselect-dropdown id="selectGenomic"
         [class]="'selector-dropdown'"
         [settings] = genDropdownSettings
@@ -27,9 +23,7 @@
   </div>
   <div class="col-auto my-1"  *ngIf="showAssembly">
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="selectAssembly" style="height: 38px">Genomic Assemblies</label>
-      </div>
+      <label class="input-group-text" for="selectAssembly" style="height: 38px">Genomic Assemblies</label>
       <ng-multiselect-dropdown id="selectAssembly"
         [class]="'selector-dropdown'"
         [settings] = genAssemblyDropdownSettings
@@ -43,9 +37,7 @@
   </div>
   <div class="col-auto my-1" *ngIf="showRepseq">
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="selectAIRR" style="height: 38px">AIRR-seq Sets</label>
-      </div>
+      <label class="input-group-text" for="selectAIRR" style="height: 38px">AIRR-seq Sets</label>
       <ng-multiselect-dropdown id="selectAIRR"
         [class]="'selector-dropdown'"
         [settings] = repDropdownSettings
@@ -60,7 +52,7 @@
 </div>
 
 <div  class="spinner-border" role="status" *ngIf="isFetching">
-  <span class="sr-only">Loading...</span>
+  <span class="visually-hidden">Loading...</span>
 </div>
 
 

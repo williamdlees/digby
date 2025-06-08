@@ -1,7 +1,7 @@
 
 <div class="row">
   <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
-    <span class="sr-only">Loading...</span>
+    <span class="visually-hidden">Loading...</span>
   </div>
 
   <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
@@ -15,11 +15,11 @@
 <div class="row">
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
     <span class="header-text">Quick search:&nbsp;</span>
-    <input class="searchBox" #searchBox>
+    <input class="form-control" placeholder="Search..." aria-label="Search" #searchBox>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()" id="deleteButton">
+    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()" id="deleteButton" title="Clear filters">
       <mat-icon class="primary-icon"  style="">delete_sweep</mat-icon>
     </button>
     <label class="form-check-label" for="deleteButton">Clear filters</label>
@@ -30,14 +30,14 @@
        [(columns)]="displayedColumns"
        [columnInfo]="allColumns"
        [saveName]="'rep-sample-table'"
-       (columnsChange)="updateColumnData($event)" id="colbutton">
+       (columnsChange)="updateColumnData($event)" id="colbutton" title="Arrange columns">
        <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
     </button>
       <label class="form-check-label" for="colbutton">Arrange Columns</label>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-    <button style="border-width: 0px; background-color: transparent;" [matMenuTriggerFor]="downloadMenu" id="downloadbutton">
+    <button style="border-width: 0px; background-color: transparent;" [matMenuTriggerFor]="downloadMenu" id="downloadbutton" title="Download options">
       <mat-icon class="primary-icon"  style="">cloud_download</mat-icon>
     </button>
     <label class="form-check-label" for="downloadbutton">Download</label>
@@ -55,7 +55,7 @@
     </div>
   </div>
 
-  <div class="col-auto ml-auto">
+  <div class="col-auto ms-auto">
     <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
   </div>
 </div>
@@ -122,7 +122,7 @@
                 {{col.name}}
               </mat-header-cell>
               <mat-cell *matCellDef="let item" class="{{col.size}}" >
-                <button class="btn btn-sm btn-solid-icon" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}">
+                <button class="btn btn-sm" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}" title="View genotype details">
                   <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
                 </button>
               </mat-cell>
@@ -142,7 +142,7 @@
                       <div *ngFor="let h of item[col.id] | keyvalue">
                         <ng-container *ngIf="h.key !== 'path'">
                           <div class="col-xs-6">
-                            <button class="btn btn-secondary btn-sm mr-1" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: item, haplo: h.key}">
+                            <button class="btn btn-secondary btn-sm me-1" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: item, haplo: h.key}">
                               {{h.key}}
                             </button>
                           </div>
@@ -181,11 +181,11 @@
         Haplotype Analysis
         <ng-container *ngIf="sample.haplotypes[haplo]['analysis'].length > 0">
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_haplotype', 'pdf', sample.haplotypes[haplo]['analysis'])">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_haplotype', 'pdf', sample.haplotypes[haplo]['analysis'])" title="Download PDF report">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
           </button>
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_haplotype', 'html', sample.haplotypes[haplo]['analysis'])">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_haplotype', 'html', sample.haplotypes[haplo]['analysis'])" title="View HTML report">
             <i class="fa fa-desktop" style="line-height: inherit;"></i>
           </button>
         </ng-container>
@@ -206,7 +206,7 @@
       <div class="row ml-1 mr-2 mb-1">
         RAbHIT explained
         <span>&nbsp;&nbsp;</span>
-        <a href="https://pubmed.ncbi.nlm.nih.gov/31173062" target="_blank">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/31173062" target="_blank" rel="noopener" title="View RAbHIT publication">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
         </a>
       </div>
@@ -227,11 +227,11 @@
         Genotype Analysis
         <ng-container *ngIf="sample.genotypes['analysis'].length > 0">
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample.genotypes['analysis'])">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample.genotypes['analysis'])" title="Download PDF report">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
           </button>
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample.genotypes['analysis'])">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample.genotypes['analysis'])" title="View HTML report">
             <i class="fa fa-desktop" style="line-height: inherit;"></i>
           </button>
         </ng-container>
@@ -294,14 +294,14 @@
       <div class="row ml-1 mr-2 mb-1">
         TIgGER explained
         <span>&nbsp;&nbsp;</span>
-        <a href="https://pubmed.ncbi.nlm.nih.gov/30814994" target="_blank">
+        <a href="https://pubmed.ncbi.nlm.nih.gov/30814994" target="_blank" rel="noopener" title="View TIgGER publication">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
         </a>
       </div>
       <div class="row ml-1 mr-2 mb-1">
         OGRDBstats explained
         <span>&nbsp;&nbsp;</span>
-        <a href="https://github.com/airr-community/ogrdbstats" target="_blank">
+        <a href="https://github.com/airr-community/ogrdbstats" target="_blank" rel="noopener" title="View OGRDBstats documentation">
           <i class="fa fa-desktop" style="line-height: inherit;"></i>
         </a>
       </div>
@@ -327,16 +327,15 @@
       <div class="row ml-4 mr-2 mb-0 align-middle">
         Sample info (csv)
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Sample info (CSV)'})">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Sample info (CSV)'})" title="Download CSV">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i> </button>
       </div>
       <div class="row ml-4 mr-2 mb-0 align-middle">
         Sample data (zip)
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'zip', {type:'Sample files (ZIP)'})">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'zip', {type:'Sample files (ZIP)'})" title="Download ZIP">
             <i class="fa fa-file-zip-o" style="line-height: inherit;" ></i> </button>
       </div>
     </div>
   </ng-template>
 </mat-menu>
-

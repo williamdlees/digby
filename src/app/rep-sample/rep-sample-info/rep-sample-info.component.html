@@ -27,7 +27,7 @@
               <div *ngIf="col.section === section">
                 <div *ngIf="sampleInfo[col.id]; else nullVal">
                   <div *ngIf="col.type === 'string' && sampleInfo[col.id].startsWith('http'); else plainVal">
-                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> <a href={{sampleInfo[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
+                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> <a href={{sampleInfo[col.id]}} target="_blank" rel="noopener" title="View {{col.name}} details"><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
                   </div>
                   <ng-template #plainVal>
                     <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> {{sampleInfo[col.id]}}</ul>

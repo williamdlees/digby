@@ -4,13 +4,13 @@
   </button>
 
   <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
-    <ul ngbNav class="navbar-nav mr-auto">
+    <ul ngbNav class="navbar-nav me-auto">
         <li ngbNavItem class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuCollapsed = true">
           <a class="nav-link" ngbNavLink  style="padding: 0" routerLink="/">
             <img class="navbar-brand" src="./assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
         </li>
         <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarAIRRSeq" role="button">
+          <a ngbDropdownToggle class="nav-link" id="navbarAIRRSeq" role="button">
             AIRR-Seq Data
           </a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
@@ -20,7 +20,7 @@
           </div>
         </li>
         <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
             Genomic Data
           </a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
@@ -31,7 +31,7 @@
           </div>
         </li>
         <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
             Analysis
           </a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
@@ -40,7 +40,7 @@
           </div>
         </li>
         <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarHelpAbout" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a ngbDropdownToggle class="nav-link" id="navbarHelpAbout" role="button">
             Help / About
           </a>
           <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
@@ -60,5 +60,3 @@
     </ul>
   </div>
 </nav>
-
-

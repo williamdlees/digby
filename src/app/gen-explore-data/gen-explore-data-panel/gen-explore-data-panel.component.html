@@ -104,7 +104,7 @@
           <mat-cell class="explore-small-col" *matCellDef="let study">
             <ng-container *ngIf="study.study_id">
               <ng-container *ngFor="let study_id of study.study_id.split(',')">
-                <a *ngIf="study_id.includes('http')" href={{study_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+                <a *ngIf="study_id.includes('http')" href={{study_id}} target="_blank" rel="noopener" title="View study details"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
                 <span *ngIf="!study_id.includes('http')"> {{study_id}}</span>
               </ng-container>
             </ng-container>
@@ -139,7 +139,7 @@
           <mat-cell *matCellDef="let study"  class="explore-small-col">
             <ng-container *ngIf="study.pub_ids">
               <ng-container *ngFor="let pub_id of study.pub_ids.split(',')">
-                <a *ngIf="pub_id.includes('http')" href={{pub_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+                <a *ngIf="pub_id.includes('http')" href={{pub_id}} target="_blank" rel="noopener" title="View publication"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
                 <span *ngIf="!pub_id.includes('http')"> {{pub_id}}</span>
               </ng-container>
             </ng-container>

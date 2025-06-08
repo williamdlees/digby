@@ -1,7 +1,7 @@
 
 <div class="container-fluid">
   <div  class="spinner-border" role="status" *ngIf="loading">
-    <span class="sr-only">Loading...</span>
+    <span class="visually-hidden">Loading...</span>
   </div>
 
   <div class="alert alert-danger" *ngIf="error">
@@ -12,7 +12,7 @@
   </div>
 
   <ng-container *ngIf="!loading && !error">
-    <h2 class="mt-5">Datasets available for species <span class="font-italic">{{species}}</span></h2>
+    <h2 class="mt-5">Datasets available for species <span class="fst-italic">{{species}}</span></h2>
 
     <div class="container">
       <mat-table #datasetInfoTable [dataSource]="datasetDescriptions">
@@ -46,7 +46,7 @@
 
   <ng-container *ngIf="!loading && !error && datasetInfo">
       <h2 class="mt-5">Summary of dataset {{dataset}}: {{datasetInfo['total_samples']}} samples from {{datasetInfo['total_subjects']}} subjects</h2>
-      <p class="font-italic">{{datasetInfo['description']}}</p>
+      <p class="fst-italic">{{datasetInfo['description']}}</p>
 
     <div class="row">
       <div class="col-lg-3 col-md-6 col-sm-12">
@@ -117,7 +117,7 @@
           <mat-cell class="explore-small-col" *matCellDef="let study">
             <ng-container *ngIf="study.study_id">
               <ng-container *ngFor="let study_id of study.study_id.split(',')">
-                <a *ngIf="study_id.includes('http')" href={{study_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+                <a *ngIf="study_id.includes('http')" href={{study_id}} title="View study details" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
                 <span *ngIf="!study_id.includes('http')"> {{study_id}}</span>
               </ng-container>
             </ng-container>
@@ -166,7 +166,7 @@
           <mat-cell *matCellDef="let study"  class="explore-small-col">
             <ng-container *ngIf="study.pub_ids">
               <ng-container *ngFor="let pub_id of study.pub_ids.split(',')">
-                <a *ngIf="pub_id.includes('http')" href={{pub_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+                <a *ngIf="pub_id.includes('http')" href={{pub_id}} title="View publication" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
                 <span *ngIf="!pub_id.includes('http')"> {{pub_id}}</span>
               </ng-container>
             </ng-container>
@@ -178,7 +178,7 @@
             Download Repertoires
           </mat-header-cell>
           <mat-cell *matCellDef="let study"  class="explore-small-col">
-            <a *ngIf="study.repertoires" href={{apibasePath}}{{study.repertoires}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            <a *ngIf="study.repertoires" href={{apibasePath}}{{study.repertoires}} title="Download repertoires" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
           </mat-cell>
         </ng-container>
 

@@ -1,6 +1,6 @@
 <div class="row">
   <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
-    <span class="sr-only">Loading...</span>
+    <span class="visually-hidden">Loading...</span>
   </div>
 
   <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
@@ -14,7 +14,7 @@
 <div class="row">
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
     <span class="header-text">Quick search:&nbsp;</span>
-    <input class="searchBox" #searchBox>
+    <input class="form-control" placeholder="Search..." aria-label="Search" #searchBox>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <div class="col-auto ml-auto">
+  <div class="col-auto ms-auto">
     <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
   </div>
 </div>
@@ -135,25 +135,25 @@
 <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
   <ng-template matMenuContent>
     <div class="container">
-      <div class="row ml-1 mr-2">
+      <div class="row ms-1 me-2">
         <b>Download data for selected genes</b>
       </div>
-      <div class="row ml-4 mr-2 mb-0 align-middle">
+      <div class="row ms-4 me-2 mb-0 align-middle">
         Ungapped sequences (fasta)
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_gen_data', 'fasta', {type:'Ungapped sequences (fasta)'})">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'fasta', {type:'Ungapped sequences (fasta)'})" title="Download ungapped sequences">
             <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
       </div>
-      <div class="row ml-4 mr-2 mb-0 align-middle">
+      <div class="row ms-4 me-2 mb-0 align-middle">
         Gapped sequences (fasta)
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_gen_data', 'fasta', {type:'Gapped sequences (fasta)'})">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'fasta', {type:'Gapped sequences (fasta)'})" title="Download gapped sequences">
             <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
       </div>
-      <div class="row ml-4 mr-2 mb-0 align-middle">
+      <div class="row ms-4 me-2 mb-0 align-middle">
         Gene information (csv)
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_gen_data', 'csv', {type:'Gene information (csv)'})">
+          <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'csv', {type:'Gene information (csv)'})" title="Download gene information">
             <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
       </div>
     </div>

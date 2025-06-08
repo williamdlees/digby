@@ -1,7 +1,7 @@
 
 <div class="container-fluid">
   <div  class="spinner-border" role="status" *ngIf="loading">
-    <span class="sr-only">Loading...</span>
+    <span class="visually-hidden">Loading...</span>
   </div>
 
   <div class="alert alert-danger" *ngIf="error">
@@ -12,7 +12,7 @@
   </div>
 
   <ng-container *ngIf="!loading && !error">
-    <h2 class="mt-5">Datasets available for species <span class="font-italic">{{species}}</span></h2>
+    <h2 class="mt-5">Datasets available for species <span class="fst-italic">{{species}}</span></h2>
 
     <div class="container">
       <mat-table #datasetInfoTable [dataSource]="datasetDescriptions">
@@ -46,7 +46,7 @@
 
   <ng-container *ngIf="!loading && !error && datasetInfo">
       <h2 class="mt-5">Summary of dataset {{dataset}}: {{datasetInfo['total_samples']}} samples from {{datasetInfo['total_subjects']}} subjects</h2>
-      <p class="font-italic">{{datasetInfo['description']}}</p>
+      <p class="fst-italic">{{datasetInfo['description']}}</p>
 
     <div class="row">
       <div class="col-lg-3 col-md-6 col-sm-12">

@@ -65,9 +65,7 @@
   <div>
     <div class="resizable-table">
     <table mat-table [dataSource]="dataSource">
-
-
-      <ng-container *ngFor="let col of allColumns">
+     <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string')">
             <ng-container matColumnDef={{col.id}}>
               <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">

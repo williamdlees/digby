@@ -29,62 +29,6 @@
   border: none;
 }
 
-mwlResizable {
-  box-sizing: border-box;
-}
-
-	mat-cell,
-	mat-footer-cell,
-	mat-header-cell {
-		width: 200px;
-		flex: none !important;
-		display: block;
-	}
-	mat-header-cell {
-		border-left: 1px solid #eee;
-	}
-
-	.mat-header-cell {
-		padding-left: 6px;
-		padding-right: 6px;
-	}
-
-	.mat-cell {
-    padding-left: 6px;
-    padding-right: 6px;
-    border-left: 1px solid #eee;
-  }
-
-  .mat-cell {
-		vertical-align: middle;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-
-.mat-row {
-  min-height: 18px !important;
-  height: 100% !important;
-  padding-bottom: 6px !important;
-  padding-top: 6px !important;
-}
-
-.small-col {
-  width: 100px;
-}
-
-.large-col {
-  width: 300px;
-}
-
-.mat-ellipsis {
-  vertical-align: middle;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block;
-}
-
 .mat-paginator-range-label {
   margin: 0px 0px !important;
 }

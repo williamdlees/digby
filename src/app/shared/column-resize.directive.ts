@@ -95,11 +95,8 @@ export class ColumnResizeDirective implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((e: Event) => {
           const mouseEvent = e as MouseEvent;
-          const rect = this.resizer.getBoundingClientRect();
-          const isNearEdge = mouseEvent.clientX >= rect.right - 6;
-          if (isNearEdge) {
-            this.onMouseDown(mouseEvent);
-          }
+          this.onMouseDown(mouseEvent);
+          mouseEvent.stopImmediatePropagation();
         });
 
       fromEvent(document, 'mousemove')

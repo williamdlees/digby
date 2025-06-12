@@ -66,15 +66,15 @@ p,li { font-size: 1.2rem; }
 .column-resizer {
   position: absolute !important;
   top: 0 !important;
-  right: -3px !important;
+  right: 0 !important;
   bottom: 0 !important;
-  width: 6px !important;
+  width: 8px !important;
   cursor: col-resize !important;
   pointer-events: auto !important;
   background: transparent !important;
   opacity: 0;
   transition: opacity 0.2s ease !important;
-  z-index: 3 !important;
+  z-index: 101 !important;
 }
 
 /* Unified resize handle styling */

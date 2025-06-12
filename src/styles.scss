@@ -46,7 +46,7 @@ p,li { font-size: 1.2rem; }
   width: 100% !important;
 }
 
-/* Column resizer styles */
+/* Unified column resizer styles */
 .resizable-table {
   overflow-x: auto !important;
   width: 100% !important;
@@ -66,27 +66,43 @@ p,li { font-size: 1.2rem; }
 .column-resizer {
   position: absolute !important;
   top: 0 !important;
-  right: 0 !important;
+  right: -3px !important;
   bottom: 0 !important;
   width: 6px !important;
   cursor: col-resize !important;
   pointer-events: auto !important;
   background: transparent !important;
-}
-
-.resize-handle {
-  position: absolute !important;
-  top: 0 !important;
-  right: 2px !important;
-  bottom: 0 !important;
-  width: 2px !important;
-  background-color: #ccc !important;
-  opacity: 0 !important;
+  opacity: 0;
   transition: opacity 0.2s ease !important;
+  z-index: 3 !important;
 }
 
-.column-resizer:hover .resize-handle {
+/* Unified resize handle styling */
+.column-resizer:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 2px;
+  bottom: 0;
+  width: 2px;
+  background-color: #ccc;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.column-resizer:hover {
   opacity: 1 !important;
+}
+
+.column-resizer:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 2px;
+  bottom: 0;
+  width: 2px;
+  background-color: #ccc;
+  z-index: 2;
 }
 
 /* Override Material hover effects */

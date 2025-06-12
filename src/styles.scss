@@ -1,12 +1,31 @@
+/* ==================== GLOBAL STYLES ==================== */
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import 'material-design-icons/iconfont/material-icons.css';
 
+/* Base page styles */
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* Typography */
 p,li { font-size: 1.2rem; }
 
+/* ================= COMPONENT STYLES ==================== */
+/* Column title styling */
+.column-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Filter component alignment */
+app-filter {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* ================= TABLE LAYOUT ======================== */
 /* Material table layout styles */
 .mat-mdc-table {
   table-layout: fixed !important;
@@ -46,7 +65,7 @@ p,li { font-size: 1.2rem; }
   width: 100% !important;
 }
 
-/* Unified column resizer styles */
+/* =============== COLUMN RESIZING ======================= */
 .resizable-table {
   overflow-x: auto !important;
   width: 100% !important;
@@ -105,7 +124,23 @@ p,li { font-size: 1.2rem; }
   z-index: 2;
 }
 
-/* Override Material hover effects */
+/* ================= HEADER STYLES ======================= */
+.mat-mdc-header-cell {
+  background: transparent !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.header-flex {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  height: 100% !important;
+  gap: 8px;
+}
+
+/* Hover state overrides */
 .mat-mdc-header-cell:hover,
 .mat-mdc-header-cell:active,
 .mat-mdc-header-cell:focus {
@@ -117,7 +152,7 @@ p,li { font-size: 1.2rem; }
   background-color: transparent !important;
 }
 
-/* Style for columns being resized */
+/* ================ INTERACTION STATES =================== */
 .resizing {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
@@ -125,7 +160,6 @@ p,li { font-size: 1.2rem; }
   user-select: none !important;
 }
 
-/* Ensure table stays in fixed layout during resize */
 .mat-mdc-table.resizing {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
@@ -133,7 +167,7 @@ p,li { font-size: 1.2rem; }
   user-select: none !important;
 }
 
-/* Common table styles */
+/* ================ TABLE CELL SIZING ==================== */
 th.small-col {
   width: 100px;
 }
@@ -166,4 +200,3 @@ th.large-col {
 .large-col {
   width: 300px;
 }
-

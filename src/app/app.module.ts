@@ -72,6 +72,7 @@ import { RefbookComponent } from './refbook/refbook.component';
 import { RefbookPanelComponent } from './refbook/refbook-panel/refbook-panel.component';
 import { ReportsService, GenomicService, RepseqService, SystemService } from 'projects/digby-swagger-client';
 import { ReportRunService } from './reports/report-run.service';
+import { ColumnResizeDirective } from './shared/column-resize.directive';
 
 export function apiConfigFactory(): Configuration  {
   const params: ConfigurationParameters = {
@@ -142,6 +143,7 @@ const appRoutes: Routes = [
         GenExploreDataPanelComponent,
         RefbookComponent,
         RefbookPanelComponent,
+        ColumnResizeDirective,
     ],
     bootstrap: [AppComponent],
     schemas: [

@@ -1,92 +1,67 @@
-.btn-sm {
-  padding: 0.1rem .3rem !important;
-  line-height: 1 !important;
+/* Header cell styling */
+.mat-mdc-header-cell {
+  background: transparent !important;
+  position: relative !important;
+  overflow: visible !important;
 }
 
-.i {
-  line-height: inherit;
-}
-
-.primary-icon {
-  color: #007bff;
-  align-items: center;
-  vertical-align: bottom;
-  line-height: 20px;
-}
-
-.header-text {
-  color: rgba(0,0,0,0.54);
-  font-size: 12px;
-}
-
-.btn-solid-icon {
-  background-color: white;
-  color: #6c757d;
-  border: none;
-}
-
-mwlResizable {
-  box-sizing: border-box;
-}
-
-	mat-cell,
-	mat-footer-cell,
-	mat-header-cell {
-		width: 200px;
-		flex: none !important;
-		display: block;
-	}
-	mat-header-cell {
-		border-left: 1px solid #eee;
-	}
-
-	.mat-header-cell {
-		padding-left: 6px;
-		padding-right: 6px;
-	}
-
-	.mat-cell {
-    padding-left: 6px;
-    padding-right: 6px;
-    border-left: 1px solid #eee;
-  }
-
-  .mat-cell {
-		vertical-align: middle;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-
-.mat-row {
-  min-height: 18px !important;
+/* Header content container */
+.header-flex {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
   height: 100% !important;
-  padding-bottom: 6px !important;
-  padding-top: 6px !important;
+  gap: 8px;
 }
 
-.small-col {
-  width: 100px;
-}
-
-.large-col {
-  width: 300px;
-}
-
-.mat-ellipsis {
-  vertical-align: middle;
+/* Column title styling */
+.column-title {
+  flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: inline-block;
 }
 
-.mat-paginator-range-label {
-  margin: 0px 0px !important;
+/* Filter component alignment */
+app-filter {
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
-.searchbox {
-  border-color: rgb(206,212, 255);
-  border-width: 1px;
-  border-style: solid;
+/* Resize handle styling */
+.column-resizer {
+  position: absolute !important;
+  top: 0;
+  right: -6px;
+  bottom: 0;
+  width: 12px;
+  cursor: col-resize;
+  z-index: 2;
+  opacity: 0;
+  background: transparent;
+  transition: opacity 0.2s ease;
+}
+
+.mat-mdc-header-cell:hover .column-resizer {
+  opacity: 1;
+}
+
+.column-resizer:hover {
+  background-color: rgba(0, 123, 255, 0.2);
+}
+
+.column-resizer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 5px;
+  bottom: 0;
+  width: 2px;
+  background-color: rgba(0, 123, 255, 0.2);
+}
+
+/* Remove Material's default hover effects */
+.mat-mdc-header-cell:hover {
+  background: transparent !important;
 }

@@ -406,16 +406,14 @@ export class RepGeneTablePanelComponent
     });
   }
 
-  onResizeEnd(event: ResizeEvent, columnName): void {
-    if (event.edges.right) {
-      const cssValue = event.rectangle.width + "px";
+  onResizeEnd(columnName, width): void {
+      const cssValue = width + "px";
       this.updateColumnWidth(columnName, cssValue);
       this.resizeEvents.set(columnName, cssValue);
       this.tableParamsStorageService.saveInfo(
         this.resizeEvents,
         "rep-gene-table-widths"
       );
-    }
   }
 
   applyResizes(): void {

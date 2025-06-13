@@ -63,12 +63,19 @@ app-filter {
   transition: width 0.1s ease !important;
 }
 
+.mat-mdc-header-row.mat-elevation-z1 {
+  z-index: 2; /* Higher than surrounding elements */
+  position: relative; /* Enable z-index */
+  background: white;
+}
+
 .mat-mdc-cell > div, .mat-mdc-header-cell > div {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   width: 100% !important;
 }
+
 
 /* =============== COLUMN RESIZING ======================= */
 .resizable-table {

@@ -68,12 +68,12 @@
       <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string' && col.id === 'sample_name')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
-              </th>
+              </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item" (click)="showInfo(item)">
                   {{item[col.id]}}
               </mat-cell>
@@ -82,12 +82,12 @@
 
         <ng-container *ngIf="(col.type === 'string' && col.id !== 'sample_name')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
-              </th>
+              </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                   <ng-container *ngIf="item[col.id] && item[col.id].startsWith('http')">
                     <a href={{item[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
@@ -101,24 +101,24 @@
 
         <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
-              </th>
+              </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">{{item[col.id]}}</mat-cell>
             </ng-container>
         </ng-container>
 
         <ng-container *ngIf="(col.type === 'boolean')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
-              </th>
+              </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                 <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
               </mat-cell>
@@ -127,11 +127,11 @@
 
         <ng-container *ngIf="(col.type === 'genotype')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 </div>
-              </th>
+              </mat-header-cell>
               <mat-cell *matCellDef="let item" class="{{col.size}}" >
                 <button class="btn btn-sm" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}" title="View genotype details">
                   <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
@@ -142,12 +142,12 @@
 
         <ng-container *ngIf="(col.type === 'haplotype')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [showSort] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
-              </th>
+              </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                 <div *ngIf="item[col.id]">
                   <div class="container">
@@ -171,7 +171,7 @@
 
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true " class="mat-elevation-z1"></mat-header-row>
 
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 

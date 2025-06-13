@@ -25,7 +25,6 @@ import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { RepGeneSelectedService } from '../rep-gene-selected.service';
 import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
 import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component';
-import { ResizeEvent } from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';

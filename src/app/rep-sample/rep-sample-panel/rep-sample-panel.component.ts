@@ -16,7 +16,6 @@ import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.compone
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
 import { RepSampleSelectedService } from '../rep-sample-selected.service';
 import {RepSampleFilterService} from '../rep-sample-filter.service';
-import {ResizeEvent} from 'angular-resizable-element';
 import {TableParamsStorageService} from '../../table/table-params-storage-service';
 import { HttpClient } from '@angular/common/http';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
@@ -267,6 +266,7 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   onResizeEnd(columnName, width): void {
+    console.log("onResizeEnd");
     const cssValue = width + 'px';
     this.updateColumnWidth(columnName, cssValue);
     this.resizeEvents.set(columnName, cssValue);

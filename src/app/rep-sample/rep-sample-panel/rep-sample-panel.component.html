@@ -68,7 +68,7 @@
       <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string' && col.id === 'sample_name')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -82,7 +82,7 @@
 
         <ng-container *ngIf="(col.type === 'string' && col.id !== 'sample_name')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -101,7 +101,7 @@
 
         <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -113,7 +113,7 @@
 
         <ng-container *ngIf="(col.type === 'boolean')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -127,7 +127,7 @@
 
         <ng-container *ngIf="(col.type === 'genotype')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 </div>
@@ -142,7 +142,7 @@
 
         <ng-container *ngIf="(col.type === 'haplotype')">
             <ng-container matColumnDef={{col.id}}>
-              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+              <th mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [showSort] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>

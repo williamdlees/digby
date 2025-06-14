@@ -61,8 +61,8 @@
 
 </div>
 
-<div>
-  <div>
+<div class="row">
+  <div class="col">
     <div class="resizable-table">
     <table mat-table [dataSource]="dataSource">
      <ng-container *ngFor="let col of allColumns">
@@ -142,7 +142,7 @@
         </ng-container>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true " class="mat-elevation-z1"></mat-header-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
 
       <mat-row *matRowDef="let row; columns: displayedColumns" ></mat-row>
 

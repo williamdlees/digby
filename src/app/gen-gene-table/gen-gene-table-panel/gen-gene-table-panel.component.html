@@ -61,43 +61,45 @@
 
 <div class="row">
   <div class="col">
-    <mat-table [dataSource]="dataSource">
-
+    <div class="resizable-table">
+    <table mat-table [dataSource]="dataSource">
       <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <div *ngIf="col.id === 'name'" >
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-                </div>
-                <div *ngIf="col.id === 'type'" >
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setTypeFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-                </div>
-                <div *ngIf="col.id === 'functional'" >
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFuncFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-                </div>
-                <div *ngIf="col.id !== 'name' && col.id !== 'type'" >
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+                <div class="header-flex">
+                  <span class="column-title">{{col.name}}</span>
+                  <div *ngIf="col.id === 'name'" >
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                  <div *ngIf="col.id === 'type'" >
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setTypeFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                  <div *ngIf="col.id === 'functional'" >
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFuncFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                  <div *ngIf="col.id !== 'name' && col.id !== 'type'" >
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
                 </div>
               </mat-header-cell>
-                <div *ngIf="col.id === 'sequence' || col.id === 'gapped_sequence'" >
-                  <mat-cell class="{{col.size}} mat-ellipsis" *matCellDef="let item"  (click)="onSequenceClick(item)">
-                      {{item[col.id]}}
-                  </mat-cell>
-                </div>
-                <div *ngIf="!(col.id === 'sequence' || col.id ==='gapped_sequence')">
-                  <mat-cell class="{{col.size}}" *matCellDef="let item">
+              <div *ngIf="col.id === 'sequence' || col.id === 'gapped_sequence'" >
+                <mat-cell class="{{col.size}}" *matCellDef="let item"  (click)="onSequenceClick(item)">
                     {{item[col.id]}}
-                  </mat-cell>
-                </div>
+                </mat-cell>
+              </div>
+              <div *ngIf="!(col.id === 'sequence' || col.id ==='gapped_sequence')">
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  {{item[col.id]}}
+                </mat-cell>
+              </div>
             </ng-container>
         </ng-container>
 
         <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+                <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
@@ -113,22 +115,26 @@
 
         <ng-container *ngIf="(col.type === 'boolean')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (resizeEnd)="onResizeEnd(col.id, $event)">
+                <span class="column-title">{{col.name}}</span>
                 <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
+                <span style="display: inline-block; min-width: 20px">
+                  <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
+                  <ng-container *ngIf="!item[col.id]">&nbsp;</ng-container>
+                </span>
               </mat-cell>
             </ng-container>
         </ng-container>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
 
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
-    </mat-table>
+    </table>
+    </div>
   </div>
 </div>
 

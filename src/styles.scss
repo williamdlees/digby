@@ -212,3 +212,44 @@ th.large-col {
 .large-col {
   width: 300px;
 }
+
+.btn-sm {
+  padding: 0.1rem .3rem !important;
+  line-height: 1 !important;
+}
+
+.addr {
+  color: rgb(0, 123, 255) !important;
+}
+
+.i {
+  line-height: inherit;
+}
+
+.primary-icon {
+  color: #007bff;
+  align-items: center;
+  vertical-align: bottom;
+  line-height: 20px;
+}
+
+.header-text {
+  color: rgba(0,0,0,0.54);
+  font-size: 12px;
+}
+
+.btn-solid-icon {
+  background-color: white;
+  color: #6c757d;
+  border: none;
+}
+
+.mat-paginator-range-label {
+  margin: 0px 0px !important;
+}
+
+.searchbox {
+  border-color: rgb(206,212, 255);
+  border-width: 1px;
+  border-style: solid;
+}

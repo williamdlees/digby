@@ -323,13 +323,14 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '', postfix: '' }, op1: seq.name, op2: ''});
   }
 
-  onResizeEnd(event: ResizeEvent, columnName): void {
-    if (event.edges.right) {
-      const cssValue = event.rectangle.width + 'px';
+  onResizeEnd(columnName, width): void {
+      const cssValue = width + "px";
       this.updateColumnWidth(columnName, cssValue);
       this.resizeEvents.set(columnName, cssValue);
-      this.tableParamsStorageService.saveInfo(this.resizeEvents, 'gen-gene-table-widths');
-    }
+      this.tableParamsStorageService.saveInfo(
+        this.resizeEvents,
+        "gen-gene-table-widths"
+      );
   }
 
   applyResizes(): void {

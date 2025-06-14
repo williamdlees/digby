@@ -61,17 +61,19 @@
 
 <div class="row">
   <div class="col">
-    <mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource">
       <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <div *ngIf="col.id === 'sample_name'" >
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-                </div>
-                <div *ngIf="col.id !== 'sample_name'" >
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+                <div class="header-flex">
+                  <span class="column-title">{{col.name}}</span>
+                  <div *ngIf="col.id === 'sample_name'" >
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                  <div *ngIf="col.id !== 'sample_name'" >
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
                 </div>
               </mat-header-cell>
                 <div *ngIf="col.id === 'annotation_path'" >
@@ -106,9 +108,11 @@
 
         <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+                <div class="header-flex">
+                  <span class="column-title">{{col.name}}</span>
+                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                </div>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                   {{item[col.id]}}
@@ -118,9 +122,11 @@
 
         <ng-container *ngIf="(col.type === 'boolean')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+                <div class="header-flex">
+                  <span class="column-title">{{col.name}}</span>
+                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                </div>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                 <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
@@ -129,11 +135,11 @@
         </ng-container>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
 
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
-    </mat-table>
+    </table>
     </div>
 </div>
 

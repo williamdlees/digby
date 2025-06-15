@@ -3,24 +3,22 @@ import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEnca
 import { GenomicService } from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
-import {GeneSequenceDataSource} from '../gene-sequence.datasource';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTable} from '@angular/material/table';
-import {columnInfo} from './gene-table-panel-cols';
-import {FilterMode} from '../../table/filter/filter-mode.enum';
-import {BehaviorSubject, fromEvent, Observable} from 'rxjs';
-import {IChoices} from '../../table/filter/ichoices';
-import {ColumnPredicate} from '../../table/filter/column-predicate';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SeqModalComponent } from '../../seq-modal/seq-modal.component';
+import { GeneSequenceDataSource } from '../gene-sequence.datasource';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTable } from '@angular/material/table';
+import { columnInfo } from './gene-table-panel-cols';
+import { FilterMode } from '../../table/filter/filter-mode.enum';
+import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
+import { IChoices } from '../../table/filter/ichoices';
+import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { GenGeneSelectedService } from '../gen-gene-selected.service'
-import {GenSampleSelectedService} from '../../gen-sample/gen-sample-selected.service';
-import { ResizeEvent } from 'angular-resizable-element';
-import { TableParamsStorageService } from '../../table/table-params-storage-service';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {NavigationEnd, Router} from '@angular/router';
-import {ReportRunService} from '../../reports/report-run.service';
-import {listsOfDictionariesEqual} from '../../shared/struct_utils';
+import { GenSampleSelectedService } from '../../gen-sample/gen-sample-selected.service';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { ReportRunService } from '../../reports/report-run.service';
+import { listsOfDictionariesEqual } from '../../shared/struct_utils';
 
 
 @Component({
@@ -28,7 +26,7 @@ import {listsOfDictionariesEqual} from '../../shared/struct_utils';
     templateUrl: './gen-gene-table-panel.component.html',
     styleUrls: ['./gen-gene-table-panel.component.css'],
     encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
-    providers: [TableParamsStorageService],
+    providers: [],
     standalone: false
 })
 
@@ -54,7 +52,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
   selectedSampleIds = [];
   samplesSelected = false;
   isSelectedGenesChecked = false;
-  resizeEvents = new Map();
   clearSubject = new BehaviorSubject<null>(null);
   clear$ = this.clearSubject.asObservable();
   setFilterSubject = new BehaviorSubject<any>(null);
@@ -75,17 +72,14 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
               private geneTableService: GeneTableSelectorService,
               private modalService: NgbModal,
               private genGeneSelectedService: GenGeneSelectedService,
-              private tableParamsStorageService: TableParamsStorageService,
               private genSampleSelectedService: GenSampleSelectedService,
               private router: Router,
               private reportRunService: ReportRunService,
-              private el: ElementRef,
   ) {
   }
 
 
   ngOnInit() {
-    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'gen-gene-table-widths');
     this.dataSource = new GeneSequenceDataSource(this.genomicService);
   }
 
@@ -122,8 +116,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.loading$Subscription = this.dataSource.loading$.subscribe(
         loading => {
           if (!loading) {
-            this.applyResizes();
-
             if (this.redirectOnLoad) {
               const r = this.redirectOnLoad;
               this.redirectOnLoad = null;
@@ -150,13 +142,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       );
 
-      this.loading$Subscription = this.dataSource.loading$.subscribe(
-        loading => {
-          if (!loading) {
-            this.applyResizes();
-          }
-        }
-      );
 
       this.genSampleSelectedServiceSubscription = this.genSampleSelectedService.source.subscribe(
         selectedIds => {
@@ -178,11 +163,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
         }
       );
 
-      this.router.events.subscribe((val) => {
-        if (val instanceof NavigationEnd) {
-          this.applyResizes();
-        }
-      });
 
       this.loadSequences$Subscription = this.loadSequences$.pipe(debounceTime(500)).subscribe(() => {
         this.loadSequencesPage();
@@ -289,8 +269,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     const deleted = difference(sLoaded, sDisplayed);
     this.filters = this.filters.filter((x) => !(deleted.has(x.field)));
     this.sorts = this.sorts.filter((x) => !(deleted.has(x.field)));
-
-    this.applyResizes();
   }
 
   loadSequencesPage() {
@@ -323,30 +301,6 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
     this.setFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '', postfix: '' }, op1: seq.name, op2: ''});
   }
 
-  onResizeEnd(columnName, width): void {
-      const cssValue = width + "px";
-      this.updateColumnWidth(columnName, cssValue);
-      this.resizeEvents.set(columnName, cssValue);
-      this.tableParamsStorageService.saveInfo(
-        this.resizeEvents,
-        "gen-gene-table-widths"
-      );
-  }
-
-  applyResizes(): void {
-    for (const [columnName, cssValue] of this.resizeEvents) {
-      this.updateColumnWidth(columnName, cssValue);
-    }
-  }
-
-  updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < columnElts.length; i++) {
-      const currentEl = columnElts[i] as HTMLDivElement;
-      currentEl.style.width = cssValue;
-    }
-  }
 
   sendReportRequest(report, format, params) {
     const datasets = this.selection.datasets;

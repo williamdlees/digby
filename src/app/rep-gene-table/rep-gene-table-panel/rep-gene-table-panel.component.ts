@@ -25,9 +25,8 @@ import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { RepGeneSelectedService } from '../rep-gene-selected.service';
 import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
 import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component';
-import {TableParamsStorageService} from '../../table/table-params-storage-service';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
 import {listsOfDictionariesEqual} from '../../shared/struct_utils';
 
@@ -36,7 +35,7 @@ import {listsOfDictionariesEqual} from '../../shared/struct_utils';
     selector: "app-rep-gene-table-panel",
     templateUrl: "./rep-gene-table-panel.component.html",
     styleUrls: ["./rep-gene-table-panel.component.css"],
-    providers: [TableParamsStorageService],
+    providers: [],
     encapsulation: ViewEncapsulation.None,
     standalone: false
 })
@@ -76,7 +75,6 @@ export class RepGeneTablePanelComponent
   selectedSampleIds = [];
   isSelectedGenesChecked = false;
   repSampleSelectedServiceSubscription = null;
-  resizeEvents = new Map();
   samplesSelected = false;
   clearSubject = new BehaviorSubject<null>(null);
   clear$ = this.clearSubject.asObservable();
@@ -98,20 +96,14 @@ export class RepGeneTablePanelComponent
     private modalService: NgbModal,
     private repGeneSelectedService: RepGeneSelectedService,
     private repSampleSelectedService: RepSampleSelectedService,
-    private tableParamsStorageService: TableParamsStorageService,
     private router: Router,
     private reportRunService: ReportRunService,
     private route: ActivatedRoute,
-    private el: ElementRef,
     ) {
     this.route.params.subscribe((params) => (this.params = params));
   }
 
   ngOnInit() {
-    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(
-      this.resizeEvents,
-      "rep-gene-table-widths"
-    );
     this.dataSource = new RepSequenceDataSource(this.repseqService);
   }
 
@@ -174,8 +166,6 @@ export class RepGeneTablePanelComponent
       this.loading$Subscription = this.dataSource.loading$.subscribe(
         (loading) => {
           if (!loading) {
-            this.applyResizes();
-
             if (this.redirectOnLoad) {
               const r = this.redirectOnLoad;
               this.redirectOnLoad = null;
@@ -204,11 +194,6 @@ export class RepGeneTablePanelComponent
           }
         });
 
-      this.router.events.subscribe((val) => {
-        if (val instanceof NavigationEnd) {
-          this.applyResizes();
-        }
-      });
 
       this.loadSequences$Subscription = this.loadSequences$.pipe(debounceTime(500)).subscribe(() => {
         this.loadSequencesPage();
@@ -347,7 +332,6 @@ export class RepGeneTablePanelComponent
     const deleted = difference(sLoaded, sDisplayed);
     this.filters = this.filters.filter((x) => !deleted.has(x.field));
     this.sorts = this.sorts.filter((x) => !deleted.has(x.field));
-    this.applyResizes();
   }
 
   loadSequencesPage() {
@@ -405,30 +389,6 @@ export class RepGeneTablePanelComponent
     });
   }
 
-  onResizeEnd(columnName, width): void {
-      const cssValue = width + "px";
-      this.updateColumnWidth(columnName, cssValue);
-      this.resizeEvents.set(columnName, cssValue);
-      this.tableParamsStorageService.saveInfo(
-        this.resizeEvents,
-        "rep-gene-table-widths"
-      );
-  }
-
-  applyResizes(): void {
-    for (const [columnName, cssValue] of this.resizeEvents) {
-      this.updateColumnWidth(columnName, cssValue);
-    }
-  }
-
-  updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < columnElts.length; i++) {
-      const currentEl = columnElts[i] as HTMLDivElement;
-      currentEl.style.width = cssValue;
-    }
-  }
 
   sendReportRequest(report, format, params) {
     const datasets = this.selection.repSeqs;

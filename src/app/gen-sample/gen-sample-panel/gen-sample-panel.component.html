@@ -61,11 +61,11 @@
 
 <div class="row">
   <div class="col">
-    <table mat-table [dataSource]="dataSource">
+    <table mat-table [dataSource]="dataSource" appTableResize="gen-sample-table-widths">
       <ng-container *ngFor="let col of allColumns">
         <ng-container *ngIf="(col.type === 'string')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                   <div *ngIf="col.id === 'sample_name'" >
@@ -108,7 +108,7 @@
 
         <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -122,7 +122,7 @@
 
         <ng-container *ngIf="(col.type === 'boolean')">
             <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize (onResizeEnd)="onResizeEnd(col.id, $event)">
+              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>

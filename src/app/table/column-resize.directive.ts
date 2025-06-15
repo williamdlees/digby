@@ -147,7 +147,17 @@ export class ColumnResizeDirective implements OnInit, OnDestroy {
     }
     const diff = e.pageX - this.startX;
     const newWidth = Math.max(50, this.startWidth + diff);
+
+    // Emit the EventEmitter output for any component listeners
     this.onResizeEnd.emit(newWidth);
+
+    // Also dispatch a custom DOM event for TableResizeDirective
+    const columnName = this.columnClass.replace('mat-column-', '');
+    const customEvent = new CustomEvent('columnResized', {
+      detail: { columnName, width: newWidth },
+      bubbles: true
+    });
+    this.column.dispatchEvent(customEvent);
   }
 
   private updateColumnWidth(width: number) {

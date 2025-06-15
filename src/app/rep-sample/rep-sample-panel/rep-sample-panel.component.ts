@@ -88,14 +88,10 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
       this.geneTableServiceSubscription = this.geneTableService.source
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
-            console.log("repGeneTableSelectorComponent received selection:", sel.species, sel.datasets[0], sel.repSeqs[0]);
-
             this.selection = sel;
             this.onSelectedSamplesChange();
             this.paginator.firstPage();
             this.table.renderRows();
-            this.loadSequencesPage();
-
           }
         );
 

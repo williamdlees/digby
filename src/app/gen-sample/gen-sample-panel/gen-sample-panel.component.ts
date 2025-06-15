@@ -89,9 +89,9 @@ export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             this.selection = sel;
+            this.onSelectedSamplesChange();
             this.paginator.firstPage();
             this.table.renderRows();
-            this.loadSequencesPage();
           }
         );
 

@@ -61,15 +61,9 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   private _columnInfo: ColumnInfo[];
 
   @Input() set columnInfo(value: ColumnInfo[]) {
-     console.log('set columnInfo');
-
     this._columnInfo = value;
-     console.log('set columnInfo2');
-
-
-     setTimeout(() => {
-    this.onResetColumns();
-
+    setTimeout(() => {
+      this.onResetColumns();
      }, 0);
   }
 
@@ -160,7 +154,6 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
     // Only emit the columns on the next animation frame available
     setTimeout(() => {
       const foo = this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
-      console.log('emit');
       this.columnsChange.emit(this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
       if (saveColumns) {
         this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName);

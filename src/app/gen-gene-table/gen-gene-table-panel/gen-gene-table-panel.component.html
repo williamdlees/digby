@@ -100,7 +100,7 @@
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <span class="column-title">{{col.name}}</span>
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                 <div *ngIf="col.id === 'appearances'" (click)="onAppearancesClick(item)">
@@ -117,7 +117,7 @@
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <span class="column-title">{{col.name}}</span>
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE"  [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                 <span style="display: inline-block; min-width: 20px">

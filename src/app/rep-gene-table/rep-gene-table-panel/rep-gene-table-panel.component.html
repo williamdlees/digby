@@ -103,7 +103,6 @@
                   <app-filter #filterComponent="menuInOtherComponent"
                             [columnName]="col.id"
                             [filterMode]="filterModeEnum.NUMBER_MODE"
-                            [setFilter$]="setFilter$"
                             [clear$]="clear$"
                             [choices$]="dataSource.choices$"
                             (predicateEmitter)="applyFilter($event)">
@@ -130,7 +129,7 @@
                 <div class="header-flex">
                 <span class="column-title">{{col.name}}</span>
                 </div>
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
                 <span style="display: inline-block; min-width: 20px">

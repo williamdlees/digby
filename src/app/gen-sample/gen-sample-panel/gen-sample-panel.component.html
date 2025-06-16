@@ -111,7 +111,7 @@
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
@@ -125,7 +125,7 @@
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
-                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">

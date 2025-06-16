@@ -1,11 +1,10 @@
 import {
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   ViewChild,
   ViewEncapsulation,
-  input
+  input,
+  output
 } from '@angular/core';
 import {FilterImplementation} from '../filter-implementation';
 import {ColumnPredicate} from '../column-predicate';
@@ -50,7 +49,7 @@ export class TextFilterComponent implements OnInit, FilterImplementation {
   readonly setFilter$ = input<Observable<any>>(undefined);
   readonly showTextFilter = input(true);
   readonly showSort = input(true);
-  @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
+  readonly predicateEmitter = output<ColumnPredicate>();
 
   selectedOperator: Operator;
   operand1Input = '';

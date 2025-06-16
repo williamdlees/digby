@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Type, Output, EventEmitter, input } from '@angular/core';
+import { Component, OnInit, ViewChild, Type, input, output } from '@angular/core';
 import { TextFilterComponent } from './text-filter/text-filter.component';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
@@ -26,7 +26,7 @@ export class FilterComponent implements OnInit {
   readonly filterMode = input<FilterMode>(undefined);
   readonly showTextFilter = input(true);
   readonly showSort = input(true);
-  @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
+  readonly predicateEmitter = output<ColumnPredicate>();
   filterImplementationComponent: Type<FilterImplementation>;
   inputs = null;
   outputs = {

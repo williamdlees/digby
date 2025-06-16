@@ -6,7 +6,7 @@ import { GoogleChartsModule, ChartType } from 'angular-google-charts';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";
 import {environment} from '../../../environments/environment';
-import { NgIf, NgFor } from '@angular/common';
+
 
 
 @Component({
@@ -15,7 +15,7 @@ import { NgIf, NgFor } from '@angular/common';
     styleUrls: ['./rep-explore-data-panel.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    imports: [NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule, NgFor]
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule]
 })
 
 export class RepExploreDataPanelComponent implements OnInit {

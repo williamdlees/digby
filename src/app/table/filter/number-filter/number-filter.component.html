@@ -1,10 +1,16 @@
 <button mat-icon-button [matMenuTriggerFor]="filterMenu">
   <span>
-    <mat-icon *ngIf="selectedOperator || (selectedItems.length > 0)">filter_list</mat-icon>
-    <mat-icon *ngIf="selectedSort==='desc'">arrow_upward</mat-icon>
-    <mat-icon *ngIf="selectedSort==='asc'">arrow_downward</mat-icon>
+    @if (selectedOperator || (selectedItems.length > 0)) {
+      <mat-icon>filter_list</mat-icon>
+    }
+    @if (selectedSort==='desc') {
+      <mat-icon>arrow_upward</mat-icon>
+    }
+    @if (selectedSort==='asc') {
+      <mat-icon>arrow_downward</mat-icon>
+    }
     <mat-icon>arrow_drop_down</mat-icon>
-    </span>
+  </span>
 </button>
 
 <mat-menu #filterMenu="matMenu" xPosition="before" class="menu-overflow-hidden tf-mat-menu">
@@ -23,29 +29,32 @@
       <div class="row">
         <button class="float-left" mat-button (click)="onSortDesc()">Sort Descending</button>
       </div>
-      <div class="row" *ngIf="selectedSort">
-        <button  class="float-left"mat-button  (click)="onSortClear()">Clear Sort</button>
-      </div>
+      @if (selectedSort) {
+        <div class="row">
+          <button  class="float-left"mat-button  (click)="onSortClear()">Clear Sort</button>
+        </div>
+      }
 
       <div class="row">
-      <div class="dropdown-divider"></div>
-      <mat-form-field class="col-12">
-        <mat-select placeholder="Select comparison" [(value)]="selectedOperator">
-          <mat-option *ngFor="let operator of operatorList" [value]="operator">
-            {{operator.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+        <div class="dropdown-divider"></div>
+        <mat-form-field class="col-12">
+          <mat-select placeholder="Select comparison" [(value)]="selectedOperator">
+            @for (operator of operatorList; track operator) {
+              <mat-option [value]="operator">
+                {{operator.name}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       </div>
 
-      <ng-container *ngIf="selectedOperator">
+      @if (selectedOperator) {
         <div class="row">
           <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
             <input matInput placeholder="Numeric operand 1" [(ngModel)]="operand1Input" name="operand1Input">
           </mat-form-field>
         </div>
-
-        <ng-container *ngIf="selectedOperator.operands === 3">
+        @if (selectedOperator.operands === 3) {
           <div class="row">
             <span class="col-12">and</span>
           </div>
@@ -54,19 +63,20 @@
               <input matInput placeholder="Numeric operand 2" [(ngModel)]="operand2Input" name="operand2Input">
             </mat-form-field>
           </div>
-        </ng-container>
-
-      <div class="row">
-        <button mat-button  (click)="onClearFilter()">Clear Filter</button>
-      </div>
-      <div class="dropdown-divider"></div>
-      </ng-container>
-
-      <div *ngIf="selectedItems.length">
+        }
         <div class="row">
-          <button mat-button  (click)="onClearSelection()">Clear Selection</button>
+          <button mat-button  (click)="onClearFilter()">Clear Filter</button>
         </div>
-      </div>
+        <div class="dropdown-divider"></div>
+      }
+
+      @if (selectedItems.length) {
+        <div>
+          <div class="row">
+            <button mat-button  (click)="onClearSelection()">Clear Selection</button>
+          </div>
+        </div>
+      }
 
       <div>
         <ng-multiselect-dropdown name="multi"  class="col-12"
@@ -75,7 +85,7 @@
           [data]="choices"
           [placeholder]="'Select Items'"
           [(ngModel)]="selectedItems"
-        >
+          >
         </ng-multiselect-dropdown>
       </div>
     </form>

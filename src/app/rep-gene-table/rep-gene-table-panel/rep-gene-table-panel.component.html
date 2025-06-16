@@ -1,15 +1,19 @@
 
 <div class="row">
-  <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-
-  <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
-    <div class="row">
-      <h4>Error loading table</h4>
-      <p>{{dataSource.error$ | async}}</p>
+  @if (dataSource.loading$ | async) {
+    <div  class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-  </div>
+  }
+
+  @if (dataSource.error$ | async) {
+    <div class="alert alert-danger">
+      <div class="row">
+        <h4>Error loading table</h4>
+        <p>{{dataSource.error$ | async}}</p>
+      </div>
+    </div>
+  }
 </div>
 
 <div class="row">
@@ -27,11 +31,11 @@
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
     <button digby-table-column-sorter
-       [(columns)]="displayedColumns"
-       [columnInfo]="allColumns"
-       [saveName]="'rep-gene-table'"
-       (columnsChange)="updateColumnData($event)" >
-       <mat-icon class="primary-icon"  style="">view_column</mat-icon>
+      [(columns)]="displayedColumns"
+      [columnInfo]="allColumns"
+      [saveName]="'rep-gene-table'"
+      (columnsChange)="updateColumnData($event)" >
+      <mat-icon class="primary-icon"  style="">view_column</mat-icon>
       <span class="header-text">Arrange Columns</span>
     </button>
   </div>
@@ -43,166 +47,182 @@
     <label class="form-check-label" for="downloadbutton">Download</label>
   </div>
 
-  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="samplesSelected">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
-        [(ngModel)]="isSelectedGenesChecked"
-        (change)="(onSelectedIdsChange())"
-      >
-      <label class="form-check-label" for="chk-selected-items">
-        Only genes from selected samples
-      </label>
-    </div>
-  </div>
-
-  <div class="col-auto ms-auto">
-    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
-  </div>
-
-</div>
-
-<div class="row">
-  <div class="col">
-    <div class="resizable-table">
-    <table mat-table [dataSource]="dataSource" appTableResize="rep-gene-table-widths">
-     <ng-container *ngFor="let col of allColumns">
-        <ng-container *ngIf="(col.type === 'string')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                <div class="header-flex">
-                  <span class="column-title">{{col.name}}</span>
-                  <app-filter #filterComponent="menuInOtherComponent"
-                            [columnName]="col.id"
-                            [filterMode]="filterModeEnum.TEXT_MODE"
-                            [setFilter$]="col.id === 'name' ? setFilter$ : null"
-                            [clear$]="clear$"
-                            [choices$]="dataSource.choices$"
-                            (predicateEmitter)="applyFilter($event)">
-                  </app-filter>
-                </div>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <div *ngIf="col.id === 'name'" (click)="onSequenceClick(item)">
-                  {{item[col.id]}}
-                </div>
-                <div *ngIf="col.id==='seq'" (click)="onSequenceClick(item)" class="mat-ellipsis">
-                  {{item[col.id]}}
-                </div>
-                <div *ngIf="!(col.id === 'name' || col.id ==='seq')">
-                  {{item[col.id]}}
-                </div>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                <div class="header-flex">
-                  <span class="column-title">{{col.name}}</span>
-                  <app-filter #filterComponent="menuInOtherComponent"
-                            [columnName]="col.id"
-                            [filterMode]="filterModeEnum.NUMBER_MODE"
-                            [clear$]="clear$"
-                            [choices$]="dataSource.choices$"
-                            (predicateEmitter)="applyFilter($event)">
-                  </app-filter>
-                </div>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <div *ngIf="col.id === 'appears'" (click)="onAppearancesClick(item)">
-                  {{item[col.id]}}
-                </div>
-                <div *ngIf="col.id === 'notesCount'" (click)="showNotes(item)">
-                  {{item[col.id]}}
-                </div>
-                <div *ngIf="col.id !== 'appears' && col.id != 'notes_count'">
-                  {{item[col.id]}}
-                </div>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'boolean')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                <div class="header-flex">
-                <span class="column-title">{{col.name}}</span>
-                </div>
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <span style="display: inline-block; min-width: 20px">
-                  <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
-                  <ng-container *ngIf="!item[col.id]">&nbsp;</ng-container>
-                </span>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
-
-      <mat-row *matRowDef="let row; columns: displayedColumns" ></mat-row>
-
-    </table>
-    </div>
-    </div>
-</div>
-
-
-<mat-menu #geneMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <ng-template matMenuContent let-seq="seq">
-    <div class="container">
-      <div class="row ms-1 me-2">
-        <b>{{seq.gene_name}} allelic variation</b>
+  @if (samplesSelected) {
+    <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+          [(ngModel)]="isSelectedGenesChecked"
+          (change)="(onSelectedIdsChange())"
+          >
+          <label class="form-check-label" for="chk-selected-items">
+            Only genes from selected samples
+          </label>
+        </div>
       </div>
-      <div class="row ms-1 me-2 mb-1">
-        IgSNPer Analysis
-        <ng-container *ngIf="seq['igsnper_plot_path'].length > 0">
+    }
+
+    <div class="col-auto ms-auto">
+      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="resizable-table">
+        <table mat-table [dataSource]="dataSource" appTableResize="rep-gene-table-widths">
+          @for (col of allColumns; track col) {
+            @if ((col.type === 'string')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent"
+                      [columnName]="col.id"
+                      [filterMode]="filterModeEnum.TEXT_MODE"
+                      [setFilter$]="col.id === 'name' ? setFilter$ : null"
+                      [clear$]="clear$"
+                      [choices$]="dataSource.choices$"
+                      (predicateEmitter)="applyFilter($event)">
+                    </app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  @if (col.id === 'name') {
+                    <div (click)="onSequenceClick(item)">
+                      {{item[col.id]}}
+                    </div>
+                  }
+                  @if (col.id==='seq') {
+                    <div (click)="onSequenceClick(item)" class="mat-ellipsis">
+                      {{item[col.id]}}
+                    </div>
+                  }
+                  @if (!(col.id === 'name' || col.id ==='seq')) {
+                    <div>
+                      {{item[col.id]}}
+                    </div>
+                  }
+                </mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'integer' || col.type === 'number')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent"
+                      [columnName]="col.id"
+                      [filterMode]="filterModeEnum.NUMBER_MODE"
+                      [clear$]="clear$"
+                      [choices$]="dataSource.choices$"
+                      (predicateEmitter)="applyFilter($event)">
+                    </app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  @if (col.id === 'appears') {
+                    <div (click)="onAppearancesClick(item)">
+                      {{item[col.id]}}
+                    </div>
+                  }
+                  @if (col.id === 'notesCount') {
+                    <div (click)="showNotes(item)">
+                      {{item[col.id]}}
+                    </div>
+                  }
+                  @if (col.id !== 'appears' && col.id != 'notes_count') {
+                    <div>
+                      {{item[col.id]}}
+                    </div>
+                  }
+                </mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'boolean')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex">
+                    <span class="column-title">{{col.name}}</span>
+                  </div>
+                  <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  <span style="display: inline-block; min-width: 20px">
+                    @if (item[col.id]) {
+                      <i class="fa fa-check" style="line-height: inherit;"></i>
+                    }
+                    @if (!item[col.id]) {
+                      &nbsp;
+                    }
+                  </span>
+                </mat-cell>
+              </ng-container>
+            }
+          }
+
+          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
+
+          <mat-row *matRowDef="let row; columns: displayedColumns" ></mat-row>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <mat-menu #geneMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <ng-template matMenuContent let-seq="seq">
+      <div class="container">
+        <div class="row ms-1 me-2">
+          <b>{{seq.gene_name}} allelic variation</b>
+        </div>
+        <div class="row ms-1 me-2 mb-1">
+          IgSNPer Analysis
+          @if (seq['igsnper_plot_path'].length > 0) {
+            <span>&nbsp;&nbsp;</span>
+            <a href="{{ seq['igsnper_plot_path'] }}" target="_blank" rel="noopener" title="View IgSNPer analysis"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+          }
+          @if (seq['igsnper_plot_path'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="row ms-1 me-2 mb-1">
+          IgSNPer explained
           <span>&nbsp;&nbsp;</span>
-          <a href="{{ seq['igsnper_plot_path'] }}" target="_blank" rel="noopener" title="View IgSNPer analysis"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="seq['igsnper_plot_path'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
+          <a href="https://github.com/Immunotools/IgSNPer" target="_blank" rel="noopener" title="Learn more about IgSNPer">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </a>
+        </div>
       </div>
-      <div class="row ms-1 me-2 mb-1">
-        IgSNPer explained
-        <span>&nbsp;&nbsp;</span>
-        <a href="https://github.com/Immunotools/IgSNPer" target="_blank" rel="noopener" title="Learn more about IgSNPer">
-          <i class="fa fa-desktop" style="line-height: inherit;"></i>
-        </a>
-      </div>
-    </div>
-  </ng-template>
-</mat-menu>
+    </ng-template>
+  </mat-menu>
 
 
-<mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <ng-template matMenuContent>
-    <div class="container">
-      <div class="row ms-1 me-2">
-        <b>Download data for selected genes</b>
-      </div>
-      <div class="row ms-4 me-2 mb-0 align-middle">
-        Ungapped sequences (fasta)
+  <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <ng-template matMenuContent>
+      <div class="container">
+        <div class="row ms-1 me-2">
+          <b>Download data for selected genes</b>
+        </div>
+        <div class="row ms-4 me-2 mb-0 align-middle">
+          Ungapped sequences (fasta)
           <span>&nbsp;&nbsp;</span>
           <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Ungapped sequences (fasta)'})" title="Download ungapped sequences">
             <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
-      </div>
-      <div class="row ms-4 me-2 mb-0 align-middle">
-        Gapped sequences (fasta)
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Gapped sequences (fasta)'})" title="Download gapped sequences">
-            <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
-      </div>
-      <div class="row ms-4 me-2 mb-0 align-middle">
-        Gene information (csv)
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Gene information (csv)'})" title="Download gene information">
-            <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
-      </div>
-    </div>
-  </ng-template>
-</mat-menu>
+          </div>
+          <div class="row ms-4 me-2 mb-0 align-middle">
+            Gapped sequences (fasta)
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Gapped sequences (fasta)'})" title="Download gapped sequences">
+              <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
+            </div>
+            <div class="row ms-4 me-2 mb-0 align-middle">
+              Gene information (csv)
+              <span>&nbsp;&nbsp;</span>
+              <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Gene information (csv)'})" title="Download gene information">
+                <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
+              </div>
+            </div>
+          </ng-template>
+        </mat-menu>

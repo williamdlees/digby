@@ -1,10 +1,16 @@
 <button mat-icon-button [matMenuTriggerFor]="filterMenu">
   <span>
-    <mat-icon *ngIf="selectedItems.length > 0">filter_list</mat-icon>
-    <mat-icon *ngIf="selectedSort==='desc'">arrow_downward</mat-icon>
-    <mat-icon *ngIf="selectedSort==='asc'">arrow_upward</mat-icon>
+    @if (selectedItems.length > 0) {
+      <mat-icon>filter_list</mat-icon>
+    }
+    @if (selectedSort==='desc') {
+      <mat-icon>arrow_downward</mat-icon>
+    }
+    @if (selectedSort==='asc') {
+      <mat-icon>arrow_upward</mat-icon>
+    }
     <mat-icon>arrow_drop_down</mat-icon>
-    </span>
+  </span>
 </button>
 
 <mat-menu #filterMenu="matMenu" xPosition="before" class="menu-overflow-hidden tf-mat-menu">
@@ -23,15 +29,19 @@
       <div class="row">
         <button class="float-left" mat-button (click)="onSortDesc()">Sort Descending</button>
       </div>
-      <div class="row" *ngIf="selectedSort">
-        <button class="float-left" mat-button  (click)="onSortClear()">Clear Sort</button>
-      </div>
-
-      <div *ngIf="selectedItems.length">
+      @if (selectedSort) {
         <div class="row">
-          <button class="float-left" mat-button  (click)="onClearSelection()">Clear Selection</button>
+          <button class="float-left" mat-button  (click)="onSortClear()">Clear Sort</button>
         </div>
-      </div>
+      }
+
+      @if (selectedItems.length) {
+        <div>
+          <div class="row">
+            <button class="float-left" mat-button  (click)="onClearSelection()">Clear Selection</button>
+          </div>
+        </div>
+      }
       <div class="row">
         <ng-multiselect-dropdown name="multi"  class="col-12"
           [class]="'filter-dropdown'"
@@ -39,7 +49,7 @@
           [data]="choices"
           [placeholder]="'Select Items'"
           [(ngModel)]="selectedItems"
-        >
+          >
         </ng-multiselect-dropdown>
       </div>
 

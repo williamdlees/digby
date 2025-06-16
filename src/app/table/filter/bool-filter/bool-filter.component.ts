@@ -14,7 +14,7 @@ import {Observable} from 'rxjs';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatMenuModule, MatMenuTrigger, MatMenu } from '@angular/material/menu';
 import { MatIconButton, MatButton } from '@angular/material/button';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 
@@ -37,7 +37,7 @@ class Operator {
     styleUrls: ['./bool-filter.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    imports: [MatIconButton, MatMenuTrigger, NgIf, MatIcon, MatMenu, FormsModule, MatButton, NgMultiSelectDropDownModule]
+    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, FormsModule, MatButton, NgMultiSelectDropDownModule]
 })
 export class BoolFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

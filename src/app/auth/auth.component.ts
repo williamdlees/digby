@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 
 import { AuthService, AuthResponseData } from './auth.service';
 import {take} from "rxjs/operators";
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html',
-    imports: [NgIf, FormsModule]
+    imports: [FormsModule]
 })
 export class AuthComponent implements OnInit{
   isLoading = false;

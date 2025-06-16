@@ -16,7 +16,7 @@ import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
 import {areListsEqual} from '../../shared/struct_utils';
 import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
 import { MatIcon } from '@angular/material/icon';
-import { NgFor, NgIf } from '@angular/common';
+
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatTooltip } from '@angular/material/tooltip';
 import { MatCard } from '@angular/material/card';
@@ -40,7 +40,7 @@ function symmetricDifference(setA, setB) {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ColumnSorterService],
-    imports: [MatMenuTrigger, MatMenu, CdkDropList, MatIcon, NgFor, CdkDrag, CdkDragHandle, MatCheckbox, MatTooltip, CdkDragPreview, MatCard, NgIf]
+    imports: [MatMenuTrigger, MatMenu, CdkDropList, MatIcon, CdkDrag, CdkDragHandle, MatCheckbox, MatTooltip, CdkDragPreview, MatCard]
 })
 export class ColumnSorterComponent implements OnInit, AfterViewInit {
   @Output()

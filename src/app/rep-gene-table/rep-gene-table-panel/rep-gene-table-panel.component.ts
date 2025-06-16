@@ -29,7 +29,7 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
 import {listsOfDictionariesEqual} from '../../shared/struct_utils';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { ColumnSorterComponent } from '../../table/column-sorter/column-sorter.component';
 import { MatMenuTrigger, MatMenu, MatMenuContent } from '@angular/material/menu';
@@ -45,7 +45,7 @@ import { FilterComponent } from '../../table/filter/filter.component';
     styleUrls: ["./rep-gene-table-panel.component.css"],
     providers: [],
     encapsulation: ViewEncapsulation.None,
-    imports: [NgIf, MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
+    imports: [MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
 })
 export class RepGeneTablePanelComponent
   implements AfterViewInit, OnInit, OnDestroy

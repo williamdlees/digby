@@ -1,14 +1,18 @@
 <div class="row">
-  <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
-    <span class="visually-hidden">Loading...</span>
-  </div>
-
-  <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
-    <div class="row">
-      <h4>Error loading table</h4>
-      <p>{{dataSource.error$ | async}}</p>
+  @if (dataSource.loading$ | async) {
+    <div  class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-  </div>
+  }
+
+  @if (dataSource.error$ | async) {
+    <div class="alert alert-danger">
+      <div class="row">
+        <h4>Error loading table</h4>
+        <p>{{dataSource.error$ | async}}</p>
+      </div>
+    </div>
+  }
 </div>
 
 <div class="row">
@@ -26,13 +30,13 @@
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
     <button digby-table-column-sorter
-       [(columns)]="displayedColumns"
-       [columnInfo]="allColumns"
-       [saveName]="'gen-sample-table'"
-       (columnsChange)="updateColumnData($event)" id="colbutton" title="Arrange columns">
-       <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
+      [(columns)]="displayedColumns"
+      [columnInfo]="allColumns"
+      [saveName]="'gen-sample-table'"
+      (columnsChange)="updateColumnData($event)" id="colbutton" title="Arrange columns">
+      <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
     </button>
-      <label class="form-check-label" for="colbutton">Arrange Columns</label>
+    <label class="form-check-label" for="colbutton">Arrange Columns</label>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
@@ -42,71 +46,82 @@
     <label class="form-check-label" for="downloadbutton">Download</label>
   </div>
 
-  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="selectedSequenceNames.length">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
-        [(ngModel)]="isSelectedSamplesChecked"
-        (change)="(onSelectedSamplesChange())"
-      >
-      <label class="form-check-label" for="chk-selected-items">
-        Only records with selected genes
-      </label>
+  @if (selectedSequenceNames.length) {
+    <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
+          [(ngModel)]="isSelectedSamplesChecked"
+          (change)="(onSelectedSamplesChange())"
+          >
+          <label class="form-check-label" for="chk-selected-items">
+            Only records with selected genes
+          </label>
+        </div>
+      </div>
+    }
+
+    <div class="col-auto ms-auto">
+      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
     </div>
   </div>
 
-  <div class="col-auto ms-auto">
-    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col">
-    <table mat-table [dataSource]="dataSource" appTableResize="gen-sample-table-widths">
-      <ng-container *ngFor="let col of allColumns">
-        <ng-container *ngIf="(col.type === 'string')">
+  <div class="row">
+    <div class="col">
+      <table mat-table [dataSource]="dataSource" appTableResize="gen-sample-table-widths">
+        @for (col of allColumns; track col) {
+          @if ((col.type === 'string')) {
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
                   <span class="column-title">{{col.name}}</span>
-                  <div *ngIf="col.id === 'sample_name'" >
-                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-                  </div>
-                  <div *ngIf="col.id !== 'sample_name'" >
-                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-                  </div>
+                  @if (col.id === 'sample_name') {
+                    <div >
+                      <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                    </div>
+                  }
+                  @if (col.id !== 'sample_name') {
+                    <div >
+                      <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                    </div>
+                  }
                 </div>
               </mat-header-cell>
-                <div *ngIf="col.id === 'annotation_path'" >
+              @if (col.id === 'annotation_path') {
+                <div >
                   <mat-cell *matCellDef="let item" class="small-col">
-                    <ng-container *ngIf="item[col.id].length > 0">
-                        <button class="btn btn-sm" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}" title="View genotype details">
-                          <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
-                        </button>
-                    </ng-container>
-                    <ng-container *ngIf="item[col.id].length === 0">
+                    @if (item[col.id].length > 0) {
+                      <button class="btn btn-sm" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}" title="View genotype details">
+                        <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
+                      </button>
+                    }
+                    @if (item[col.id].length === 0) {
                       NA
-                    </ng-container>
+                    }
                   </mat-cell>
                 </div>
-                <div *ngIf="col.id === 'sample_name'">
+              }
+              @if (col.id === 'sample_name') {
+                <div>
                   <mat-cell class="{{col.size}}" *matCellDef="let item" (click)="showInfo(item)">
                     {{item[col.id]}}
                   </mat-cell>
                 </div>
-                <div *ngIf="col.id !== 'annotation_path' && col.id !== 'sample_name'">
+              }
+              @if (col.id !== 'annotation_path' && col.id !== 'sample_name') {
+                <div>
                   <mat-cell class="{{col.size}}" *matCellDef="let item">
-                    <ng-container *ngIf="item[col.id] && item[col.id].startsWith('http')">
+                    @if (item[col.id] && item[col.id].startsWith('http')) {
                       <a href={{item[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-                    </ng-container>
-                    <ng-container *ngIf="!(item[col.id] && item[col.id].startsWith('http'))">
+                    }
+                    @if (!(item[col.id] && item[col.id].startsWith('http'))) {
                       {{item[col.id]}}
-                    </ng-container>
+                    }
                   </mat-cell>
                 </div>
+              }
             </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
+          }
+          @if ((col.type === 'integer' || col.type === 'number')) {
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
@@ -115,12 +130,11 @@
                 </div>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
-                  {{item[col.id]}}
+                {{item[col.id]}}
               </mat-cell>
             </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'boolean')">
+          }
+          @if ((col.type === 'boolean')) {
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
                 <div class="header-flex">
@@ -129,106 +143,108 @@
                 </div>
               </mat-header-cell>
               <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
+                @if (item[col.id]) {
+                  <i class="fa fa-check" style="line-height: inherit;"></i>
+                }
               </mat-cell>
             </ng-container>
-        </ng-container>
-      </ng-container>
+          }
+        }
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="mat-elevation-z1"></mat-header-row>
 
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
-    </table>
+      </table>
     </div>
-</div>
+  </div>
 
 
-<mat-menu #genoMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <div  (click) = "$event.stopPropagation()">
-    <ng-template matMenuContent let-sample="sample">
+  <mat-menu #genoMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <div  (click) = "$event.stopPropagation()">
+      <ng-template matMenuContent let-sample="sample">
+        <div class="container">
+          <div class="row ms-1 me-2">
+            <b>{{sample.name}}</b>
+          </div>
+          <div class="row ms-1 me-2 mb-1">
+            Genotype Analysis
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample)" title="Download PDF report">
+              <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
+            </button>
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample)" title="View HTML report">
+              <i class="fa fa-desktop" style="line-height: inherit;"></i>
+            </button>
+          </div>
+          @if (sample.annotation_method=='IGenotyper') {
+            <div class="row ms-1 me-2 mb-1">
+              IGenotyper
+            </div>
+            <div class="row ms-4 me-2 mb-0 align-middle">
+              Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            </div>
+            <div class="row ms-4 me-2 mb-0 align-middle">
+              Contigs: BAM<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank" rel="noopener" title="Download BAM file"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+              <span>&nbsp;&nbsp;</span>BAI<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path.replace('.bam', '.bam.bai')}}" target="_blank" rel="noopener" title="Download BAI file"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            </div>
+            <div class="row ms-4 me-2 mb-1">
+              Documentation<span>&nbsp;&nbsp;</span>
+              <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+            </div>
+          }
+          @if (sample.annotation_method=='Digger') {
+            <div class="row ms-1 me-2 mb-1">
+              Digger
+            </div>
+            <div class="row ms-4 me-2 mb-0 align-middle">
+              Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            </div>
+            <div class="row ms-4 me-2 mb-0 align-middle">
+              Contigs<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank" rel="noopener" title="Download contigs"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+              <span>&nbsp;&nbsp;</span>
+            </div>
+            <div class="row ms-4 me-2 mb-1">
+              Documentation<span>&nbsp;&nbsp;</span>
+              <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+            </div>
+          }
+          @if (sample.annotation_method=='VDJbase') {
+            <div class="row ms-2 me-2 mb-1">
+              VDJbase
+            </div>
+            <div class="row ms-4 me-2 mb-0 align-middle">
+              Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+            </div>
+            <div class="row ms-4 me-2 mb-1">
+              Documentation<span>&nbsp;&nbsp;</span>
+              <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
+            </div>
+          }
+        </div>
+      </ng-template>
+    </div>
+  </mat-menu>
+
+  <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <ng-template matMenuContent>
       <div class="container">
         <div class="row ms-1 me-2">
-          <b>{{sample.name}}</b>
+          <b>Download data for selected samples</b>
         </div>
-        <div class="row ms-1 me-2 mb-1">
-          Genotype Analysis
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample)" title="Download PDF report">
-            <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
-          </button>
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample)" title="View HTML report">
-            <i class="fa fa-desktop" style="line-height: inherit;"></i>
-          </button>
-        </div>
-        <ng-container *ngIf="sample.annotation_method=='IGenotyper'">
-          <div class="row ms-1 me-2 mb-1">
-            IGenotyper
-          </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
-            Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
-            Contigs: BAM<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank" rel="noopener" title="Download BAM file"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-            <span>&nbsp;&nbsp;</span>BAI<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path.replace('.bam', '.bam.bai')}}" target="_blank" rel="noopener" title="Download BAI file"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </div>
-          <div class="row ms-4 me-2 mb-1">
-            Documentation<span>&nbsp;&nbsp;</span>
-            <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="sample.annotation_method=='Digger'">
-          <div class="row ms-1 me-2 mb-1">
-            Digger
-          </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
-            Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
-            Contigs<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank" rel="noopener" title="Download contigs"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-            <span>&nbsp;&nbsp;</span>
-          </div>
-          <div class="row ms-4 me-2 mb-1">
-            Documentation<span>&nbsp;&nbsp;</span>
-            <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="sample.annotation_method=='VDJbase'">
-          <div class="row ms-2 me-2 mb-1">
-            VDJbase
-          </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
-            Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-          </div>
-          <div class="row ms-4 me-2 mb-1">
-            Documentation<span>&nbsp;&nbsp;</span>
-            <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
-          </div>
-        </ng-container>
-      </div>
-    </ng-template>
-  </div>
-</mat-menu>
-
-<mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <ng-template matMenuContent>
-    <div class="container">
-      <div class="row ms-1 me-2">
-        <b>Download data for selected samples</b>
-      </div>
-      <div class="row ms-4 me-2 mb-0 align-middle">
-        Sample info (csv)
+        <div class="row ms-4 me-2 mb-0 align-middle">
+          Sample info (csv)
           <span>&nbsp;&nbsp;</span>
           <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'csv', {type:'Sample info (CSV)'})" title="Download CSV">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i> </button>
-      </div>
-      <div class="row ms-4 me-2 mb-0 align-middle">
-        Sample data (zip)
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'zip', {type:'Sample files (ZIP)'})" title="Download ZIP">
-            <i class="fa fa-file-zip-o" style="line-height: inherit;" ></i> </button>
-      </div>
-    </div>
-  </ng-template>
-</mat-menu>
+          </div>
+          <div class="row ms-4 me-2 mb-0 align-middle">
+            Sample data (zip)
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'zip', {type:'Sample files (ZIP)'})" title="Download ZIP">
+              <i class="fa fa-file-zip-o" style="line-height: inherit;" ></i> </button>
+            </div>
+          </div>
+        </ng-template>
+      </mat-menu>

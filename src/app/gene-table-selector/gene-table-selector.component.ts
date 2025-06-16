@@ -8,14 +8,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {GeneTableSelection} from './gene-table-selector.model';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-gene-table-selector',
     templateUrl: './gene-table-selector.component.html',
     styleUrls: ['./gene-table-selector.component.css'],
     encapsulation: ViewEncapsulation.None,
-    imports: [FormsModule, NgFor, NgIf, NgMultiSelectDropDownModule]
+    imports: [FormsModule, NgMultiSelectDropDownModule]
 })
 
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {

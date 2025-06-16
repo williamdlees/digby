@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatIconButton, MatButton } from '@angular/material/button';
 import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
-import { NgIf, NgFor } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
@@ -34,7 +34,7 @@ class Operator {
     styleUrls: ['./date-filter.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    imports: [MatIconButton, MatMenuTrigger, NgIf, MatIcon, MatMenu, FormsModule, MatButton, MatFormField, MatSelect, NgFor, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgMultiSelectDropDownModule]
+    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, FormsModule, MatButton, MatFormField, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgMultiSelectDropDownModule]
 })
 export class DateFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

@@ -9,53 +9,55 @@
 
   <p><a href="assets/doc/report_documentation.pdf">Click here</a> for explanation of reports.</p>
 
-  <ng-container *ngFor="let reportSection of reportSections">
-      <h2>{{reportSection.title}}</h2>
-      <mat-table [dataSource]="reportSection.source">
-        <ng-container matColumnDef="title">
-          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-          <mat-cell *matCellDef="let rep"> <b>{{rep.title}}</b> </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="thumbnail">
-          <mat-header-cell *matHeaderCellDef> Thumbnail </mat-header-cell>
-          <mat-cell *matCellDef="let rep">
-            <div *ngIf="rep.thumbnail">
+  @for (reportSection of reportSections; track reportSection) {
+    <h2>{{reportSection.title}}</h2>
+    <mat-table [dataSource]="reportSection.source">
+      <ng-container matColumnDef="title">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell *matCellDef="let rep"> <b>{{rep.title}}</b> </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="thumbnail">
+        <mat-header-cell *matHeaderCellDef> Thumbnail </mat-header-cell>
+        <mat-cell *matCellDef="let rep">
+          @if (rep.thumbnail) {
+            <div>
               <img src='{{rep.thumbnail}}' height='100' alt='{{rep.title}} report thumbnail'>
             </div>
-          </mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-          <mat-cell *matCellDef="let rep"> {{rep.description}} </mat-cell>
-        </ng-container>
-        <ng-container  matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef> Run </mat-header-cell>
-          <mat-cell *matCellDef="let rep">
-            <ng-container *ngIf="rep.format.indexOf('pdf') >= 0">
-              <button class="btn btn-lg" (click)="runReport(rep, 'pdf')" title="Generate PDF report">
-                <i class="fa fa-file-pdf-o" style="line-height: inherit;"></i>
-              </button>
-            </ng-container>
-            <ng-container *ngIf="rep.format.indexOf('html') >= 0">
-              <button class="btn btn-lg" (click)="runReport(rep, 'html')" title="View report in browser">
-                <i class="fa fa-desktop" style="line-height: inherit;"></i>
-              </button>
-            </ng-container>
-            <ng-container *ngIf="rep.format.indexOf('xls') >= 0">
-              <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download Excel report">
-                <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
-              </button>
-            </ng-container>
-            <ng-container *ngIf="rep.format.indexOf('file') >= 0">
-              <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download report file">
-                <i class="fa fa-save" style="line-height: inherit;"></i>
-              </button>
-            </ng-container>
-          </mat-cell>
-        </ng-container>
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        <p style="margin-bottom: 32px" *matNoDataRow>{{reportSection.empty}}</p><br><br>
-      </mat-table>
-  </ng-container>
+          }
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
+        <mat-cell *matCellDef="let rep"> {{rep.description}} </mat-cell>
+      </ng-container>
+      <ng-container  matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> Run </mat-header-cell>
+        <mat-cell *matCellDef="let rep">
+          @if (rep.format.indexOf('pdf') >= 0) {
+            <button class="btn btn-lg" (click)="runReport(rep, 'pdf')" title="Generate PDF report">
+              <i class="fa fa-file-pdf-o" style="line-height: inherit;"></i>
+            </button>
+          }
+          @if (rep.format.indexOf('html') >= 0) {
+            <button class="btn btn-lg" (click)="runReport(rep, 'html')" title="View report in browser">
+              <i class="fa fa-desktop" style="line-height: inherit;"></i>
+            </button>
+          }
+          @if (rep.format.indexOf('xls') >= 0) {
+            <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download Excel report">
+              <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
+            </button>
+          }
+          @if (rep.format.indexOf('file') >= 0) {
+            <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download report file">
+              <i class="fa fa-save" style="line-height: inherit;"></i>
+            </button>
+          }
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <p style="margin-bottom: 32px" *matNoDataRow>{{reportSection.empty}}</p><br><br>
+    </mat-table>
+  }
 </div>

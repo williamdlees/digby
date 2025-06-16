@@ -8,10 +8,10 @@
        height: 200px;">
     <div class="container-fluid" style="padding-top: 1vw; padding-bottom: 5vw;">
       <div class="row mt-1 mb-5 ms-1 me-1">
-            <div class="col-lg-2 col-md-3  col-sm-4  bg-light" style="border-radius: 2vw">
-              <img class="img-fluid mt-2" src="./assets/img/logo_white_2.png" alt="VDJbase Logo">
-              <p style="font-size: 0.75rem;">Immune Receptor Genotypes and Haplotypes</p>
-            </div>
+        <div class="col-lg-2 col-md-3  col-sm-4  bg-light" style="border-radius: 2vw">
+          <img class="img-fluid mt-2" src="./assets/img/logo_white_2.png" alt="VDJbase Logo">
+          <p style="font-size: 0.75rem;">Immune Receptor Genotypes and Haplotypes</p>
+        </div>
       </div>
     </div>
   </div>
@@ -26,23 +26,33 @@
             </div>
           </div>
 
-          <div  class="spinner-border" role="status" *ngIf="loadingNews">
-            <span class="visually-hidden">Loading...</span>
-          </div>
+          @if (loadingNews) {
+            <div  class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          }
 
-          <div class="alert alert-danger" *ngIf="errorNews">
-            <h4>Error loading news</h4>
-          </div>
+          @if (errorNews) {
+            <div class="alert alert-danger">
+              <h4>Error loading news</h4>
+            </div>
+          }
 
           <div>
-            <p *ngIf="loadedNewsPosts.length < 1 && !loadingNews && !errorNews">No posts available!</p>
-            <div *ngIf="loadedNewsPosts.length >= 1 && !loadingNews">
-              <ul class="list-unstyled">
-                <li *ngFor="let post of loadedNewsPosts">
-                  <a href="{{ post[1] }}">{{ post[0] }}</a>
-                </li>
-              </ul>
-            </div>
+            @if (loadedNewsPosts.length < 1 && !loadingNews && !errorNews) {
+              <p>No posts available!</p>
+            }
+            @if (loadedNewsPosts.length >= 1 && !loadingNews) {
+              <div>
+                <ul class="list-unstyled">
+                  @for (post of loadedNewsPosts; track post) {
+                    <li>
+                      <a href="{{ post[1] }}">{{ post[0] }}</a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
           </div>
         </div>
 
@@ -53,23 +63,33 @@
             </div>
           </div>
 
-          <div  class="spinner-border" role="status" *ngIf="loadingHelp">
-            <span class="visually-hidden">Loading...</span>
-          </div>
+          @if (loadingHelp) {
+            <div  class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          }
 
-          <div class="alert alert-danger" *ngIf="errorHelp">
-            <h4>Error loading help</h4>
-          </div>
+          @if (errorHelp) {
+            <div class="alert alert-danger">
+              <h4>Error loading help</h4>
+            </div>
+          }
 
           <div>
-            <p *ngIf="loadedHelpPosts.length < 1 && !loadingHelp && !errorHelp">No posts available!</p>
-            <div *ngIf="loadedHelpPosts.length >= 1 && !loadingHelp">
-              <ul class="list-unstyled">
-                <li *ngFor="let post of loadedHelpPosts">
-                  <a href="{{ post[1] }}">{{ post[0] }}</a>
-                </li>
-              </ul>
-            </div>
+            @if (loadedHelpPosts.length < 1 && !loadingHelp && !errorHelp) {
+              <p>No posts available!</p>
+            }
+            @if (loadedHelpPosts.length >= 1 && !loadingHelp) {
+              <div>
+                <ul class="list-unstyled">
+                  @for (post of loadedHelpPosts; track post) {
+                    <li>
+                      <a href="{{ post[1] }}">{{ post[0] }}</a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -109,23 +129,23 @@
             <li><a routerLink="./datarep">Explore the data</a> available in VDJbase today</li>
             <li>Read our <a routerLink="./user-guide">user guide</a> or find more information on <a href="./assets/doc/report_documentation.pdf">reports</a></li>
             <br>
-            <li>Browse the <a routerLink="./samplerep/null">adaptive immune receptor repertore (AIRR) datasets</a></li>
-            <li>Browse <a routerLink="./generep">alleles</a> identified from the AIRR datasets</li>
-            <br>
-            <li>Browse the <a routerLink="./genesample/null">genomically-derived datasets</a></li>
-            <li>Browse <a routerLink="./genetable">alleles</a> identified from the genomically-derived datasets</li>
-            <li>View <a routerLink="./genebrowser/Human/IGH">alignments</a> in a genome browser.</li>
-          </ul>
+              <li>Browse the <a routerLink="./samplerep/null">adaptive immune receptor repertore (AIRR) datasets</a></li>
+              <li>Browse <a routerLink="./generep">alleles</a> identified from the AIRR datasets</li>
+              <br>
+                <li>Browse the <a routerLink="./genesample/null">genomically-derived datasets</a></li>
+                <li>Browse <a routerLink="./genetable">alleles</a> identified from the genomically-derived datasets</li>
+                <li>View <a routerLink="./genebrowser/Human/IGH">alignments</a> in a genome browser.</li>
+              </ul>
 
-          <p>All options are also available from the menu at the top of each page.</p>
+              <p>All options are also available from the menu at the top of each page.</p>
 
-          <p>
-            VDJbase is jointly developed and maintained by members of the <a href="http://yaarilab.com/">Yaari Lab</a> at the Faculty of Engineering at Bar Ilan University, Israel.
-            For further information, please contact <a href="http://yaarilab.com/contact">Gur Yaari</a> or
-            <a href="mailto:william@lees.org.uk">William Lees</a>.
-          </p>
+              <p>
+                VDJbase is jointly developed and maintained by members of the <a href="http://yaarilab.com/">Yaari Lab</a> at the Faculty of Engineering at Bar Ilan University, Israel.
+                For further information, please contact <a href="http://yaarilab.com/contact">Gur Yaari</a> or
+                <a href="mailto:william@lees.org.uk">William Lees</a>.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>

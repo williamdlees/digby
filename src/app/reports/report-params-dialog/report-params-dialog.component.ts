@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { NgFor, NgSwitch, NgSwitchCase } from '@angular/common';
+
 
 export interface SampleCoverage {
   genomic: string[];
@@ -18,7 +18,7 @@ export interface SampleCoverage {
     styleUrls: ['./report-params-dialog.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
-    imports: [FormsModule, ReactiveFormsModule, NgFor, NgSwitch, NgSwitchCase, NgMultiSelectDropDownModule]
+    imports: [FormsModule, ReactiveFormsModule, NgMultiSelectDropDownModule]
 })
 export class ReportParamsDialogComponent implements OnInit {
   @Input() report;

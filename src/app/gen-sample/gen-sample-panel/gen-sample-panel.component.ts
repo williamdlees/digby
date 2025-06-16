@@ -19,7 +19,7 @@ import { GenSampleFilterService } from '../gen-sample-filter.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { ReportRunService } from '../../reports/report-run.service';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { ColumnSorterComponent } from '../../table/column-sorter/column-sorter.component';
 import { MatMenuTrigger, MatMenu, MatMenuContent } from '@angular/material/menu';
@@ -36,7 +36,7 @@ import { FilterComponent } from '../../table/filter/filter.component';
     providers: [],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    imports: [NgIf, MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
+    imports: [MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
 })
 
 export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {

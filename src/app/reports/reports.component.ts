@@ -15,13 +15,13 @@ import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dia
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ReportRunService} from './report-run.service';
 import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
-import { NgFor, NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-reports',
     templateUrl: './reports.component.html',
     styleUrls: ['./reports.component.scss'],
-    imports: [GeneTableSelectorComponent, NgFor, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow]
+    imports: [GeneTableSelectorComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow]
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<string>;

@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 import {WordpressService} from "./wordpress.service";
 import {AuthService} from "../auth/auth.service";
 import {SysConfig} from "../auth/sysconfig.model";
-import { NgIf, NgFor } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 
 
@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    imports: [NgIf, NgFor, RouterLink]
+    imports: [RouterLink]
 })
 export class HomeComponent implements OnInit {
   loadedNewsPosts = [];

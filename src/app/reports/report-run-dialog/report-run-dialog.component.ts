@@ -6,7 +6,7 @@ import {catchError} from 'rxjs/operators';
 import {ReportErrorDialogComponent} from '../report-error-dialog/report-error-dialog.component';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportRequestService} from '../report-request-service';
-import { NgIf } from '@angular/common';
+
 
 @Component({
     selector: 'app-report-run-dialog',
@@ -14,7 +14,7 @@ import { NgIf } from '@angular/common';
     styleUrls: ['./report-run-dialog.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
-    imports: [NgIf]
+    imports: []
 })
 export class ReportRunDialogComponent implements OnInit {
   @Input() report;

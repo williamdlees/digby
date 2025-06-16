@@ -4,6 +4,8 @@ import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {catchError, finalize} from 'rxjs/operators';
 import { RepseqService } from 'projects/digby-swagger-client';
 import { columnInfo } from '../rep-sample-panel/rep-sample-panel-cols';
+import { NgIf, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-sample-rep-info',
@@ -11,7 +13,7 @@ import { columnInfo } from '../rep-sample-panel/rep-sample-panel-cols';
     styleUrls: ['./rep-sample-info.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
-    standalone: false
+    imports: [NgIf, NgFor, MatTooltip]
 })
 export class RepSampleInfoComponent implements OnInit {
   @Input() sampleName;

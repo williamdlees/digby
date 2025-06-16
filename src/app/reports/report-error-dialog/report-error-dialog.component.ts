@@ -7,8 +7,6 @@ import {FormGroup} from '@angular/forms';
     templateUrl: './report-error-dialog.component.html',
     styleUrls: ['./report-error-dialog.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
-    ,
-    standalone: false
 })
 export class ReportErrorDialogComponent {
   @Input() report;

@@ -2,9 +2,8 @@ import { Directive, ElementRef, Input, OnInit, OnDestroy, Renderer2 } from '@ang
 import { TableParamsStorageService } from './table-params-storage-service';
 
 @Directive({
-  selector: '[appTableResize]',
-  providers: [TableParamsStorageService],
-  standalone: false
+    selector: '[appTableResize]',
+    providers: [TableParamsStorageService]
 })
 export class TableResizeDirective implements OnInit, OnDestroy {
   @Input('appTableResize') storageKey: string = '';

@@ -5,15 +5,17 @@ import { retryWithBackoff } from '../shared/retry_with_backoff';
 import {catchError, debounceTime} from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {GeneTableSelection} from './gene-table-selector.model';
+import { FormsModule } from '@angular/forms';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-gene-table-selector',
     templateUrl: './gene-table-selector.component.html',
     styleUrls: ['./gene-table-selector.component.css'],
     encapsulation: ViewEncapsulation.None,
-    standalone: false
+    imports: [FormsModule, NgFor, NgIf, NgMultiSelectDropDownModule]
 })
 
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {

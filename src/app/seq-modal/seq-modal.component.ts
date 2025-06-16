@@ -5,8 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'app-seq-modal',
     templateUrl: './seq-modal.component.html',
-    styleUrls: ['./seq-modal.component.scss'],
-    standalone: false
+    styleUrls: ['./seq-modal.component.scss']
 })
 
 export class SeqModalComponent implements OnInit {

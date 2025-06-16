@@ -4,6 +4,8 @@ import {catchError, finalize} from 'rxjs/operators';
 import { GenomicService } from 'projects/digby-swagger-client';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
+import { NgIf, NgFor } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
 
 
 @Component({
@@ -12,7 +14,7 @@ import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
     styleUrls: ['./gen-sample-info.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
-    standalone: false
+    imports: [NgIf, NgFor, MatTooltip]
 })
 
 export class GenSampleInfoComponent implements OnInit {

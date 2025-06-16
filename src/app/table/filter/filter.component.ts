@@ -9,13 +9,14 @@ import { FilterMode } from './filter-mode.enum';
 import { ColumnPredicate } from './column-predicate';
 import { IChoices } from './ichoices';
 import { Observable } from 'rxjs';
+import { DynamicComponent, DynamicIoDirective } from 'ng-dynamic-component';
 
 @Component({
     selector: 'app-filter',
     templateUrl: './filter.component.html',
     styleUrls: ['./filter.component.css'],
     exportAs: 'menuInOtherComponent',
-    standalone: false
+    imports: [DynamicComponent, DynamicIoDirective]
 })
 export class FilterComponent implements OnInit {
   @Input() columnName: string;

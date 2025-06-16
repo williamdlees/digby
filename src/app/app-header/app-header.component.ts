@@ -1,16 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {debounceTime} from 'rxjs/operators';
 import {AuthService} from "../auth/auth.service";
-import {Router} from "@angular/router";
+import { Router, RouterLinkActive, RouterLink } from "@angular/router";
 import { GeneTableSelection } from '../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../gene-table-selector/gene-table-selector.service';
+import { NgbCollapse, NgbNav, NgbNavItem, NgbNavItemRole, NgbNavLink, NgbNavLinkBase, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem } from '@ng-bootstrap/ng-bootstrap';
+import { NgIf } from '@angular/common';
 
 
 @Component({
     selector: 'app-header',
     templateUrl: './app-header.component.html',
     styleUrls: ['./app-header.component.css'],
-    standalone: false
+    imports: [NgbCollapse, NgbNav, NgbNavItem, NgbNavItemRole, RouterLinkActive, NgbNavLink, NgbNavLinkBase, RouterLink, NgIf, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem]
 })
 
 export class AppHeaderComponent implements OnInit {

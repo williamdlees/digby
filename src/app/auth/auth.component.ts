@@ -1,15 +1,16 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { AuthService, AuthResponseData } from './auth.service';
 import {take} from "rxjs/operators";
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html',
-    standalone: false
+    imports: [NgIf, FormsModule]
 })
 export class AuthComponent implements OnInit{
   isLoading = false;

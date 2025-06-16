@@ -3,7 +3,15 @@ import { FilterImplementation } from '../filter-implementation';
 import { ColumnPredicate } from '../column-predicate';
 import { IChoices } from '../ichoices';
 import { Observable } from 'rxjs';
-import {IDropdownSettings} from 'ng-multiselect-dropdown';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { NgIf, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatInput, MatSuffix } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
+import { MatDatepickerInput, MatDatepickerToggle, MatDatepicker } from '@angular/material/datepicker';
 
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
@@ -26,7 +34,7 @@ class Operator {
     styleUrls: ['./date-filter.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    standalone: false
+    imports: [MatIconButton, MatMenuTrigger, NgIf, MatIcon, MatMenu, FormsModule, MatButton, MatFormField, MatSelect, NgFor, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgMultiSelectDropDownModule]
 })
 export class DateFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

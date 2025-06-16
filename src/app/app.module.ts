@@ -107,9 +107,37 @@ const appRoutes: Routes = [
   { path: '**', component: HomeComponent, canActivate: [AuthGuard] },
 ];
 
-@NgModule({ declarations: [
-        AppComponent,
-        AppHeaderComponent,
+@NgModule({ declarations: [AppComponent],
+    bootstrap: [AppComponent],
+    schemas: [
+        // Add CUSTOM_ELEMENTS_SCHEMA to suppress errors about unknown elements in templates
+        // This is needed for the ResizableModule directives to work with material components
+        // We would need to refactor the code to use the proper directives, but this is a workaround for now
+        // during the Angular upgrade
+        CUSTOM_ELEMENTS_SCHEMA
+    ], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        NgbModule,
+        MatInputModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatProgressSpinnerModule,
+        RouterModule.forRoot(appRoutes),
+        ApiModule.forRoot(apiConfigFactory),
+        NgMultiSelectDropDownModule.forRoot(),
+        FilterModule,
+        MatIconModule,
+        MatMenuModule,
+        MatCheckboxModule,
+        DragDropModule,
+        MatCardModule,
+        ObserversModule,
+        ResizableModule,
+        GoogleChartsModule,
+        MatTooltipModule, AppHeaderComponent,
         HomeComponent,
         GenGeneTableComponent,
         GenGeneTablePanelComponent,
@@ -145,38 +173,7 @@ const appRoutes: Routes = [
         RefbookComponent,
         RefbookPanelComponent,
         ColumnResizeDirective,
-        TableResizeDirective,
-    ],
-    bootstrap: [AppComponent],
-    schemas: [
-        // Add CUSTOM_ELEMENTS_SCHEMA to suppress errors about unknown elements in templates
-        // This is needed for the ResizableModule directives to work with material components
-        // We would need to refactor the code to use the proper directives, but this is a workaround for now
-        // during the Angular upgrade
-        CUSTOM_ELEMENTS_SCHEMA
-    ], imports: [BrowserModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NgbModule,
-        MatInputModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatProgressSpinnerModule,
-        RouterModule.forRoot(appRoutes),
-        ApiModule.forRoot(apiConfigFactory),
-        NgMultiSelectDropDownModule.forRoot(),
-        FilterModule,
-        MatIconModule,
-        MatMenuModule,
-        MatCheckboxModule,
-        DragDropModule,
-        MatCardModule,
-        ObserversModule,
-        ResizableModule,
-        GoogleChartsModule,
-        MatTooltipModule], providers: [
+        TableResizeDirective], providers: [
         RequestCache,
         AuthService,
         ReportsService,
@@ -189,9 +186,9 @@ const appRoutes: Routes = [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true },
         { provide: RouteReuseStrategy, useClass: CustomReuseStrategy },
         provideAppInitializer(() => {
-        const initializerFn = (appInitializer)(inject(AuthService));
-        return initializerFn();
-      }),
+            const initializerFn = (appInitializer)(inject(AuthService));
+            return initializerFn();
+        }),
         provideHttpClient(withInterceptorsFromDi()),
     ] })
 export class AppModule {

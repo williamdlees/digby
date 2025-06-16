@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEnca
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTable } from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { GenSampleDataSource } from '../gen-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
@@ -19,6 +19,14 @@ import { GenSampleFilterService } from '../gen-sample-filter.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { ReportRunService } from '../../reports/report-run.service';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { ColumnSorterComponent } from '../../table/column-sorter/column-sorter.component';
+import { MatMenuTrigger, MatMenu, MatMenuContent } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { TableResizeDirective } from '../../table/table-resize.directive';
+import { ColumnResizeDirective } from '../../table/column-resize.directive';
+import { FilterComponent } from '../../table/filter/filter.component';
 
 
 @Component({
@@ -28,7 +36,7 @@ import { ReportRunService } from '../../reports/report-run.service';
     providers: [],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    standalone: false
+    imports: [NgIf, MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, NgFor, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
 })
 
 export class GenSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {

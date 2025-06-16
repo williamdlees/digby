@@ -11,7 +11,14 @@ import {FilterImplementation} from '../filter-implementation';
 import {ColumnPredicate} from '../column-predicate';
 import {IChoices} from '../ichoices';
 import {Observable} from 'rxjs';
-import {IDropdownSettings, MultiSelectComponent} from 'ng-multiselect-dropdown';
+import { IDropdownSettings, MultiSelectComponent, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { MatIconButton, MatButton } from '@angular/material/button';
+import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { NgIf, NgFor } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatInput } from '@angular/material/input';
+import { MatSelect, MatOption } from '@angular/material/select';
 
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
@@ -32,7 +39,7 @@ class Operator {
     styleUrls: ['./text-filter.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    standalone: false
+    imports: [MatIconButton, MatMenuTrigger, NgIf, MatIcon, MatMenu, FormsModule, MatButton, MatFormField, MatSelect, NgFor, MatOption, MatInput, NgMultiSelectDropDownModule]
 })
 export class TextFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;

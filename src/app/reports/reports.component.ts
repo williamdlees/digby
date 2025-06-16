@@ -1,5 +1,5 @@
 import {Component, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatTable} from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from '@angular/material/table';
 import {ReportsListDataSource} from './reports-list-data.source';
 import {ReportsService} from 'projects/digby-swagger-client';
 import {catchError, debounceTime, map} from 'rxjs/operators';
@@ -14,12 +14,14 @@ import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.mod
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ReportRunService} from './report-run.service';
+import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
+import { NgFor, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-reports',
     templateUrl: './reports.component.html',
     styleUrls: ['./reports.component.scss'],
-    standalone: false
+    imports: [GeneTableSelectorComponent, NgFor, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, NgIf, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow]
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<string>;

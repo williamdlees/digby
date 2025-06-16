@@ -11,10 +11,7 @@ import {
 } from '@angular/core';
 import { Subject, fromEvent, takeUntil } from 'rxjs';
 
-@Directive({
-  selector: '[appColumnResize]',
-  standalone: false
-})
+@Directive({ selector: '[appColumnResize]' })
 export class ColumnResizeDirective implements OnInit, OnDestroy {
   @Input() resizableTable: HTMLElement | null = null;
   @Output() onResizeEnd: EventEmitter<number> = new EventEmitter();

@@ -2,6 +2,7 @@ import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RepseqService } from 'projects/digby-swagger-client';
 import {DomSanitizer} from '@angular/platform-browser';
+import { SafePipe } from '../../safe.pipe';
 
 @Component({
     selector: 'app-rep-gene-notes',
@@ -9,7 +10,7 @@ import {DomSanitizer} from '@angular/platform-browser';
     styleUrls: ['./rep-gene-notes.component.scss'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
-    standalone: false
+    imports: [SafePipe]
 })
 
 export class RepGeneNotesComponent implements OnInit {

@@ -3,8 +3,9 @@ import {GeneTableSelection} from '../../gene-table-selector/gene-table-selector.
 import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-selector.service';
 import { GenomicService } from 'projects/digby-swagger-client';
 import { GoogleChartsModule, ChartType } from 'angular-google-charts';
-import {MatTable} from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";
+import { NgIf, NgFor } from '@angular/common';
 
 
 @Component({
@@ -13,7 +14,7 @@ import {debounceTime} from "rxjs/operators";
     styleUrls: ['./gen-explore-data-panel.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    standalone: false
+    imports: [NgIf, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule, NgFor]
 })
 
 export class GenExploreDataPanelComponent implements OnInit {

@@ -8,8 +8,7 @@ import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
 @Component({
     selector: 'app-refbook-panel',
     templateUrl: './refbook-panel.component.html',
-    styleUrls: ['./refbook-panel.component.css'],
-    standalone: false
+    styleUrls: ['./refbook-panel.component.css']
 })
 
 export class RefbookPanelComponent implements OnInit, AfterViewInit {

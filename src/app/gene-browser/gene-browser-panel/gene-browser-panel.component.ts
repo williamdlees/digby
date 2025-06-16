@@ -38,6 +38,8 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   geneTableServiceSubscription = null;
   authServiceSubscription = null;
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input() selection: GeneTableSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 

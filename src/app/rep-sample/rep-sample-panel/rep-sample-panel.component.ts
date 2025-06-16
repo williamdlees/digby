@@ -39,6 +39,8 @@ import { FilterComponent } from '../../table/filter/filter.component';
 })
 
 export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;

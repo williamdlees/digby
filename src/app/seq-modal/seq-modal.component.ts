@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit, input} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -9,8 +9,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class SeqModalComponent implements OnInit {
-  @Input() name;
-  @Input() content;
+  readonly name = input(undefined);
+  readonly content = input(undefined);
   displayContent: string;
   width = 50;
   gapped = false;
@@ -23,7 +23,8 @@ export class SeqModalComponent implements OnInit {
     // format display_content from the sequence in content
     // options tbd...
 
-    this.gappedAvailable = this.content.gapped && this.content.gapped.length > 0;
+    const content = this.content();
+    this.gappedAvailable = content.gapped && content.gapped.length > 0;
     this.format_sequence();
   }
 
@@ -33,14 +34,16 @@ export class SeqModalComponent implements OnInit {
     let content = '';
 
     if (this.gapped) {
-      content = this.content.gapped ? this.content.gapped : '';
+      const contentValue = this.content();
+      content = contentValue.gapped ? contentValue.gapped : '';
     } else {
-      content = this.content.ungapped ? this.content.ungapped : '';
+      const contentValue = this.content();
+      content = contentValue.ungapped ? contentValue.ungapped : '';
     }
 
     if (content) {
       if(this.fasta) {
-        this.displayContent += '>' + this.name + '<br>';
+        this.displayContent += '>' + this.name() + '<br>';
       }
 
       for (const frag of this.chunkSubstr(content, this.width)) {

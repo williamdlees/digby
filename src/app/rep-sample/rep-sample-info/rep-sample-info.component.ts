@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, input} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {catchError, finalize} from 'rxjs/operators';
@@ -16,9 +16,9 @@ import { MatTooltip } from '@angular/material/tooltip';
     imports: [MatTooltip]
 })
 export class RepSampleInfoComponent implements OnInit {
-  @Input() sampleName;
-  @Input() species;
-  @Input() dataset;
+  readonly sampleName = input(undefined);
+  readonly species = input(undefined);
+  readonly dataset = input(undefined);
   loading = false;
   error = null;
   sampleInfo = null;
@@ -32,7 +32,7 @@ export class RepSampleInfoComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.repseqService.getSampleInfoApi(this.species, this.dataset, this.sampleName).pipe(
+    this.repseqService.getSampleInfoApi(this.species(), this.dataset(), this.sampleName()).pipe(
       retryWithBackoff(),
       catchError(error => {
         this.error.next(error);

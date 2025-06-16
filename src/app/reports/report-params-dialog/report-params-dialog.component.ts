@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, input} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
@@ -21,9 +21,9 @@ export interface SampleCoverage {
     imports: [FormsModule, ReactiveFormsModule, NgMultiSelectDropDownModule]
 })
 export class ReportParamsDialogComponent implements OnInit {
-  @Input() report;
-  @Input() filterParams;
-  @Input() sampleCoverage: SampleCoverage;
+  readonly report = input(undefined);
+  readonly filterParams = input(undefined);
+  readonly sampleCoverage = input<SampleCoverage>(undefined);
   myFormGroup: FormGroup;
   params = [];
   scopeText : string
@@ -45,38 +45,40 @@ export class ReportParamsDialogComponent implements OnInit {
   ngOnInit(): void {
     const group = {};
 
-    this.report.params.forEach(t => {
+    this.report().params.forEach(t => {
       this.add_fields(t, group);
     });
 
-    if (this.report.filter_params) {
-      for (let key in this.filterParams) {
-        this.add_fields(this.filterParams[key], group);
+    const report = this.report();
+    if (report.filter_params) {
+      for (let key in this.filterParams()) {
+        this.add_fields(this.filterParams()[key], group);
       }
     }
 
     this.myFormGroup = new FormGroup(group);
 
     this.scopeText = 'The report will be run on ';
-    if (this.report.scope.includes("gen_sample")) {
-      if (this.sampleCoverage.genomic.length > 1) {
-        this.scopeText += this.sampleCoverage.genomicScope + ' samples from ' + this.sampleCoverage.genomic.join(', ') + ' genomic datasets';
-      } else if (this.sampleCoverage.genomic.length === 1) {
-        this.scopeText += this.sampleCoverage.genomicScope + ' samples from the ' + this.sampleCoverage.genomic[0] + ' genomic dataset';
+    const sampleCoverage = this.sampleCoverage();
+    if (report.scope.includes("gen_sample")) {
+      if (this.sampleCoverage().genomic.length > 1) {
+        this.scopeText += this.sampleCoverage().genomicScope + ' samples from ' + this.sampleCoverage().genomic.join(', ') + ' genomic datasets';
+      } else if (sampleCoverage.genomic.length === 1) {
+        this.scopeText += sampleCoverage.genomicScope + ' samples from the ' + sampleCoverage.genomic[0] + ' genomic dataset';
       }
     }
 
-    if (this.report.scope.includes("gen_sample") &&
-      this.report.scope.includes("rep_sample") &&
-      this.sampleCoverage.genomic.length > 0 && this.sampleCoverage.AIRRSeq.length > 0) {
+    if (report.scope.includes("gen_sample") &&
+      report.scope.includes("rep_sample") &&
+      sampleCoverage.genomic.length > 0 && sampleCoverage.AIRRSeq.length > 0) {
       this.scopeText += ' and ';
     }
 
-    if (this.report.scope.includes("rep_sample")) {
-      if (this.sampleCoverage.AIRRSeq.length > 1) {
-        this.scopeText += this.sampleCoverage.AIRRSeqScope + ' samples from ' + this.sampleCoverage.AIRRSeq.join(', ') + ' AIRR-Seq datasets';
-      } else if (this.sampleCoverage.AIRRSeq.length === 1) {
-        this.scopeText += this.sampleCoverage.AIRRSeqScope + ' samples from the ' + this.sampleCoverage.AIRRSeq[0] + ' AIRR-Seq dataset';
+    if (report.scope.includes("rep_sample")) {
+      if (sampleCoverage.AIRRSeq.length > 1) {
+        this.scopeText += sampleCoverage.AIRRSeqScope + ' samples from ' + sampleCoverage.AIRRSeq.join(', ') + ' AIRR-Seq datasets';
+      } else if (sampleCoverage.AIRRSeq.length === 1) {
+        this.scopeText += sampleCoverage.AIRRSeqScope + ' samples from the ' + sampleCoverage.AIRRSeq[0] + ' AIRR-Seq dataset';
       }
     }
   }

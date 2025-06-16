@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, Output, EventEmitter, ViewEncapsulation, input} from '@angular/core';
 import { FilterImplementation } from '../filter-implementation';
 import { ColumnPredicate } from '../column-predicate';
 import { IChoices } from '../ichoices';
@@ -38,12 +38,12 @@ class Operator {
 })
 export class DateFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
-  @Input() columnName: string;
-  @Input() choices$: Observable<IChoices>;
-  @Input() clear$: Observable<null>;
-  @Input() setFilter$: Observable<any>;
-  @Input() showTextFilter = true;
-  @Input() showSort = true;
+  readonly columnName = input<string>(undefined);
+  readonly choices$ = input<Observable<IChoices>>(undefined);
+  readonly clear$ = input<Observable<null>>(undefined);
+  readonly setFilter$ = input<Observable<any>>(undefined);
+  readonly showTextFilter = input(true);
+  readonly showSort = input(true);
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   selectedOperator: Operator;
@@ -70,18 +70,20 @@ export class DateFilterComponent implements OnInit, FilterImplementation {
   }
 
   ngOnInit() {
-    if (this.choices$) {
-      this.choices$.subscribe((c) => {
-        if (typeof c !== 'undefined' && c[this.columnName]) {
+    const choices$ = this.choices$();
+    if (choices$) {
+      choices$.subscribe((c) => {
+        if (typeof c !== 'undefined' && c[this.columnName()]) {
           this.choices = [];
-          for (let i = 0; i < c[this.columnName].length; i++) {
-            this.choices.push({ id: i, text: c[this.columnName][i] });
+          for (let i = 0; i < c[this.columnName()].length; i++) {
+            this.choices.push({ id: i, text: c[this.columnName()][i] });
           }
         }
       });
     }
-    if (this.clear$) {
-      this.clear$.subscribe((c) => {
+    const clear$ = this.clear$();
+    if (clear$) {
+      clear$.subscribe((c) => {
           this.selectedOperator = null;
           this.selectedSort = null;
           this.selectedItems = [];
@@ -136,32 +138,33 @@ export class DateFilterComponent implements OnInit, FilterImplementation {
 
   generatePredicate(): ColumnPredicate {
     const pred = {
-      field: this.columnName,
+      field: this.columnName(),
       predicates: [],
-      sort: { field: this.columnName, order: this.selectedSort }
+      sort: { field: this.columnName(), order: this.selectedSort }
     };
 
+    const columnName = this.columnName();
     if (this.selectedOperator && this.selectedOperator.operands === 2) {
       pred.predicates.push ({
-        field: this.columnName,
+        field: columnName,
         op: this.selectedOperator.operator,
         value: this.operand1Input
       });
     } else if (this.selectedOperator && this.selectedOperator.operands === 3) {
       pred.predicates.push({
-          field: this.columnName,
+          field: columnName,
           op: this.selectedOperator.operator,
           value: this.operand1Input < this.operand2Input ? this.operand1Input : this.operand2Input
         });
       pred.predicates.push({
-          field: this.columnName,
+          field: columnName,
           op: this.selectedOperator.operator2,
           value: this.operand1Input < this.operand2Input ? this.operand2Input : this.operand1Input
         });
     }
 
     if (this.selectedItems.length > 0) {
-      pred.predicates.push({ field: this.columnName, op: 'in', value: this.selectedItems.map((x) => x.text) });
+      pred.predicates.push({ field: columnName, op: 'in', value: this.selectedItems.map((x) => x.text) });
     }
 
     return pred;

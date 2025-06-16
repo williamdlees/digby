@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
   ElementRef,
   ChangeDetectionStrategy,
+  input
 } from '@angular/core';
 import { moveItemInArray, CdkDragDrop, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPreview } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
@@ -47,13 +48,14 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   columnsChange: EventEmitter<string[]> = new EventEmitter<string[]>();
   //@Input()
   //columns: string[];
-  @Input()
-  saveName?: string;
+  readonly saveName = input<string>(undefined);
   //@Input()
   //columnInfo: ColumnInfo[];
 
   private _columns: string[];
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set columns(value: string[]) {
 
      this._columns = value;
@@ -66,6 +68,8 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
 
   private _columnInfo: ColumnInfo[];
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set columnInfo(value: ColumnInfo[]) {
     this._columnInfo = value;
     setTimeout(() => {
@@ -86,7 +90,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   constructor(private elementRef: ElementRef, private columnSorterService: ColumnSorterService) {}
 
   ngOnInit() {
-    const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName);
+    const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName());
     const iNew = new Set(this.columnInfo.map((x) => x.id));
     const iSaved = new Set(savedInfo.map((x) => x.id));
     const sNew = new Set(this.columnInfo.map((x) => x.name));
@@ -162,7 +166,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
       const foo = this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
       this.columnsChange.emit(this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
       if (saveColumns) {
-        this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName);
+        this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName());
       }
     }, 0);
   }

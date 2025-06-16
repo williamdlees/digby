@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, input} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormGroup} from '@angular/forms';
 
@@ -9,8 +9,8 @@ import {FormGroup} from '@angular/forms';
     encapsulation: ViewEncapsulation.None // needed for css styling
 })
 export class ReportErrorDialogComponent {
-  @Input() report;
-  @Input() errorMessage;
+  readonly report = input(undefined);
+  readonly errorMessage = input(undefined);
 
   constructor(public activeModal: NgbActiveModal) {
   }

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Injectable, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {AfterViewInit, Component, Injectable, OnInit, ViewEncapsulation, input} from '@angular/core';
 import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
@@ -19,9 +19,9 @@ import { FormsModule } from '@angular/forms';
 })
 
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
-  @Input() showGenomic: boolean;
-  @Input() showAssembly: boolean;
-  @Input() showRepseq: boolean;
+  readonly showGenomic = input<boolean>(undefined);
+  readonly showAssembly = input<boolean>(undefined);
+  readonly showRepseq = input<boolean>(undefined);
   species = null;
   selectedSpecies = null;
   notifiedUpdates =  { species: false, refSeq: false, repSeq: false, assemblies: false };

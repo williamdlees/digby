@@ -18,7 +18,7 @@
 
 @if (!loading && !error) {
   <div class="modal-header">
-    <h3 class="modal-title">Sample Details - {{sampleName}}</h3>
+    <h3 class="modal-title">Sample Details - {{sampleName()}}</h3>
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">

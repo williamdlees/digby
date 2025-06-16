@@ -5,15 +5,15 @@ import {
   OnInit,
   Renderer2,
   NgZone,
-  Input,
   Output,
-  EventEmitter
+  EventEmitter,
+  input
 } from '@angular/core';
 import { Subject, fromEvent, takeUntil } from 'rxjs';
 
 @Directive({ selector: '[appColumnResize]' })
 export class ColumnResizeDirective implements OnInit, OnDestroy {
-  @Input() resizableTable: HTMLElement | null = null;
+  readonly resizableTable = input<HTMLElement | null>(null);
   @Output() onResizeEnd: EventEmitter<number> = new EventEmitter();
 
   private isResizing = false;
@@ -35,7 +35,7 @@ export class ColumnResizeDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.table = this.resizableTable || this.findParentTable(this.column);
+    this.table = this.resizableTable() || this.findParentTable(this.column);
 
     if (!this.table) {
       console.error(

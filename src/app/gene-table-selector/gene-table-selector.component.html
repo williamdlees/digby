@@ -9,7 +9,7 @@
       </select>
     </div>
   </div>
-  @if (showGenomic) {
+  @if (showGenomic()) {
     <div class="col-auto my-1">
       <div class="input-group">
         <label class="input-group-text" for="selectGenomic" style="height: 38px">Genomic Sets</label>
@@ -25,7 +25,7 @@
       </div>
     </div>
   }
-  @if (showAssembly) {
+  @if (showAssembly()) {
     <div class="col-auto my-1" >
       <div class="input-group">
         <label class="input-group-text" for="selectAssembly" style="height: 38px">Genomic Assemblies</label>
@@ -41,7 +41,7 @@
       </div>
     </div>
   }
-  @if (showRepseq) {
+  @if (showRepseq()) {
     <div class="col-auto my-1">
       <div class="input-group">
         <label class="input-group-text" for="selectAIRR" style="height: 38px">AIRR-seq Sets</label>

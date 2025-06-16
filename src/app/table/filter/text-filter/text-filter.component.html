@@ -17,7 +17,7 @@
   <div class="container content-centered" (click) = "$event.stopPropagation()">
     <form>
       <div class="row">
-        @if (showSort) {
+        @if (showSort()) {
           <div>
             <div class="col-8" style="padding-left: 0px; padding-right: 16px; display: flex">
               <button class="float-left" mat-button (click)="onSortAsc()">Sort Ascending</button>
@@ -30,7 +30,7 @@
           </button>
         </div>
       </div>
-      @if (showSort) {
+      @if (showSort()) {
         <div>
           <div class="row">
             <div class="col-12"  style="padding-left: 0px">
@@ -46,7 +46,7 @@
           </div>
         </div>
       }
-      @if (showTextFilter) {
+      @if (showTextFilter()) {
         <div>
           <div class="row">
             <div class="dropdown-divider"></div>

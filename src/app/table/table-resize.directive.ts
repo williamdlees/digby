@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, OnDestroy, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, Renderer2, input } from '@angular/core';
 import { TableParamsStorageService } from './table-params-storage-service';
 
 @Directive({
@@ -6,7 +6,7 @@ import { TableParamsStorageService } from './table-params-storage-service';
     providers: [TableParamsStorageService]
 })
 export class TableResizeDirective implements OnInit, OnDestroy {
-  @Input('appTableResize') storageKey: string = '';
+  readonly storageKey = input<string>('', { alias: "appTableResize" });
 
   private resizeEvents = new Map<string, string>();
   private resizeObserver: MutationObserver;
@@ -19,8 +19,9 @@ export class TableResizeDirective implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (this.storageKey) {
-      this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, this.storageKey);
+    const storageKey = this.storageKey();
+    if (storageKey) {
+      this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, storageKey);
       this.setupResizeHandling();
       this.setupMutationObserver();
     }
@@ -94,7 +95,7 @@ export class TableResizeDirective implements OnInit, OnDestroy {
     const cssValue = width + 'px';
     this.updateColumnWidth(columnName, cssValue);
     this.resizeEvents.set(columnName, cssValue);
-    this.tableParamsStorageService.saveInfo(this.resizeEvents, this.storageKey);
+    this.tableParamsStorageService.saveInfo(this.resizeEvents, this.storageKey());
   }
 
   private applyResizes(): void {

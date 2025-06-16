@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Type, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Type, Output, EventEmitter, input } from '@angular/core';
 import { TextFilterComponent } from './text-filter/text-filter.component';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
@@ -19,13 +19,13 @@ import { DynamicComponent, DynamicIoDirective } from 'ng-dynamic-component';
     imports: [DynamicComponent, DynamicIoDirective]
 })
 export class FilterComponent implements OnInit {
-  @Input() columnName: string;
-  @Input() choices$: Observable<IChoices>;
-  @Input() clear$: Observable<null>;
-  @Input() setFilter$: Observable<any>;
-  @Input() filterMode: FilterMode;
-  @Input() showTextFilter = true;
-  @Input() showSort = true;
+  readonly columnName = input<string>(undefined);
+  readonly choices$ = input<Observable<IChoices>>(undefined);
+  readonly clear$ = input<Observable<null>>(undefined);
+  readonly setFilter$ = input<Observable<any>>(undefined);
+  readonly filterMode = input<FilterMode>(undefined);
+  readonly showTextFilter = input(true);
+  readonly showSort = input(true);
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
   filterImplementationComponent: Type<FilterImplementation>;
   inputs = null;
@@ -37,15 +37,15 @@ export class FilterComponent implements OnInit {
 
   ngOnInit() {
     this.inputs = {
-      columnName: this.columnName,
-      choices$: this.choices$,
-      clear$: this.clear$,
-      setFilter$: this.setFilter$,
-      showTextFilter: this.showTextFilter,
-      showSort: this.showSort,
+      columnName: this.columnName(),
+      choices$: this.choices$(),
+      clear$: this.clear$(),
+      setFilter$: this.setFilter$(),
+      showTextFilter: this.showTextFilter(),
+      showSort: this.showSort(),
     };
 
-    switch (this.filterMode) {
+    switch (this.filterMode()) {
       case FilterMode.TEXT_MODE:
         this.filterImplementationComponent = TextFilterComponent;
         break;

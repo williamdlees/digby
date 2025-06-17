@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation, input, output} from '@angular/core';
+import {Component, OnInit, ViewChild, Output, EventEmitter, ViewEncapsulation, input} from '@angular/core';
 import { FilterImplementation } from '../filter-implementation';
 import { ColumnPredicate } from '../column-predicate';
 import { IChoices } from '../ichoices';
@@ -44,7 +44,7 @@ export class DateFilterComponent implements OnInit, FilterImplementation {
   readonly setFilter$ = input<Observable<any>>(undefined);
   readonly showTextFilter = input(true);
   readonly showSort = input(true);
-  readonly predicateEmitter = output<ColumnPredicate>();
+  @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   selectedOperator: Operator;
   operand1Input;

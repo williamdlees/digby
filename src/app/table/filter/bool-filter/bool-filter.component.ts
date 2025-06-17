@@ -1,10 +1,11 @@
 import {
   Component,
+  EventEmitter,
   OnInit,
+  Output,
   ViewChild,
   ViewEncapsulation,
-  input,
-  output
+  input
 } from '@angular/core';
 import {FilterImplementation} from '../filter-implementation';
 import {ColumnPredicate} from '../column-predicate';
@@ -46,7 +47,7 @@ export class BoolFilterComponent implements OnInit, FilterImplementation {
   readonly setFilter$ = input<Observable<any>>(undefined);
   readonly showTextFilter = input(true);
   readonly showSort = input(true);
-  readonly predicateEmitter = output<ColumnPredicate>();
+  @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   filterCleared = false;
   selectedSort = null;

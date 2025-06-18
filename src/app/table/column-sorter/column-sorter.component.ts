@@ -5,12 +5,11 @@ import {
   OnInit,
   Input,
   AfterViewInit,
-  EventEmitter,
-  Output,
   ViewEncapsulation,
   ElementRef,
   ChangeDetectionStrategy,
-  input
+  input,
+  output
 } from '@angular/core';
 import { moveItemInArray, CdkDragDrop, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPreview } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
@@ -44,8 +43,7 @@ function symmetricDifference(setA, setB) {
     imports: [MatMenuTrigger, MatMenu, CdkDropList, MatIcon, CdkDrag, CdkDragHandle, MatCheckbox, MatTooltip, CdkDragPreview, MatCard]
 })
 export class ColumnSorterComponent implements OnInit, AfterViewInit {
-  @Output()
-  columnsChange: EventEmitter<string[]> = new EventEmitter<string[]>();
+  readonly columnsChange = output<string[]>();
   //@Input()
   //columns: string[];
   readonly saveName = input<string>(undefined);

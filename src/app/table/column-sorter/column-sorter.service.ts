@@ -19,7 +19,7 @@ export class ColumnSorterService {
 
       const loadedInfo = localStorage.getItem(`${saveName}-columns`);
 
-      if (loadedInfo) {
+      if (loadedInfo && saveName != 'rep-sample-columns') {
         return JSON.parse(loadedInfo);
       }
       if (saveName) {

@@ -1,0 +1,57 @@
+.report-table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.report-table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Set specific column widths */
+.mat-column-title {
+  width: 20%;
+  word-wrap: break-word;
+}
+
+.mat-column-thumbnail {
+  width: 120px;
+  text-align: center;
+}
+
+.mat-column-description {
+  width: 60%;
+}
+
+.mat-column-actions {
+  width: 120px;
+  text-align: center;
+}
+
+/* Additional classes for cell alignment */
+.thumbnail-column {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.actions-column {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.description-column {
+  /* These properties ensure text wrapping */
+  white-space: normal !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  hyphens: auto;
+  -webkit-hyplens: auto;
+  padding: 10px;
+  line-height: 1.4;
+  vertical-align: top;
+}
+
+/* Ensure headers and cells have consistent padding */
+th.mat-header-cell, td.mat-cell {
+  padding: 8px;
+}

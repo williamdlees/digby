@@ -16,7 +16,7 @@ import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.compone
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
 import { RepSampleSelectedService } from '../rep-sample-selected.service';
 import {RepSampleFilterService} from '../rep-sample-filter.service';
-import { NavigationEnd, Router} from '@angular/router';
+import { Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {ReportRunService} from '../../reports/report-run.service';
 import { AsyncPipe, KeyValuePipe } from '@angular/common';

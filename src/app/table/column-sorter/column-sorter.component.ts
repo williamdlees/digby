@@ -149,11 +149,8 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
     const currentColumnIds = this.internalColumnInfo.map(col => col.id);
     const newColumnIds = this.columnInfo.map(col => col.id);
 
-    if (!areListsEqual(currentColumnIds, newColumnIds)) {
-      this.internalColumnInfo = this.columnInfo.map(a => {return {...a}});
-      this.selectedColumnInfo = this.columnInfo.filter(el => !el.hidden);
-    }
-
+    this.internalColumnInfo = this.columnInfo.map(a => {return {...a}});
+    this.selectedColumnInfo = this.internalColumnInfo.filter(el => !el.hidden);
     this.reorderColumns();
     this.emitColumns(true);
   }

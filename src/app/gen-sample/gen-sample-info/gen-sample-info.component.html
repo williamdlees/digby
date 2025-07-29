@@ -28,7 +28,7 @@
         @for (section of ['Study', 'Sample', 'Subject', 'TissuePro', 'SeqProtocol', 'DataPro']; track section) {
           <div class="col-4">
             <h4><b>{{section}}</b></h4>
-            @for (col of allColumns; track col) {
+            @for (col of allColumns; track col.id) {
               <div>
                 @if (col.section === section) {
                   <div>

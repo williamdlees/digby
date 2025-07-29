@@ -39,7 +39,7 @@
         <div class="dropdown-divider"></div>
         <mat-form-field class="col-12">
           <mat-select placeholder="Select comparison" [(value)]="selectedOperator">
-            @for (operator of operatorList; track operator) {
+            @for (operator of operatorList; track operator.name) {
               <mat-option [value]="operator">
                 {{operator.name}}
               </mat-option>

@@ -69,7 +69,7 @@
     <div class="col">
       <div class="resizable-table">
         <table mat-table [dataSource]="dataSource" appTableResize="gen-gene-table-widths">
-          @for (col of allColumns; track col) {
+          @for (col of allColumns; track col.id) {
             @if ((col.type === 'string')) {
               <ng-container matColumnDef={{col.id}}>
                 <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>

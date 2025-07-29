@@ -9,7 +9,7 @@
 
   <p><a href="assets/doc/report_documentation.pdf">Click here</a> for explanation of reports.</p>
 
-  @for (reportSection of reportSections; track reportSection) {
+  @for (reportSection of reportSections; track reportSection.title) {
     <h2>{{reportSection.title}}</h2>
     <mat-table [dataSource]="reportSection.source">
       <ng-container matColumnDef="title">

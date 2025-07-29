@@ -7,7 +7,7 @@
       <mat-icon class="primary-icon"  style="padding-left: 0px !important;">clear</mat-icon>
     </button>
     <label class="form-check-label" for="col-clear-button">Reset Columns</label>
-    @for (column of selectedColumnInfo; track column; let i = $index) {
+    @for (column of selectedColumnInfo; track column.id; let i = $index) {
       <div class="dragable-row"
         cdkDrag
         [cdkDragData]="{columnIndex: i, columnTitle: column.id}"
@@ -38,7 +38,7 @@
             {{section}}
           </div>
         }
-        @for (column of classifiedColumnInfo[section]; track column) {
+        @for (column of classifiedColumnInfo[section]; track column.id) {
           <div class="digby-table-undragable dragable-row">
             <mat-checkbox
               [hidden]="!column.hidden"

@@ -3,7 +3,7 @@
     <div class="input-group">
       <label class="input-group-text" for="selectSpecies">Species</label>
       <select class="form-select" id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
-        @for (s of species; track s) {
+        @for (s of species; track s.name) {
           <option [ngValue]="s">{{s.name}}</option>
         }
       </select>

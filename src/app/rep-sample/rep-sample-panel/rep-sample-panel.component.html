@@ -71,7 +71,7 @@
       <div class="resizable-table">
         <table mat-table [dataSource]="dataSource" appTableResize="rep-sample-table-widths">
 
-          @for (col of allColumns; track col) {
+          @for (col of allColumns; track col.id) {
             @if ((col.type === 'string' && col.id === 'sample_name')) {
               <ng-container matColumnDef={{col.id}}>
                 <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
@@ -156,7 +156,7 @@
                     <div>
                       <div class="container">
                         <div class="row">
-                          @for (h of item[col.id] | keyvalue; track h) {
+                          @for (h of item[col.id] | keyvalue; track h.key) {
                             <div>
                               @if (h.key !== 'path') {
                                 <div class="col-xs-6">

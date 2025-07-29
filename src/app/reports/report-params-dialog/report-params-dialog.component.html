@@ -9,7 +9,7 @@
       <div class="form-group" style="margin-top: 1rem !important">
         <input type="submit" class="btn btn-primary" value="Run Report"/>
       </div>
-      @for (form_elem of params; track form_elem) {
+      @for (form_elem of params; track form_elem.id) {
         <div>
           <div>
             @switch (form_elem.type) {

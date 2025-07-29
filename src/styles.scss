@@ -1,11 +1,19 @@
 /* ==================== GLOBAL STYLES ==================== */
 /* You can add global styles to this file, and also import other style files */
-@import '../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
+@use 'styles/theme-variables' as *;
+@use 'styles/material-theme' as *;
+@use 'styles/material-components' as *;
 @import 'material-design-icons/iconfont/material-icons.css';
 
 /* Base page styles */
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 /* Typography */
 p,li,span.mat-typography { font-size: 1.2rem; }
@@ -48,13 +56,14 @@ app-filter {
   box-sizing: border-box !important;
   word-wrap: break-word !important;
   padding: 6px !important;
-  border-left: 1px solid #eee;
+  border-left: 1px solid var(--border-color);
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   position: relative !important;
   cursor: default !important;
   background: transparent !important;
+  color: var(--text-color) !important;
 }
 
 [class*="mat-column-"] {
@@ -67,7 +76,7 @@ app-filter {
 .mat-mdc-header-row.mat-elevation-z1 {
   z-index: 2; /* Higher than surrounding elements */
   position: relative; /* Enable z-index */
-  background: white;
+  background: var(--background-color);
 }
 
 .mat-mdc-cell > div, .mat-mdc-header-cell > div {
@@ -117,7 +126,7 @@ app-filter {
   right: 2px;
   bottom: 0;
   width: 2px;
-  background-color: #ccc;
+  background-color: var(--border-color);
   z-index: 2;
   pointer-events: none;
 }
@@ -133,7 +142,7 @@ app-filter {
   right: 2px;
   bottom: 0;
   width: 2px;
-  background-color: #ccc;
+  background-color: var(--border-color);
   z-index: 2;
 }
 
@@ -229,7 +238,7 @@ th.large-col {
 }
 
 .addr {
-  color: rgb(0, 123, 255) !important;
+  color: var(--primary-color) !important;
 }
 
 .i {
@@ -237,20 +246,21 @@ th.large-col {
 }
 
 .primary-icon {
-  color: #007bff;
+  color: var(--primary-color);
   align-items: center;
   vertical-align: bottom;
   line-height: 20px;
 }
 
 .header-text {
-  color: rgba(0,0,0,0.54);
+  color: var(--text-color);
+  opacity: 0.7;
   font-size: 12px;
 }
 
 .btn-solid-icon {
-  background-color: white;
-  color: #6c757d;
+  background-color: var(--card-bg);
+  color: var(--text-color);
   border: none;
 }
 
@@ -259,7 +269,44 @@ th.large-col {
 }
 
 .searchbox {
-  border-color: rgb(206,212, 255);
+  border-color: var(--border-color);
   border-width: 1px;
   border-style: solid;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Material elevation overrides */
+.mat-elevation-z1, .mat-elevation-z2, .mat-elevation-z3, .mat-elevation-z4 {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+/* Card styling */
+.mat-card {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+}
+
+/* Button styling */
+button.btn {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+button.btn:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Input fields */
+input, select, textarea {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
 }

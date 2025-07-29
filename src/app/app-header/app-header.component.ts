@@ -5,14 +5,27 @@ import { Router, RouterLinkActive, RouterLink } from "@angular/router";
 import { GeneTableSelection } from '../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../gene-table-selector/gene-table-selector.service';
 import { NgbCollapse, NgbNav, NgbNavItem, NgbNavItemRole, NgbNavLink, NgbNavLinkBase, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem } from '@ng-bootstrap/ng-bootstrap';
-
-
+import { ThemeToggleComponent } from '../shared/components/theme-toggle/theme-toggle.component';
 
 @Component({
     selector: 'app-header',
     templateUrl: './app-header.component.html',
     styleUrls: ['./app-header.component.css'],
-    imports: [NgbCollapse, NgbNav, NgbNavItem, NgbNavItemRole, RouterLinkActive, NgbNavLink, NgbNavLinkBase, RouterLink, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem]
+    imports: [
+      NgbCollapse, 
+      NgbNav, 
+      NgbNavItem, 
+      NgbNavItemRole, 
+      RouterLinkActive, 
+      NgbNavLink, 
+      NgbNavLinkBase, 
+      RouterLink, 
+      NgbDropdown, 
+      NgbDropdownToggle, 
+      NgbDropdownMenu, 
+      NgbDropdownItem,
+      ThemeToggleComponent
+    ]
 })
 
 export class AppHeaderComponent implements OnInit {

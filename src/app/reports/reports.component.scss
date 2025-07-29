@@ -1,11 +1,17 @@
+@use '../../styles/theme-variables' as *;
+
 .report-table-container {
   overflow-x: auto;
   width: 100%;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
 }
 
 .report-table {
   width: 100%;
   table-layout: fixed;
+  color: var(--text-color);
 }
 
 /* Set specific column widths */
@@ -54,4 +60,19 @@
 /* Ensure headers and cells have consistent padding */
 th.mat-header-cell, td.mat-cell {
   padding: 8px;
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+/* Dark mode specific overrides if needed */
+:host-context(.dark-theme) {
+  .btn-lg {
+    /* Special button styling for dark mode if needed */
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+  }
+  
+  .fa {
+    color: var(--text-color);
+  }
 }

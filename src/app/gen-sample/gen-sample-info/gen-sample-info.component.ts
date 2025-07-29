@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {catchError, finalize} from 'rxjs/operators';
 import { GenomicService } from 'projects/digby-swagger-client';
@@ -18,9 +18,9 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 
 export class GenSampleInfoComponent implements OnInit {
-  readonly sampleName = input(undefined);
-  readonly species = input(undefined);
-  readonly dataset = input(undefined);
+  @Input() sampleName; // note that NgbModal does not support input signals
+  @Input() species;
+  @Input() dataset;
   loading = false;
   error = null;
   sampleInfo = null;
@@ -34,10 +34,10 @@ export class GenSampleInfoComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.genSampleService.getSubjectInfoApi(this.species(), this.dataset(), this.sampleName()).pipe(
+    this.genSampleService.getSubjectInfoApi(this.species, this.dataset, this.sampleName).pipe(
       retryWithBackoff(),
       catchError(error => {
-        this.error.next(error);
+        this.error = error;
         return([]);
       }),
       finalize(() => {

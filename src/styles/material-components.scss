@@ -1,0 +1,85 @@
+/**
+ * This file handles applying a Material Design theme on top of our CSS variables.
+ * It serves as a bridge between Angular Material's components and our custom theming system.
+ */
+
+/* Material Components Base Styles */
+
+// Add global Material component styles that will be affected by our CSS variables
+.mat-mdc-button.mat-primary {
+  color: var(--primary-color);
+}
+
+.mat-mdc-button.mat-accent {
+  color: var(--secondary-color);
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.mat-mdc-raised-button.mat-accent {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+// Form controls
+.mat-mdc-form-field {
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--card-bg);
+  }
+  
+  .mat-mdc-form-field-label {
+    color: var(--text-color);
+  }
+  
+  .mat-mdc-input-element {
+    color: var(--text-color);
+  }
+}
+
+// Dialogs
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: var(--mat-dialog-bg);
+  color: var(--text-color);
+}
+
+// Tooltip
+.mat-mdc-tooltip {
+  background-color: var(--mat-tooltip-bg);
+  color: var(--mat-tooltip-color);
+}
+
+// Table
+.mat-mdc-table {
+  background-color: var(--background-color);
+  
+  .mat-mdc-header-row {
+    background-color: var(--table-header-bg);
+  }
+  
+  .mat-mdc-row:hover {
+    background-color: var(--table-row-hover);
+  }
+  
+  .mat-mdc-cell, 
+  .mat-mdc-header-cell {
+    color: var(--text-color);
+  }
+}
+
+// Paginator
+.mat-mdc-paginator {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+// Progress indicators
+.mat-mdc-progress-spinner circle {
+  stroke: var(--primary-color);
+}
+
+.mat-mdc-progress-bar-fill::after {
+  background-color: var(--primary-color);
+}

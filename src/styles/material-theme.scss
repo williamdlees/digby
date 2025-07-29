@@ -1,0 +1,78 @@
+/**
+ * Simplified Material theme for Dark Mode support
+ * 
+ * Instead of using the full Angular Material theming system,
+ * we'll use CSS custom properties to easily switch between themes.
+ */
+
+// The Angular Material components will use CSS variables to determine their color
+// These are automatically applied to components via our CSS variables in theme-variables.scss
+
+// Define additional Material-specific styles for dark mode
+.mat-mdc-card {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-stroked-button {
+  color: var(--text-color);
+}
+
+.mat-mdc-checkbox .mat-ripple-element,
+.mat-mdc-checkbox .mat-mdc-checkbox-background {
+  background-color: var(--primary-color);
+}
+
+.mat-mdc-dialog-container {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.mat-mdc-progress-bar-fill::after {
+  background-color: var(--primary-color);
+}
+
+.mat-mdc-tab-nav-bar {
+  background-color: var(--card-bg);
+}
+
+.mat-mdc-tab-link, .mat-mdc-tab {
+  color: var(--text-color);
+}
+
+.mat-mdc-tab-group, .mat-mdc-tab-nav-panel {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+// Apply different styles for .dark-theme
+.dark-theme {
+  .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: var(--card-bg);
+  }
+  
+  .mdc-floating-label {
+    color: var(--text-color);
+  }
+  
+  .mat-mdc-tab-header {
+    background-color: var(--card-bg);
+  }
+  
+  .mat-mdc-paginator {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+  
+  .mat-mdc-option {
+    color: var(--text-color);
+  }
+  
+  .mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
+    background-color: var(--hover-bg);
+  }
+  
+  .mat-mdc-select-value {
+    color: var(--text-color);
+  }
+}

@@ -73,7 +73,7 @@
             @if ((col.type === 'string')) {
               <ng-container matColumnDef={{col.id}}>
                 <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                  <div class="header-flex">
+                  <div class="header-flex-tight">
                     <span class="column-title">{{col.name}}</span>
                     @if (col.id === 'name') {
                       <div >
@@ -165,22 +165,22 @@
   <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
     <ng-template matMenuContent>
       <div class="container">
-        <div class="row ms-1 me-2">
+        <div class="d-flex align-items-center ms-1 me-2">
           <b>Download data for selected genes</b>
         </div>
-        <div class="row ms-4 me-2 mb-0 align-middle">
+        <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
           Ungapped sequences (fasta)
           <span>&nbsp;&nbsp;</span>
           <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'fasta', {type:'Ungapped sequences (fasta)'})" title="Download ungapped sequences">
             <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
           </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
+          <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
             Gapped sequences (fasta)
             <span>&nbsp;&nbsp;</span>
             <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'fasta', {type:'Gapped sequences (fasta)'})" title="Download gapped sequences">
               <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Gene information (csv)
               <span>&nbsp;&nbsp;</span>
               <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'csv', {type:'Gene information (csv)'})" title="Download gene information">

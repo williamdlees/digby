@@ -75,7 +75,7 @@
             @if ((col.type === 'string')) {
               <ng-container matColumnDef={{col.id}}>
                 <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                  <div class="header-flex">
+                  <div class="header-flex-tight">
                     <span class="column-title">{{col.name}}</span>
                     <app-filter #filterComponent="menuInOtherComponent"
                       [columnName]="col.id"
@@ -109,7 +109,7 @@
             @if ((col.type === 'integer' || col.type === 'number')) {
               <ng-container matColumnDef={{col.id}}>
                 <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                  <div class="header-flex">
+                  <div class="header-flex-tight">
                     <span class="column-title">{{col.name}}</span>
                     <app-filter #filterComponent="menuInOtherComponent"
                       [columnName]="col.id"
@@ -142,7 +142,7 @@
             @if ((col.type === 'boolean')) {
               <ng-container matColumnDef={{col.id}}>
                 <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                  <div class="header-flex">
+                  <div class="header-flex-tight">
                     <span class="column-title">{{col.name}}</span>
                   </div>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
@@ -174,10 +174,10 @@
   <mat-menu #geneMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
     <ng-template matMenuContent let-seq="seq">
       <div class="container">
-        <div class="row ms-1 me-2">
+        <div class="d-flex align-items-center ms-1 me-2">
           <b>{{seq.gene_name}} allelic variation</b>
         </div>
-        <div class="row ms-1 me-2 mb-1">
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
           IgSNPer Analysis
           @if (seq['igsnper_plot_path'].length > 0) {
             <span>&nbsp;&nbsp;</span>
@@ -187,7 +187,7 @@
             <span>&nbsp;&nbsp;</span>Not available
           }
         </div>
-        <div class="row ms-1 me-2 mb-1">
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
           IgSNPer explained
           <span>&nbsp;&nbsp;</span>
           <a href="https://github.com/Immunotools/IgSNPer" target="_blank" rel="noopener" title="Learn more about IgSNPer">
@@ -202,22 +202,22 @@
   <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
     <ng-template matMenuContent>
       <div class="container">
-        <div class="row ms-1 me-2">
+        <div class="d-flex align-items-center ms-1 me-2">
           <b>Download data for selected genes</b>
         </div>
-        <div class="row ms-4 me-2 mb-0 align-middle">
+        <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
           Ungapped sequences (fasta)
           <span>&nbsp;&nbsp;</span>
           <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Ungapped sequences (fasta)'})" title="Download ungapped sequences">
             <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
           </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
+          <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
             Gapped sequences (fasta)
             <span>&nbsp;&nbsp;</span>
             <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'fasta', {type:'Gapped sequences (fasta)'})" title="Download gapped sequences">
               <i class="fa fa-file-text-o" style="line-height: inherit;" ></i> </button>
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Gene information (csv)
               <span>&nbsp;&nbsp;</span>
               <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Gene information (csv)'})" title="Download gene information">

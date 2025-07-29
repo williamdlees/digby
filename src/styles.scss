@@ -22,6 +22,7 @@ p,li,span.mat-typography { font-size: 1.2rem; }
   text-overflow: ellipsis;
   word-break: break-word;
   white-space: normal !important;
+  font-size: 12px !important;
 }
 
 /* Filter component alignment */
@@ -150,6 +151,15 @@ app-filter {
   width: 100% !important;
   height: 100% !important;
   gap: 8px;
+}
+
+.header-flex-tight {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  height: 100% !important;
+  gap: 0px;
 }
 
 /* Hover state overrides */

@@ -72,7 +72,7 @@
           @if ((col.type === 'string')) {
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                <div class="header-flex">
+                <div class="header-flex-tight">
                   <span class="column-title">{{col.name}}</span>
                   @if (col.id === 'sample_name') {
                     <div >
@@ -124,7 +124,7 @@
           @if ((col.type === 'integer' || col.type === 'number')) {
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                <div class="header-flex">
+                <div class="header-flex-tight">
                   <span class="column-title">{{col.name}}</span>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
@@ -137,7 +137,7 @@
           @if ((col.type === 'boolean')) {
             <ng-container matColumnDef={{col.id}}>
               <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
-                <div class="header-flex">
+                <div class="header-flex-tight">
                   <span class="column-title">{{col.name}}</span>
                   <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
                 </div>
@@ -164,10 +164,10 @@
     <div  (click) = "$event.stopPropagation()">
       <ng-template matMenuContent let-sample="sample">
         <div class="container">
-          <div class="row ms-1 me-2">
+          <div class="d-flex align-items-center ms-1 me-2">
             <b>{{sample.name}}</b>
           </div>
-          <div class="row ms-1 me-2 mb-1">
+          <div class="d-flex align-items-center ms-1 me-2 mb-1">
             Genotype Analysis
             <span>&nbsp;&nbsp;</span>
             <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample)" title="Download PDF report">
@@ -179,45 +179,45 @@
             </button>
           </div>
           @if (sample.annotation_method=='IGenotyper') {
-            <div class="row ms-1 me-2 mb-1">
+            <div class="d-flex align-items-center ms-1 me-2 mb-1">
               IGenotyper
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Contigs: BAM<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank" rel="noopener" title="Download BAM file"><i class="fa fa-save" style="line-height: inherit;"></i></a>
               <span>&nbsp;&nbsp;</span>BAI<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path.replace('.bam', '.bam.bai')}}" target="_blank" rel="noopener" title="Download BAI file"><i class="fa fa-save" style="line-height: inherit;"></i></a>
             </div>
-            <div class="row ms-4 me-2 mb-1">
+            <div class="d-flex align-items-center ms-4 me-2 mb-1">
               Documentation<span>&nbsp;&nbsp;</span>
               <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
             </div>
           }
           @if (sample.annotation_method=='Digger') {
-            <div class="row ms-1 me-2 mb-1">
+            <div class="d-flex align-items-center ms-1 me-2 mb-1">
               Digger
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Contigs<span>&nbsp;&nbsp;</span><a href="{{sample.contig_bam_path}}" target="_blank" rel="noopener" title="Download contigs"><i class="fa fa-save" style="line-height: inherit;"></i></a>
               <span>&nbsp;&nbsp;</span>
             </div>
-            <div class="row ms-4 me-2 mb-1">
+            <div class="d-flex align-items-center ms-4 me-2 mb-1">
               Documentation<span>&nbsp;&nbsp;</span>
               <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
             </div>
           }
           @if (sample.annotation_method=='VDJbase') {
-            <div class="row ms-2 me-2 mb-1">
+            <div class="d-flex align-items-center ms-2 me-2 mb-1">
               VDJbase
             </div>
-            <div class="row ms-4 me-2 mb-0 align-middle">
+            <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
               Annotation<span>&nbsp;&nbsp;</span><a href="{{sample.annotation_path}}" target="_blank" rel="noopener" title="Download annotation"><i class="fa fa-save" style="line-height: inherit;"></i></a>
             </div>
-            <div class="row ms-4 me-2 mb-1">
+            <div class="d-flex align-items-center ms-4 me-2 mb-1">
               Documentation<span>&nbsp;&nbsp;</span>
               <a href="{{sample.annotation_reference}}" target="_blank" rel="noopener" title="View documentation"><i class="fa fa-desktop" style="line-height: inherit;"></i></a>
             </div>
@@ -230,16 +230,16 @@
   <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
     <ng-template matMenuContent>
       <div class="container">
-        <div class="row ms-1 me-2">
+        <div class="d-flex align-items-center ms-1 me-2">
           <b>Download data for selected samples</b>
         </div>
-        <div class="row ms-4 me-2 mb-0 align-middle">
+        <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
           Sample info (csv)
           <span>&nbsp;&nbsp;</span>
           <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'csv', {type:'Sample info (CSV)'})" title="Download CSV">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i> </button>
           </div>
-          <div class="row ms-4 me-2 mb-0 align-middle">
+          <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
             Sample data (zip)
             <span>&nbsp;&nbsp;</span>
             <button class="btn btn-sm addr" (click)="sendReportRequest('download_gen_data', 'zip', {type:'Sample files (ZIP)'})" title="Download ZIP">

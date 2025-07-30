@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
 import {ReportsService} from 'digby-swagger-client';
 import {pollUntil} from '../../shared/poll-until-rxjs';
 import {defer, of} from 'rxjs';
@@ -17,14 +17,14 @@ import {ReportRequestService} from '../report-request-service';
     imports: []
 })
 export class ReportRunDialogComponent implements OnInit {
-  readonly report = input(undefined);
-  readonly format = input(undefined);
-  readonly params = input(undefined);
-  readonly species = input(undefined);
-  readonly genSeqs = input(undefined);
-  readonly genFilters = input(undefined);
-  readonly repSeqs = input(undefined);
-  readonly repFilters = input(undefined);
+  @Input() report;
+  @Input() format;
+  @Input() params;
+  @Input() species;
+  @Input() genSeqs;
+  @Input() genFilters;
+  @Input() repSeqs;
+  @Input() repFilters;
   statusText = '';
   lastStatusText = '';
   errorText = '';
@@ -41,7 +41,7 @@ export class ReportRunDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reportTitle = this.report().title;
+    this.reportTitle = this.report.title;
     this.reportRequest = new ReportRequestService(this.reportsService);
     this.reportResult$Subscription = this.reportRequest.reportResult$.subscribe(
       (result) => {
@@ -71,7 +71,7 @@ export class ReportRunDialogComponent implements OnInit {
     this.lastStatusText = '';
     this.statusText = '';
     this.errorText = '';
-    this.reportRequest.requestReport(this.report().name, this.format(), this.species(), this.genSeqs(), this.genFilters(), this.repSeqs(), this.repFilters(), this.params());
+    this.reportRequest.requestReport(this.report.name, this.format, this.species, this.genSeqs, this.genFilters, this.repSeqs, this.repFilters, this.params);
   }
 
 }

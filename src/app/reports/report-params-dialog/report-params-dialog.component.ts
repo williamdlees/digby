@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
@@ -21,9 +21,9 @@ export interface SampleCoverage {
     imports: [FormsModule, ReactiveFormsModule, NgMultiSelectDropDownModule]
 })
 export class ReportParamsDialogComponent implements OnInit {
-  readonly report = input(undefined);
-  readonly filterParams = input(undefined);
-  readonly sampleCoverage = input<SampleCoverage>(undefined);
+  @Input() report;
+  @Input() filterParams;
+  @Input() sampleCoverage: SampleCoverage;
   myFormGroup: FormGroup;
   params = [];
   scopeText : string
@@ -45,24 +45,24 @@ export class ReportParamsDialogComponent implements OnInit {
   ngOnInit(): void {
     const group = {};
 
-    this.report().params.forEach(t => {
+    this.report.params.forEach(t => {
       this.add_fields(t, group);
     });
 
-    const report = this.report();
+    const report = this.report;
     if (report.filter_params) {
-      for (let key in this.filterParams()) {
-        this.add_fields(this.filterParams()[key], group);
+      for (let key in this.filterParams) {
+        this.add_fields(this.filterParams[key], group);
       }
     }
 
     this.myFormGroup = new FormGroup(group);
 
     this.scopeText = 'The report will be run on ';
-    const sampleCoverage = this.sampleCoverage();
+    const sampleCoverage = this.sampleCoverage;
     if (report.scope.includes("gen_sample")) {
-      if (this.sampleCoverage().genomic.length > 1) {
-        this.scopeText += this.sampleCoverage().genomicScope + ' samples from ' + this.sampleCoverage().genomic.join(', ') + ' genomic datasets';
+      if (this.sampleCoverage.genomic.length > 1) {
+        this.scopeText += this.sampleCoverage.genomicScope + ' samples from ' + this.sampleCoverage.genomic.join(', ') + ' genomic datasets';
       } else if (sampleCoverage.genomic.length === 1) {
         this.scopeText += sampleCoverage.genomicScope + ' samples from the ' + sampleCoverage.genomic[0] + ' genomic dataset';
       }

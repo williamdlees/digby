@@ -14,24 +14,28 @@
 </button>
 
 <mat-menu #filterMenu="matMenu" xPosition="before" class="menu-overflow-hidden tf-mat-menu">
-  <div class="content-centered" (click) = "$event.stopPropagation()">
-    <form class="col-12" >
+  <div class="container content-centered" (click) = "$event.stopPropagation()">
+    <form>
       <div class="row">
-        <div class="col-6" style="padding-left: 0px; display: flex">
-          <button class="float-left;" mat-button (click)="onSortAsc()">Sort Ascending</button>
+        <div class="col-8" style="padding-left: 0px; padding-right: 16px; display: flex">
+          <button class="float-start;" mat-button (click)="onSortAsc()">Sort Ascending</button>
         </div>
-        <div class="col-6" style="text-align: right">
-          <button class="float-right" mat-flat-button color="primary"  (click)="onValidation()">
+        <div class="col-4 ml-auto">
+          <button class="float-right" style="min-width: 0px" mat-flat-button color="primary"  (click)="onValidation()">
             OK
           </button>
         </div>
       </div>
       <div class="row">
-        <button class="float-left" mat-button (click)="onSortDesc()">Sort Descending</button>
+          <div class="col-12"  style="padding-left: 0px">
+            <button class="float-start" mat-button (click)="onSortDesc()">Sort Descending</button>
+          </div>
       </div>
       @if (selectedSort) {
         <div class="row">
-          <button  class="float-left"mat-button  (click)="onSortClear()">Clear Sort</button>
+          <div class="col-12"  style="padding-left: 0px">
+            <button  class="float-start" mat-button  (click)="onSortClear()">Clear Sort</button>
+          </div>
         </div>
       }
 
@@ -65,7 +69,9 @@
           </div>
         }
         <div class="row">
-          <button mat-button  (click)="onClearFilter()">Clear Filter</button>
+          <div class="col-12"  style="padding-left: 0px">
+            <button class="float-start" mat-button  (click)="onClearFilter()">Clear Filter</button>
+          </div>
         </div>
         <div class="dropdown-divider"></div>
       }
@@ -73,7 +79,9 @@
       @if (selectedItems.length) {
         <div>
           <div class="row">
-            <button mat-button  (click)="onClearSelection()">Clear Selection</button>
+            <div class="col-12"  style="padding-left: 0px">
+              <button class="float-start" mat-button  (click)="onClearSelection()">Clear Selection</button>
+            </div>
           </div>
         </div>
       }

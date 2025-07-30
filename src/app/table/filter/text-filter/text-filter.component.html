@@ -18,39 +18,34 @@
     <form>
       <div class="row">
         @if (showSort()) {
-          <div>
-            <div class="col-8" style="padding-left: 0px; padding-right: 16px; display: flex">
-              <button class="float-left" mat-button (click)="onSortAsc()">Sort Ascending</button>
-            </div>
+          <div class="col-8" style="padding-left: 0px; padding-right: 16px; display: flex">
+            <button class="float-start" mat-button (click)="onSortAsc()">Sort Ascending</button>
           </div>
         }
         <div class="col-4 ml-auto">
-          <button class="float-right"  style="min-width: 0px" mat-flat-button color="primary"  (click)="onValidation()">
+          <button class="float-right" style="min-width: 0px" mat-flat-button color="primary"  (click)="onValidation()">
             OK
           </button>
         </div>
       </div>
       @if (showSort()) {
-        <div>
-          <div class="row">
-            <div class="col-12"  style="padding-left: 0px">
-              <button class="float-left" mat-button (click)="onSortDesc()">Sort Descending</button>
-            </div>
+        <div class="row">
+          <div class="col-12"  style="padding-left: 0px">
+            <button class="float-start" mat-button (click)="onSortDesc()">Sort Descending</button>
           </div>
         </div>
       }
       @if (selectedSort) {
-        <div>
-          <div class="row">
-            <button mat-button  (click)="onSortClear()">Clear Sort</button>
+        <div class="row">
+          <div class="col-12"  style="padding-left: 0px">
+            <button class="float-start" mat-button  (click)="onSortClear()">Clear Sort</button>
           </div>
         </div>
       }
       @if (showTextFilter()) {
-        <div>
           <div class="row">
             <div class="dropdown-divider"></div>
-            <mat-form-field class="col-12">
+            <mat-form-field class="col-12" >
               <mat-select placeholder="Select Filter" [(value)]="selectedOperator" [compareWith]="compareFn">
                 @for (operator of operatorList; track operator.name) {
                   <mat-option [value]="operator">
@@ -62,7 +57,7 @@
           </div>
           @if (selectedOperator) {
             <div class="row">
-              <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
+              <mat-form-field class="col-12"  (click) = "$event.stopPropagation()" >
                 <input matInput placeholder="Filter value" [(ngModel)]="operand1Input" name="operand1Input">
               </mat-form-field>
             </div>
@@ -71,30 +66,32 @@
                 <span class="col-12">and</span>
               </div>
               <div class="row">
-                <mat-form-field class="col-12" (click) = "$event.stopPropagation()" >
+                <mat-form-field class="col-12"  (click) = "$event.stopPropagation()" >
                   <input matInput placeholder="Filter value 2" [(ngModel)]="operand2Input" name="operand2Input">
                 </mat-form-field>
               </div>
             }
             <div class="row">
-              <button mat-button  (click)="onClearFilter()">Clear Filter</button>
+              <div class="col-12"  style="padding-left: 0px">
+                <button class="float-start" mat-button  (click)="onClearFilter()">Clear Filter</button>
+              </div>
             </div>
             <div class="dropdown-divider"></div>
           }
-        </div>
       }
 
       @if (selectedItems.length) {
         <div>
           <div class="row">
-            <button mat-button  (click)="onClearSelection()">Clear Selection</button>
+            <div class="col-12"  style="padding-left: 0px">
+              <button class="float-start" mat-button  (click)="onClearSelection()">Clear Selection</button>
+            </div>
           </div>
         </div>
       }
 
       <div>
-        <ng-multiselect-dropdown name="multi"  class="col-12"
-          [class]="'filter-dropdown'"
+        <ng-multiselect-dropdown name="multi"  class="col-12 filter-dropdown"
           [settings]="dropdownSettings"
           [data]="choices"
           [placeholder]="'Select Items'"

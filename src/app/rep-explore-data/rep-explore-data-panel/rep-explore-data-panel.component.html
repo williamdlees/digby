@@ -121,40 +121,40 @@
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="institute">
-          <mat-header-cell *matHeaderCellDef  class="explore-large-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-large-col header-flex-tight">
             Lab
           </mat-header-cell>
           <mat-cell  class="explore-large-col" *matCellDef="let study">{{study.lab_address}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="num_subjects">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Subjects
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_subjects}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.num_subjects}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="subjects_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Subjects in VDJbase
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.subjects_in_vdjbase}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.subjects_in_vdjbase}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="num_samples">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Samples
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_samples}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.num_samples}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="samples_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Samples in VDJbase
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.samples_in_vdjbase}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.samples_in_vdjbase}}</mat-cell>
         </ng-container>
         <ng-container matColumnDef="paper" >
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Paper
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">
             @if (study.pub_ids) {
               @for (pub_id of study.pub_ids.split(','); track pub_id) {
                 @if (pub_id.includes('http')) {
@@ -168,10 +168,10 @@
           </mat-cell>
         </ng-container>
         <ng-container matColumnDef="repertoires">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Download Repertoires
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">
             @if (study.repertoires) {
               <a href={{apibasePath}}{{study.repertoires}} title="Download repertoires" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
             }

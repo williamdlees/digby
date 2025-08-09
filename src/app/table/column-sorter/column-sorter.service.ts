@@ -6,6 +6,9 @@ export interface ColumnInfo {
   hidden: boolean;
   section?: string;
   description?: string;
+  size?: string; // 'small-col', 'medium-col', 'large-col'
+  type?: string; // 'string', 'number', 'date', etc.
+  preventBeingHidden?: boolean;
 }
 
 @Injectable()

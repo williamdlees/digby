@@ -1,10 +1,10 @@
 /* tslint:disable:max-line-length */
 import {Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
-import {ReportsService, RepseqService} from '../../../../dist/digby-swagger-client';
+import { RepseqService} from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTable} from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {RepSampleDataSource} from '../rep-sample-data.source';
 import { FilterMode } from '../../table/filter/filter-mode.enum';
 import { ColumnPredicate } from '../../table/filter/column-predicate';
@@ -16,23 +16,31 @@ import {RepSampleInfoComponent} from '../rep-sample-info/rep-sample-info.compone
 import { RepGeneSelectedService } from '../../rep-gene-table/rep-gene-selected.service';
 import { RepSampleSelectedService } from '../rep-sample-selected.service';
 import {RepSampleFilterService} from '../rep-sample-filter.service';
-import {ResizeEvent} from 'angular-resizable-element';
-import {TableParamsStorageService} from '../../table/table-params-storage-service';
-import {HttpClient} from '@angular/common/http';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import { Router} from '@angular/router';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {ReportRunService} from '../../reports/report-run.service';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { ColumnSorterComponent } from '../../table/column-sorter/column-sorter.component';
+import { MatMenuTrigger, MatMenu, MatMenuContent } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { TableResizeDirective } from '../../table/table-resize.directive';
+import { ColumnResizeDirective } from '../../table/column-resize.directive';
+import { FilterComponent } from '../../table/filter/filter.component';
 
 
 @Component({
-  selector: 'app-sample-rep-panel',
-  templateUrl: './rep-sample-panel.component.html',
-  styleUrls: ['./rep-sample-panel.component.css'],
-  providers: [TableParamsStorageService],
-  encapsulation: ViewEncapsulation.None,   // needed for css styling on mat-menu-panel
+    selector: 'app-sample-rep-panel',
+    templateUrl: './rep-sample-panel.component.html',
+    styleUrls: ['./rep-sample-panel.component.css'],
+    providers: [],
+    encapsulation: ViewEncapsulation.None,
+    imports: [MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe, KeyValuePipe]
 })
 
 export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy {
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
@@ -53,7 +61,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   isSelectedSamplesChecked = false;
   choices$Subscription = null;
   loading$Subscription = null;
-  resizeEvents = new Map();
   clearSubject = new BehaviorSubject<null>(null);
   clear$ = this.clearSubject.asObservable();
   setFilterSubject = new BehaviorSubject<any>(null);
@@ -65,10 +72,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
               private repGeneSelectedService: RepGeneSelectedService,
               private repSampleSelectedService: RepSampleSelectedService,
               private repSampleFilterService: RepSampleFilterService,
-              private tableParamsStorageService: TableParamsStorageService,
-              private reportsService: ReportsService,
-              private httpClient: HttpClient,
-              private route: ActivatedRoute,
               private reportRunService: ReportRunService,
               private router: Router,
               private el: ElementRef,
@@ -77,7 +80,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
   }
 
   ngOnInit() {
-    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(this.resizeEvents, 'rep-sample-table-widths');
     this.dataSource = new RepSampleDataSource(this.repseqService);
   }
 
@@ -97,9 +99,9 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
             this.selection = sel;
+            this.onSelectedSamplesChange();
             this.paginator.firstPage();
             this.table.renderRows();
-            this.loadSequencesPage();
           }
         );
 
@@ -109,14 +111,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
             this.repSampleSelectedService.selection.next({ids: choices.names_by_dataset});
           } else {
             this.repSampleSelectedService.selection.next({ids: []});
-          }
-        }
-      );
-
-      this.loading$Subscription = this.dataSource.loading$.subscribe(
-        loading => {
-          if (!loading) {
-            this.applyResizes();
           }
         }
       );
@@ -137,12 +131,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
           this.onSelectedSamplesChange();
         }
       );
-
-      this.router.events.subscribe((val) => {
-        if (val instanceof NavigationEnd) {
-          //this.applyResizes();      don't think this is doing anything useful
-        }
-      });
 
       const searchOrder = {field: 'sample_name', predicates: [], sort: {field: 'sample_name', order: 'asc'}}
       this.applyFilter(searchOrder);
@@ -261,29 +249,6 @@ export class RepSamplePanelComponent implements AfterViewInit, OnInit, OnDestroy
     modalRef.componentInstance.dataset = sample.dataset;
   }
 
-  onResizeEnd(event: ResizeEvent, columnName): void {
-    if (event.edges.right) {
-      const cssValue = event.rectangle.width + 'px';
-      this.updateColumnWidth(columnName, cssValue);
-      this.resizeEvents.set(columnName, cssValue);
-      this.tableParamsStorageService.saveInfo(this.resizeEvents, 'rep-sample-table-widths');
-    }
-  }
-
-  applyResizes(): void {
-    for (const [columnName, cssValue] of this.resizeEvents) {
-      this.updateColumnWidth(columnName, cssValue);
-    }
-  }
-
-  updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < columnElts.length; i++) {
-      const currentEl = columnElts[i] as HTMLDivElement;
-      currentEl.style.width = cssValue;
-    }
-  }
 
   sendReportRequest(report, format, params) {
     let reportParams: any;

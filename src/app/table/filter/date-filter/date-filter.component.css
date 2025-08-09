@@ -4,6 +4,10 @@ outline: none !important;
 outline-style: none !important;
 }
 
+button {
+  flex-shrink: 0 !important;
+}
+
 
 p,li {
   font-size: 0.9rem !important;

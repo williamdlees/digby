@@ -26,32 +26,32 @@ import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    MatTableModule,
-    MatInputModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatSortModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    NgMultiSelectDropDownModule,
-    DynamicModule,
-  ],
-  declarations: [TextFilterComponent, BoolFilterComponent, NumberFilterComponent, DateFilterComponent, FilterComponent, ],
-  providers: [MatNativeDateModule,
-  {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
-  ],
-  exports: [
-    FilterComponent
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        MatTableModule,
+        MatInputModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatSortModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        NgMultiSelectDropDownModule,
+        DynamicModule,
+        TextFilterComponent, BoolFilterComponent, NumberFilterComponent, DateFilterComponent, FilterComponent,
+    ],
+    providers: [MatNativeDateModule,
+        { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+    ],
+    exports: [
+        FilterComponent
+    ]
 })
 export class FilterModule { }

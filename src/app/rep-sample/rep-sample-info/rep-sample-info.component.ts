@@ -1,18 +1,22 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {catchError, finalize} from 'rxjs/operators';
-import { RepseqService } from '../../../../dist/digby-swagger-client';
+import { RepseqService } from 'projects/digby-swagger-client';
 import { columnInfo } from '../rep-sample-panel/rep-sample-panel-cols';
 
+import { MatTooltip } from '@angular/material/tooltip';
+
 @Component({
-  selector: 'app-sample-rep-info',
-  templateUrl: './rep-sample-info.component.html',
-  styleUrls: ['./rep-sample-info.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling
+    selector: 'app-sample-rep-info',
+    templateUrl: './rep-sample-info.component.html',
+    styleUrls: ['./rep-sample-info.component.css'],
+    encapsulation: ViewEncapsulation.None, // needed for css styling
+    standalone: true,
+    imports: [MatTooltip]
 })
 export class RepSampleInfoComponent implements OnInit {
-  @Input() sampleName;
+  @Input() sampleName; // note that NgbModal does not support input signals
   @Input() species;
   @Input() dataset;
   loading = false;
@@ -31,7 +35,7 @@ export class RepSampleInfoComponent implements OnInit {
     this.repseqService.getSampleInfoApi(this.species, this.dataset, this.sampleName).pipe(
       retryWithBackoff(),
       catchError(error => {
-        this.error.next(error);
+        this.error = error;
         return([]);
       }),
       finalize(() => {

@@ -1,6 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Observable, BehaviorSubject, of, EMPTY} from 'rxjs';
-import { RepseqService } from '../../../dist/digby-swagger-client';
+import { RepseqService } from 'projects/digby-swagger-client';
 import {catchError, finalize} from 'rxjs/operators';
 import { RepSample } from './rep-sample.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';

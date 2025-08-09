@@ -1,6 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Observable, BehaviorSubject, of, EMPTY} from 'rxjs';
-import { GenomicService } from '../../../dist/digby-swagger-client';
+import { GenomicService } from 'projects/digby-swagger-client';
 import {catchError, finalize} from 'rxjs/operators';
 import { GenSample } from './gen-sample.model';
 import {retryWithBackoff} from '../shared/retry_with_backoff';

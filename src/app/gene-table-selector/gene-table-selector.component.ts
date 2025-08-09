@@ -1,29 +1,27 @@
-import {AfterViewInit, Component, Injectable, Input, OnInit, ViewEncapsulation} from '@angular/core';
-import { GenomicService } from '../../../dist/digby-swagger-client';
-import { RepseqService } from '../../../dist/digby-swagger-client';
+import {AfterViewInit, Component, Injectable, OnInit, ViewEncapsulation, input} from '@angular/core';
+import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
 import {catchError, debounceTime} from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import {HttpErrorResponse} from '@angular/common/http';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { HttpErrorResponse } from '@angular/common/http';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import {GeneTableSelection} from './gene-table-selector.model';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
-  selector: 'app-gene-table-selector',
-  templateUrl: './gene-table-selector.component.html',
-  styleUrls: ['./gene-table-selector.component.css'],
-  encapsulation: ViewEncapsulation.None
-})
-
-@Injectable({
-  providedIn: 'root'
+    selector: 'app-gene-table-selector',
+    templateUrl: './gene-table-selector.component.html',
+    styleUrls: ['./gene-table-selector.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    imports: [FormsModule, NgMultiSelectDropDownModule]
 })
 
 export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
-  @Input() showGenomic: boolean;
-  @Input() showAssembly: boolean;
-  @Input() showRepseq: boolean;
+  readonly showGenomic = input<boolean>(undefined);
+  readonly showAssembly = input<boolean>(undefined);
+  readonly showRepseq = input<boolean>(undefined);
   species = null;
   selectedSpecies = null;
   notifiedUpdates =  { species: false, refSeq: false, repSeq: false, assemblies: false };
@@ -86,6 +84,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       this.geneTableServiceSubscription = this.geneTableService.source
         .pipe(debounceTime(500)).subscribe(
           (sel: GeneTableSelection) => {
+            console.log("GeneTableSelectorComponent received selection:", sel.species, sel.datasets[0], sel.repSeqs[0]);
             if (!this.species) {
               this.initializing = true;
               this.updateSpecies(sel);
@@ -154,7 +153,6 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   updateGen(selectedNames: string[]) {
-    console.log("updating gen selection in GeneTableSelectorComponent");
     this.genomicService.getDataSetApi(this.selectedSpecies.name)
       .pipe(
         retryWithBackoff(),
@@ -248,7 +246,6 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
 
   updateRep(selectedNames: string[]) {
-    console.log("updating rep selection in GeneTableSelectorComponent");
     this.repseqService.getDataSetApi(this.selectedSpecies.name)
       .pipe(
         retryWithBackoff(),

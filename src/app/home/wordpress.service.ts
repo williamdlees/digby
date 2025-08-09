@@ -1,11 +1,11 @@
 // Collect recent posts from Wordpress
 
 import {Injectable, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {BehaviorSubject, EMPTY, Observable, Subject, throwError} from 'rxjs';
 import {map, catchError} from "rxjs/operators";
 import {retryWithBackoff} from "../shared/retry_with_backoff";
-import { SystemService } from '../../../dist/digby-swagger-client';
+import { SystemService } from 'projects/digby-swagger-client';
 import {SysConfig} from "../auth/sysconfig.model";
 import {AuthService} from "../auth/auth.service";
 

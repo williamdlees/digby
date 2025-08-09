@@ -5,15 +5,21 @@ import {
   OnInit,
   Input,
   AfterViewInit,
-  EventEmitter,
-  Output,
   ViewEncapsulation,
   ElementRef,
   ChangeDetectionStrategy,
+  input,
+  output
 } from '@angular/core';
-import { moveItemInArray, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { moveItemInArray, CdkDragDrop, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPreview } from '@angular/cdk/drag-drop';
 import { ColumnSorterService, ColumnInfo } from './column-sorter.service';
 import {areListsEqual} from '../../shared/struct_utils';
+import { MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { MatIcon } from '@angular/material/icon';
+
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatCard } from '@angular/material/card';
 
 function symmetricDifference(setA, setB) {
     const _difference = new Set(setA);
@@ -28,25 +34,26 @@ function symmetricDifference(setA, setB) {
 }
 
 @Component({
-  selector: 'digby-table-column-sorter, button[digby-table-column-sorter]',
-  templateUrl: './column-sorter.component.html',
-  styleUrls: ['./column-sorter.component.css'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ColumnSorterService],
+    selector: 'digby-table-column-sorter, button[digby-table-column-sorter]',
+    templateUrl: './column-sorter.component.html',
+    styleUrls: ['./column-sorter.component.css'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ColumnSorterService],
+    imports: [MatMenuTrigger, MatMenu, CdkDropList, MatIcon, CdkDrag, CdkDragHandle, MatCheckbox, MatTooltip, CdkDragPreview, MatCard]
 })
 export class ColumnSorterComponent implements OnInit, AfterViewInit {
-  @Output()
-  columnsChange: EventEmitter<string[]> = new EventEmitter<string[]>();
+  readonly columnsChange = output<string[]>();
   //@Input()
   //columns: string[];
-  @Input()
-  saveName?: string;
+  readonly saveName = input<string>(undefined);
   //@Input()
   //columnInfo: ColumnInfo[];
 
   private _columns: string[];
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set columns(value: string[]) {
 
      this._columns = value;
@@ -59,10 +66,11 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
 
   private _columnInfo: ColumnInfo[];
 
+  // TODO: Skipped for migration because:
+  //  Accessor inputs cannot be migrated as they are too complex.
   @Input() set columnInfo(value: ColumnInfo[]) {
-     console.log('set columnInfo');
-     this._columnInfo = value;
-     setTimeout(() => {
+    this._columnInfo = value;
+    setTimeout(() => {
       this.onResetColumns();
      }, 0);
   }
@@ -80,7 +88,7 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
   constructor(private elementRef: ElementRef, private columnSorterService: ColumnSorterService) {}
 
   ngOnInit() {
-    const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName);
+    const savedInfo = this.columnSorterService.loadSavedColumnInfo(this.columnInfo, this.saveName());
     const iNew = new Set(this.columnInfo.map((x) => x.id));
     const iSaved = new Set(savedInfo.map((x) => x.id));
     const sNew = new Set(this.columnInfo.map((x) => x.name));
@@ -149,13 +157,12 @@ export class ColumnSorterComponent implements OnInit, AfterViewInit {
 
   private emitColumns(saveColumns: boolean) {
     // Only emit the columns on the next animation frame available
-    //setTimeout(() => {
+    setTimeout(() => {
       const foo = this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id);
-      console.log('emit');
       this.columnsChange.emit(this.internalColumnInfo.filter(colInfo => !colInfo.hidden).map(colInfo => colInfo.id));
       if (saveColumns) {
-        this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName);
+        this.columnSorterService.saveColumnInfo(this.internalColumnInfo, this.saveName());
       }
-    //}, 0);
+    }, 0);
   }
 }

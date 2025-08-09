@@ -1,7 +1,7 @@
-<app-gene-table-selector [showGenomic] = true [showAssembly] = false [showRepseq]=true></app-gene-table-selector>
+<app-gene-table-selector [showGenomic]=true [showAssembly]=false [showRepseq]=true></app-gene-table-selector>
 <div>
   <h2>VDJbase Reports</h2>
-  <p>Please select above the species and datasets on which you would like to report. Multiple datasets from the same species can be selected. </p>
+  <p>Please select above the species and datasets on which you would like to report. Multiple datasets from the same species can be selected.</p>
 
   <p>You can refine the samples against which the reports will run by using filters in the Samples windows to display just those samples that you wish to be included.</p>
 
@@ -9,53 +9,71 @@
 
   <p><a href="assets/doc/report_documentation.pdf">Click here</a> for explanation of reports.</p>
 
-  <ng-container *ngFor="let reportSection of reportSections">
-      <h2>{{reportSection.title}}</h2>
-      <mat-table [dataSource]="reportSection.source">
+  @for (reportSection of reportSections; track reportSection.title) {
+    <h2>{{reportSection.title}}</h2>
+    <div class="mat-elevation-z1 report-table-container">
+      <table mat-table [dataSource]="reportSection.source" class="report-table">
+        <!-- Name Column -->
         <ng-container matColumnDef="title">
-          <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-          <mat-cell *matCellDef="let rep"> <b>{{rep.title}}</b> </mat-cell>
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let rep"> <b>{{rep.title}}</b> </td>
         </ng-container>
+
+        <!-- Thumbnail Column -->
         <ng-container matColumnDef="thumbnail">
-          <mat-header-cell *matHeaderCellDef> Thumbnail </mat-header-cell>
-          <mat-cell *matCellDef="let rep">
-            <div *ngIf="rep.thumbnail">
-              <img src='{{rep.thumbnail}}' height='100'>
-            </div>
-          </mat-cell>
+          <th mat-header-cell *matHeaderCellDef class="thumbnail-column"> Thumbnail </th>
+          <td mat-cell *matCellDef="let rep" class="thumbnail-column">
+            @if (rep.thumbnail) {
+              <img src='{{rep.thumbnail}}' height='100' alt='{{rep.title}} report thumbnail'>
+            }
+          </td>
         </ng-container>
+
+        <!-- Description Column -->
         <ng-container matColumnDef="description">
-          <mat-header-cell *matHeaderCellDef> Description </mat-header-cell>
-          <mat-cell *matCellDef="let rep"> {{rep.description}} </mat-cell>
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let rep" class="description-column"> {{rep.description}} </td>
         </ng-container>
-        <ng-container  matColumnDef="actions">
-          <mat-header-cell *matHeaderCellDef> Run </mat-header-cell>
-          <mat-cell *matCellDef="let rep">
-            <ng-container *ngIf="rep.format.indexOf('pdf') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'pdf')">
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="actions-column"> Run </th>
+          <td mat-cell *matCellDef="let rep" class="actions-column">
+            @if (rep.format.indexOf('pdf') >= 0) {
+              <button class="btn btn-lg" (click)="runReport(rep, 'pdf')" title="Generate PDF report">
                 <i class="fa fa-file-pdf-o" style="line-height: inherit;"></i>
               </button>
-            </ng-container>
-            <ng-container *ngIf="rep.format.indexOf('html') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'html')">
+            }
+            @if (rep.format.indexOf('html') >= 0) {
+              <button class="btn btn-lg" (click)="runReport(rep, 'html')" title="View report in browser">
                 <i class="fa fa-desktop" style="line-height: inherit;"></i>
               </button>
-            </ng-container>
-            <ng-container *ngIf="rep.format.indexOf('xls') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
+            }
+            @if (rep.format.indexOf('xls') >= 0) {
+              <button class="btn btn-lg" (click)="runReport(rep, 'xls')" title="Download Excel report">
                 <i class="fa fa-file-excel-o" style="line-height: inherit;"></i>
               </button>
-            </ng-container>
-            <ng-container *ngIf="rep.format.indexOf('file') >= 0">
-              <button class="btn btn-lg btn-solid-icon" (click)="runReport(rep, 'xls')">
+            }
+            @if (rep.format.indexOf('file') >= 0) {
+              <button class="btn btn-lg" (click)="runReport(rep, 'file')" title="Download report file">
                 <i class="fa fa-save" style="line-height: inherit;"></i>
               </button>
-            </ng-container>
-          </mat-cell>
+            }
+          </td>
         </ng-container>
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        <p style="margin-bottom: 32px" *matNoDataRow>{{reportSection.empty}}</p><br><br>
-      </mat-table>
-  </ng-container>
+
+        <!-- Row Definitions -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- No Data Row -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4" style="text-align: center; padding: 16px;">
+            {{reportSection.empty}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <br>
+  }
 </div>

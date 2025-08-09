@@ -1,71 +1,75 @@
-<div class="form-row align-items-center">
+<div class="row align-items-center g-2">
   <div class="col-auto my-1">
     <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text" for="selectSpecies">Species</label>
-      </div>
-      <select class="custom-select" id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
-        <option *ngFor="let s of species" [ngValue]="s">{{s.name}}</option>
+      <label class="input-group-text" for="selectSpecies">Species</label>
+      <select class="form-select" id="selectSpecies" [(ngModel)]="selectedSpecies" (ngModelChange)="speciesChange()">
+        @for (s of species; track s.name) {
+          <option [ngValue]="s">{{s.name}}</option>
+        }
       </select>
     </div>
   </div>
-  <div class="col-auto my-1" *ngIf="showGenomic">
-    <div class="input-group">
-      <div class="input-group-prepend">
+  @if (showGenomic()) {
+    <div class="col-auto my-1">
+      <div class="input-group">
         <label class="input-group-text" for="selectGenomic" style="height: 38px">Genomic Sets</label>
+        <ng-multiselect-dropdown id="selectGenomic"
+          [class]="'selector-dropdown'"
+          [settings] = genDropdownSettings
+          [data] = datasets
+          [(ngModel)] = selectedGen
+          [placeholder] = "'Select Datasets'"
+          (ngModelChange)="refSeqChange()"
+          >
+        </ng-multiselect-dropdown>
       </div>
-      <ng-multiselect-dropdown id="selectGenomic"
-        [class]="'selector-dropdown'"
-        [settings] = genDropdownSettings
-        [data] = datasets
-        [(ngModel)] = selectedGen
-        [placeholder] = "'Select Datasets'"
-        (ngModelChange)="refSeqChange()"
-      >
-      </ng-multiselect-dropdown>
     </div>
-  </div>
-  <div class="col-auto my-1"  *ngIf="showAssembly">
-    <div class="input-group">
-      <div class="input-group-prepend">
+  }
+  @if (showAssembly()) {
+    <div class="col-auto my-1" >
+      <div class="input-group">
         <label class="input-group-text" for="selectAssembly" style="height: 38px">Genomic Assemblies</label>
+        <ng-multiselect-dropdown id="selectAssembly"
+          [class]="'selector-dropdown'"
+          [settings] = genAssemblyDropdownSettings
+          [data] = assemblies
+          [(ngModel)] = selectedAssembly
+          [placeholder] = "'Select Datasets'"
+          (ngModelChange)="assemblyChange()"
+          >
+        </ng-multiselect-dropdown>
       </div>
-      <ng-multiselect-dropdown id="selectAssembly"
-        [class]="'selector-dropdown'"
-        [settings] = genAssemblyDropdownSettings
-        [data] = assemblies
-        [(ngModel)] = selectedAssembly
-        [placeholder] = "'Select Datasets'"
-        (ngModelChange)="assemblyChange()"
-      >
-      </ng-multiselect-dropdown>
     </div>
-  </div>
-  <div class="col-auto my-1" *ngIf="showRepseq">
-    <div class="input-group">
-      <div class="input-group-prepend">
+  }
+  @if (showRepseq()) {
+    <div class="col-auto my-1">
+      <div class="input-group">
         <label class="input-group-text" for="selectAIRR" style="height: 38px">AIRR-seq Sets</label>
+        <ng-multiselect-dropdown id="selectAIRR"
+          [class]="'selector-dropdown'"
+          [settings] = repDropdownSettings
+          [data] = repSeqs
+          [(ngModel)] = selectedRep
+          [placeholder] = "'Select Datasets'"
+          (ngModelChange)="repSeqChange()"
+          >
+        </ng-multiselect-dropdown>
       </div>
-      <ng-multiselect-dropdown id="selectAIRR"
-        [class]="'selector-dropdown'"
-        [settings] = repDropdownSettings
-        [data] = repSeqs
-        [(ngModel)] = selectedRep
-        [placeholder] = "'Select Datasets'"
-        (ngModelChange)="repSeqChange()"
-      >
-      </ng-multiselect-dropdown>
+    </div>
+  }
+</div>
+
+@if (isFetching) {
+  <div  class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+}
+
+
+@if (error) {
+  <div class="alert alert-danger">
+    <div class="row">
+      <h4>Error loading data: {{error}}</h4>
     </div>
   </div>
-</div>
-
-<div  class="spinner-border" role="status" *ngIf="isFetching">
-  <span class="sr-only">Loading...</span>
-</div>
-
-
-<div class="alert alert-danger" *ngIf="error">
-  <div class="row">
-    <h4>Error loading data: {{error}}</h4>
-  </div>
-</div>
+}

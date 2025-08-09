@@ -1,19 +1,22 @@
 
 <div class="container-fluid">
-  <div  class="spinner-border" role="status" *ngIf="loading">
-    <span class="sr-only">Loading...</span>
-  </div>
-
-  <div class="alert alert-danger" *ngIf="error">
-    <div class="row">
-      <h4>Error loading table</h4>
-      <p>{{error}}</p>
+  @if (loading) {
+    <div  class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-  </div>
+  }
 
-  <ng-container *ngIf="!loading && !error">
-    <h2 class="mt-5">Datasets available for species <span class="font-italic">{{species}}</span></h2>
+  @if (error) {
+    <div class="alert alert-danger">
+      <div class="row">
+        <h4>Error loading table</h4>
+        <p>{{error}}</p>
+      </div>
+    </div>
+  }
 
+  @if (!loading && !error) {
+    <h2 class="mt-5">Datasets available for species <span class="fst-italic">{{species}}</span></h2>
     <div class="container">
       <mat-table #datasetInfoTable [dataSource]="datasetDescriptions">
         <ng-container matColumnDef="name">
@@ -22,84 +25,77 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let desc" style="width: 30% !important; flex: 0 0 30% !important;">{{desc.dataset}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="desc">
           <mat-header-cell *matHeaderCellDef>
             Description
           </mat-header-cell>
           <mat-cell *matCellDef="let desc">{{desc.description}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="updated">
           <mat-header-cell *matHeaderCellDef>
             Updated
           </mat-header-cell>
           <mat-cell *matCellDef="let desc">{{desc.created}}</mat-cell>
         </ng-container>
-
         <mat-header-row *matHeaderRowDef="['name', 'desc', 'updated']; sticky: true " class="mat-elevation-z1"></mat-header-row>
-
         <mat-row *matRowDef="let row; columns: ['name', 'desc', 'updated']" ></mat-row>
       </mat-table>
     </div>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="!loading && !error && datasetInfo">
-      <h2 class="mt-5">Summary of dataset {{dataset}}: {{datasetInfo['total_samples']}} samples from {{datasetInfo['total_subjects']}} subjects</h2>
-      <p class="font-italic">{{datasetInfo['description']}}</p>
-
+  @if (!loading && !error && datasetInfo) {
+    <h2 class="mt-5">Summary of dataset {{dataset}}: {{datasetInfo['total_samples']}} samples from {{datasetInfo['total_subjects']}} subjects</h2>
+    <p class="fst-italic">{{datasetInfo['description']}}</p>
     <div class="row">
       <div class="col-lg-3 col-md-6 col-sm-12">
         <google-chart
-           [type]="'BarChart'"
-           [title]="'Sex (no. of individuals)'"
-           [data]="datasetInfo['sex_count']"
-           [options]="{legend: {position: 'none'}}"
-        >
+          [type]="barChartType"
+          [title]="'Sex (no. of individuals)'"
+          [data]="datasetInfo['sex_count']"
+          [options]="{legend: {position: 'none'}}"
+          >
         </google-chart>
       </div>
-
       <div class="col-lg-3 col-md-6 col-sm-12">
         <google-chart
-           [type]="'PieChart'"
-           [title]="'Condition (% individuals)'"
-           [data]="datasetInfo['condition_count']"
-           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
-           [width]="'100%'"
-        >
+          [type]="pieChartType"
+          [title]="'Condition (% individuals)'"
+          [data]="datasetInfo['condition_count']"
+          [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+          [width]="500"
+          >
         </google-chart>
       </div>
-
       <div class="col-lg-3 col-md-6 col-sm-12">
         <google-chart
-           [type]="'PieChart'"
-           [title]="'Cell Type (% samples)'"
-           [data]="datasetInfo['celltype_count']"
-           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
-        >
+          [type]="pieChartType"
+          [title]="'Cell Type (% samples)'"
+          [data]="datasetInfo['celltype_count']"
+          [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+          [width]="500"
+          >
         </google-chart>
       </div>
-
       <div class="col-lg-3 col-md-6 col-sm-12">
         <google-chart
-           [type]="'PieChart'"
-           [title]="'Tissue (% samples)'"
-           [data]="datasetInfo['tissue_count']"
-           [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
-        >
+          [type]="pieChartType"
+          [title]="'Tissue (% samples)'"
+          [data]="datasetInfo['tissue_count']"
+          [options]="{chartArea: {left: 0, width:'100%', height: '75%'}}"
+          [width]="500"
+          >
         </google-chart>
       </div>
     </div>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="!loading && !error && datasetInfo">
+  @if (!loading && !error && datasetInfo) {
     <div class="container">
       <h2 class="mt-5">Studies included in {{dataset}}:</h2>
       <p>Samples may be omitted from VDJbase if the associated set of reads is too small for analysis. </p>
       <p>Clicking on the Download Repertoires link will download a script that you can use to download annotated repertoires for all samples in the study.
         Please note that the server has a download limit, to prevent abuse. If the HTTP code 503 is returned, the server is rate-limited and it will provide an indication of when you can retry.
       </p>
-
       <mat-table #datasetStudyTable [dataSource]="datasetInfo['studies']">
         <ng-container matColumnDef="name">
           <mat-header-cell *matHeaderCellDef class="explore-small-col">
@@ -107,89 +103,89 @@
           </mat-header-cell>
           <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.study_name}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="accession_id">
           <mat-header-cell *matHeaderCellDef class="explore-small-col">
             Accession ID
           </mat-header-cell>
           <mat-cell class="explore-small-col" *matCellDef="let study">
-            <ng-container *ngIf="study.study_id">
-              <ng-container *ngFor="let study_id of study.study_id.split(',')">
-                <a *ngIf="study_id.includes('http')" href={{study_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-                <span *ngIf="!study_id.includes('http')"> {{study_id}}</span>
-              </ng-container>
-            </ng-container>
+            @if (study.study_id) {
+              @for (study_id of study.study_id.split(','); track study_id) {
+                @if (study_id.includes('http')) {
+                  <a href={{study_id}} title="View study details" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+                }
+                @if (!study_id.includes('http')) {
+                  <span> {{study_id}}</span>
+                }
+              }
+            }
           </mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="institute">
-          <mat-header-cell *matHeaderCellDef  class="explore-large-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-large-col header-flex-tight">
             Lab
           </mat-header-cell>
           <mat-cell  class="explore-large-col" *matCellDef="let study">{{study.lab_address}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="num_subjects">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Subjects
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_subjects}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.num_subjects}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="subjects_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Subjects in VDJbase
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.subjects_in_vdjbase}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.subjects_in_vdjbase}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="num_samples">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Samples
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.num_samples}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.num_samples}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="samples_in_vdjbase">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Samples in VDJbase
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">{{study.samples_in_vdjbase}}</mat-cell>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">{{study.samples_in_vdjbase}}</mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="paper" >
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Paper
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">
-            <ng-container *ngIf="study.pub_ids">
-              <ng-container *ngFor="let pub_id of study.pub_ids.split(',')">
-                <a *ngIf="pub_id.includes('http')" href={{pub_id}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-                <span *ngIf="!pub_id.includes('http')"> {{pub_id}}</span>
-              </ng-container>
-            </ng-container>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">
+            @if (study.pub_ids) {
+              @for (pub_id of study.pub_ids.split(','); track pub_id) {
+                @if (pub_id.includes('http')) {
+                  <a href={{pub_id}} title="View publication" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+                }
+                @if (!pub_id.includes('http')) {
+                  <span> {{pub_id}}</span>
+                }
+              }
+            }
           </mat-cell>
         </ng-container>
-
         <ng-container matColumnDef="repertoires">
-          <mat-header-cell *matHeaderCellDef  class="explore-small-col">
+          <mat-header-cell *matHeaderCellDef  class="explore-small-col header-flex-tight">
             Download Repertoires
           </mat-header-cell>
-          <mat-cell *matCellDef="let study"  class="explore-small-col">
-            <a *ngIf="study.repertoires" href={{apibasePath}}{{study.repertoires}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+          <mat-cell *matCellDef="let study"  class="explore-small-col header-flex-tight">
+            @if (study.repertoires) {
+              <a href={{apibasePath}}{{study.repertoires}} title="Download repertoires" rel="noopener"><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
+            }
           </mat-cell>
         </ng-container>
-
         <mat-header-row *matHeaderRowDef="['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper', 'repertoires']; sticky: true " class="mat-elevation-z1"></mat-header-row>
-
         <mat-row *matRowDef="let row; columns: ['name', 'accession_id', 'institute', 'num_subjects', 'subjects_in_vdjbase', 'num_samples', 'samples_in_vdjbase', 'paper', 'repertoires']" ></mat-row>
       </mat-table>
     </div>
-  </ng-container>
+  }
 
-  <ng-container *ngIf="!loading && !error && !datasetInfo">
+  @if (!loading && !error && !datasetInfo) {
     <div class="container">
       <p>Please select a single dataset to see its statistics and composition</p>
     </div>
-  </ng-container>
+  }
 </div>

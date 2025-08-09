@@ -1,69 +1,87 @@
 <ng-container>
   <div class="modal-header">
     <h3 class="modal-title">Report Parameters - {{ report.title }}</h3>
-    <button type="button" tabindex="-1" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" tabindex="-1" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div style="margin-bottom: 15px">{{scopeText}}</div>
-      <form [formGroup]="myFormGroup" (ngSubmit)="onSubmit()">
-        <div class="form-group" style="margin-top: 1rem !important">
-          <input type="submit" class="btn btn-primary" value="Run Report"/>
-        </div>
-        <div *ngFor="let form_elem of params">
-          <div [ngSwitch]="form_elem.type">
-            <div *ngSwitchCase="'textBox'">
-              <div class="form-group">
-                <label for="{{form_elem.id}}">{{ form_elem.label }}: </label>
-                <input id="{{form_elem.id}}" type="text" formControlName="{{form_elem.id}}"/>
-              </div>
-            </div>
-            <div *ngSwitchCase="'multiTextBox'">
-              <div class="form-group">
-                <label for="{{form_elem.id}}">{{ form_elem.label }}: </label>
-                <textarea id="{{form_elem.id}}" formControlName="{{form_elem.id}}" rows="10" style="width: 100%"></textarea>
-              </div>
-            </div>
-            <div *ngSwitchCase="'number'">
-              <div class="form-group"  style="margin-top: 1rem; margin-bottom: 0rem !important;">
-                <label for="{{form_elem.id}}">{{ form_elem.label }}: &nbsp;&nbsp;&nbsp;</label>
-                <input id="{{form_elem.id}}" type="number" formControlName="{{form_elem.id}}"/>
-              </div>
-            </div>
-            <div *ngSwitchCase="'decimal'">
-              <div class="form-group" style="margin-top: 1rem; margin-bottom: 0rem !important;">
-                <label for="{{form_elem.id}}">{{ form_elem.label }}: &nbsp;&nbsp;&nbsp;</label>
-                <input id="{{form_elem.id}}" type="number" formControlName="{{form_elem.id}}"/>
-              </div>
-            </div>
-            <div *ngSwitchCase="'boolean'">
-              <div class="form-check" style="margin-top: 1rem; margin-bottom: 0rem !important;">
-                <input class="form-check-input" id="{{form_elem.id}}" type="checkbox" formControlName="{{form_elem.id}}"/>
-                <label class="form-check-label" for="{{form_elem.id}}">{{ form_elem.label }}</label>
-              </div>
-            </div>
-            <div *ngSwitchCase="'select'">
-              <div class="form-group">
-                <label for="{{form_elem.id}}">{{ form_elem.label }}</label>
-                <select  id="{{form_elem.id}}" class="custom-select" formControlName="{{form_elem.id}}" [value]="form_elem.options[0]">
-                  <option *ngFor="let opt of form_elem.options">
-                    {{opt}}
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div *ngSwitchCase="'multi_select'">
-              <ng-multiselect-dropdown style="padding-left: 10px !important; padding-top: 7px !important;"
-                [settings] = repDropdownSettings
-                [data] = form_elem.options
-                formControlName = "{{form_elem.id}}"
-                [placeholder] = form_elem.label
-              >
-              </ng-multiselect-dropdown>
-            </div>
+    <form [formGroup]="myFormGroup" (ngSubmit)="onSubmit()">
+      <div class="form-group" style="margin-top: 1rem !important">
+        <input type="submit" class="btn btn-primary" value="Run Report"/>
+      </div>
+      @for (form_elem of params; track form_elem.id) {
+        <div>
+          <div>
+            @switch (form_elem.type) {
+              @case ('textBox') {
+                <div>
+                  <div class="form-group">
+                    <label for="{{form_elem.id}}">{{ form_elem.label }}: </label>
+                    <input id="{{form_elem.id}}" type="text" formControlName="{{form_elem.id}}"/>
+                  </div>
+                </div>
+              }
+              @case ('multiTextBox') {
+                <div>
+                  <div class="form-group">
+                    <label for="{{form_elem.id}}">{{ form_elem.label }}: </label>
+                    <textarea id="{{form_elem.id}}" formControlName="{{form_elem.id}}" rows="10" style="width: 100%"></textarea>
+                  </div>
+                </div>
+              }
+              @case ('number') {
+                <div>
+                  <div class="form-group"  style="margin-top: 1rem; margin-bottom: 0rem !important;">
+                    <label for="{{form_elem.id}}">{{ form_elem.label }}: &nbsp;&nbsp;&nbsp;</label>
+                    <input id="{{form_elem.id}}" type="number" formControlName="{{form_elem.id}}"/>
+                  </div>
+                </div>
+              }
+              @case ('decimal') {
+                <div>
+                  <div class="form-group" style="margin-top: 1rem; margin-bottom: 0rem !important;">
+                    <label for="{{form_elem.id}}">{{ form_elem.label }}: &nbsp;&nbsp;&nbsp;</label>
+                    <input id="{{form_elem.id}}" type="number" formControlName="{{form_elem.id}}"/>
+                  </div>
+                </div>
+              }
+              @case ('boolean') {
+                <div>
+                  <div class="form-check" style="margin-top: 1rem; margin-bottom: 0rem !important;">
+                    <input class="form-check-input" id="{{form_elem.id}}" type="checkbox" formControlName="{{form_elem.id}}"/>
+                    <label class="form-check-label" for="{{form_elem.id}}">{{ form_elem.label }}</label>
+                  </div>
+                </div>
+              }
+              @case ('select') {
+                <div>
+                  <div class="form-group">
+                    <label for="{{form_elem.id}}">{{ form_elem.label }}</label>
+                    <select  id="{{form_elem.id}}" class="form-select" formControlName="{{form_elem.id}}" [value]="form_elem.options[0]">
+                      @for (opt of form_elem.options; track opt) {
+                        <option>
+                          {{opt}}
+                        </option>
+                      }
+                    </select>
+                  </div>
+                </div>
+              }
+              @case ('multi_select') {
+                <div>
+                  <ng-multiselect-dropdown style="padding-left: 10px !important; padding-top: 7px !important;"
+                    [settings] = repDropdownSettings
+                    [data] = form_elem.options
+                    formControlName = "{{form_elem.id}}"
+                    [placeholder] = form_elem.label
+                    >
+                  </ng-multiselect-dropdown>
+                </div>
+              }
+            }
           </div>
         </div>
-      </form>
-    </div>
+      }
+    </form>
+  </div>
 </ng-container>

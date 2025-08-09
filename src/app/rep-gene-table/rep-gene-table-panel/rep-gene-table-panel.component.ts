@@ -9,13 +9,13 @@ import {
   ViewEncapsulation,
   ElementRef
 } from '@angular/core';
-import { RepseqService } from '../../../../dist/digby-swagger-client';
+import { RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SeqModalComponent} from '../../seq-modal/seq-modal.component';
 import {MatPaginator} from '@angular/material/paginator';
-import {MatTable} from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {columnInfo} from './rep-gene-table-panel-cols';
 import {FilterMode} from '../../table/filter/filter-mode.enum';
 import {BehaviorSubject, fromEvent, Observable} from 'rxjs';
@@ -25,26 +25,33 @@ import {RepSequenceDataSource} from '../rep-sequence.datasource';
 import { RepGeneSelectedService } from '../rep-gene-selected.service';
 import {RepSampleSelectedService} from '../../rep-sample/rep-sample-selected.service';
 import {RepGeneNotesComponent} from '../rep-gene-notes/rep-gene-notes.component';
-import { ResizeEvent } from 'angular-resizable-element';
-import {TableParamsStorageService} from '../../table/table-params-storage-service';
-import {debounceTime, distinctUntilChanged, filter, map} from 'rxjs/operators';
-import 'rxjs/add/observable/interval';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ReportRunService} from '../../reports/report-run.service';
 import {listsOfDictionariesEqual} from '../../shared/struct_utils';
+import { AsyncPipe } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
+import { ColumnSorterComponent } from '../../table/column-sorter/column-sorter.component';
+import { MatMenuTrigger, MatMenu, MatMenuContent } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { TableResizeDirective } from '../../table/table-resize.directive';
+import { ColumnResizeDirective } from '../../table/column-resize.directive';
+import { FilterComponent } from '../../table/filter/filter.component';
 
 
 @Component({
-  selector: "app-rep-gene-table-panel",
-  templateUrl: "./rep-gene-table-panel.component.html",
-  styleUrls: ["./rep-gene-table-panel.component.css"],
-  providers: [TableParamsStorageService],
-
-  encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
+    selector: "app-rep-gene-table-panel",
+    templateUrl: "./rep-gene-table-panel.component.html",
+    styleUrls: ["./rep-gene-table-panel.component.css"],
+    providers: [],
+    encapsulation: ViewEncapsulation.None,
+    imports: [MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
 })
 export class RepGeneTablePanelComponent
   implements AfterViewInit, OnInit, OnDestroy
 {
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
@@ -78,7 +85,6 @@ export class RepGeneTablePanelComponent
   selectedSampleIds = [];
   isSelectedGenesChecked = false;
   repSampleSelectedServiceSubscription = null;
-  resizeEvents = new Map();
   samplesSelected = false;
   clearSubject = new BehaviorSubject<null>(null);
   clear$ = this.clearSubject.asObservable();
@@ -100,20 +106,14 @@ export class RepGeneTablePanelComponent
     private modalService: NgbModal,
     private repGeneSelectedService: RepGeneSelectedService,
     private repSampleSelectedService: RepSampleSelectedService,
-    private tableParamsStorageService: TableParamsStorageService,
     private router: Router,
     private reportRunService: ReportRunService,
     private route: ActivatedRoute,
-    private el: ElementRef,
     ) {
     this.route.params.subscribe((params) => (this.params = params));
   }
 
   ngOnInit() {
-    this.resizeEvents = this.tableParamsStorageService.loadSavedInfo(
-      this.resizeEvents,
-      "rep-gene-table-widths"
-    );
     this.dataSource = new RepSequenceDataSource(this.repseqService);
   }
 
@@ -176,8 +176,6 @@ export class RepGeneTablePanelComponent
       this.loading$Subscription = this.dataSource.loading$.subscribe(
         (loading) => {
           if (!loading) {
-            this.applyResizes();
-
             if (this.redirectOnLoad) {
               const r = this.redirectOnLoad;
               this.redirectOnLoad = null;
@@ -206,11 +204,6 @@ export class RepGeneTablePanelComponent
           }
         });
 
-      this.router.events.subscribe((val) => {
-        if (val instanceof NavigationEnd) {
-          this.applyResizes();
-        }
-      });
 
       this.loadSequences$Subscription = this.loadSequences$.pipe(debounceTime(500)).subscribe(() => {
         this.loadSequencesPage();
@@ -349,7 +342,6 @@ export class RepGeneTablePanelComponent
     const deleted = difference(sLoaded, sDisplayed);
     this.filters = this.filters.filter((x) => !deleted.has(x.field));
     this.sorts = this.sorts.filter((x) => !deleted.has(x.field));
-    this.applyResizes();
   }
 
   loadSequencesPage() {
@@ -407,32 +399,6 @@ export class RepGeneTablePanelComponent
     });
   }
 
-  onResizeEnd(event: ResizeEvent, columnName): void {
-    if (event.edges.right) {
-      const cssValue = event.rectangle.width + "px";
-      this.updateColumnWidth(columnName, cssValue);
-      this.resizeEvents.set(columnName, cssValue);
-      this.tableParamsStorageService.saveInfo(
-        this.resizeEvents,
-        "rep-gene-table-widths"
-      );
-    }
-  }
-
-  applyResizes(): void {
-    for (const [columnName, cssValue] of this.resizeEvents) {
-      this.updateColumnWidth(columnName, cssValue);
-    }
-  }
-
-  updateColumnWidth(columnName: string, cssValue: string) {
-    const columnElts = this.el.nativeElement.getElementsByClassName('mat-column-' + columnName);
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0; i < columnElts.length; i++) {
-      const currentEl = columnElts[i] as HTMLDivElement;
-      currentEl.style.width = cssValue;
-    }
-  }
 
   sendReportRequest(report, format, params) {
     const datasets = this.selection.repSeqs;
@@ -480,6 +446,3 @@ function sampleIdsEqual(id1, id2) {
 
   return Object.keys(id1).every((v) => arraysEqual(id1[v], id2[v]));
 }
-
-
-

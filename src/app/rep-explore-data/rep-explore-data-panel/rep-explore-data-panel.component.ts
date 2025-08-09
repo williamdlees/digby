@@ -1,18 +1,21 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import {GeneTableSelection} from '../../gene-table-selector/gene-table-selector.model';
 import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-selector.service';
-import { RepseqService } from '../../../../dist/digby-swagger-client';
-import { GoogleChartsModule } from 'angular-google-charts';
-import {MatTable} from '@angular/material/table';
+import { RepseqService } from 'projects/digby-swagger-client';
+import { GoogleChartsModule, ChartType } from 'angular-google-charts';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";
 import {environment} from '../../../environments/environment';
 
 
+
 @Component({
-  selector: 'app-rep-explore-data-panel',
-  templateUrl: './rep-explore-data-panel.component.html',
-  styleUrls: ['./rep-explore-data-panel.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-rep-explore-data-panel',
+    templateUrl: './rep-explore-data-panel.component.html',
+    styleUrls: ['./rep-explore-data-panel.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule]
 })
 
 export class RepExploreDataPanelComponent implements OnInit {
@@ -23,7 +26,9 @@ export class RepExploreDataPanelComponent implements OnInit {
   datasetInfo = null;
   loading = false;
   error = null;
-  apibasePath = environment.apiBasePath
+  apibasePath = environment.apiBasePath;
+  barChartType = ChartType.BarChart;
+  pieChartType = ChartType.PieChart;
   @ViewChild('datasetInfoTable') datasetInfoTable: MatTable<any>;
 
   constructor(

@@ -1,9 +1,11 @@
 import { Component, Injectable, Input, OnChanges, SimpleChanges, OnInit, ViewEncapsulation } from '@angular/core';
-import { RefbookService } from '../../../../dist/digby-swagger-client';
+import { FormsModule } from '@angular/forms';
+import { BaseChartDirective  } from 'ng2-charts';
+import { RefbookService } from '../../../../projects/digby-swagger-client/api/refbook.service';
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import {AvailableSpeciesAndData, SpeciesGeneSelection, testAvailableSpeciesAndData} from '../species-gene-selector/species-gene-selector.model';
+import { SpeciesGeneSelection } from '../species-gene-selector/species-gene-selector.model';
 import { OverviewData } from './dash-refbook-overview.model';
 import { ChartConfiguration } from 'chart.js';
 
@@ -12,7 +14,9 @@ import { ChartConfiguration } from 'chart.js';
   selector: 'app-dash-refbook-overview',
   templateUrl: './dash-refbook-overview.component.html',
   styleUrls: ['./dash-refbook-overview.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [FormsModule, BaseChartDirective ]
 })
 
 @Injectable({
@@ -35,7 +39,7 @@ export class DashRefbookOverviewComponent implements OnInit, OnChanges {
   };
 
   // Create the chart data
-  chartData = {
+  public chartData: ChartConfiguration<'bar'>['data'] = {
     labels: [], // Alleles as labels on the X-axis
     datasets: [
       {
@@ -60,22 +64,22 @@ export class DashRefbookOverviewComponent implements OnInit, OnChanges {
   };
 
   // Chart configuration
-  chartConfig = {
-    type: 'bar',
-    options: {
-      responsive: true,
-      scales: {
-        x: {
-          stacked: true, // Enable stacking on the X-axis
-        },
-        y: {
-          stacked: true, // Enable stacking on the Y-axis
-          beginAtZero: true,
+  public chartOptions: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true, // Enable stacking on the X-axis
+      },
+      y: {
+        stacked: true, // Enable stacking on the Y-axis
+        beginAtZero: true,
+        title: {
+          display: true,
           text: 'Sample Count' // Y-axis label
         }
-      }
     }
-};
+  }
+}
 
 constructor(private refbookService: RefbookService) { }
 

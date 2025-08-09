@@ -1,20 +1,24 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {catchError, finalize} from 'rxjs/operators';
-import { GenomicService } from '../../../../dist/digby-swagger-client';
+import { GenomicService } from 'projects/digby-swagger-client';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {columnInfo} from "../gen-sample-panel/gen-sample-panel-cols";
 
+import { MatTooltip } from '@angular/material/tooltip';
+
 
 @Component({
-  selector: 'app-gen-sample-info',
-  templateUrl: './gen-sample-info.component.html',
-  styleUrls: ['./gen-sample-info.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling
+    selector: 'app-gen-sample-info',
+    templateUrl: './gen-sample-info.component.html',
+    styleUrls: ['./gen-sample-info.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling
+    ,
+    imports: [MatTooltip]
 })
 
 export class GenSampleInfoComponent implements OnInit {
-  @Input() sampleName;
+  @Input() sampleName; // note that NgbModal does not support input signals
   @Input() species;
   @Input() dataset;
   loading = false;
@@ -33,7 +37,7 @@ export class GenSampleInfoComponent implements OnInit {
     this.genSampleService.getSubjectInfoApi(this.species, this.dataset, this.sampleName).pipe(
       retryWithBackoff(),
       catchError(error => {
-        this.error.next(error);
+        this.error = error;
         return([]);
       }),
       finalize(() => {

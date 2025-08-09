@@ -5,7 +5,9 @@
         <label class="input-group-text" for="selectSpecies">Species</label>
       </div>
       <select class="custom-select" id="selectSpecies" [(ngModel)]="selection.species" (ngModelChange)="speciesChange()">
-        <option *ngFor="let s of availableSpeciesAndData.species" [ngValue]="s">{{s}}</option>
+        @for (s of availableSpeciesAndData.species; track s) {
+          <option [ngValue]="s">{{s}}</option>
+        }
       </select>
     </div>
   </div>
@@ -15,7 +17,9 @@
         <label class="input-group-text" for="selectChain" style="height: 38px">Chain</label>
       </div>
       <select class="custom-select" id="selectChain" [(ngModel)]="selection.chain" (ngModelChange)="chainChange()">
-        <option *ngFor="let s of availableSpeciesAndData.chains[selection.species]" [ngValue]="s">{{s}}</option>
+        @for (s of availableSpeciesAndData.chains[selection.species]; track s) {
+          <option [ngValue]="s">{{s}}</option>
+        }
       </select>
     </div>
   </div>
@@ -25,20 +29,24 @@
         <label class="input-group-text" for="selectAsc" style="height: 38px">ASC</label>
       </div>
       <select class="custom-select" id="selectAsc" [(ngModel)]="selection.asc" (ngModelChange)="ascChange()">
-        <option *ngFor="let s of availableAsc" [ngValue]="s">{{s}}</option>
+        @for (s of availableAsc; track s) {
+          <option [ngValue]="s">{{s}}</option>
+        }
       </select>
     </div>
   </div>
-
 </div>
 
-<div  class="spinner-border" role="status" *ngIf="isFetching">
-  <span class="sr-only">Loading...</span>
-</div>
-
-
-<div class="alert alert-danger" *ngIf="error">
-  <div class="row">
-    <h4>Error loading data: {{error}}</h4>
+@if (isFetching) {
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
   </div>
-</div>
+}
+
+@if (error) {
+  <div class="alert alert-danger">
+    <div class="row">
+      <h4>Error loading data: {{error}}</h4>
+    </div>
+  </div>
+}

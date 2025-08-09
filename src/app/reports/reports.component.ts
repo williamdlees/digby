@@ -1,7 +1,7 @@
 import {Component, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatTable} from '@angular/material/table';
+import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from '@angular/material/table';
 import {ReportsListDataSource} from './reports-list-data.source';
-import {ReportsService} from '../../../dist/digby-swagger-client';
+import {ReportsService} from 'projects/digby-swagger-client';
 import {catchError, debounceTime, map} from 'rxjs/operators';
 import {DataSource} from '@angular/cdk/collections';
 import {defer, Observable, of, Subscription} from 'rxjs';
@@ -12,13 +12,16 @@ import {RepSampleFilterService} from '../rep-sample/rep-sample-filter.service';
 import {GeneTableSelectorService} from '../gene-table-selector/gene-table-selector.service';
 import {GeneTableSelection} from '../gene-table-selector/gene-table-selector.model';
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ReportRunService} from './report-run.service';
+import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
+
 
 @Component({
-  selector: 'app-reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss'],
+    selector: 'app-reports',
+    templateUrl: './reports.component.html',
+    styleUrls: ['./reports.component.scss'],
+    imports: [GeneTableSelectorComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow]
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   @ViewChild(MatTable) table: MatTable<string>;

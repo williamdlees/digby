@@ -1,14 +1,18 @@
-import {Injectable} from '@angular/core';
+import {Component, Injectable} from '@angular/core';
 import {ReportParamsDialogComponent, SampleCoverage} from './report-params-dialog/report-params-dialog.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportRunDialogComponent} from './report-run-dialog/report-run-dialog.component';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Subscription} from 'rxjs';
 import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dialog.component';
 import {ReportRequestService} from './report-request-service';
-import {ReportsService} from 'digby-swagger-client';
+import {ReportsService} from 'projects/digby-swagger-client';
 import {ReportsListDataSource} from './reports-list-data.source';
 
+@Component({
+    template: '',
+    standalone: false
+})
 @Injectable({
   providedIn: 'root'
 })

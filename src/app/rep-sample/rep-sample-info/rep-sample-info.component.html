@@ -1,51 +1,59 @@
 
-  <div  class="spinner-border" role="status" *ngIf="loading">
-    <span class="sr-only">Loading...</span>
+@if (loading) {
+  <div  class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
   </div>
+}
 
-  <div class="alert alert-danger" *ngIf="error">
+@if (error) {
+  <div class="alert alert-danger">
     <div class="row">
       <h4>Error loading table</h4>
       <p>{{error}}</p>
     </div>
   </div>
+}
 
 
 
-<ng-container *ngIf="!loading && !error">
+@if (!loading && !error) {
   <div class="modal-header">
     <h3 class="modal-title">Sample Details - {{sampleName}}</h3>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
     <div class="container">
       <div class="row">
-        <ng-container *ngFor="let section of ['Study', 'Sample', 'Subject', 'TissuePro', 'SeqProtocol', 'DataPro', 'GenoDetection']">
+        @for (section of ['Study', 'Sample', 'Subject', 'TissuePro', 'SeqProtocol', 'DataPro', 'GenoDetection']; track section) {
           <div class="col-4">
             <h4><b>{{section}}</b></h4>
-            <div *ngFor="let col of allColumns">
-              <div *ngIf="col.section === section">
-                <div *ngIf="sampleInfo[col.id]; else nullVal">
-                  <div *ngIf="col.type === 'string' && sampleInfo[col.id].startsWith('http'); else plainVal">
-                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> <a href={{sampleInfo[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
+            @for (col of allColumns; track col.id) {
+              <div>
+                @if (col.section === section) {
+                  <div>
+                    @if (sampleInfo[col.id]) {
+                      <div>
+                        @if (col.type === 'string' && sampleInfo[col.id].startsWith('http')) {
+                          <div>
+                            <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> <a href={{sampleInfo[col.id]}} target="_blank" rel="noopener" title="View {{col.name}} details"><i class="fa fa-external-link" style="line-height: inherit;"></i></a></ul>
+                          </div>
+                        } @else {
+                          <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> {{sampleInfo[col.id]}}</ul>
+                        }
+                      </div>
+                    } @else {
+                      <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> </ul>
+                    }
                   </div>
-                  <ng-template #plainVal>
-                    <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> {{sampleInfo[col.id]}}</ul>
-                  </ng-template>
-                </div>
-                <ng-template #nullVal>
-                  <ul><span style="font-weight:500" matTooltip="{{col.description}}" matTooltipClass="digby-table-tooltip">{{col.name}}:</span> </ul>
-                </ng-template>
+                }
               </div>
-            </div>
+            }
           </div>
-        </ng-container>
+        }
       </div>
     </div>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
   </div>
-</ng-container>
+}

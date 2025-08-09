@@ -4,32 +4,34 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
-    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "module": "es2020",
+    "module": "es2022",
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "ES2022",
+    "useDefineForClassFields": false,
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
-      "es2018",
+      "es2022",
       "dom"
     ],
     "paths": {
       "digby-swagger-client": [
-        "dist/digby-swagger-client"
+        "projects/digby-swagger-client"
       ],
       "digby-swagger-client/*": [
-        "dist/digby-swagger-client/*"
+        "projects/digby-swagger-client/*"
       ]
     }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "strictTemplates": true
   }
 }

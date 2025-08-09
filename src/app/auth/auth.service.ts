@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {catchError, map, tap} from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
-import { SystemService } from '../../../dist/digby-swagger-client';
+import { SystemService } from 'projects/digby-swagger-client';
 
 import { User } from './user.model';
 import {SysConfig} from "./sysconfig.model";
@@ -18,7 +18,7 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   sysConfig = new BehaviorSubject<SysConfig>(new SysConfig(true, '', '', ''));
@@ -39,7 +39,7 @@ export class AuthService {
           console.log(err);
           return throwError(err);
         }),
-        tap((sysConfig) => {
+        tap((sysConfig: SysConfig) => {
           //console.log('auth: calling config api')
           this.sysConfig.next(sysConfig)
           this.userData = new User( sysConfig.app_protected,'Anonymous', '', null, '', null);
@@ -59,7 +59,7 @@ export class AuthService {
       )
       .pipe(
         catchError(this.handleError),
-        tap(resData => {
+        tap((resData: any) => {
           this.handleAuthentication(
             resData.username,
             resData.access_token,
@@ -147,7 +147,7 @@ export class AuthService {
           this.logout();
           return throwError(err);
         }),
-      ).subscribe(resData => {
+      ).subscribe((resData: any) => {
           //console.log("refreshed access token");
           this.handleRefresh(
             resData.access_token,

@@ -1,17 +1,20 @@
 import { Component, Injectable, Input, OnChanges, SimpleChanges, OnInit, ViewEncapsulation } from '@angular/core';
-import { RefbookService } from '../../../../dist/digby-swagger-client';
+import { RefbookService } from '../../../../projects/digby-swagger-client/api/refbook.service';
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import {AvailableSpeciesAndData, SpeciesGeneSelection, testAvailableSpeciesAndData} from '../species-gene-selector/species-gene-selector.model';
+import { SpeciesGeneSelection } from '../species-gene-selector/species-gene-selector.model';
 import { AlignmentData } from './dash-refbook-alignment.model';
-
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
 
 @Component({
   selector: 'app-dash-refbook-alignment',
   templateUrl: './dash-refbook-alignment.component.html',
   styleUrls: ['./dash-refbook-alignment.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [PlotlyModule],
 })
 
 @Injectable({
@@ -203,7 +206,7 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
     //this.chartData = {...this.chartData}
   }
 
-  plot_update(figure, graphDiv) {
+  plot_update() {
     console.log('plot_update');
   }
 }

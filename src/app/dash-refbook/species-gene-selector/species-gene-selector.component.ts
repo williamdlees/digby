@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, Injectable, Output, OnInit, ViewEncapsulation, EventEmitter } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { GenomicService } from '../../../../dist/digby-swagger-client';
-import { RefbookService } from '../../../../dist/digby-swagger-client';
+import { RefbookService } from '../../../../projects/digby-swagger-client/api/refbook.service';
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import {catchError, debounceTime} from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -12,7 +13,9 @@ import {AvailableSpeciesAndData, SpeciesGeneSelection, testAvailableSpeciesAndDa
   selector: 'app-species-gene-selector',
   templateUrl: './species-gene-selector.component.html',
   styleUrls: ['./species-gene-selector.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true,
+  imports: [FormsModule]
 })
 
 @Injectable({

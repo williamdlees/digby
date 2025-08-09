@@ -4,62 +4,72 @@
   </button>
 
   <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
-    <ul ngbNav class="navbar-nav mr-auto">
-        <li ngbNavItem class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuCollapsed = true">
-          <a class="nav-link" ngbNavLink  style="padding: 0" routerLink="/">
-            <img class="navbar-brand" src="./assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
+    <ul ngbNav class="navbar-nav me-auto">
+      <li ngbNavItem class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuCollapsed = true">
+        <a class="nav-link" ngbNavLink  style="padding: 0" routerLink="/">
+          <img class="navbar-brand" src="./assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
         </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarAIRRSeq" role="button">
-            AIRR-Seq Data
-          </a>
-          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-            <a ngbDropdownItem class="dropdown-item" routerLink="./datarep" (click)="isMenuCollapsed = true">Explore AIRR-Seq Data</a>
-            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./samplerep', 'null']" (click)="isMenuCollapsed = true">Samples</a>
-            <a ngbDropdownItem class="dropdown-item" routerLink="./generep" (click)="isMenuCollapsed = true">Germline Genes</a>
-          </div>
-        </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Genomic Data
-          </a>
-          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-            <a ngbDropdownItem class="dropdown-item" routerLink="./datagen" (click)="isMenuCollapsed = true">Explore Genomic Data</a>
-            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genesample', 'null']" (click)="isMenuCollapsed = true">Samples</a>
-            <a ngbDropdownItem class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genes</a>
-            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'IGH']" (click)="isMenuCollapsed = true" [disabled]=!assemblies_present>Gene Browser</a>
-          </div>
-        </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarGenomic" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Analysis
-          </a>
-          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-            <a ngbDropdownItem class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
-            <a ngbDropdownItem class="dropdown-item" routerLink="/dash_refbook" (click)="isMenuCollapsed = true">Reference Dashboard</a>
-            <a ngbDropdownItem class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Macaque Reference Book</a>
-          </div>
-        </li>
-        <li ngbDropdown class="nav-item dropdown" *ngIf="displayProtected">
-          <a ngbDropdownToggle class="nav-link " id="navbarHelpAbout" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Help / About
-          </a>
-          <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-            <a ngbDropdownItem class="dropdown-item" href="./user-guide" (click)="isMenuCollapsed = true">User Guide</a>
-            <a ngbDropdownItem class="dropdown-item" href="./quick-ref" (click)="isMenuCollapsed = true">Quick Reference</a>
-            <a ngbDropdownItem class="dropdown-item" href="./assets/doc/report_documentation.pdf" (click)="isMenuCollapsed = true">Guide to Reports (pdf)</a>
-            <a ngbDropdownItem class="dropdown-item" href="./assets/doc/glossary.pdf" (click)="isMenuCollapsed = true">Glossary (pdf)</a>
-            <a ngbDropdownItem class="dropdown-item" href="./licensing" (click)="isMenuCollapsed = true">Licensing</a>
-          </div>
-        </li>
-      <li ngbNavItem class="nav-item" routerLinkActive="active" *ngIf="displayLogin">
-        <a class="nav-link" ngbNavLink routerLink="/auth" (click)="isMenuCollapsed = true">Login</a>
-      </li>
-      <li ngbNavItem class="nav-item" routerLinkActive="active" *ngIf="displayLogout">
-        <a class="nav-link" ngbNavLink routerLink="/auth" (click)="onLogout()">Logout</a>
-      </li>
-    </ul>
-  </div>
-</nav>
-
-
+        @if (displayProtected) {
+          <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link" id="navbarAIRRSeq" role="button">
+              AIRR-Seq Data
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+              <a ngbDropdownItem class="dropdown-item" routerLink="./datarep" (click)="isMenuCollapsed = true">Explore AIRR-Seq Data</a>
+              <a ngbDropdownItem class="dropdown-item" [routerLink]="['./samplerep', 'null']" (click)="isMenuCollapsed = true">Samples</a>
+              <a ngbDropdownItem class="dropdown-item" routerLink="./generep" (click)="isMenuCollapsed = true">Germline Genes</a>
+            </div>
+          </li>
+        }
+        @if (displayProtected) {
+          <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
+              Genomic Data
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+              <a ngbDropdownItem class="dropdown-item" routerLink="./datagen" (click)="isMenuCollapsed = true">Explore Genomic Data</a>
+              <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genesample', 'null']" (click)="isMenuCollapsed = true">Samples</a>
+              <a ngbDropdownItem class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genes</a>
+              <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'IGH']" (click)="isMenuCollapsed = true" [disabled]=!assemblies_present>Gene Browser</a>
+            </div>
+          </li>
+        }
+        @if (displayProtected) {
+          <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
+              Analysis
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+              <a ngbDropdownItem class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
+              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_refbook" (click)="isMenuCollapsed = true">Reference Dashboard</a>
+              <a ngbDropdownItem class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Macaque Reference Book</a>
+            </div>
+          </li>
+        }
+        @if (displayProtected) {
+          <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link" id="navbarHelpAbout" role="button">
+              Help / About
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+              <a ngbDropdownItem class="dropdown-item" href="./user-guide" (click)="isMenuCollapsed = true">User Guide</a>
+              <a ngbDropdownItem class="dropdown-item" href="./quick-ref" (click)="isMenuCollapsed = true">Quick Reference</a>
+              <a ngbDropdownItem class="dropdown-item" href="./assets/doc/report_documentation.pdf" (click)="isMenuCollapsed = true">Guide to Reports (pdf)</a>
+              <a ngbDropdownItem class="dropdown-item" href="./assets/doc/glossary.pdf" (click)="isMenuCollapsed = true">Glossary (pdf)</a>
+              <a ngbDropdownItem class="dropdown-item" href="./licensing" (click)="isMenuCollapsed = true">Licensing</a>
+            </div>
+          </li>
+        }
+        @if (displayLogin) {
+          <li ngbNavItem class="nav-item" routerLinkActive="active">
+            <a class="nav-link" ngbNavLink routerLink="/auth" (click)="isMenuCollapsed = true">Login</a>
+          </li>
+        }
+        @if (displayLogout) {
+          <li ngbNavItem class="nav-item" routerLinkActive="active">
+            <a class="nav-link" ngbNavLink routerLink="/auth" (click)="onLogout()">Logout</a>
+          </li>
+        }
+      </ul>
+    </div>
+  </nav>

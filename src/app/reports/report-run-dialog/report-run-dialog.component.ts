@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
 import {ReportsService} from 'digby-swagger-client';
 import {pollUntil} from '../../shared/poll-until-rxjs';
 import {defer, of} from 'rxjs';
@@ -7,11 +7,14 @@ import {ReportErrorDialogComponent} from '../report-error-dialog/report-error-di
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportRequestService} from '../report-request-service';
 
+
 @Component({
-  selector: 'app-report-run-dialog',
-  templateUrl: './report-run-dialog.component.html',
-  styleUrls: ['./report-run-dialog.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling
+    selector: 'app-report-run-dialog',
+    templateUrl: './report-run-dialog.component.html',
+    styleUrls: ['./report-run-dialog.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling
+    ,
+    imports: []
 })
 export class ReportRunDialogComponent implements OnInit {
   @Input() report;

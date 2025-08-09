@@ -4,11 +4,14 @@ import {WordpressService} from "./wordpress.service";
 import {AuthService} from "../auth/auth.service";
 import {SysConfig} from "../auth/sysconfig.model";
 
+import { RouterLink } from '@angular/router';
+
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.scss'],
+    standalone: true
 })
 export class HomeComponent implements OnInit {
   loadedNewsPosts = [];

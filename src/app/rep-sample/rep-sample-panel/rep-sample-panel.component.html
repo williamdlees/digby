@@ -1,25 +1,29 @@
 
 <div class="row">
-  <div  class="spinner-border" role="status" *ngIf="dataSource.loading$ | async">
-    <span class="sr-only">Loading...</span>
-  </div>
-
-  <div class="alert alert-danger" *ngIf="dataSource.error$ | async">
-    <div class="row">
-      <h4>Error loading table</h4>
-      <p>{{dataSource.error$ | async}}</p>
+  @if (dataSource.loading$ | async) {
+    <div  class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
-  </div>
+  }
+
+  @if (dataSource.error$ | async) {
+    <div class="alert alert-danger">
+      <div class="row">
+        <h4>Error loading table</h4>
+        <p>{{dataSource.error$ | async}}</p>
+      </div>
+    </div>
+  }
 </div>
 
 <div class="row">
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
     <span class="header-text">Quick search:&nbsp;</span>
-    <input class="searchBox" #searchBox>
+    <input class="form-control" placeholder="Search..." aria-label="Search" #searchBox>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()" id="deleteButton">
+    <button style="border-width: 0px; background-color: transparent;" (click)="clearSelection()" id="deleteButton" title="Clear filters">
       <mat-icon class="primary-icon"  style="">delete_sweep</mat-icon>
     </button>
     <label class="form-check-label" for="deleteButton">Clear filters</label>
@@ -27,316 +31,329 @@
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
     <button digby-table-column-sorter
-       [(columns)]="displayedColumns"
-       [columnInfo]="allColumns"
-       [saveName]="'rep-sample-table'"
-       (columnsChange)="updateColumnData($event)" id="colbutton">
-       <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
+      [(columns)]="displayedColumns"
+      [columnInfo]="allColumns"
+      [saveName]="'rep-sample-table'"
+      (columnsChange)="updateColumnData($event)" id="colbutton" title="Arrange columns">
+      <mat-icon class="primary-icon"  style="padding-left: 0px !important;">view_column</mat-icon>
     </button>
-      <label class="form-check-label" for="colbutton">Arrange Columns</label>
+    <label class="form-check-label" for="colbutton">Arrange Columns</label>
   </div>
 
   <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex; padding-left: 0px !important;">
-    <button style="border-width: 0px; background-color: transparent;" [matMenuTriggerFor]="downloadMenu" id="downloadbutton">
+    <button style="border-width: 0px; background-color: transparent;" [matMenuTriggerFor]="downloadMenu" id="downloadbutton" title="Download options">
       <mat-icon class="primary-icon"  style="">cloud_download</mat-icon>
     </button>
     <label class="form-check-label" for="downloadbutton">Download</label>
   </div>
 
-  <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;" *ngIf="selectedSequenceNames.length">
+  @if (selectedSequenceNames.length) {
+    <div class="col-auto" style="align-items: center; justify-content: flex-start; display: flex;">
       <div class="form-check">
         <input class="form-check-input" type="checkbox" id="chk-selected-items" style="margin-top: .1rem;"
           [(ngModel)]="isSelectedSamplesChecked"
           (change)="(onSelectedSamplesChange())"
-        >
-        <label class="form-check-label" for="chk-selected-items">
-          Only samples with selected genes
-        </label>
+          >
+          <label class="form-check-label" for="chk-selected-items">
+            Only samples with selected genes
+          </label>
+        </div>
+      </div>
+    }
+
+    <div class="col-auto ms-auto">
+      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
     </div>
   </div>
 
-  <div class="col-auto ml-auto">
-    <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
-  </div>
-</div>
+  <div class="row">
+    <div class="col">
+      <div class="resizable-table">
+        <table mat-table [dataSource]="dataSource" appTableResize="rep-sample-table-widths">
 
-<div class="row">
-  <div class="col">
-    <mat-table [dataSource]="dataSource">
-
-      <ng-container *ngFor="let col of allColumns">
-        <ng-container *ngIf="(col.type === 'string' && col.id === 'sample_name')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item" (click)="showInfo(item)">
+          @for (col of allColumns; track col.id) {
+            @if ((col.type === 'string' && col.id === 'sample_name')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex-tight">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item" (click)="showInfo(item)">
                   {{item[col.id]}}
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'string' && col.id !== 'sample_name')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
-                  <ng-container *ngIf="item[col.id] && item[col.id].startsWith('http')">
+                </mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'string' && col.id !== 'sample_name')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex-tight">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.TEXT_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  @if (item[col.id] && item[col.id].startsWith('http')) {
                     <a href={{item[col.id]}}><i class="fa fa-external-link" style="line-height: inherit;"></i></a>
-                  </ng-container>
-                  <ng-container *ngIf="!item[col.id] || !item[col.id].startsWith('http')">
+                  }
+                  @if (!item[col.id] || !item[col.id].startsWith('http')) {
                     {{item[col.id]}}
-                  </ng-container>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'integer' || col.type === 'number')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">{{item[col.id]}}</mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'boolean')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [setFilter$] = "setFilter$" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <i *ngIf="item[col.id]" class="fa fa-check" style="line-height: inherit;"></i>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'genotype')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-              </mat-header-cell>
-              <mat-cell *matCellDef="let item" class="{{col.size}}" >
-                <button class="btn btn-sm btn-solid-icon" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}">
-                  <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
-                </button>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
-
-        <ng-container *ngIf="(col.type === 'haplotype')">
-            <ng-container matColumnDef={{col.id}}>
-              <mat-header-cell class="{{col.size}}" *matHeaderCellDef mwlResizable [enableGhostResize]="true" (resizeEnd)="onResizeEnd($event, col.id)" [resizeEdges]="{bottom: false, right: true, top: false, left: true}">
-                {{col.name}}
-                <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [showSort] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
-              </mat-header-cell>
-              <mat-cell class="{{col.size}}" *matCellDef="let item">
-                <div *ngIf="item[col.id]">
-                  <div class="container">
-                    <div class="row">
-                      <div *ngFor="let h of item[col.id] | keyvalue">
-                        <ng-container *ngIf="h.key !== 'path'">
-                          <div class="col-xs-6">
-                            <button class="btn btn-secondary btn-sm mr-1" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: item, haplo: h.key}">
-                              {{h.key}}
-                            </button>
-                          </div>
-                        </ng-container>
+                  }
+                </mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'integer' || col.type === 'number')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex-tight">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.NUMBER_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">{{item[col.id]}}</mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'boolean')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex-tight">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="col.id" [filterMode]="filterModeEnum.BOOL_MODE" [clear$] = "clear$" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  @if (item[col.id]) {
+                    <i class="fa fa-check" style="line-height: inherit;"></i>
+                  }
+                </mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'genotype')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex-tight">
+                    <span class="column-title">{{col.name}}</span>
+                  </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let item" class="{{col.size}}" >
+                  <button class="btn btn-sm" style="" [matMenuTriggerFor]="genoMenu" [matMenuTriggerData]="{sample: item}" title="View genotype details">
+                    <i class="fa fa-folder fa-5" style="line-height: inherit;"></i>
+                  </button>
+                </mat-cell>
+              </ng-container>
+            }
+            @if ((col.type === 'haplotype')) {
+              <ng-container matColumnDef={{col.id}}>
+                <mat-header-cell class="{{col.size}}" *matHeaderCellDef appColumnResize>
+                  <div class="header-flex-tight">
+                    <span class="column-title">{{col.name}}</span>
+                    <app-filter #filterComponent="menuInOtherComponent" [columnName]="'haplotypes'" [filterMode]="filterModeEnum.TEXT_MODE" [showTextFilter] = "false" [showSort] = "false" [choices$]="dataSource.choices$" (predicateEmitter)="applyFilter($event)"></app-filter>
+                  </div>
+                </mat-header-cell>
+                <mat-cell class="{{col.size}}" *matCellDef="let item">
+                  @if (item[col.id]) {
+                    <div>
+                      <div class="container">
+                        <div class="row">
+                          @for (h of item[col.id] | keyvalue; track h.key) {
+                            <div>
+                              @if (h.key !== 'path') {
+                                <div class="col-xs-6">
+                                  <button class="btn btn-secondary btn-sm me-1" [matMenuTriggerFor]="haploMenu"  [matMenuTriggerData]="{sample: item, haplo: h.key}">
+                                    {{h.key}}
+                                  </button>
+                                </div>
+                              }
+                            </div>
+                          }
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </mat-cell>
-            </ng-container>
-        </ng-container>
+                  }
+                </mat-cell>
+              </ng-container>
+            }
+          }
 
+          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true " class="mat-elevation-z1"></mat-header-row>
 
-      </ng-container>
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true "></mat-header-row>
-
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-
-    </mat-table>
-
+        </table>
+      </div>
+    </div>
   </div>
-</div>
 
 
-<mat-menu #haploMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <ng-template matMenuContent let-sample="sample" let-haplo="haplo">
-    <div class="container">
-      <div class="row ml-1 mr-2">
-        <b>{{sample.sample_name}}</b>
-      </div>
-      <div class="row ml-1 mr-2 mb-1">
-        Inferred haplotype using {{haplo}} as anchor
-      </div>
-      <div class="row ml-4 mr-2 mb-0 align-middle">
-        Haplotype Analysis
-        <ng-container *ngIf="sample.haplotypes[haplo]['analysis'].length > 0">
+  <mat-menu #haploMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <ng-template matMenuContent let-sample="sample" let-haplo="haplo">
+      <div class="container">
+        <div class="d-flex align-items-center ms-1 me-2">
+          <b>{{sample.sample_name}}</b>
+        </div>
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
+          Inferred haplotype using {{haplo}} as anchor
+        </div>
+        <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
+          Haplotype Analysis
+          @if (sample.haplotypes[haplo]['analysis'].length > 0) {
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_haplotype', 'pdf', sample.haplotypes[haplo]['analysis'])" title="Download PDF report">
+              <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
+            </button>
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_haplotype', 'html', sample.haplotypes[haplo]['analysis'])" title="View HTML report">
+              <i class="fa fa-desktop" style="line-height: inherit;"></i>
+            </button>
+          }
+          @if (sample.haplotypes[haplo]['analysis'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="d-flex align-items-center ms-4 me-2 mb-4">
+          RabHIT report
+          @if (sample.haplotypes[haplo]['rabhit'].length > 0) {
+            <span>&nbsp;&nbsp;</span>
+            <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['rabhit'] }}" download="{{ sample.sample_name + '_rabhit.tab'}}" title="Download RabHIT report"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          }
+          @if (sample.haplotypes[haplo]['rabhit'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
+          RAbHIT explained
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_haplotype', 'pdf', sample.haplotypes[haplo]['analysis'])">
-            <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
-          </button>
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_haplotype', 'html', sample.haplotypes[haplo]['analysis'])">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/31173062" target="_blank" rel="noopener" title="View RAbHIT publication">
             <i class="fa fa-desktop" style="line-height: inherit;"></i>
-          </button>
-        </ng-container>
-        <ng-container *ngIf="sample.haplotypes[haplo]['analysis'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
+          </a>
+        </div>
       </div>
-      <div class="row ml-4 mr-2 mb-4">
-        RabHIT report
-        <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length > 0">
-          <span>&nbsp;&nbsp;</span>
-          <a href="{{ sample.haplotypes['path']+sample.haplotypes[haplo]['rabhit'] }}" download="{{ sample.sample_name + '_rabhit.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="sample.haplotypes[haplo]['rabhit'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      <div class="row ml-1 mr-2 mb-1">
-        RAbHIT explained
-        <span>&nbsp;&nbsp;</span>
-        <a href="https://pubmed.ncbi.nlm.nih.gov/31173062" target="_blank">
-          <i class="fa fa-desktop" style="line-height: inherit;"></i>
-        </a>
-      </div>
-    </div>
-  </ng-template>
-</mat-menu>
+    </ng-template>
+  </mat-menu>
 
-<mat-menu #genoMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <ng-template matMenuContent let-sample="sample">
-    <div class="container">
-      <div class="row ml-1 mr-2">
-        <b>{{sample.sample_name}}</b>
-      </div>
-      <div class="row ml-1 mr-2 mb-1">
-        Inferred genotype
-      </div>
-      <div class="row ml-4 mr-2 mb-1">
-        Genotype Analysis
-        <ng-container *ngIf="sample.genotypes['analysis'].length > 0">
+  <mat-menu #genoMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <ng-template matMenuContent let-sample="sample">
+      <div class="container">
+        <div class="d-flex align-items-center ms-1 me-2">
+          <b>{{sample.sample_name}}</b>
+        </div>
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
+          Inferred genotype
+        </div>
+        <div class="d-flex align-items-center ms-4 me-2 mb-1">
+          Genotype Analysis
+          @if (sample.genotypes['analysis'].length > 0) {
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample.genotypes['analysis'])" title="Download PDF report">
+              <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
+            </button>
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample.genotypes['analysis'])" title="View HTML report">
+              <i class="fa fa-desktop" style="line-height: inherit;"></i>
+            </button>
+          }
+          @if (sample.genotypes['analysis'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="d-flex align-items-center ms-4 me-2 mb-1">
+          TIgGER report
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_genotype', 'pdf', sample.genotypes['analysis'])">
-            <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i>
-          </button>
+          @if (sample.genotypes['tigger'].length > 0) {
+            <a href="{{ sample.genotypes['path']+sample.genotypes['tigger'] }}" download="{{ sample.sample_name + '_tigger.tab'}}" title="Download TIgGER report"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          }
+          @if (sample.genotypes['tigger'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="d-flex align-items-center ml-4 mr-2 mb-1">
+          OGRDBStats report
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('rep_single_genotype', 'html', sample.genotypes['analysis'])">
+          @if (sample.genotypes['ogrdbstats'].length > 0) {
+            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbstats'] }}" download="{{ sample.sample_name + '_ogrdbstats.csv'}}" title="Download OGRDBStats report"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          }
+          @if (sample.genotypes['ogrdbstats'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="d-flex align-items-center ml-4 mr-2 mb-1">
+          OGRDBStats plots
+          <span>&nbsp;&nbsp;</span>
+          @if (sample.genotypes['ogrdbplot'].length > 0) {
+            <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.sample_name + '_ogrdbplot.pdf'}}" title="Download OGRDBStats plots"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
+          }
+          @if (sample.genotypes['ogrdbplot'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <div class="d-flex align-items-center ml-1 mr-2 mb-1">
+          Annotated repertoire
+          <span>&nbsp;&nbsp;</span>
+          @if (sample.genotypes['madc_url'].length > 0) {
+            <a href="{{ sample.genotypes['madc_url'] }}" title="Download annotated repertoire"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          }
+          @if (sample.genotypes['madc_url'].length === 0) {
+            <span>&nbsp;&nbsp;</span>Not available
+          }
+        </div>
+        <!--
+        <div class="d-flex align-items-center ml-4 mr-2 mb-4">
+          IgSNPer report (for sample S1)
+          <span>&nbsp;&nbsp;</span>
+          <ng-container *ngIf="sample.genotypes['igsnper'].length > 0">
+            <a href="{{ sample.genotypes['path']+sample.genotypes['igsnper'] }}" download="{{ sample.sample_name + '_igsnper.tsv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
+          </ng-container>
+          <ng-container *ngIf="sample.genotypes['igsnper'].length === 0">
+            <span>&nbsp;&nbsp;</span>Not available
+          </ng-container>
+        </div>
+        -->
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
+          TIgGER explained
+          <span>&nbsp;&nbsp;</span>
+          <a href="https://pubmed.ncbi.nlm.nih.gov/30814994" target="_blank" rel="noopener" title="View TIgGER publication">
             <i class="fa fa-desktop" style="line-height: inherit;"></i>
-          </button>
-        </ng-container>
-        <ng-container *ngIf="sample.genotypes['analysis'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      <div class="row ml-4 mr-2 mb-1">
-        TIgGER report
-        <span>&nbsp;&nbsp;</span>
-        <ng-container *ngIf="sample.genotypes['tigger'].length > 0">
-          <a href="{{ sample.genotypes['path']+sample.genotypes['tigger'] }}" download="{{ sample.sample_name + '_tigger.tab'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="sample.genotypes['tigger'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      <div class="row ml-4 mr-2 mb-1">
-        OGRDBStats report
-        <span>&nbsp;&nbsp;</span>
-        <ng-container *ngIf="sample.genotypes['ogrdbstats'].length > 0">
-          <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbstats'] }}" download="{{ sample.sample_name + '_ogrdbstats.csv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="sample.genotypes['ogrdbstats'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      <div class="row ml-4 mr-2 mb-1">
-         OGRDBStats plots
-        <span>&nbsp;&nbsp;</span>
-        <ng-container *ngIf="sample.genotypes['ogrdbplot'].length > 0">
-          <a href="{{ sample.genotypes['path']+sample.genotypes['ogrdbplot'] }}" download="{{ sample.sample_name + '_ogrdbplot.pdf'}}"><i class="fa fa-file-pdf-o" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="sample.genotypes['ogrdbplot'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      <div class="row ml-1 mr-2 mb-1">
-        Annotated repertoire
-        <span>&nbsp;&nbsp;</span>
-        <ng-container *ngIf="sample.genotypes['madc_url'].length > 0">
-          <a href="{{ sample.genotypes['madc_url'] }}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="sample.genotypes['madc_url'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      <!--
-      <div class="row ml-4 mr-2 mb-4">
-         IgSNPer report (for sample S1)
-        <span>&nbsp;&nbsp;</span>
-        <ng-container *ngIf="sample.genotypes['igsnper'].length > 0">
-          <a href="{{ sample.genotypes['path']+sample.genotypes['igsnper'] }}" download="{{ sample.sample_name + '_igsnper.tsv'}}"><i class="fa fa-save" style="line-height: inherit;"></i></a>
-        </ng-container>
-        <ng-container *ngIf="sample.genotypes['igsnper'].length === 0">
-          <span>&nbsp;&nbsp;</span>Not available
-        </ng-container>
-      </div>
-      -->
-      <div class="row ml-1 mr-2 mb-1">
-        TIgGER explained
-        <span>&nbsp;&nbsp;</span>
-        <a href="https://pubmed.ncbi.nlm.nih.gov/30814994" target="_blank">
-          <i class="fa fa-desktop" style="line-height: inherit;"></i>
-        </a>
-      </div>
-      <div class="row ml-1 mr-2 mb-1">
-        OGRDBstats explained
-        <span>&nbsp;&nbsp;</span>
-        <a href="https://github.com/airr-community/ogrdbstats" target="_blank">
-          <i class="fa fa-desktop" style="line-height: inherit;"></i>
-        </a>
-      </div>
-      <!--
-      <div class="row ml-1 mr-2 mb-1">
-        IgSNPer explained
-        <span>&nbsp;&nbsp;</span>
-        <a href="https://github.com/Immunotools/IgSNPer" target="_blank">
-          <i class="fa fa-desktop" style="line-height: inherit;"></i>
-        </a>
-      </div>
-      -->
-    </div>
-  </ng-template>
-</mat-menu>
-
-<mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
-  <ng-template matMenuContent>
-    <div class="container">
-      <div class="row ml-1 mr-2">
-        <b>Download data for selected samples</b>
-      </div>
-      <div class="row ml-4 mr-2 mb-0 align-middle">
-        Sample info (csv)
+          </a>
+        </div>
+        <div class="d-flex align-items-center ms-1 me-2 mb-1">
+          OGRDBstats explained
           <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Sample info (CSV)'})">
+          <a href="https://github.com/airr-community/ogrdbstats" target="_blank" rel="noopener" title="View OGRDBstats documentation">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </a>
+        </div>
+        <!--
+        <div class="d-flex align-items-center ml-1 mr-2 mb-1">
+          IgSNPer explained
+          <span>&nbsp;&nbsp;</span>
+          <a href="https://github.com/Immunotools/IgSNPer" target="_blank">
+            <i class="fa fa-desktop" style="line-height: inherit;"></i>
+          </a>
+        </div>
+        -->
+      </div>
+    </ng-template>
+  </mat-menu>
+
+  <mat-menu #downloadMenu="matMenu" xPosition="before" class="menu-overflow-hidden">
+    <ng-template matMenuContent>
+      <div class="container">
+        <div class="d-flex align-items-center ms-1 me-2">
+          <b>Download data for selected samples</b>
+        </div>
+        <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
+          Sample info (csv)
+          <span>&nbsp;&nbsp;</span>
+          <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'csv', {type:'Sample info (CSV)'})" title="Download CSV">
             <i class="fa fa-file-pdf-o" style="line-height: inherit;" ></i> </button>
-      </div>
-      <div class="row ml-4 mr-2 mb-0 align-middle">
-        Sample data (zip)
-          <span>&nbsp;&nbsp;</span>
-          <button class="btn btn-sm btn-solid-icon addr" (click)="sendReportRequest('download_rep_data', 'zip', {type:'Sample files (ZIP)'})">
-            <i class="fa fa-file-zip-o" style="line-height: inherit;" ></i> </button>
-      </div>
-    </div>
-  </ng-template>
-</mat-menu>
-
+          </div>
+          <div class="d-flex align-items-center ms-4 me-2 mb-0 align-middle">
+            Sample data (zip)
+            <span>&nbsp;&nbsp;</span>
+            <button class="btn btn-sm addr" (click)="sendReportRequest('download_rep_data', 'zip', {type:'Sample files (ZIP)'})" title="Download ZIP">
+              <i class="fa fa-file-zip-o" style="line-height: inherit;" ></i> </button>
+            </div>
+          </div>
+        </ng-template>
+      </mat-menu>

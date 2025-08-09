@@ -7,6 +7,10 @@ outline: none !important;
 outline-style: none !important;
 }
 
+button {
+  flex-shrink: 0 !important;
+}
+
 .tf-mat-menu{
   overflow: visible !important;
   max-width: none !important;

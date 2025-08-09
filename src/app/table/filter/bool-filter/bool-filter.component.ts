@@ -1,18 +1,22 @@
 import {
   Component,
   EventEmitter,
-  Input,
   OnInit,
   Output,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  input
 } from '@angular/core';
 import {FilterImplementation} from '../filter-implementation';
 import {ColumnPredicate} from '../column-predicate';
 import {IChoices} from '../ichoices';
 import {Observable} from 'rxjs';
-import {IDropdownSettings} from 'ng-multiselect-dropdown';
-import { MatMenuModule} from '@angular/material/menu';
+import { IDropdownSettings, NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { MatMenuModule, MatMenuTrigger, MatMenu } from '@angular/material/menu';
+import { MatIconButton, MatButton } from '@angular/material/button';
+
+import { MatIcon } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 /**
  * biPredicate => Will become a (value) => boolean with curryfication --> the operand will disappear in Output
@@ -28,16 +32,21 @@ class Operator {
 }
 
 @Component({
-  selector: 'app-bool-filter',
-  templateUrl: './bool-filter.component.html',
-  styleUrls: ['./bool-filter.component.css'],
-  encapsulation: ViewEncapsulation.None   // needed for css styling on mat-menu-panel
+    selector: 'app-bool-filter',
+    templateUrl: './bool-filter.component.html',
+    styleUrls: ['./bool-filter.component.css'],
+    encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
+    ,
+    imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, FormsModule, MatButton, NgMultiSelectDropDownModule]
 })
 export class BoolFilterComponent implements OnInit, FilterImplementation {
   @ViewChild('filterMenu') matMenuTrigger;
-  @Input() columnName: string;
-  @Input() choices$: Observable<IChoices>;
-  @Input() clear$: Observable<null>;
+  readonly columnName = input<string>(undefined);
+  readonly choices$ = input<Observable<IChoices>>(undefined);
+  readonly clear$ = input<Observable<null>>(undefined);
+  readonly setFilter$ = input<Observable<any>>(undefined);
+  readonly showTextFilter = input(true);
+  readonly showSort = input(true);
   @Output() predicateEmitter = new EventEmitter<ColumnPredicate>();
 
   filterCleared = false;
@@ -54,18 +63,20 @@ export class BoolFilterComponent implements OnInit, FilterImplementation {
   }
 
   ngOnInit() {
-    if (this.choices$) {
-      this.choices$.subscribe((c) => {
-        if (typeof c !== 'undefined' && c[this.columnName]) {
+    const choices$ = this.choices$();
+    if (choices$) {
+      choices$.subscribe((c) => {
+        if (typeof c !== 'undefined' && c[this.columnName()]) {
           this.choices = [];
-          for (let i = 0; i < c[this.columnName].length; i++) {
-            this.choices.push({ id: i, text: c[this.columnName][i] });
+          for (let i = 0; i < c[this.columnName()].length; i++) {
+            this.choices.push({ id: i, text: c[this.columnName()][i] });
           }
         }
       });
     }
-    if (this.clear$) {
-      this.clear$.subscribe((c) => {
+    const clear$ = this.clear$();
+    if (clear$) {
+      clear$.subscribe((c) => {
           this.selectedSort = null;
           this.selectedItems = [];
       });
@@ -113,13 +124,13 @@ export class BoolFilterComponent implements OnInit, FilterImplementation {
 
   generatePredicate(): ColumnPredicate {
     const pred = {
-      field: this.columnName,
+      field: this.columnName(),
       predicates: [],
-      sort: { field: this.columnName, order: this.selectedSort }
+      sort: { field: this.columnName(), order: this.selectedSort }
     };
 
     if (this.selectedItems.length > 0) {
-      pred.predicates.push({ field: this.columnName, op: 'in', value: this.selectedItems.map((x) => (typeof(x.text) === 'boolean' ? (x.text ? '1' : '0') : x.text)) });
+      pred.predicates.push({ field: this.columnName(), op: 'in', value: this.selectedItems.map((x) => (typeof(x.text) === 'boolean' ? (x.text ? '1' : '0') : x.text)) });
     }
 
     return pred;

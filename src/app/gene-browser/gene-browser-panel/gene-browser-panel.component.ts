@@ -4,12 +4,11 @@ import {environment} from '../../../environments/environment';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
 import {ActivatedRoute} from '@angular/router';
-import igv from 'src/assets/js/igv.js';
 import {debounceTime, delay} from 'rxjs/operators';
 import {AuthService} from "../../auth/auth.service";
 import {User} from "../../auth/user.model";
 
-// declare var igv: any;
+declare var igv: any;
 declare var $: any;
 
 const options = {
@@ -29,9 +28,9 @@ const options = {
 };
 
 @Component({
-  selector: 'app-gene-browser-panel',
-  templateUrl: './gene-browser-panel.component.html',
-  styleUrls: ['./gene-browser-panel.component.scss']
+    selector: 'app-gene-browser-panel',
+    templateUrl: './gene-browser-panel.component.html',
+    styleUrls: ['./gene-browser-panel.component.scss']
 })
 
 export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
@@ -39,6 +38,8 @@ export class GeneBrowserPanelComponent implements OnInit, OnDestroy {
   geneTableServiceSubscription = null;
   authServiceSubscription = null;
 
+  // TODO: Skipped for migration because:
+  //  Your application code writes to the input. This prevents migration.
   @Input() selection: GeneTableSelection;
   @ViewChild('igv', {static: true}) igvdiv: ElementRef;
 

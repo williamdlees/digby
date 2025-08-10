@@ -1,9 +1,11 @@
 .explore-small-col {
   width: 8% !important;
   flex: 0 0 8% !important;
+  white-space: wrap !important;
 }
 
 .explore-large-col {
   width: 25% !important;
   flex: 0 0 25% !important;
+  white-space: wrap !important;
 }

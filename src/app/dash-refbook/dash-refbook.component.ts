@@ -4,8 +4,8 @@ import { SpeciesGeneSelection } from './species-gene-selector/species-gene-selec
 import { SpeciesGeneSelectorComponent } from './species-gene-selector/species-gene-selector.component';
 import { DashRefbookOverviewComponent } from './dash-refbook-overview/dash-refbook-overview.component';
 import { DashRefbookAlignmentComponent } from './dash-refbook-alignment/dash-refbook-alignment.component';
-import { DashRefbookUsageComponent } from './dsah-refbook-usage/dash-refbook-usage.component';
-import { DashRefbookZygosityComponent } from './dash-book-zygosity/dash-refbook-zygosity.component';
+import { DashRefbookUsageComponent } from './dash-refbook-usage/dash-refbook-usage.component';
+import { DashRefbookZygosityComponent } from './dash-refbook-zygosity/dash-refbook-zygosity.component';
 import { RefbookService } from '../../../projects/digby-swagger-client/api/refbook.service';
 
 @Component({

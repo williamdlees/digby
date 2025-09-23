@@ -1,6 +1,4 @@
 import { enableProdMode, provideAppInitializer, inject, importProvidersFrom } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
 import { apiConfigFactory } from './app/app.module';
 import { environment } from './environments/environment';
 import { RequestCache } from './app/shared/http_cache';
@@ -33,6 +31,7 @@ import { GenGeneTableComponent } from './app/gen-gene-table/gen-gene-table.compo
 import { GeneBrowserComponent } from './app/gene-browser/gene-browser.component';
 import { RefbookComponent } from './app/refbook/refbook.component';
 import { DashRefbookComponent } from './app/dash-refbook/dash-refbook.component';
+import { GeneRefbookComponent } from './app/gene-refbook/gene-refbook.component';
 import { ReportsComponent } from './app/reports/reports.component';
 import { QuickRefComponent } from './app/home/quick-ref/quick-ref.component';
 import { UserGuideComponent } from './app/home/user-guide/user-guide.component';
@@ -69,6 +68,7 @@ const appRoutes: Routes = [
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
   // Analysis menu
   { path: 'reference_book/:species', component: RefbookComponent, canActivate: [AuthGuard] },
+  { path: 'gene_refbook', component: GeneRefbookComponent, canActivate: [AuthGuard] },
   { path: 'dash_refbook', component: DashRefbookComponent, canActivate: [AuthGuard] },
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
   // Help menu

@@ -1,0 +1,16 @@
+<div class="container-fluid">
+  <app-species-gene-selector (selectionChange)="ascChange($event)" ></app-species-gene-selector>
+  <mat-tab-group animationDuration="0ms"  mat-stretch-tabs>
+    <mat-tab label="Overview">
+      <app-gene-refbook-overview [selection]="selection"></app-gene-refbook-overview>
+    </mat-tab>
+    <mat-tab label="tab 2">
+
+    </mat-tab>
+    <mat-tab label="tab 3">
+    </mat-tab>
+    <mat-tab label="tab 4">
+    </mat-tab>
+  </mat-tab-group>
+
+</div>

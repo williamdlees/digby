@@ -72,6 +72,14 @@ export class GeneRefbookOverviewComponent implements OnInit, OnChanges {
   public chartOptions: ChartOptions<'bar'> = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10
+      }
+    },
     scales: {
       x: {
         stacked: true, // Enable stacking on the X-axis

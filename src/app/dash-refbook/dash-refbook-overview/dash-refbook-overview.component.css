@@ -64,3 +64,8 @@
   color: #99a0b0;
 }
 
+.chart-container {
+  width: 100%;
+  height: 400px;
+  margin-top: 2rem;
+}

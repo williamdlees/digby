@@ -3,7 +3,7 @@ import { RefbookService } from '../../../../projects/digby-swagger-client/api/re
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { SpeciesGeneSelection } from '../species-gene-selector/species-gene-selector.model';
+import { SpeciesGeneSelection } from '../../shared/models/species-gene-selection.model';
 import { ZygosityData } from './dash-refbook-zygosity.model';
 import * as UpSetJS from '@upsetjs/bundle';
 
@@ -21,8 +21,6 @@ export class DashRefbookZygosityComponent implements OnInit, OnChanges {
   @Input() selection: SpeciesGeneSelection;
   @ViewChild('upsetContainer', { static: false }) upsetContainer!: ElementRef<HTMLDivElement>;
 
-
-
   isFetching = false;
   error = '';
   zygosityData: ZygosityData = { samples: [] };
@@ -36,18 +34,18 @@ export class DashRefbookZygosityComponent implements OnInit, OnChanges {
     this.fetchZygosityData();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['selection'] && !changes['selection'].firstChange) {
+      this.fetchZygosityData();
+    }
+  }
+
   ngAfterViewInit() {
     if ('ResizeObserver' in window) {
       this.resizeObs = new ResizeObserver(() => this.renderUpset());
       this.resizeObs.observe(this.upsetContainer.nativeElement);
     }
     this.renderUpset();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['selection']) {
-      this.fetchZygosityData();
-    }
   }
 
   ngOnDestroy() {
@@ -64,19 +62,15 @@ export class DashRefbookZygosityComponent implements OnInit, OnChanges {
 
     this.refbookService.getAscZygosity(this.selection.species, this.selection.chain, this.selection.asc)
       .pipe(
-        tap(data => console.log('tap:', data)),
         retryWithBackoff(),
         catchError(err => {
-          console.error('getAscZygosity ERROR:', err);
           this.error = 'Failed to load zygosity data.';
           this.isFetching = false;
           return EMPTY;
         })
       )
       .subscribe((data: ZygosityData) => {
-        console.log(data);
         this.zygosityData = data;
-        console.log('Zygosity Data:', data);
         this.isFetching = false;
         this.selectionState = null;
         this.renderUpset();

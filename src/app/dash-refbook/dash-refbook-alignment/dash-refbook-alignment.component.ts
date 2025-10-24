@@ -3,7 +3,7 @@ import { RefbookService } from '../../../../projects/digby-swagger-client/api/re
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { SpeciesGeneSelection } from '../species-gene-selector/species-gene-selector.model';
+import { SpeciesGeneSelection } from '../../shared/models/species-gene-selection.model';
 import { AlignmentData } from './dash-refbook-alignment.model';
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
@@ -21,7 +21,7 @@ import { PlotlyModule } from 'angular-plotly.js';
   providedIn: 'root'
 })
 
-export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
+export class DashRefbookAlignmentComponent implements OnInit {
   @Input() selection: SpeciesGeneSelection;
   isFetching: boolean;
   error: string;
@@ -69,26 +69,37 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
   constructor(private refbookService: RefbookService) { }
 
   ngOnInit() {
+    this.fetchData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selection'] && changes['selection'].currentValue) {
-        const cs = changes['selection'].currentValue;
-        this.selection = changes['selection'].currentValue;
-        this.refbookService.getAscSeqs(cs.species, cs.chain, cs.asc)
-          .pipe(
-            retryWithBackoff(),
-            catchError(err => {
-              this.error = err;
-              return EMPTY;
-            })
-          )
-          .subscribe((data: AlignmentData) => {
-            this.isFetching = false;
-            this.alignmentData = data;
-            this.alignmentChart(data.alleles);
-          });
+    if (changes['selection'] && !changes['selection'].firstChange) {
+      this.fetchData();
     }
+  }
+
+  private fetchData() {
+    if (!this.selection?.species || !this.selection?.chain || !this.selection?.asc) {
+      this.isFetching = false;
+      return;
+    }
+
+    this.isFetching = true;
+
+    this.refbookService.getAscSeqs(this.selection.species, this.selection.chain, this.selection.asc)
+      .pipe(
+        retryWithBackoff(),
+        catchError(err => {
+          this.error = err;
+          this.isFetching = false;
+          return EMPTY;
+        })
+      )
+      .subscribe((data: AlignmentData) => {
+        this.isFetching = false;
+        this.alignmentData = data;
+        this.alignmentChart(data.alleles);
+      });
   }
 
   // map each nucleotide (and gaps) to an integer code

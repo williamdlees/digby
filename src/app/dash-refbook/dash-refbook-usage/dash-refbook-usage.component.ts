@@ -3,7 +3,7 @@ import { RefbookService } from '../../../../projects/digby-swagger-client/api/re
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { SpeciesGeneSelection } from '../species-gene-selector/species-gene-selector.model';
+import { SpeciesGeneSelection } from '../../shared/models/species-gene-selection.model';
 import { PlotlyModule } from 'angular-plotly.js';
 import { UsageData } from './dash-refbook-usage.model';
 
@@ -25,7 +25,7 @@ export class DashRefbookUsageComponent implements OnInit, OnChanges {
   error = '';
   usageData: UsageData = { alleles: [] };
 
-  
+
   plotData: any[] = [];
   plotLayout: any = {
     title: { text: 'Allele usage fractions' },
@@ -45,13 +45,21 @@ export class DashRefbookUsageComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selection']) {
+    if (changes['selection'] && !changes['selection'].firstChange) {
       this.fetchUsageData();
     }
   }
 
   fetchUsageData() {
-    if (!this.selection?.species || !this.selection?.chain || !this.selection?.asc) return;
+    if (!this.selection?.species || !this.selection?.chain || !this.selection?.asc) {
+      this.isFetching = false;
+      this.error = '';
+      // Clear existing data when selection is incomplete
+      this.usageData = { alleles: [] };
+      // Clear plot data
+      this.plotData = [];
+      return;
+    }
 
     this.isFetching = true;
     this.error = '';
@@ -61,7 +69,6 @@ export class DashRefbookUsageComponent implements OnInit, OnChanges {
       .pipe(
         retryWithBackoff(),
         catchError(err => {
-          console.error('getAscUsage ERROR:', err);
           this.error = 'Failed to load usage data.';
           this.isFetching = false;
           return EMPTY;

@@ -82,7 +82,7 @@ export class SpeciesGeneSelectorComponent implements OnInit, AfterViewInit {
 
  chainChange() {
     this.isFetching = true;
-    this.refbookService.getAscsInChainApi(this.selection.species, this.selection.chain)
+    this.refbookService.getAscsInLocusApi(this.selection.species, this.selection.chain)
       .pipe(
         retryWithBackoff(),
         catchError(err => {

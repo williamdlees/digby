@@ -5,7 +5,7 @@ import { RefbookService } from '../../../../projects/digby-swagger-client/api/re
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { SpeciesGeneSelection } from '../species-gene-selector/species-gene-selector.model';
+import { SpeciesGeneSelection } from '../../shared/models/species-gene-selection.model';
 import { OverviewData } from './dash-refbook-overview.model';
 import { ChartConfiguration, ChartData, ChartOptions, Chart, registerables } from 'chart.js';
 
@@ -92,55 +92,114 @@ export class DashRefbookOverviewComponent implements OnInit, OnChanges {
 constructor(private refbookService: RefbookService) { }
 
   ngOnInit() {
-    
+    this.fetchData();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selection'] && changes['selection'].currentValue) {
-        const cs = changes['selection'].currentValue;
-        this.selection = changes['selection'].currentValue;
-        this.isFetching = true;
-        this.refbookService.getAscsOverview(cs.species, cs.chain, cs.asc)
-          .pipe(
-            retryWithBackoff(),
-            catchError(err => {
-              this.error = err;
-              return EMPTY;
-            })
-          )
-          .subscribe((data: OverviewData) => {
-            this.isFetching = false;
-            this.overviewData = data;
-            
-            // Create new chart data object to trigger change detection
-            this.chartData = {
-              labels: data.alleles,
-              datasets: [
-                {
-                  label: 'Genomic Only',
-                  data: data.genomic_only_counts,
-                  backgroundColor: '#a9e1d4',
-                  borderColor: '#8DD3C7',
-                  borderWidth: 1
-                },
-                {
-                  label: 'AIRRseq Only',
-                  data: data.vdjbase_only_counts,
-                  backgroundColor: '#FFA07A',
-                  borderColor: '#fa946b',
-                  borderWidth: 1
-                },
-                {
-                  label: 'Both',
-                  data: data.both_counts,
-                  backgroundColor: '#ce93d8',
-                  borderColor: '#ba68c8',
-                  borderWidth: 1
-                }
-              ]
-            };
-            
-          });
+    if (changes['selection'] && !changes['selection'].firstChange) {
+      this.fetchData();
+    }
+  }
+
+  private fetchData() {
+    if (!this.selection?.species || !this.selection?.chain || !this.selection?.asc) {
+      this.isFetching = false;
+      this.error = null;
+      // Clear existing data when selection is incomplete
+      this.overviewData = {
+        total: 0,
+        novel: 0,
+        baseline: 0,
+        alleles: [],
+        genomic_only_counts: [],
+        vdjbase_only_counts: [],
+        both_counts: []
+      };
+      // Clear chart data
+      this.chartData = {
+        labels: [],
+        datasets: [
+          {
+            label: 'Genomic Only',
+            data: [],
+            backgroundColor: '#a9e1d4',
+            borderColor: '#8DD3C7',
+            borderWidth: 1
+          },
+          {
+            label: 'AIRRseq Only',
+            data: [],
+            backgroundColor: '#FFA07A',
+            borderColor: '#fa946b',
+            borderWidth: 1
+          },
+          {
+            label: 'Both',
+            data: [],
+            backgroundColor: '#ce93d8',
+            borderColor: '#ba68c8',
+            borderWidth: 1
+          }
+        ]
+      };
+      return;
+    }
+
+    this.isFetching = true;
+    this.error = null;
+
+    this.refbookService.getAscsOverview(this.selection.species, this.selection.chain, this.selection.asc)
+      .pipe(
+        retryWithBackoff(),
+        catchError(err => {
+          this.error = err.message || err;
+          this.isFetching = false;
+          return EMPTY;
+        })
+      )
+      .subscribe((data: OverviewData) => {
+        this.isFetching = false;
+        this.overviewData = data;
+
+        // Use setTimeout to avoid potential debugger issues
+        setTimeout(() => {
+          this.updateChartData(data);
+        }, 0);
+    });
+  }
+
+  private updateChartData(data: OverviewData): void {
+    try {
+      // Create new chart data object to trigger change detection
+      this.chartData = {
+        labels: data.alleles,
+        datasets: [
+          {
+            label: 'Genomic Only',
+            data: data.genomic_only_counts,
+            backgroundColor: '#a9e1d4',
+            borderColor: '#8DD3C7',
+            borderWidth: 1
+          },
+          {
+            label: 'AIRRseq Only',
+            data: data.vdjbase_only_counts,
+            backgroundColor: '#FFA07A',
+            borderColor: '#fa946b',
+            borderWidth: 1
+          },
+          {
+            label: 'Both',
+            data: data.both_counts,
+            backgroundColor: '#ce93d8',
+            borderColor: '#ba68c8',
+            borderWidth: 1
+          }
+        ]
+      };
+    } catch (error) {
+      // Silently handle any chart update errors
+      this.error = 'Error updating chart';
     }
   }
 }

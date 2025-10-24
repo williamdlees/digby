@@ -1,15 +1,41 @@
 <div class="container-fluid">
-  <app-species-gene-selector (selectionChange)="ascChange($event)" ></app-species-gene-selector>
-  <mat-tab-group animationDuration="0ms"  mat-stretch-tabs>
-    <mat-tab label="Overview">
-      <app-gene-refbook-overview [selection]="selection"></app-gene-refbook-overview>
-    </mat-tab>
-    <mat-tab label="tab 2">
+  <app-gene-table-selector [showGenomic]="true" [showAssembly]="false" [showRepseq]="true"></app-gene-table-selector>
 
-    </mat-tab>
-    <mat-tab label="tab 3">
-    </mat-tab>
-    <mat-tab label="tab 4">
+  <div class="row mt-3">
+    <div class="col-auto">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="selectAsc">ASC</label>
+        </div>
+        <select class="custom-select" id="selectAsc" [(ngModel)]="selection.asc" [disabled]="ascDisabled" (ngModelChange)="onAscChange()">
+          @if (ascLoading) {
+            <option value="">Loading...</option>
+          } @else {
+            <option value="">Select ASC</option>
+            @for (asc of availableAscs; track asc) {
+              <option [value]="asc">{{asc}}</option>
+            }
+          }
+        </select>
+        @if (ascLoading) {
+          <div class="input-group-append">
+            <span class="input-group-text">
+              <div class="spinner-border spinner-border-sm" role="status"></div>
+            </span>
+          </div>
+        }
+      </div>
+      @if (ascError) {
+        <small class="text-danger">Error loading ASCs: {{ascError}}</small>
+      }
+    </div>
+  </div>
+
+  <mat-tab-group animationDuration="0ms" mat-stretch-tabs (selectedTabChange)="onTabChange($event)">
+    <mat-tab label="Overview">
+      <ng-template matTabContent>
+        <app-gene-refbook-overview [selection]="selection"></app-gene-refbook-overview>
+      </ng-template>
     </mat-tab>
   </mat-tab-group>
 

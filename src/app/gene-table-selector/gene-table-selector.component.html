@@ -12,16 +12,12 @@
   @if (showGenomic()) {
     <div class="col-auto my-1">
       <div class="input-group">
-        <label class="input-group-text" for="selectGenomic" style="height: 38px">Genomic Sets</label>
-        <ng-multiselect-dropdown id="selectGenomic"
-          [class]="'selector-dropdown'"
-          [settings] = genDropdownSettings
-          [data] = datasets
-          [(ngModel)] = selectedGen
-          [placeholder] = "'Select Datasets'"
-          (ngModelChange)="refSeqChange()"
-          >
-        </ng-multiselect-dropdown>
+        <label class="input-group-text" for="selectGenomic">Genomic locus</label>
+        <select class="form-select" id="selectSpecies" [(ngModel)]="singleSelectedGen" (ngModelChange)="refSeqChange()">
+          @for (s of datasets; track s.text) {
+            <option [ngValue]="s">{{s.text}}</option>
+          }
+        </select>
       </div>
     </div>
   }
@@ -44,16 +40,24 @@
   @if (showRepseq()) {
     <div class="col-auto my-1">
       <div class="input-group">
-        <label class="input-group-text" for="selectAIRR" style="height: 38px">AIRR-seq Sets</label>
-        <ng-multiselect-dropdown id="selectAIRR"
-          [class]="'selector-dropdown'"
-          [settings] = repDropdownSettings
-          [data] = repSeqs
-          [(ngModel)] = selectedRep
-          [placeholder] = "'Select Datasets'"
-          (ngModelChange)="repSeqChange()"
-          >
-        </ng-multiselect-dropdown>
+        <label class="input-group-text" for="selectRepSeq">AIRR-seq locus</label>
+        <select class="form-select" id="selectRepSeq" [(ngModel)]="singleSelectedRep" (ngModelChange)="repSeqChange()">
+          @for (s of repSeqs; track s.text) {
+            <option [ngValue]="s">{{s.text}}</option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+  @if (showCommon()) {
+    <div class="col-auto my-1">
+      <div class="input-group">
+        <label class="input-group-text" for="selectCommon">Locus</label>
+        <select class="form-select" id="selectCommon" [(ngModel)]="singleSelectedCommon" (ngModelChange)="commonChange()">
+          @for (s of commonDatasets; track s.text) {
+            <option [ngValue]="s">{{s.text}}</option>
+          }
+        </select>
       </div>
     </div>
   }

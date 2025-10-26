@@ -50,9 +50,6 @@ import { FilterComponent } from '../../table/filter/filter.component';
 export class RepGeneTablePanelComponent
   implements AfterViewInit, OnInit, OnDestroy
 {
-  // TODO: Skipped for migration because:
-  //  Your application code writes to the input. This prevents migration.
-  @Input() selection: GeneTableSelection;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatTable) table: MatTable<string>;
   @ViewChild("searchBox", { static: true }) searchBox: ElementRef;
@@ -70,6 +67,7 @@ export class RepGeneTablePanelComponent
     "novel",
     "max_kdiff",
   ];
+  selection: GeneTableSelection;
   allColumns = columnInfo;
   lastLoadedColumns = [];
   paginatorSubscription = null;
@@ -237,6 +235,7 @@ export class RepGeneTablePanelComponent
               assemblies: this.selection.assemblies,
               repSeqs: [this.params.dataset],
               repDatasetDescriptions: this.selection.repDatasetDescriptions,
+              commonDatasets: this.selection.commonDatasets
             });
             setTimeout(() => {
               this.searchBox.nativeElement.value = this.params.alleleName;

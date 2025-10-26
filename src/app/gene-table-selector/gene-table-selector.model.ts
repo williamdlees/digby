@@ -5,4 +5,5 @@ export class GeneTableSelection {
   assemblies: string[];
   repSeqs: string[];
   repDatasetDescriptions: { dataset: string, description: string}[];
+  commonDatasets: string[];
 }

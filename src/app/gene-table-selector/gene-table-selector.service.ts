@@ -13,6 +13,7 @@ export class GeneTableSelectorService {
     assemblies: ['igh'],
     repSeqs: ['IGH'],
     repDatasetDescriptions: [{ dataset: 'IGH', description: ''}],
+    commonDatasets: []
   });
   source = this.selection.asObservable();
 

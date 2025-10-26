@@ -45,6 +45,8 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
   ascError: string | null = null;
   ascDisabled = true;
   selectedTabIndex = 0;
+  genomic_present: boolean = false;
+  airrseq_present: boolean = false
 
   private destroy$ = new Subject<void>();
   private geneTableSubscription: Subscription;
@@ -85,54 +87,25 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Map GeneTableSelection to SpeciesGeneSelection
-    const mappedSelection = this.mapGeneTableToSpeciesGene(geneSelection);
-
-    // Synchronize genomic and airr-seq loci (prefer airr-seq)
-    const synchronizedSelection = this.synchronizeLoci(mappedSelection, geneSelection);
-
     // Update selection
     const previousChain = this.selection.chain;
+    const previousSpecies = this.selection.species;
     this.selection = {
-      species: synchronizedSelection.species,
-      chain: synchronizedSelection.chain,
+      species: geneSelection.species,
+      chain: geneSelection.commonDatasets.length > 0 ? geneSelection.commonDatasets[0] : null,
       asc: undefined // Always clear ASC when species/chain changes
     };
 
     // Update ASC dropdown if species or chain changed
     if (this.selection.species && this.selection.chain &&
-        (this.selection.species !== synchronizedSelection.species || this.selection.chain !== previousChain)) {
+        (this.selection.species !== previousSpecies || this.selection.chain !== previousChain)) {
       this.ascLoadSubject.next({species: this.selection.species, chain: this.selection.chain});
     } else if (!this.selection.chain) {
       this.disableAscDropdown();
     }
   }
 
-  private mapGeneTableToSpeciesGene(geneSelection: GeneTableSelection): SpeciesGeneSelection {
-    return {
-      species: geneSelection.species,
-      chain: undefined, // Will be determined by synchronization logic
-      asc: this.selection.asc // Preserve current ASC unless cleared
-    };
-  }
-
-  private synchronizeLoci(baseSelection: SpeciesGeneSelection, geneSelection: GeneTableSelection): SpeciesGeneSelection {
-    let selectedChain: string | undefined = undefined;
-
-    // Prefer airr-seq chain, fallback to genomic chain
-    if (geneSelection.repSeqs && geneSelection.repSeqs.length > 0) {
-      selectedChain = geneSelection.repSeqs[0];
-    } else if (geneSelection.datasets && geneSelection.datasets.length > 0) {
-      selectedChain = geneSelection.datasets[0];
-    }
-
-    return {
-      ...baseSelection,
-      chain: selectedChain
-    };
-  }
-
-    private loadAscs(species: string, chain: string): void {
+  private loadAscs(species: string, chain: string): void {
     if (!species || !chain) {
       this.disableAscDropdown();
       return;
@@ -153,11 +126,18 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
         }),
         takeUntil(this.destroy$)
       )
-      .subscribe((ascs: string[]) => {
+      .subscribe((rec: { ascs: string[], genomic: boolean, airr_seq: boolean }) => {
         this.ascLoading = false;
-        this.availableAscs = ascs || [];
+        this.availableAscs = rec.ascs || [];
+        this.genomic_present = rec.genomic;
+        this.airrseq_present = rec.airr_seq;
         this.ascDisabled = this.availableAscs.length === 0;
         this.ascError = null;
+
+        if (this.availableAscs.length > 0) {
+          this.selection.asc = this.availableAscs[0];
+          this.onAscChange();
+        }
       });
   }
 

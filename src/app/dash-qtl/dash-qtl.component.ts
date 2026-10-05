@@ -442,6 +442,26 @@ export class DashQtlComponent implements OnInit, OnDestroy {
     this.loadAscs();
   }
 
+  /** The gene the panels were last told about, which is not always the one the
+   *  select shows: filtering to a single option binds the model without firing
+   *  a change, so the view says a gene is chosen while nothing has been sent. */
+  private committedAsc?: string;
+
+  /**
+   * Narrowing the filter to a single gene binds it to the select and displays
+   * it, but fires no change event, so the panels are never told and the page
+   * keeps asking for a gene that already looks chosen. Clicking the option
+   * cannot rescue it either: inside a closed dropdown the option never gets
+   * the click. So the commit happens here, when the filter settles on one.
+   */
+  onAscFilterChange(): void {
+    const matches = this.filteredAscs;
+    if (matches.length === 1 && this.committedAsc !== matches[0].asc) {
+      this.selection.asc = matches[0].asc;
+      this.onAscChange();
+    }
+  }
+
   /**
    * A different gene is a different scan, so the plotted variant goes with it.
    *
@@ -451,6 +471,7 @@ export class DashQtlComponent implements OnInit, OnDestroy {
    * never fires and the plot keeps showing the previous gene's scan.
    */
   onAscChange(): void {
+    this.committedAsc = this.selection.asc;
     this.selection = { ...this.selection };
     this.plot = undefined;
     this.pointAsc = undefined;

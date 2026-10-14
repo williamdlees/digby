@@ -11,6 +11,18 @@
         </li>
         @if (displayProtected) {
           <li ngbDropdown class="nav-item dropdown">
+            <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
+              Analysis
+            </a>
+            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
+              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_refbook" (click)="isMenuCollapsed = true">Allele Reference Dashboard</a>
+              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_qtl" (click)="isMenuCollapsed = true">Gene Usage QTL</a>
+              <a ngbDropdownItem [disabled]="demo" class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
+            </div>
+          </li>
+        }
+        @if (displayProtected) {
+          <li ngbDropdown class="nav-item dropdown">
             <a ngbDropdownToggle class="nav-link" id="navbarAIRRSeq" role="button">
               AIRR-Seq Data
             </a>
@@ -31,19 +43,6 @@
               <a ngbDropdownItem [disabled]="demo" class="dropdown-item" [routerLink]="['./genesample', 'null']" (click)="isMenuCollapsed = true">Samples</a>
               <a ngbDropdownItem [disabled]="demo" class="dropdown-item" routerLink="./genetable" (click)="isMenuCollapsed = true">Genes</a>
               <a ngbDropdownItem class="dropdown-item" [routerLink]="['./genebrowser', 'Human', 'IGH']" (click)="isMenuCollapsed = true" [disabled]="demo || !assemblies_present">Gene Browser</a>
-            </div>
-          </li>
-        }
-        @if (displayProtected) {
-          <li ngbDropdown class="nav-item dropdown">
-            <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
-              Analysis
-            </a>
-            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-              <a ngbDropdownItem [disabled]="demo" class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
-              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_refbook" (click)="isMenuCollapsed = true">Allele Reference Dashboard</a>
-              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_qtl" (click)="isMenuCollapsed = true">Gene Usage QTL</a>
-              <a ngbDropdownItem [disabled]="demo" class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Macaque Reference Book</a>
             </div>
           </li>
         }

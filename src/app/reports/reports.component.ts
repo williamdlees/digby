@@ -94,9 +94,11 @@ export class ReportsComponent implements OnInit, OnDestroy {
     const initialValues = {};
     params.keys.filter(k => k !== 'report' && k !== 'format').forEach(k => initialValues[k] = params.get(k));
 
-    combineLatest([this.reportsListDataSource.connect(), this.geneTableService.source.pipe(debounceTime(500))])
-      .pipe(filter(([reports]) => reports.length > 0), take(1))
-      .subscribe(([reports, sel]) => {
+    // the run service needs the report filters before it can open a dialog, so wait for them too
+    combineLatest([this.reportsListDataSource.connect(), this.reportsListDataSource.globalReportFilterParams$,
+                   this.geneTableService.source.pipe(debounceTime(500))])
+      .pipe(filter(([reports, filters]) => reports.length > 0 && !!filters), debounceTime(0), take(1))
+      .subscribe(([reports, , sel]) => {
         const report = reports.find(r => r.name === name);
         if (!report) {
           console.warn(`reports: no report named ${name} for the current selection`);

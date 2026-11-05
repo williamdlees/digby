@@ -61,11 +61,12 @@ export class ReportRunService {
     );
   }
 
-  runReport(report, format, species, genDataSets, genSampleFilters, repDataSets, repSampleFilters, reportParams) {
+  runReport(report, format, species, genDataSets, genSampleFilters, repDataSets, repSampleFilters, reportParams, initialValues = null) {
     if (!reportParams) {      // if the params aren't pre-cooked, check if this report requires them and, if so, display a dialog
       if (report.params.length > 0 || report.filter_params) {
         const modalRef = this.modalService.open(ReportParamsDialogComponent, {size: 'm'});
         modalRef.componentInstance.report = report;
+        modalRef.componentInstance.initialValues = initialValues;
 
         let filterParams = null;
 

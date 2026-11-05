@@ -3,6 +3,28 @@
     <div>
       <h1>See how antibody and T-cell receptor genes differ between people</h1>
       <p class="sub">Germline genotypes and haplotypes from AIRR-seq and genomic sequencing. Free under CC0.</p>
+      <div class="site-search" role="search" (keydown.escape)="clearSiteSearch()">
+        <span class="material-icons" aria-hidden="true">search</span>
+        <input type="search" [value]="siteQuery" (input)="searchSite($any($event.target).value)" autocomplete="off"
+               placeholder="Allele or gene name, or a pasted sequence" aria-label="Search VDJbase" aria-controls="site-results">
+        @if (siteQuery.trim().length >= 3) {
+          <div class="results" id="site-results" aria-live="polite">
+            @for (r of siteResults; track r.type + r.label) {
+              <a class="result" [routerLink]="r.route" [queryParams]="r.queryParams">
+                <span class="type">{{r.type}}</span><b>{{r.label}}</b><span class="detail">{{r.detail}}</span>
+              </a>
+            } @empty {
+              <p class="none">{{siteSearching ? 'Searching...' : 'No matches'}}</p>
+            }
+          </div>
+        }
+      </div>
+      <div class="tries">
+        <span>Try</span>
+        @for (ex of searchExamples; track ex) {
+          <button type="button" class="try" (click)="searchSite(ex)">{{ex}}</button>
+        }
+      </div>
       <div ngbDropdown class="download" autoClose="outside" (openChange)="openDownloads($event)">
         <button type="button" class="btn btn-primary" ngbDropdownToggle>Download curated data</button>
         <div ngbDropdownMenu class="download-menu" aria-label="Choose a dataset to download">

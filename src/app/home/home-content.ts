@@ -7,6 +7,9 @@ export interface LinkItem {
   href?: string;                          // external link
 }
 
+// shown under the search box; clicking one runs it
+export const SEARCH_EXAMPLES = ['IGHV1-69', 'IGHV1-69*02', 'IGKV', 'TRBV'];
+
 export const QUESTIONS: (LinkItem & { kind: string })[] = [
   { kind: 'Sequence', label: 'How do the IGHV1-69 alleles differ in CDR2?', route: '/dash_refbook',
     queryParams: { sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'alignment' } },

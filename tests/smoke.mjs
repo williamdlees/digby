@@ -14,6 +14,7 @@ const chrome = process.env.CHROME || 'google-chrome';
 const pages = [
   ['/', 'app-home', 'Start with a question'],
   ['/', 'app-home', 'Cite VDJbase'],
+  ['/', 'app-home', 'Download curated data'],
   ['/datarep', 'app-rep-explore-data', ''],
   ['/datagen', 'app-gen-explore-data', ''],
   ['/generep', 'app-rep-gene-table', ''],

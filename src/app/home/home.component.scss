@@ -21,6 +21,16 @@ a { color: var(--vdj-teal-dark); }
   h1 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); font-weight: 700; max-width: 20ch; }
   .sub { margin-top: 8px; color: var(--vdj-body); max-width: 52ch; font-size: 1.05rem; }
 }
+.download { margin-top: 18px; }
+.download-menu {
+  padding: 12px 14px;
+  min-width: 260px;
+  display: grid;
+  gap: 6px;
+  label, .label { font-size: .85rem; color: var(--vdj-muted); }
+  .loci { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .loci .btn { padding: 3px 10px; font-family: monospace; }
+}
 .questions {
   display: grid;
   gap: 8px;

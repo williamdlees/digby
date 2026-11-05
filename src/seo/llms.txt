@@ -1,0 +1,29 @@
+# VDJbase
+
+> VDJbase is a public database of immunoglobulin (antibody) and T cell receptor germline genes, genotypes and haplotypes, inferred from adaptive immune receptor repertoire sequencing (AIRR-seq) and from genomic sequencing of human and other species. Data and reports are published under CC0.
+
+VDJbase holds per-sample genotypes (TIgGER and OGRDB reports), haplotypes inferred with RAbHIT, allele usage across populations, and the annotated rearrangements behind them (served by MADC, https://madc.vdjbase.org).
+
+## Cite
+
+Lees WD, Peres A, Klein V, Amos N, Jana U, Engelbrecht E, Vanwinkle Z, Malach Y, Konstantinovsky T, Polak P, Watson CT, Yaari G. The current landscape of adaptive immune receptor genomic and repertoire data: OGRDB and VDJbase. Nucleic Acids Research 54(D1):D932-D937 (2025). https://doi.org/10.1093/nar/gkaf1094
+
+## API
+
+- [Published API (Swagger UI)](https://vdjbase.org/api/v1/): the stable, documented interface for programmatic access
+- [OpenAPI schema](https://vdjbase.org/static/vdjbase-api-openapi3.yaml): machine-readable definition of the published API
+- The internal API under /admin/api/ serves this web site only and may change without notice; please do not crawl it
+
+## Pages
+
+- [Home](https://vdjbase.org/)
+- [AIRR-seq data](https://vdjbase.org/datarep): datasets, studies, samples and per-study download scripts
+- [Genomic data](https://vdjbase.org/datagen): genomic samples and gene tables
+- [Reports](https://vdjbase.org/reports): allele usage, heatmaps and other analyses
+- [Reference book](https://vdjbase.org/dash_refbook) and [QTL browser](https://vdjbase.org/dash_qtl)
+- [User guide](https://vdjbase.org/user-guide) and [quick reference](https://vdjbase.org/quick-ref)
+- [Licensing](https://vdjbase.org/licensing)
+
+## Downloads
+
+- [Downloads](https://vdjbase.org/downloads): for each species, dataset and study, scripts that fetch the rearrangements (AIRR TSV, from MADC), the genotypes and the haplotypes with curl

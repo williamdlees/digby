@@ -154,6 +154,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       )
       .subscribe((resp) => {
       this.isFetching = false;
+      // the selection may have changed while species were loading (e.g. a preselection from the URL), so use the latest
+      selection = this.geneTableService.selection.value;
       let id = 1;
       this.species = [];
       for (const sp of resp) {

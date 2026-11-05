@@ -3,6 +3,24 @@
     <div>
       <h1>See how antibody and T-cell receptor genes differ between people</h1>
       <p class="sub">Germline genotypes and haplotypes from AIRR-seq and genomic sequencing. Free under CC0.</p>
+      <div ngbDropdown class="download" autoClose="outside" (openChange)="openDownloads($event)">
+        <button type="button" class="btn btn-primary" ngbDropdownToggle>Download curated data</button>
+        <div ngbDropdownMenu class="download-menu" aria-label="Choose a dataset to download">
+          <label for="dl-species">Species</label>
+          <select id="dl-species" class="form-select form-select-sm" (change)="selectDownloadSpecies($any($event.target).value)">
+            @for (sp of dlSpeciesList; track sp) {
+              <option [value]="sp" [selected]="sp === dlSpecies">{{sp}}</option>
+            }
+          </select>
+          <span class="label">Locus</span>
+          <div class="loci" role="group" aria-label="Locus">
+            @for (ds of dlDatasets; track ds) {
+              <button type="button" class="btn btn-outline-primary" [class.active]="ds === dlDataset" [attr.aria-pressed]="ds === dlDataset" (click)="dlDataset = ds">{{ds}}</button>
+            }
+          </div>
+          <a class="btn btn-primary" routerLink="/downloads" [queryParams]="{species: dlSpecies, dataset: dlDataset}" [class.disabled]="!dlDataset">Go to downloads</a>
+        </div>
+      </div>
     </div>
     <div class="questions" aria-labelledby="questions-heading">
       <h2 id="questions-heading">Start with a question</h2>

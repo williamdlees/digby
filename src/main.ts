@@ -30,6 +30,7 @@ import { GenSampleComponent } from './app/gen-sample/gen-sample.component';
 import { GenGeneTableComponent } from './app/gen-gene-table/gen-gene-table.component';
 import { GeneBrowserComponent } from './app/gene-browser/gene-browser.component';
 import { RefbookComponent } from './app/refbook/refbook.component';
+import { DownloadsComponent } from './app/downloads/downloads.component';
 import { DashRefbookComponent } from './app/dash-refbook/dash-refbook.component';
 import { DashQtlComponent } from './app/dash-qtl/dash-qtl.component';
 import { ReportsComponent } from './app/reports/reports.component';
@@ -73,6 +74,7 @@ const appRoutes: Routes = [
   // one route for every doc page; the slug is looked up in DOCS_PAGES and the
   // component lazy-loaded, so a new page needs no change here
   { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+  { path: 'downloads', component: DownloadsComponent, canActivate: [AuthGuard] },
   // Help menu
   { path: 'quick-ref', component: QuickRefComponent, canActivate: [AuthGuard] },
   { path: 'user-guide', component: UserGuideComponent, canActivate: [AuthGuard] },

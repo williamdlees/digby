@@ -23,6 +23,8 @@ const pages = [
   ['/user-guide', 'app-user-guide', ''],
   ['/quick-ref', 'app-quick-ref', ''],
   ['/licensing', 'app-licensing', 'CC0'],
+  ['/downloads?species=Human&dataset=IGH', 'app-downloads', 'download_study_genotypes/Human/'],
+  ['/datarep', 'app-study-table', 'download_study_genotypes/Human/'],
 ];
 
 // files that must be served as themselves, not as the app's index.html

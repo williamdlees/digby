@@ -1,139 +1,111 @@
-<div class="container-fluid">
-
-  <div class="text-center py-1 bg-primary shadow-none"
-       style="background-image: url(./assets/img/virions.png);
-       background-position: center;
-       background-size: 100%;
-       background-repeat: repeat;
-       height: 200px;">
-    <div class="container-fluid" style="padding-top: 1vw; padding-bottom: 5vw;">
-      <div class="row mt-1 mb-5 ms-1 me-1">
-        <div class="col-lg-2 col-md-3  col-sm-4  bg-light" style="border-radius: 2vw">
-          <img class="img-fluid mt-2" src="./assets/img/logo_white_2.png" alt="VDJbase Logo">
-          <p style="font-size: 0.75rem;">Immune Receptor Genotypes and Haplotypes</p>
-        </div>
+<div class="hero-band">
+  <section class="wrap hero" aria-label="Introduction">
+    <div>
+      <h1>See how antibody and T-cell receptor genes differ between people</h1>
+      <p class="sub">Germline genotypes and haplotypes from AIRR-seq and genomic sequencing. Free under CC0.</p>
+    </div>
+    <div class="questions" aria-labelledby="questions-heading">
+      <h2 id="questions-heading">Start with a question</h2>
+      <div class="q-grid">
+        @for (q of questions; track q.label) {
+          <a class="q" [routerLink]="q.route" [queryParams]="q.queryParams">
+            <span class="kind">{{q.kind}}</span>
+            <strong>{{q.label}}</strong>
+          </a>
+        }
       </div>
     </div>
-  </div>
+  </section>
+</div>
 
-  <div class="ps-1 pe-5 pt-5" style="background-color: #f5f5f5; color: #000000;">
-    <div class="container">
-      <div class="row">
-        <div class = "col-md-6">
-          <div class="row">
-            <div class="col-md-6">
-              <h1 class="mat-h1">Latest News (<a href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">more</a>)</h1>
-            </div>
-          </div>
+<section class="wrap cards" aria-label="Explore">
+  @for (card of entryCards; track card.title) {
+    <div class="entry-card">
+      <span class="icon material-icons {{card.source}}" aria-hidden="true">{{card.icon}}</span>
+      <h3>{{card.title}}</h3>
+      <p>{{card.text}}</p>
+      <a class="btn btn-primary btn-sm" [routerLink]="card.main.route">{{card.main.label}}</a>
+      <div class="links">
+        @for (link of card.links; track link.label) {
+          <a [routerLink]="link.route">{{link.label}}</a>
+        }
+      </div>
+    </div>
+  }
+</section>
 
+<div class="help-band">
+  <section class="wrap help" aria-label="News and documentation">
+    <div>
+      <h2>News &amp; documentation</h2>
+      <div class="feeds">
+        <div>
+          <h3>Latest news</h3>
           @if (loadingNews) {
-            <div  class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
+            <div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>
           }
-
           @if (errorNews) {
-            <div class="alert alert-danger">
-              <h4>Error loading news</h4>
-            </div>
+            <p class="text-danger">News could not be loaded.</p>
           }
-
-          <div>
-            @if (loadedNewsPosts.length < 1 && !loadingNews && !errorNews) {
-              <p>No posts available!</p>
-            }
-            @if (loadedNewsPosts.length >= 1 && !loadingNews) {
-              <div>
-                <ul class="list-unstyled">
-                  @for (post of loadedNewsPosts; track post) {
-                    <li>
-                      <a href="{{ post[1] }}">{{ post[0] }}</a>
-                    </li>
-                  }
-                </ul>
-              </div>
-            }
-          </div>
+          @if (!loadingNews && !errorNews && loadedNewsPosts.length < 1) {
+            <p class="muted">No posts available.</p>
+          }
+          @for (post of loadedNewsPosts; track post[1]) {
+            <a class="post" href="{{post[1]}}" [innerHTML]="post[0]"></a>
+          }
+          <a class="all" href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">All news</a>
         </div>
-
-        <div class = "col-md-6">
-          <div class="row">
-            <div class="col-md-6">
-              <h1 class="mat-h1">Help topics (<a href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">more</a>)</h1>
-            </div>
-          </div>
-
+        <div>
+          <h3>Help topics</h3>
           @if (loadingHelp) {
-            <div  class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
+            <div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>
           }
-
           @if (errorHelp) {
-            <div class="alert alert-danger">
-              <h4>Error loading help</h4>
-            </div>
+            <p class="text-danger">Help topics could not be loaded.</p>
           }
-
-          <div>
-            @if (loadedHelpPosts.length < 1 && !loadingHelp && !errorHelp) {
-              <p>No posts available!</p>
-            }
-            @if (loadedHelpPosts.length >= 1 && !loadingHelp) {
-              <div>
-                <ul class="list-unstyled">
-                  @for (post of loadedHelpPosts; track post) {
-                    <li>
-                      <a href="{{ post[1] }}">{{ post[0] }}</a>
-                    </li>
-                  }
-                </ul>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="mat-h1">About VDJbase</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <p>
-            <span class="mat-typography" style="font-weight: 500;">VDJbase</span> is a public database of immunoglobulin and T cell receptor genes, genotypes, and haplotypes.
-            Initially developed using <span class="mat-typography" style="font-weight: 500;">adaptive immune receptor repertoire sequencing (AIRR-seq)</span> based inferences,
-            the database now also incorporates growing amounts of information derived from long-read <span class="mat-typography" style="font-weight: 500;">genomic sequencing</span> data.
-          </p>
-          <p>
-            Comprehensive knowledge of immunoglobulin and T cell receptor genes across human populations and model organisms is critical for understanding immune function and variability.
-            In VDJbase we curate data from hundreds of individuals, enabling the discovery of previously unreported alleles and supporting population-level analysis of immune receptor variation.
-          </p>
-          <p>
-            The platform offers customizable reports to explore gene and allele usage patterns, based on both AIRR-seq and genomic sources.
-            All data and tools are freely available under an open-source license. Through VDJbase, you can:
-          </p>
-          <span class="mat-typography" style="font-weight: 500;">
-            <ul>
-              <li>Explore the <a href="/datarep">AIRR-seq</a> and <a href="/datagen">genomic</a> data available in VDJbase today</li>
-              <li>Browse AIRR-seq-derived <a href="/samplerep/null">datasets</a> and <a href="/generep">alleles</a></li>
-              <li>Browse genomically derived <a href="/genesample/null">datasets</a> and <a href="/genetable">alleles</a></li>
-              <li>View <a href="/genebrowser/Human/IGH">alignments</a> in an integrated genome browser</li>
-              <li>Generate <a href="/reports">interactive reports</a> on gene and allele usage</li>
-              <li>Access documentation on <a href="/assets/doc/report_documentation.pdf">reports</a> and a <a href="/user-guide">user guide</a></li>
-            </ul>
-          </span>
-
-          <p>All features are available via the top menu.</p>
-
-          <p>If you use VDJbase in your work, please <a href="https://doi.org/10.1093/nar/gkaf1094">cite our paper.</a></p>
-
-          <p>
-            VDJbase is developed and maintained by the <a href="https://medicine.yale.edu/profile/gur-yaari/">Yaari Lab</a> at Yale University in collaboration with William Lees.
-            For more information, please contact <a href="mailto:gur.yaari@yale.edu">Gur Yaari</a> or
-            <a href="mailto:william@lees.org.uk">William Lees</a>.
-          </p>
+          @if (!loadingHelp && !errorHelp && loadedHelpPosts.length < 1) {
+            <p class="muted">No posts available.</p>
+          }
+          @for (post of loadedHelpPosts; track post[1]) {
+            <a class="post" href="{{post[1]}}" [innerHTML]="post[0]"></a>
+          }
+          <a class="all" href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">All help topics</a>
+          <a class="all" routerLink="/user-guide">User guide</a>
         </div>
       </div>
     </div>
+
+    <div class="side">
+      <aside class="box" aria-labelledby="cite-heading">
+        <h3 id="cite-heading">Cite VDJbase</h3>
+        <div class="cite">
+          {{citation.title}}
+          <i>{{citation.authors}} {{citation.journal}}</i>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary btn-sm" [href]="citation.doi">Read the article</a>
+          <button type="button" class="btn btn-outline-primary btn-sm" (click)="copyCitation()">Copy citation</button>
+          <span class="muted" aria-live="polite">{{copied}}</span>
+        </div>
+      </aside>
+
+      <aside class="box" aria-labelledby="contribute-heading">
+        <h3 id="contribute-heading">Contribute data</h3>
+        <ul class="contribute">
+          @for (item of contribute; track item.label) {
+            <li>
+              <span class="icon material-icons" aria-hidden="true">{{item.icon}}</span>
+              <div><a [href]="item.href">{{item.label}}</a><p>{{item.text}}</p></div>
+            </li>
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<footer class="wrap">
+  VDJbase is developed and maintained by the <a href="https://medicine.yale.edu/profile/gur-yaari/">Yaari Lab</a> at Yale University
+  in collaboration with William Lees. Contact <a href="mailto:gur.yaari@yale.edu">Gur Yaari</a> or
+  <a href="mailto:william@lees.org.uk">William Lees</a>. <a routerLink="/licensing">Licensing</a>.
+</footer>

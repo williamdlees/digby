@@ -5,13 +5,15 @@ import {AuthService} from "../auth/auth.service";
 import {SysConfig} from "../auth/sysconfig.model";
 
 import { RouterLink } from '@angular/router';
+import { QUESTIONS, ENTRY_CARDS, CITATION, CONTRIBUTE } from './home-content';
 
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
-    standalone: true
+    standalone: true,
+    imports: [RouterLink]
 })
 export class HomeComponent implements OnInit {
   loadedNewsPosts = [];
@@ -21,6 +23,11 @@ export class HomeComponent implements OnInit {
   loadingHelp = false;
   errorHelp = null;
   wpConfig = new SysConfig(true, '', '', '');
+  questions = QUESTIONS;
+  entryCards = ENTRY_CARDS;
+  citation = CITATION;
+  contribute = CONTRIBUTE;
+  copied = '';
 
   constructor( private wordpressService: WordpressService,
                private authService: AuthService ) {  }
@@ -51,6 +58,12 @@ export class HomeComponent implements OnInit {
         this.loadingHelp = false;
       }
     );
+  }
+
+  copyCitation() {
+    const c = this.citation;
+    navigator.clipboard.writeText(`${c.authors} ${c.title} ${c.journal} ${c.doi}`)
+      .then(() => this.copied = 'Copied', () => this.copied = 'Copy failed');
   }
 
   ngOnInit() {

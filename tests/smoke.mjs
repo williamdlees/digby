@@ -16,6 +16,7 @@ const pages = [
   ['/', 'app-home', 'Cite VDJbase'],
   ['/', 'app-home', 'Download curated data'],
   ['/', 'app-home', 'post-card'],
+  ['/', 'app-home', 'Search VDJbase'],
   ['/datarep', 'app-rep-explore-data', ''],
   ['/datagen', 'app-gen-explore-data', ''],
   ['/generep', 'app-rep-gene-table', ''],

@@ -1,7 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Post, WordpressService} from "./wordpress.service";
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
+import { SearchResult, SiteSearchService } from './site-search.service';
+import { GeneTableSelectorService } from '../gene-table-selector/gene-table-selector.service';
 import { DatePipe } from '@angular/common';
 import {AuthService} from "../auth/auth.service";
 import {SysConfig} from "../auth/sysconfig.model";
@@ -9,7 +11,7 @@ import {SysConfig} from "../auth/sysconfig.model";
 import { RouterLink } from '@angular/router';
 import { NgbDropdown, NgbDropdownToggle, NgbDropdownMenu } from '@ng-bootstrap/ng-bootstrap';
 import { RepseqService } from 'projects/digby-swagger-client';
-import { QUESTIONS, ENTRY_CARDS, CITATION, CONTRIBUTE } from './home-content';
+import { QUESTIONS, ENTRY_CARDS, CITATION, CONTRIBUTE, SEARCH_EXAMPLES } from './home-content';
 
 
 @Component({
@@ -33,6 +35,11 @@ export class HomeComponent implements OnInit {
   errorPosts = null;
   wpConfig = new SysConfig(true, '', '', '');
   questions = QUESTIONS;
+  searchExamples = SEARCH_EXAMPLES;
+  siteQuery = '';
+  private siteQuery$ = new Subject<string>();
+  siteResults: SearchResult[] = [];
+  siteSearching = false;
   entryCards = ENTRY_CARDS;
   citation = CITATION;
   contribute = CONTRIBUTE;
@@ -44,7 +51,18 @@ export class HomeComponent implements OnInit {
 
   constructor( private wordpressService: WordpressService,
                private authService: AuthService,
-               private repseqService: RepseqService ) {  }
+               private repseqService: RepseqService,
+               private siteSearch: SiteSearchService,
+               private geneTableService: GeneTableSelectorService ) {  }
+
+  searchSite(text: string) {
+    this.siteQuery = text;
+    this.siteQuery$.next(text.trim());
+  }
+
+  clearSiteSearch() {
+    this.searchSite('');
+  }
 
   // download picker: species and locus lists load the first time it opens
   openDownloads(open: boolean) {
@@ -136,6 +154,16 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.siteQuery$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => this.siteSearching = true),
+      switchMap(text => this.siteSearch.search(text, this.geneTableService.selection.value.species || 'Human')),
+    ).subscribe(results => {
+      this.siteResults = results;
+      this.siteSearching = false;
+    });
+
       this.wordpressService.sysConfig.subscribe(
         sysConfig => {
           if (sysConfig.wp_rest != '') {

@@ -57,7 +57,7 @@
                 <div>
                   <div class="form-group">
                     <label for="{{form_elem.id}}">{{ form_elem.label }}</label>
-                    <select  id="{{form_elem.id}}" class="form-select" formControlName="{{form_elem.id}}" [value]="form_elem.options[0]">
+                    <select  id="{{form_elem.id}}" class="form-select" formControlName="{{form_elem.id}}">
                       @for (opt of form_elem.options; track opt) {
                         <option>
                           {{opt}}

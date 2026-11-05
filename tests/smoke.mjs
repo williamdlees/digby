@@ -12,7 +12,8 @@ const chrome = process.env.CHROME || 'google-chrome';
 
 // route, component selector that must render with content, text the page must show
 const pages = [
-  ['/', 'app-home', 'About VDJbase'],
+  ['/', 'app-home', 'Start with a question'],
+  ['/', 'app-home', 'Cite VDJbase'],
   ['/datarep', 'app-rep-explore-data', ''],
   ['/datagen', 'app-gen-explore-data', ''],
   ['/generep', 'app-rep-gene-table', ''],

@@ -18,11 +18,11 @@ export const QUESTIONS: (LinkItem & { kind: string })[] = [
 ];
 
 export const ENTRY_CARDS: { title: string, text: string, icon: string, source: 'airrseq' | 'genomic' | 'brand', main: LinkItem, links: LinkItem[] }[] = [
-  { title: 'AIRR-Seq Data', icon: 'biotech', source: 'airrseq',
+  { title: 'AIRR-Seq Data', icon: 'insert_chart', source: 'airrseq',
     text: 'Genotypes and haplotypes inferred from repertoires, with downloadable annotations.',
     main: { label: 'Explore AIRR-Seq Data', route: '/datarep' },
     links: [{ label: 'Samples', route: '/samplerep/null' }, { label: 'Germline genes', route: '/generep' }, { label: 'Downloads', route: '/downloads' }] },
-  { title: 'Genomic Data', icon: 'science', source: 'genomic',
+  { title: 'Genomic Data', icon: 'fingerprint', source: 'genomic',
     text: 'Alleles from long-read sequencing of the germline loci.',
     main: { label: 'Explore Genomic Data', route: '/datagen' },
     links: [{ label: 'Samples', route: '/genesample/null' }, { label: 'Genes', route: '/genetable' }, { label: 'Gene browser', route: '/genebrowser/Human/IGH' }] },
@@ -41,10 +41,10 @@ export const CITATION = {
 
 // D6: contribute links go to the collaboration post for now
 export const CONTRIBUTE: (LinkItem & { text: string, icon: string })[] = [
-  { label: 'Submit AIRR-seq projects', icon: 'upload_file', text: 'Share repertoire studies for genotype and haplotype inference.',
+  { label: 'Submit AIRR-seq projects', icon: 'cloud_upload', text: 'Share repertoire studies for genotype and haplotype inference.',
     href: 'https://wordpress.vdjbase.org/index.php/vdjbase_news/collaboration-opportunities/' },
-  { label: 'Submit genomic data', icon: 'upload_file', text: 'Add annotated loci from long-read sequencing.',
+  { label: 'Submit genomic data', icon: 'cloud_upload', text: 'Add annotated loci from long-read sequencing.',
     href: 'https://wordpress.vdjbase.org/index.php/vdjbase_news/collaboration-opportunities/' },
-  { label: 'Submit novel alleles to OGRDB', icon: 'fact_check', text: 'Germline sequences go through OGRDB review.',
+  { label: 'Submit novel alleles to OGRDB', icon: 'verified_user', text: 'Germline sequences go through OGRDB review.',
     href: 'https://ogrdb.airr-community.org/' },
 ];

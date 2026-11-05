@@ -24,7 +24,7 @@
       <span class="icon material-icons {{card.source}}" aria-hidden="true">{{card.icon}}</span>
       <h3>{{card.title}}</h3>
       <p>{{card.text}}</p>
-      <a class="btn btn-primary btn-sm" [routerLink]="card.main.route">{{card.main.label}}</a>
+      <a class="btn btn-primary" [routerLink]="card.main.route">{{card.main.label}}</a>
       <div class="links">
         @for (link of card.links; track link.label) {
           <a [routerLink]="link.route">{{link.label}}</a>
@@ -83,8 +83,8 @@
           <i>{{citation.authors}} {{citation.journal}}</i>
         </div>
         <div class="actions">
-          <a class="btn btn-primary btn-sm" [href]="citation.doi">Read the article</a>
-          <button type="button" class="btn btn-outline-primary btn-sm" (click)="copyCitation()">Copy citation</button>
+          <a class="btn btn-primary" [href]="citation.doi">Read the article</a>
+          <button type="button" class="btn btn-outline-primary" (click)="copyCitation()">Copy citation</button>
           <span class="muted" aria-live="polite">{{copied}}</span>
         </div>
       </aside>

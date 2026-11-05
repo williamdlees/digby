@@ -29,7 +29,6 @@ import { GenExploreDataComponent } from './app/gen-explore-data/gen-explore-data
 import { GenSampleComponent } from './app/gen-sample/gen-sample.component';
 import { GenGeneTableComponent } from './app/gen-gene-table/gen-gene-table.component';
 import { GeneBrowserComponent } from './app/gene-browser/gene-browser.component';
-import { RefbookComponent } from './app/refbook/refbook.component';
 import { DashRefbookComponent } from './app/dash-refbook/dash-refbook.component';
 import { DashQtlComponent } from './app/dash-qtl/dash-qtl.component';
 import { ReportsComponent } from './app/reports/reports.component';
@@ -66,8 +65,9 @@ const appRoutes: Routes = [
   { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent, canActivate: [AuthGuard] },
   { path: 'genetable', component: GenGeneTableComponent, canActivate: [AuthGuard] },
   { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
-  // Analysis menu
-  { path: 'reference_book/:species', component: RefbookComponent, canActivate: [AuthGuard] },
+  // dashboards and reports
+  // kept because a paper cites it; the page is no longer in the menu (D5)
+  { path: 'reference_book/:species', redirectTo: '' },
   { path: 'dash_refbook', component: DashRefbookComponent, canActivate: [AuthGuard] },
   { path: 'dash_qtl', component: DashQtlComponent, canActivate: [AuthGuard] },
   // one route for every doc page; the slug is looked up in DOCS_PAGES and the

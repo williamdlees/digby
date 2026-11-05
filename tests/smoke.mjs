@@ -25,6 +25,9 @@ const pages = [
   ['/licensing', 'app-licensing', 'CC0'],
 ];
 
+// top-level menu links (F2)
+const menuLinks = ['/dash_refbook', '/dash_qtl', '/reports', '/downloads'];
+
 // files that must be served as themselves, not as the app's index.html
 const rootFiles = ['/robots.txt', '/sitemap.xml', '/llms.txt'];
 
@@ -50,6 +53,11 @@ try {
     check(m && /<[a-z]/i.test(m[1]), `${route} renders <${selector}>`);
     check(dom.includes('<app-header'), `${route} shows the menu`);
     if (text) check(dom.includes(text), `${route} shows "${text}"`);
+    if (route === '/') {
+      const menu = (dom.match(/<app-header[\s\S]*?<\/app-header>/) || [''])[0];
+      for (const link of menuLinks) check(menu.includes(`href="${link}"`), `menu links to ${link}`);
+      check(!/>\s*Analysis\s*</.test(menu), 'menu has no Analysis dropdown');
+    }
     for (const e of consoleErrors) console.log(`     console: ${e.trim().slice(0, 200)}`);
   }
 

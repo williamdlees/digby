@@ -10,6 +10,14 @@
           <img class="navbar-brand" src="./assets/img/logo_white_2.png" alt="VDJlogo" height="40" style="padding: 0"></a>
         </li>
         @if (displayProtected) {
+          <li ngbNavItem class="nav-item" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            <a class="nav-link" ngbNavLink routerLink="/dash_refbook">Allele Reference</a>
+          </li>
+          <li ngbNavItem class="nav-item" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            <a class="nav-link" ngbNavLink routerLink="/dash_qtl">Gene Usage QTL</a>
+          </li>
+        }
+        @if (displayProtected) {
           <li ngbDropdown class="nav-item dropdown">
             <a ngbDropdownToggle class="nav-link" id="navbarAIRRSeq" role="button">
               AIRR-Seq Data
@@ -35,16 +43,11 @@
           </li>
         }
         @if (displayProtected) {
-          <li ngbDropdown class="nav-item dropdown">
-            <a ngbDropdownToggle class="nav-link" id="navbarGenomic" role="button">
-              Analysis
-            </a>
-            <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarHelpAbout">
-              <a ngbDropdownItem class="dropdown-item" routerLink="/reports" (click)="isMenuCollapsed = true">Reports</a>
-              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_refbook" (click)="isMenuCollapsed = true">Allele Reference Dashboard</a>
-              <a ngbDropdownItem class="dropdown-item" routerLink="/dash_qtl" (click)="isMenuCollapsed = true">Gene Usage QTL</a>
-              <a ngbDropdownItem class="dropdown-item" [routerLink]="['./reference_book', 'null']" (click)="isMenuCollapsed = true">Macaque Reference Book</a>
-            </div>
+          <li ngbNavItem class="nav-item" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            <a class="nav-link" ngbNavLink routerLink="/reports">Reports</a>
+          </li>
+          <li ngbNavItem class="nav-item" routerLinkActive="active" (click)="isMenuCollapsed = true">
+            <a class="nav-link" ngbNavLink routerLink="/downloads">Downloads</a>
           </li>
         }
         @if (displayProtected) {

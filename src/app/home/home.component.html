@@ -56,40 +56,42 @@
   <section class="wrap help" aria-label="News and documentation">
     <div>
       <h2>News &amp; documentation</h2>
-      <div class="feeds">
-        <div>
-          <h3>Latest news</h3>
-          @if (loadingNews) {
-            <div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>
+      <div class="post-tools">
+        <input type="search" class="form-control" placeholder="Search news and help" aria-label="Search news and help"
+               (input)="searchPosts($any($event.target).value)">
+        <div class="chips" role="group" aria-label="Filter by topic">
+          @for (t of topics; track t.categories) {
+            <button type="button" class="chip" [class.on]="t.categories === topic" [attr.aria-pressed]="t.categories === topic"
+                    (click)="selectTopic(t.categories)">{{t.label}}</button>
           }
-          @if (errorNews) {
-            <p class="text-danger">News could not be loaded.</p>
-          }
-          @if (!loadingNews && !errorNews && loadedNewsPosts.length < 1) {
-            <p class="muted">No posts available.</p>
-          }
-          @for (post of loadedNewsPosts; track post[1]) {
-            <a class="post" href="{{post[1]}}" [innerHTML]="post[0]"></a>
-          }
-          <a class="all" href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">All news</a>
         </div>
-        <div>
-          <h3>Help topics</h3>
-          @if (loadingHelp) {
-            <div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>
+      </div>
+
+      @if (errorPosts) {
+        <p class="text-danger">News and help could not be loaded.</p>
+      }
+      <div class="posts" [class.loading]="loadingPosts" aria-live="polite">
+        @for (post of posts; track post.link) {
+          <article class="post-card">
+            <a [href]="post.link" [innerHTML]="post.title"></a>
+            <p>{{post.excerpt}}</p>
+            <div class="meta"><time [attr.datetime]="post.date">{{post.date | date:'d MMM y'}}</time><span class="tag">{{postTopic(post)}}</span></div>
+          </article>
+        } @empty {
+          @if (!loadingPosts && !errorPosts) {
+            <p class="muted">No posts match.</p>
           }
-          @if (errorHelp) {
-            <p class="text-danger">Help topics could not be loaded.</p>
-          }
-          @if (!loadingHelp && !errorHelp && loadedHelpPosts.length < 1) {
-            <p class="muted">No posts available.</p>
-          }
-          @for (post of loadedHelpPosts; track post[1]) {
-            <a class="post" href="{{post[1]}}" [innerHTML]="post[0]"></a>
-          }
-          <a class="all" href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">All help topics</a>
-          <a class="all" routerLink="/user-guide">User guide</a>
-        </div>
+        }
+      </div>
+      <div class="pager">
+        <button type="button" class="btn btn-outline-primary" [disabled]="page <= 1 || loadingPosts" (click)="goToPage(page - 1)" aria-label="Previous page">&lsaquo;</button>
+        <span>Page {{page}} of {{totalPages}}</span>
+        <button type="button" class="btn btn-outline-primary" [disabled]="page >= totalPages || loadingPosts" (click)="goToPage(page + 1)" aria-label="Next page">&rsaquo;</button>
+        <span class="more">
+          <a href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">All news</a> &middot;
+          <a href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">All help topics</a> &middot;
+          <a routerLink="/user-guide">User guide</a>
+        </span>
       </div>
     </div>
 

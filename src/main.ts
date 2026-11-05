@@ -55,30 +55,30 @@ const params: ConfigurationParameters = {
     basePath: environment.apiBasePath,
   };
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: '', title: 'VDJbase', component: HomeComponent, canActivate: [AuthGuard] },
   // AIRR-seq menu
-  { path: 'datarep', component: RepExploreDataComponent, canActivate: [AuthGuard] },
-  { path: 'samplerep/:onlySelectedSamples', component: RepSampleComponent, canActivate: [AuthGuard] },
-  { path: 'generep', component: RepGeneTableComponent, canActivate: [AuthGuard] },
-  { path: 'generep/:species/:dataset/:alleleName', component: RepGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'datarep', title: 'AIRR-seq data | VDJbase', component: RepExploreDataComponent, canActivate: [AuthGuard] },
+  { path: 'samplerep/:onlySelectedSamples', title: 'AIRR-seq samples | VDJbase', component: RepSampleComponent, canActivate: [AuthGuard] },
+  { path: 'generep', title: 'AIRR-seq alleles | VDJbase', component: RepGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'generep/:species/:dataset/:alleleName', title: 'AIRR-seq alleles | VDJbase', component: RepGeneTableComponent, canActivate: [AuthGuard] },
   // Genomics menu
-  { path: 'datagen', component: GenExploreDataComponent, canActivate: [AuthGuard] },
-  { path: 'genesample/:onlySelectedSamples', component: GenSampleComponent, canActivate: [AuthGuard] },
-  { path: 'genetable', component: GenGeneTableComponent, canActivate: [AuthGuard] },
-  { path: 'genebrowser/:speciesName/:refName', component: GeneBrowserComponent, canActivate: [AuthGuard] },
+  { path: 'datagen', title: 'Genomic data | VDJbase', component: GenExploreDataComponent, canActivate: [AuthGuard] },
+  { path: 'genesample/:onlySelectedSamples', title: 'Genomic samples | VDJbase', component: GenSampleComponent, canActivate: [AuthGuard] },
+  { path: 'genetable', title: 'Genomic alleles | VDJbase', component: GenGeneTableComponent, canActivate: [AuthGuard] },
+  { path: 'genebrowser/:speciesName/:refName', title: 'Gene browser | VDJbase', component: GeneBrowserComponent, canActivate: [AuthGuard] },
   // Analysis menu
-  { path: 'reference_book/:species', component: RefbookComponent, canActivate: [AuthGuard] },
-  { path: 'dash_refbook', component: DashRefbookComponent, canActivate: [AuthGuard] },
-  { path: 'dash_qtl', component: DashQtlComponent, canActivate: [AuthGuard] },
+  { path: 'reference_book/:species', title: 'Reference book | VDJbase', component: RefbookComponent, canActivate: [AuthGuard] },
+  { path: 'dash_refbook', title: 'Allele Reference | VDJbase', component: DashRefbookComponent, canActivate: [AuthGuard] },
+  { path: 'dash_qtl', title: 'Gene Usage QTL | VDJbase', component: DashQtlComponent, canActivate: [AuthGuard] },
   // one route for every doc page; the slug is looked up in DOCS_PAGES and the
   // component lazy-loaded, so a new page needs no change here
-  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
+  { path: 'reports', title: 'Reports | VDJbase', component: ReportsComponent, canActivate: [AuthGuard] },
   // Help menu
-  { path: 'quick-ref', component: QuickRefComponent, canActivate: [AuthGuard] },
-  { path: 'user-guide', component: UserGuideComponent, canActivate: [AuthGuard] },
-  { path: 'licensing', component: LicensingComponent, canActivate: [AuthGuard] },
-  { path: 'auth', component: AuthComponent },
-  { path: '**', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'quick-ref', title: 'Quick reference | VDJbase', component: QuickRefComponent, canActivate: [AuthGuard] },
+  { path: 'user-guide', title: 'User guide | VDJbase', component: UserGuideComponent, canActivate: [AuthGuard] },
+  { path: 'licensing', title: 'Licensing | VDJbase', component: LicensingComponent, canActivate: [AuthGuard] },
+  { path: 'auth', title: 'Sign in | VDJbase', component: AuthComponent },
+  { path: '**', title: 'VDJbase', component: HomeComponent, canActivate: [AuthGuard] },
 ];
 
 

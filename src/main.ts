@@ -29,6 +29,7 @@ import { GenExploreDataComponent } from './app/gen-explore-data/gen-explore-data
 import { GenSampleComponent } from './app/gen-sample/gen-sample.component';
 import { GenGeneTableComponent } from './app/gen-gene-table/gen-gene-table.component';
 import { GeneBrowserComponent } from './app/gene-browser/gene-browser.component';
+import { DownloadsComponent } from './app/downloads/downloads.component';
 import { DashRefbookComponent } from './app/dash-refbook/dash-refbook.component';
 import { DashQtlComponent } from './app/dash-qtl/dash-qtl.component';
 import { ReportsComponent } from './app/reports/reports.component';
@@ -73,6 +74,7 @@ const appRoutes: Routes = [
   // one route for every doc page; the slug is looked up in DOCS_PAGES and the
   // component lazy-loaded, so a new page needs no change here
   { path: 'reports', title: 'Reports | VDJbase', component: ReportsComponent, canActivate: [AuthGuard] },
+  { path: 'downloads', title: 'Downloads | VDJbase', component: DownloadsComponent, canActivate: [AuthGuard] },
   // Help menu
   { path: 'quick-ref', title: 'Quick reference | VDJbase', component: QuickRefComponent, canActivate: [AuthGuard] },
   { path: 'user-guide', title: 'User guide | VDJbase', component: UserGuideComponent, canActivate: [AuthGuard] },

@@ -68,8 +68,8 @@ const appRoutes: Routes = [
   { path: 'genebrowser/:speciesName/:refName', title: 'Gene browser | VDJbase', component: GeneBrowserComponent, canActivate: [AuthGuard] },
   // Analysis menu
   { path: 'reference_book/:species', title: 'Reference book | VDJbase', component: RefbookComponent, canActivate: [AuthGuard] },
-  { path: 'dash_refbook', title: 'Reference book | VDJbase', component: DashRefbookComponent, canActivate: [AuthGuard] },
-  { path: 'dash_qtl', title: 'QTL browser | VDJbase', component: DashQtlComponent, canActivate: [AuthGuard] },
+  { path: 'dash_refbook', title: 'Allele Reference | VDJbase', component: DashRefbookComponent, canActivate: [AuthGuard] },
+  { path: 'dash_qtl', title: 'Gene Usage QTL | VDJbase', component: DashQtlComponent, canActivate: [AuthGuard] },
   // one route for every doc page; the slug is looked up in DOCS_PAGES and the
   // component lazy-loaded, so a new page needs no change here
   { path: 'reports', title: 'Reports | VDJbase', component: ReportsComponent, canActivate: [AuthGuard] },

@@ -25,8 +25,8 @@ a:not(.btn) { color: var(--vdj-teal-dark); }
 .download-menu {
   padding: 12px 14px;
   min-width: 260px;
-  display: grid;
   gap: 6px;
+  &.show { display: grid; }   // Bootstrap hides the menu until it opens; display only when open
   label, .label { font-size: .85rem; color: var(--vdj-muted); }
   .loci { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
   .loci .btn { padding: 3px 10px; font-family: monospace; }

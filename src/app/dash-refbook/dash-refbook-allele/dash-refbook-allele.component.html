@@ -9,7 +9,10 @@
         @if (isNovel) { <span class="tag novel">novel</span> }
       </p>
     </div>
-    <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
+    <div class="allele-actions">
+      <button type="button" class="link-button" (click)="showSequence()">Sequence</button>
+      <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
+    </div>
   </div>
 
   <app-scope-note [selection]="selection"></app-scope-note>

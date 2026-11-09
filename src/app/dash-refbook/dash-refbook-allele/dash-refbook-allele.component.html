@@ -3,16 +3,16 @@
 } @else {
   <div class="allele-head">
     <div>
-      <h3 class="allele-name">{{ allele }}</h3>
+      <div class="allele-title">
+        <h3 class="allele-name">{{ allele }}</h3>
+        <button type="button" class="btn btn-primary seq-button" (click)="showSequence()">View sequence</button>
+      </div>
       <p class="allele-sub">
         allele of <strong>{{ gene }}</strong> in {{ selection.species }}
         @if (isNovel) { <span class="tag novel">novel</span> }
       </p>
     </div>
-    <div class="allele-actions">
-      <button type="button" class="link-button" (click)="showSequence()">Sequence</button>
-      <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
-    </div>
+    <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
   </div>
 
   <app-scope-note [selection]="selection"></app-scope-note>

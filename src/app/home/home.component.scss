@@ -117,8 +117,8 @@ a:not(.btn) { color: var(--vdj-teal-dark); }
   padding: 18px 16px;
   display: grid;
   gap: 8px;
+  grid-template-rows: auto auto 1fr auto auto;   // text row takes the slack so buttons line up across cards
   justify-items: center;
-  align-content: start;
   text-align: center;
   h3 { font-size: 1.12rem; }
   p { font-size: .88rem; color: var(--vdj-muted); }

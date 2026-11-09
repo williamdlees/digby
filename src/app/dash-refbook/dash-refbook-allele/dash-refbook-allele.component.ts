@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { EMPTY, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlotlyModule } from 'angular-plotly.js';
 import * as UpSetJS from '@upsetjs/bundle';
 
@@ -16,6 +17,7 @@ import {
 import { DashDrillService } from '../dash-drill.service';
 import { ScopeNoteComponent } from '../scope-note/scope-note.component';
 import { PlotExportComponent } from '../../shared/plot-export/plot-export.component';
+import { SeqModalComponent } from '../../seq-modal/seq-modal.component';
 
 interface Partner {
   name: string;
@@ -115,7 +117,7 @@ export class DashRefbookAlleleComponent
   private renderHandle?: ReturnType<typeof setTimeout>;
 
   constructor(private refbookService: RefbookService, private drill: DashDrillService,
-              private host: ElementRef<HTMLElement>) {}
+              private host: ElementRef<HTMLElement>, private modalService: NgbModal) {}
 
   ngOnInit() { this.fetch(); }
 
@@ -138,6 +140,23 @@ export class DashRefbookAlleleComponent
   ngOnDestroy() {
     this.resizeObs?.disconnect();
     clearTimeout(this.renderHandle);
+  }
+
+  /** The allele's sequence in the same dialog the sequence tables use. */
+  showSequence() {
+    const { species, chain } = this.selection;
+    const name = this.allele;
+    this.refbookService.getAscSeqs(species, chain, this.gene).subscribe({
+      next: (resp: { alleles?: { name: string; seq: string; seq_gapped: string }[] }) => {
+        const rec = resp.alleles?.find(a => a.name === name);
+        const modalRef = this.modalService.open(SeqModalComponent, { size: 'lg' });
+        modalRef.componentInstance.name = name;
+        modalRef.componentInstance.content = rec
+          ? { ungapped: rec.seq, gapped: rec.seq_gapped.includes('.') ? rec.seq_gapped : '' }
+          : { ungapped: '', gapped: '' };
+      },
+      error: () => this.error = 'Could not load the sequence',
+    });
   }
 
   /** Step back up to the gene, keeping everything else in place. */

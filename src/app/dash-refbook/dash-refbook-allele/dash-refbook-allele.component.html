@@ -3,10 +3,7 @@
 } @else {
   <div class="allele-head">
     <div>
-      <div class="allele-title">
-        <h3 class="allele-name">{{ allele }}</h3>
-        <button type="button" class="btn btn-primary seq-button" (click)="showSequence()">View sequence</button>
-      </div>
+      <h3 class="allele-name">{{ allele }}</h3>
       <p class="allele-sub">
         allele of <strong>{{ gene }}</strong> in {{ selection.species }}
         @if (isNovel) { <span class="tag novel">novel</span> }
@@ -23,6 +20,28 @@
     <p class="allele-status">Loading…</p>
   } @else {
     <div class="allele-cards">
+
+      <section class="card wide">
+        <div class="seq-head">
+          <h4>Sequence</h4>
+          <div class="seq-views" role="group" aria-label="Sequence view">
+            @for (v of seqViews; track v.id) {
+              <button type="button" class="btn btn-outline-primary" [class.active]="seqView === v.id"
+                      [attr.aria-pressed]="seqView === v.id" (click)="seqView = v.id">{{ v.label }}</button>
+            }
+          </div>
+          <button type="button" class="btn btn-primary" [disabled]="!seqText()" (click)="copySequence()">Copy</button>
+          <span class="note" aria-live="polite">{{ copied }}</span>
+        </div>
+        @if (seqView === 'alignment') {
+          <p class="note">Against the gene's reference allele. Dashes match, lower case marks a substitution.</p>
+        }
+        @if (seqText()) {
+          <pre class="allele-alignment">{{ seqText() }}</pre>
+        } @else {
+          <p class="note">No sequence available.</p>
+        }
+      </section>
 
       <section class="card">
         <h4>Where it was seen</h4>
@@ -129,15 +148,6 @@
         }
       </section>
 
-      <section class="card wide">
-        <h4>Sequence</h4>
-        <p class="note">Against the gene's reference allele. Dashes match, lower case marks a substitution.</p>
-        @if (alignment) {
-          <pre class="allele-alignment">{{ alignment }}</pre>
-        } @else {
-          <p class="note">No sequence available.</p>
-        }
-      </section>
     </div>
   }
 }

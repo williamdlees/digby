@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { EMPTY, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PlotlyModule } from 'angular-plotly.js';
 import * as UpSetJS from '@upsetjs/bundle';
 
@@ -17,7 +16,6 @@ import {
 import { DashDrillService } from '../dash-drill.service';
 import { ScopeNoteComponent } from '../scope-note/scope-note.component';
 import { PlotExportComponent } from '../../shared/plot-export/plot-export.component';
-import { SeqModalComponent } from '../../seq-modal/seq-modal.component';
 
 interface Partner {
   name: string;
@@ -92,6 +90,14 @@ export class DashRefbookAlleleComponent
   /** Sequence against the gene's reference. */
   alignment = '';
 
+  /** The allele itself, ungapped and IMGT-gapped. */
+  sequence = { seq: '', seq_gapped: '' };
+  readonly seqViews = [
+    { id: 'alignment', label: 'Alignment' }, { id: 'seq', label: 'Ungapped' }, { id: 'seq_gapped', label: 'Gapped' },
+  ] as const;
+  seqView: 'alignment' | 'seq' | 'seq_gapped' = 'seq';
+  copied = '';
+
   /** Carriers per project, one bar per database. */
   carrierPlot: unknown[] = [];
   carrierLayout: Record<string, unknown> = {};
@@ -117,7 +123,7 @@ export class DashRefbookAlleleComponent
   private renderHandle?: ReturnType<typeof setTimeout>;
 
   constructor(private refbookService: RefbookService, private drill: DashDrillService,
-              private host: ElementRef<HTMLElement>, private modalService: NgbModal) {}
+              private host: ElementRef<HTMLElement>) {}
 
   ngOnInit() { this.fetch(); }
 
@@ -142,21 +148,16 @@ export class DashRefbookAlleleComponent
     clearTimeout(this.renderHandle);
   }
 
-  /** The allele's sequence in the same dialog the sequence tables use. */
-  showSequence() {
-    const { species, chain } = this.selection;
-    const name = this.allele;
-    this.refbookService.getAscSeqs(species, chain, this.gene).subscribe({
-      next: (resp: { alleles?: { name: string; seq: string; seq_gapped: string }[] }) => {
-        const rec = resp.alleles?.find(a => a.name === name);
-        const modalRef = this.modalService.open(SeqModalComponent, { size: 'lg' });
-        modalRef.componentInstance.name = name;
-        modalRef.componentInstance.content = rec
-          ? { ungapped: rec.seq, gapped: rec.seq_gapped.includes('.') ? rec.seq_gapped : '' }
-          : { ungapped: '', gapped: '' };
-      },
-      error: () => this.error = 'Could not load the sequence',
-    });
+  /** What the sequence card shows: the alignment, or the allele as FASTA. */
+  seqText(): string {
+    if (this.seqView === 'alignment') return this.alignment;
+    const seq = this.sequence[this.seqView];
+    return seq ? `>${this.allele}\n${seq.match(/.{1,60}/g).join('\n')}` : '';
+  }
+
+  copySequence() {
+    navigator.clipboard.writeText(this.seqText())
+      .then(() => this.copied = 'Copied', () => this.copied = 'Copy failed');
   }
 
   /** Step back up to the gene, keeping everything else in place. */
@@ -205,6 +206,8 @@ export class DashRefbookAlleleComponent
         .pipe(soften({ projects: [] })),
       alignment: this.refbookService.getAscAlignment(species, chain, asc, 20, sources, alleles)
         .pipe(soften<{ alignment: string }>({ alignment: '' })),
+      sequences: this.refbookService.getAscSeqs(species, chain, asc)
+        .pipe(soften<{ alleles: { name: string; seq: string; seq_gapped: string }[] }>({ alleles: [] })),
     })
       .pipe(catchError(err => {
         this.error = err?.message ?? 'Could not load this allele';
@@ -219,6 +222,8 @@ export class DashRefbookAlleleComponent
         this.readCarriers({ genomic: result.genomic, airrseq: result.airrseq });
         this.buildPlots();
         this.alignment = (result.alignment as { alignment?: string })?.alignment ?? '';
+        this.sequence = result.sequences.alleles?.find(a => a.name === allele) ?? { seq: '', seq_gapped: '' };
+        this.copied = '';
         this.scheduleRender();
       });
   }

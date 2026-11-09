@@ -222,7 +222,8 @@ export class DashRefbookAlleleComponent
         this.readCarriers({ genomic: result.genomic, airrseq: result.airrseq });
         this.buildPlots();
         this.alignment = (result.alignment as { alignment?: string })?.alignment ?? '';
-        this.sequence = result.sequences.alleles?.find(a => a.name === allele) ?? { seq: '', seq_gapped: '' };
+        this.sequence = (result.sequences as { alleles?: { name: string; seq: string; seq_gapped: string }[] })
+          ?.alleles?.find(a => a.name === allele) ?? { seq: '', seq_gapped: '' };
         this.copied = '';
         this.scheduleRender();
       });

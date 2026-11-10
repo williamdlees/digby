@@ -20,7 +20,7 @@
     "@angular/material": "^19.2.18",
     "@angular/platform-browser": "~19.2.14",
     "@angular/platform-browser-dynamic": "~19.2.14",
-    "@angular/router": "~19.2.14",
+    "@angular/router": "~20.3.33",
     "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "@popperjs/core": "^2.11.8",
     "angular-google-charts": "^16.0.2",

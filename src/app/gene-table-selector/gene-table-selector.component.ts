@@ -78,14 +78,18 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       // If we have URL params, override the default BehaviorSubject value immediately
       if (params.species && params.dataset) {
         console.log("GeneTableSelectorComponent: Route params detected", params.species, params.dataset);
+        // within the same species keep the rest of the selection: emptied genomic datasets read as a genomic change,
+        // and the selector then re-announced its old AIRR-seq locus over the one in the link
+        const current = this.geneTableService.selection.value;
+        const kept = current.species === params.species ? current : {
+          datasets: [], genDatasetDescriptions: [], assemblies: [], repDatasetDescriptions: [],
+        };
         this.geneTableService.selection.next({
+          ...current,
+          ...kept,
           species: params.species,
-          datasets: [],
-          genDatasetDescriptions: [],
-          assemblies: [],
           repSeqs: [params.dataset],
-          repDatasetDescriptions: [],
-          commonDatasets:[]
+          commonDatasets: [params.dataset]
         });
       }
     });

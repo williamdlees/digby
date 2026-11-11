@@ -319,7 +319,7 @@ constructor(private refbookService: RefbookService, private drill: DashDrillServ
 
   /** Give each shortened allele tick its full name as a native tooltip. */
   labelTitles(): void {
-    attachTickTitles(this.host.nativeElement, this.fullByLabel);
+    attachTickTitles(this.host.nativeElement, this.fullByLabel, name => this.drill.drill('allele', name));
   }
 
   onPlotClick(event: { points?: { customdata?: unknown }[] }): void {

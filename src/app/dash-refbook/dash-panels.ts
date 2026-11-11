@@ -29,7 +29,7 @@ export const DASH_PANELS: DashPanel[] = [
     id: 'allele',
     group: 'Detail',
     label: 'Allele',
-    description: 'Everything known about one allele. Opened by clicking an allele in any plot.',
+    description: 'Everything known about one allele. Opened from the list here or by clicking an allele name in another analysis.',
     caption: 'The level below the gene. Where the allele was seen (genomic, AIRR-seq or both), ' +
              'how much of a repertoire it typically accounts for, how many subjects carry it and ' +
              'in which projects, which other alleles of the gene it turns up alongside, and its ' +
@@ -167,7 +167,7 @@ export function panelBlockedReason(
   alleleCount = 0,
 ): string | null {
   if (panel.needsAllele && !alleleCount) {
-    return 'Click an allele in any plot to open it here.';
+    return 'Pick an allele to open it here.';
   }
 
   const has: Record<DataSource, boolean> = {

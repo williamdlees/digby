@@ -71,7 +71,7 @@
   font-size: 0.85rem; color: #3c4043; cursor: pointer;
 }
 .panel-link:hover:not(:disabled) { background: var(--vdj-teal-wash); }
-.panel-link.on { background: var(--vdj-teal); color: #fff; font-weight: 500; }
+.panel-link.on, .panel-link.on:hover { background: var(--vdj-teal); color: #fff; font-weight: 500; }
 .panel-link:disabled { color: #9aa0a6; cursor: not-allowed; }
 .panel-lock { opacity: 0.6; }
 
@@ -124,6 +124,20 @@
 .panel-blocked { padding: 3rem 1rem; text-align: center; }
 .panel-blocked .reason { margin: 0 0 0.35rem; color: #3c4043; font-weight: 500; }
 .panel-blocked .description { margin: 0; color: #5f6368; font-size: 0.9rem; }
+.allele-choices {
+  display: grid; grid-template-columns: minmax(0, max-content) minmax(80px, 1fr) auto;
+  max-width: 640px; margin: 1.4rem auto 0; text-align: left;
+  border: 1px solid #e8eaed; border-radius: 8px; overflow: hidden;
+}
+.choices-head, .allele-choice { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; gap: 12px; align-items: center; padding: 6px 12px; }
+.choices-head { background: #f8f9fa; font-size: 0.75rem; color: #5f6368; span:last-child { grid-column: 2 / 4; text-align: right; } }
+.allele-choice {
+  border: 0; border-top: 1px solid #f1f3f4; background: #fff; text-align: left; cursor: pointer;
+  &:hover, &:focus-visible { background: var(--vdj-teal-wash); }
+}
+.choice-name { font-family: 'Roboto Mono', Menlo, Consolas, monospace; font-size: 0.82rem; color: var(--vdj-teal-dark); overflow-wrap: anywhere; }
+.choice-bar { height: 8px; border-radius: 4px; background: #f1f3f4; span { display: block; height: 100%; min-width: 3px; border-radius: 4px; background: var(--vdj-teal-light); } }
+.choice-count { font-size: 0.82rem; color: #3c4043; text-align: right; font-variant-numeric: tabular-nums; }
 
 @media (max-width: 900px) {
   .dash-shell, .dash-shell.rail-closed { grid-template-columns: minmax(0, 1fr); }

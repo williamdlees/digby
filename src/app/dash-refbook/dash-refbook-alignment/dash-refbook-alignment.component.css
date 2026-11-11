@@ -44,3 +44,9 @@
   white-space: nowrap; color: #202124;
 }
 .alignment-legend td:last-child { color: #5f6368; word-break: break-all; }
+
+/* allele names open the allele; styled as text so the columns stay aligned */
+.allele-link {
+  border: 0; padding: 0; background: none; font: inherit; color: var(--vdj-teal-dark, #1a6e6e); cursor: pointer;
+}
+.allele-link:hover { text-decoration: underline; }

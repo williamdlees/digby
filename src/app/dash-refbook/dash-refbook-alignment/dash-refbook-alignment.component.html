@@ -39,6 +39,6 @@
         }
       </div>
     }
-    <pre class="alignment-text">{{ alignment }}</pre>
+    <pre class="alignment-text">@for (row of rows; track $index) {@if (row.name) {<button type="button" class="allele-link" (click)="drill.drill('allele', row.full)">{{ row.name }}</button>}{{ row.rest }}{{ '\n' }}}</pre>
   }
 </div>

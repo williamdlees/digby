@@ -7,6 +7,7 @@ import { EMPTY } from 'rxjs';
 import { RefbookService } from '../../../../projects/digby-swagger-client/api/refbook.service';
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { SpeciesGeneSelection, sourcesParam, allelesParam } from '../../shared/models/species-gene-selection.model';
+import { DashDrillService } from '../dash-drill.service';
 
 @Component({
   selector: 'app-dash-refbook-alignment',
@@ -24,11 +25,13 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
   segment = '';
   codonWrap = 20;
   legend: { label: string; name: string }[] = [];
+  /** The alignment by line; a line that starts with a name gets that name as a link. */
+  rows: { name?: string; full?: string; rest: string }[] = [];
   showLegend = false;
 
   readonly wrapOptions = [10, 15, 20, 30, 40];
 
-  constructor(private refbookService: RefbookService) {}
+  constructor(private refbookService: RefbookService, readonly drill: DashDrillService) {}
 
   ngOnInit() {
     this.fetchData();
@@ -78,6 +81,7 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
           this.error = err?.error?.message ?? err?.message ?? 'Could not load the alignment';
           this.isFetching = false;
           this.alignment = '';
+          this.rows = [];
           return EMPTY;
         })
       )
@@ -86,6 +90,11 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
         this.alignment = data.alignment;
         this.segment = data.segment;
         this.legend = Object.entries(data.legend ?? {}).map(([label, name]) => ({ label, name }));
+        // ruler and translation lines start with spaces; allele lines start with the (maybe shortened) name
+        this.rows = data.alignment.split('\n').map(line => {
+          const m = /^(\S+)(.*)$/.exec(line);
+          return m ? { name: m[1], full: data.legend?.[m[1]] ?? m[1], rest: m[2] } : { rest: line };
+        });
       });
   }
 }

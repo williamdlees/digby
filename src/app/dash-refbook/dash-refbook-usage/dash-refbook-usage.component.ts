@@ -198,6 +198,6 @@ export class DashRefbookUsageComponent implements OnInit, OnChanges {
 
   /** Give each shortened allele tick its full name as a native tooltip. */
   labelTitles(): void {
-    attachTickTitles(this.host.nativeElement, this.fullByLabel);
+    attachTickTitles(this.host.nativeElement, this.fullByLabel, name => this.drill.drill('allele', name));
   }
 }

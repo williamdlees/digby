@@ -290,9 +290,28 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
     return `not used by the ${this.activePanel?.label?.toLowerCase() ?? 'panel'}`;
   }
 
+  /** The alleles on screen, most carried first, for picking one when the Allele panel has none. */
+  get alleleChoices(): { name: string; carriers: number }[] {
+    const passing = this.passingAlleles();
+    return this.alleleCounts
+      .filter(a => !passing || passing.includes(a.name))
+      .map(a => ({ name: a.name, carriers: a.genomic + a.airrseq }))
+      .sort((a, b) => b.carriers - a.carriers);
+  }
+
+  openAllele(name: string): void {
+    this.drillService.drill('allele', name);
+  }
+
   blockedReason(panel: DashPanel): string | null {
     return panelBlockedReason(panel, this.selection.sources ?? [], this.available,
                               this.selection.ascs?.length ?? 0, this.selectedAlleles.length);
+  }
+
+  /** A panel opens when nothing blocks it; the Allele panel also opens with no allele while there are alleles to pick from. */
+  canOpen(panel: DashPanel): boolean {
+    return !this.blockedReason(panel)
+      || (!!panel.needsAllele && !this.selectedAlleles.length && this.alleleCounts.length > 0);
   }
 
   panelsIn(group: string): DashPanel[] {
@@ -312,7 +331,7 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
   }
 
   selectPanel(panel: DashPanel): void {
-    if (this.blockedReason(panel)) {
+    if (!this.canOpen(panel)) {
       return;
     }
     this.activePanelId = panel.id;
@@ -326,7 +345,7 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
   }
 
   /** Bound into the gallery, which asks per card rather than holding the rule. */
-  readonly galleryBlocked = (panel: DashPanel): string | null => this.blockedReason(panel);
+  readonly galleryBlocked = (panel: DashPanel): string | null => this.canOpen(panel) ? null : this.blockedReason(panel);
 
   /** Back to the cards, without losing the species, locus or filters. */
   openGallery(): void {
@@ -779,7 +798,8 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
 
     // Last, because it depends on what the rest of the URL restored. A link may
     const wanted = this.panels.find(panel => panel.id === params.get('panel'));
-    if (wanted && !(wanted.needsAllele && !this.selectedAlleles.length)) {
+    // the Allele panel with no allele lists the gene's alleles to pick from
+    if (wanted && !(wanted.needsAllele && !this.selectedAlleles.length && !this.selection.ascs?.length)) {
       this.activePanelId = wanted.id;
     }
 

@@ -1,5 +1,6 @@
-/** Native tooltips on Plotly tick labels. */
-export function attachTickTitles(host: Element, fullByLabel: Map<string, string>): void {
+/** Native tooltips on Plotly tick labels; with onClick, a label also opens what it names. */
+export function attachTickTitles(host: Element, fullByLabel: Map<string, string>,
+                                 onClick?: (full: string) => void): void {
   const ticks = host.querySelectorAll('.yaxislayer-above text');
 
   ticks.forEach(tick => {
@@ -11,11 +12,21 @@ export function attachTickTitles(host: Element, fullByLabel: Map<string, string>
 
     const full = fullByLabel.get(label);
     const existing = tick.querySelector('title');
+    const el = tick as SVGElement;
+
+    // a property, not a listener, so a redraw replaces it instead of stacking another
+    el.onclick = full && onClick ? () => onClick(full) : null;
+    if (el.onclick) {
+      el.style.pointerEvents = 'all';
+      el.style.cursor = 'pointer';
+    }
 
     // nothing to add where the tick already is the full name
     if (!full || full === label) {
       existing?.remove();
-      (tick as SVGElement).style.removeProperty('cursor');
+      if (!el.onclick) {
+        el.style.removeProperty('cursor');
+      }
       return;
     }
 
@@ -25,7 +36,7 @@ export function attachTickTitles(host: Element, fullByLabel: Map<string, string>
     if (!existing) {
       tick.appendChild(title);
     }
-    (tick as SVGElement).style.pointerEvents = 'all';
-    (tick as SVGElement).style.cursor = 'help';
+    el.style.pointerEvents = 'all';
+    el.style.cursor = el.onclick ? 'pointer' : 'help';
   });
 }

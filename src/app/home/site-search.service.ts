@@ -14,14 +14,14 @@ export interface SearchAction {
 }
 
 export interface SearchResult {
-  type: 'Gene' | 'Family' | 'Allele' | 'Download' | 'Sequence';
+  type: 'Locus' | 'Genes' | 'Family' | 'Gene' | 'Allele' | 'Download' | 'Sequence';
   label: string;
   detail: string;
   actions: SearchAction[];
 }
 
 const LOCUS = /^(IG[HKL]|TR[ABDG])/i;
-const FAMILY = /^(IG[HKL]|TR[ABDG])[VDJ]\d+$/i;
+const FAMILY = /^(IG[HKL]|TR[ABDG])([VDJ]\d*)?$/i;
 const SEQUENCE = /^[ACGTN.\-]{30,}$/i;
 const PAGE_SIZE = 8;
 
@@ -101,13 +101,17 @@ function dashboardLink(gene: string, allele?: string): Pick<SearchAction, 'route
   return { route: ['/dash_refbook'], queryParams: allele ? { ...queryParams, panel: 'allele', alleles: allele } : { ...queryParams, panel: 'overview' } };
 }
 
-// a subgroup such as IGHV1 opens the locus map zoomed into it, when the dashboard has genes in it
+// a locus (IGL), gene type (IGLV) or subgroup (IGLV1) opens the locus map zoomed into it, when the dashboard has genes there
 function familyResult(query: string, species: string, rows: Row[]): SearchResult[] {
   const family = query.toUpperCase();
-  if (!FAMILY.test(family) || !rows.some(r => r.asc && r.gene?.toUpperCase().startsWith(family + '-'))) {
+  if (!FAMILY.test(family) || !rows.some(r => r.asc && r.gene?.toUpperCase().startsWith(family))) {
     return [];
   }
-  return [{ type: 'Family', label: family, detail: `${species} ${family.slice(0, 3)} subgroup`, actions: [
+  const locus = family.slice(0, 3);
+  const [type, detail] = family.length === 3 ? ['Locus', `${species} ${locus} locus`]
+    : family.length === 4 ? ['Genes', `${species} ${locus} ${family[3]} genes`]
+    : ['Family', `${species} ${locus} subgroup`];
+  return [{ type: type as SearchResult['type'], label: family, detail, actions: [
     { label: 'Locus map', route: ['/dash_refbook'], queryParams: { panel: 'sunburst', family } },
   ] }];
 }

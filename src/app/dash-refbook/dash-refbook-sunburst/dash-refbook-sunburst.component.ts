@@ -63,10 +63,20 @@ export class DashRefbookSunburstComponent implements OnInit, OnChanges {
       });
   }
 
+  // IGLV1 is a subgroup label; IGLV is the ring-one label V; IGL is the whole map
   private focusFamily(): void {
-    const i = this.family && this.data ? this.data.label.indexOf(this.family.toUpperCase()) : -1;
+    if (!this.family || !this.data) {
+      return;
+    }
+    const f = this.family.toUpperCase();
+    let i = this.data.label.indexOf(f);
+    if (i < 0 && f.length === 4) {
+      i = this.data.label.findIndex((l, j) => j > 0 && this.data.parent[j] === 0 && l === f[3]);
+    }
     if (i > 0) {
       this.drillTo(i);
+    } else if (i === 0) {
+      this.resetView();
     }
   }
 

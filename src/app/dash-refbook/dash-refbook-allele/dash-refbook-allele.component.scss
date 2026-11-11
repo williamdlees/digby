@@ -68,6 +68,7 @@
   font-size: 0.85rem; cursor: pointer; text-align: left;
 }
 .link-button:hover { text-decoration: underline; }
+.head-links { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; }
 
 /* the alignment is column-aligned, so it must not wrap or re-space */
 .allele-alignment {

@@ -4,7 +4,7 @@
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
+import { GenomicService, RefbookService, RepseqService } from 'projects/digby-swagger-client';
 
 export interface SearchResult {
   type: 'Gene' | 'AIRR-seq' | 'Genomic' | 'Download' | 'Sequence';
@@ -21,8 +21,10 @@ const PAGE_SIZE = 8;
 @Injectable({ providedIn: 'root' })
 export class SiteSearchService {
   private datasets: Record<string, Observable<{ repseq: string[], genomic: string[] }>> = {};
+  private ascs: Record<string, Observable<string[]>> = {};
 
-  constructor(private repseqService: RepseqService, private genomicService: GenomicService) { }
+  constructor(private repseqService: RepseqService, private genomicService: GenomicService,
+              private refbookService: RefbookService) { }
 
   search(text: string, species: string): Observable<SearchResult[]> {
     const query = text.replace(/\s+/g, '');
@@ -39,8 +41,8 @@ export class SiteSearchService {
       switchMap(sets => {
         const pick = (names: string[]) => names.filter(d => !locus || d.toUpperCase() === locus);
         const calls = [
-          ...pick(sets.repseq).map(d => this.names(this.repseqService.getSequencesApi(species, d, 0, PAGE_SIZE, nameFilter(query), undefined, COLS), 'AIRR-seq', d)),
-          ...pick(sets.genomic).map(d => this.names(this.genomicService.getSequencesApi(species, d, 0, PAGE_SIZE, nameFilter(query), undefined, COLS), 'Genomic', d)),
+          ...pick(sets.repseq).map(d => this.names(this.repseqService.getSequencesApi(species, d, 0, PAGE_SIZE, nameFilter(query), undefined, COLS), 'AIRR-seq', species, d)),
+          ...pick(sets.genomic).map(d => this.names(this.genomicService.getSequencesApi(species, d, 0, PAGE_SIZE, nameFilter(query), undefined, COLS), 'Genomic', species, d)),
         ];
         return (calls.length ? forkJoin(calls) : of([])).pipe(
           map(lists => group(lists.flat(), species, locus && sets.repseq.find(d => d.toUpperCase() === locus)))
@@ -58,10 +60,18 @@ export class SiteSearchService {
     return this.datasets[species];
   }
 
-  private names(call: Observable<any>, source: 'AIRR-seq' | 'Genomic', dataset: string) {
+  // the genes the dashboard can open: pseudogenes and orphons have sequences but no ASC
+  private locusAscs(species: string, locus: string) {
+    this.ascs[`${species}/${locus}`] ??= this.refbookService.getAscsInLocusApi(species, locus).pipe(
+      map((r: { ascs: string[] }) => r.ascs ?? []), catchError(() => of([])), shareReplay(1));
+    return this.ascs[`${species}/${locus}`];
+  }
+
+  private names(call: Observable<any>, source: 'AIRR-seq' | 'Genomic', species: string, dataset: string) {
     // the AIRR-seq endpoint returns its rows as samples, the genomic one as sequences
-    return call.pipe(
-      map(resp => (resp.samples ?? resp.sequences ?? []).map(r => ({ name: r.name, gene: r.gene_name, source, dataset }))),
+    return forkJoin([call, this.locusAscs(species, dataset)]).pipe(
+      map(([resp, ascs]) => (resp.samples ?? resp.sequences ?? [])
+        .map(r => ({ name: r.name, gene: r.gene_name, source, dataset, asc: ascs.includes(r.gene_name) }))),
       catchError(() => of([]))
     );
   }
@@ -73,21 +83,26 @@ function nameFilter(query: string): string {
   return JSON.stringify([{ field: 'name', op: 'ilike', value: `%${query}%` }]);
 }
 
-function dashboardLink(gene: string): Pick<SearchResult, 'route' | 'queryParams'> {
-  return { route: ['/dash_refbook'], queryParams: { sources: 'genomic,airrseq', segment: gene.charAt(3).toUpperCase(), genes: gene } };
+// with an allele, opens that allele's card; gene_name is the ASC name, the dashboard's own key
+function dashboardLink(gene: string, allele?: string): Pick<SearchResult, 'route' | 'queryParams'> {
+  const queryParams = { sources: 'genomic,airrseq', segment: gene.charAt(3).toUpperCase(), genes: gene };
+  return { route: ['/dash_refbook'], queryParams: allele ? { ...queryParams, panel: 'allele', alleles: allele } : queryParams };
 }
 
 // genes first, then alleles, then a download row when the locus is known
-function group(rows: { name: string, gene: string, source: 'AIRR-seq' | 'Genomic', dataset: string }[], species: string, downloadDataset: string): SearchResult[] {
+function group(rows: { name: string, gene: string, source: 'AIRR-seq' | 'Genomic', dataset: string, asc: boolean }[], species: string, downloadDataset: string): SearchResult[] {
   const genes = [...new Set(rows.map(r => r.gene).filter(Boolean))];
   const results: SearchResult[] = genes.map(gene => ({ type: 'Gene', label: gene, detail: 'Allele Reference dashboard', ...dashboardLink(gene) }));
 
   for (const r of rows) {
-    if (r.source === 'AIRR-seq') {
-      results.push({ type: 'AIRR-seq', label: r.name, detail: `${species} ${r.dataset} allele`, route: ['/generep', species, r.dataset, r.name] });
+    const detail = `${species} ${r.dataset} ${r.source === 'AIRR-seq' ? '' : 'genomic '}allele`;
+    if (r.asc) {
+      results.push({ type: r.source, label: r.name, detail, ...dashboardLink(r.gene, r.name) });
+    } else if (r.source === 'AIRR-seq') {
+      // no card for a pseudogene or orphon allele, so it keeps its AIRR-seq table entry
+      results.push({ type: r.source, label: r.name, detail, route: ['/generep', species, r.dataset, r.name] });
     } else {
-      // shortcut: the genomic gene table takes no URL filter, so a genomic allele opens its gene in the dashboard
-      results.push({ type: 'Genomic', label: r.name, detail: `${species} ${r.dataset} genomic allele`, ...dashboardLink(r.gene || r.name) });
+      results.push({ type: r.source, label: r.name, detail, ...dashboardLink(r.gene || r.name) });
     }
   }
 

@@ -9,7 +9,12 @@
         @if (isNovel) { <span class="tag novel">novel</span> }
       </p>
     </div>
-    <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
+    <div class="head-links">
+      <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
+      @if (airrseqAppearances) {
+        <a class="link-button" [routerLink]="['/generep', selection.species, selection.chain, allele]">AIRR-seq allele table →</a>
+      }
+    </div>
   </div>
 
   <app-scope-note [selection]="selection"></app-scope-note>

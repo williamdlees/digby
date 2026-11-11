@@ -762,6 +762,8 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
       queryParams: {
         // no panel while the cards are up, so the URL says what is on screen.
         panel: this.showGallery ? null : this.activePanelId,
+        // the species shown, so a species a link asked for does not pull a later dropdown change back to it
+        species: this.selection.species ?? null,
         segment: this.segment,
         projects: this.selectedProjects.join(',') || null,
         samples: this.selectedSamples.join(',') || null,
@@ -795,18 +797,21 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
       this.selection = { ...this.selection, sources };
     }
 
+    // a link may name the species too (the landing page questions are about human genes)
+    const species = params.get('species') ?? undefined;
+    const otherSpecies = !!species && species !== this.selection.species;
     const genes = (params.get('genes') ?? '').split(',').filter(Boolean);
-    if (genes.length && genes.join() !== (this.selection.ascs ?? []).join()) {
+    if (genes.length && (otherSpecies || genes.join() !== (this.selection.ascs ?? []).join())) {
       this.pendingAscs = genes;
       this.selection = { ...this.selection, ascs: genes, asc: genes[0] };
       this.facetCache.clear();
-      this.openLocusOf(genes[0]);
+      this.openLocusOf(genes[0], species);
     }
 
     // a family link (?family=IGHV1) opens the locus map in that family's locus; the map zooms in itself
     const family = params.get('family');
-    if (family && family !== this.lastFamily) {
-      this.openLocusOf(family);
+    if (family && (family !== this.lastFamily || otherSpecies)) {
+      this.openLocusOf(family, species);
     }
     this.lastFamily = family;
 
@@ -822,12 +827,13 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
   }
 
   /** Genes named by a link (the page is kept alive between visits, so this runs on every arrival): switch to their locus, or load them in this one. */
-  private openLocusOf(gene: string): void {
+  private openLocusOf(gene: string, species?: string): void {
     const locus = gene.slice(0, 3).toUpperCase();
     const current = this.geneTableService.selection.value;
-    if (locus !== (this.selection.chain ?? current.commonDatasets[0])) {
+    const otherSpecies = !!species && species !== current.species;
+    if (otherSpecies || locus !== (this.selection.chain ?? current.commonDatasets[0])) {
       // loadAscs picks up pendingAscs once the locus arrives
-      this.geneTableService.selection.next({ ...current, commonDatasets: [locus] });
+      this.geneTableService.selection.next({ ...current, species: species ?? current.species, commonDatasets: [locus] });
     } else if (this.selection.chain && this.availableAscs.length) {
       this.pendingAscs = [];
       this.loadAlleleCounts();

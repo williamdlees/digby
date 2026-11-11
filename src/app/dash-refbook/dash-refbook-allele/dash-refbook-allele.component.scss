@@ -73,10 +73,12 @@
 .allele-alignment {
   margin: 0.5rem 0 0; padding: 0.7rem;
   font-family: 'Roboto Mono', Menlo, Consolas, monospace;
-  font-size: 12px; line-height: 1.35;
-  white-space: pre; overflow-x: auto; max-height: 40vh; overflow-y: auto;
+  font-size: 11.5px; line-height: 1.35;
+  white-space: pre; overflow-x: auto;
   background: #fafafa; border: 1px solid #e8eaed; border-radius: 4px;
 }
 
 /* which projects a figure covers, when the two databases are scoped differently */
 .scope { display: block; font-size: 0.72rem; color: #80868b; }
+// FASTA wraps to the card; the alignment keeps its columns and scrolls
+.allele-alignment.wrap { white-space: pre-wrap; word-break: break-all; }

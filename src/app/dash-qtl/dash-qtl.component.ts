@@ -210,6 +210,11 @@ export class DashQtlComponent implements OnInit, OnDestroy {
         this.species = result.species ?? [];
         this.loci = result.loci ?? {};
         this.datasets = result.datasets ?? [];
+        // a server with no scans built: say so, rather than letting a panel opened from a link report its own 404
+        if (!this.species.length) {
+          this.error = 'No guQTL results are available on this server';
+          return;
+        }
 
         if (!this.selection.species || !this.species.includes(this.selection.species)) {
           this.selection = { ...this.selection, species: this.species[0] };

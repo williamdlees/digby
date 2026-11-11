@@ -752,6 +752,10 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
 
   /** Selection lives in the query string so a panel can be linked to and reloaded. */
   private writeToUrl(): void {
+    // pages are kept alive when left; a hidden dashboard reacting to the shared locus must not pull the user back here
+    if (!this.router.url.startsWith('/dash_refbook')) {
+      return;
+    }
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -791,9 +795,11 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
     }
 
     const genes = (params.get('genes') ?? '').split(',').filter(Boolean);
-    if (genes.length) {
+    if (genes.length && genes.join() !== (this.selection.ascs ?? []).join()) {
       this.pendingAscs = genes;
       this.selection = { ...this.selection, ascs: genes, asc: genes[0] };
+      this.facetCache.clear();
+      this.openLocusOf(genes[0]);
     }
 
     // Last, because it depends on what the rest of the URL restored. A link may
@@ -805,6 +811,19 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
 
     // no panel named means nobody has chosen one yet: show what there is to choose
     this.showGallery = !params.get('panel');
+  }
+
+  /** Genes named by a link (the page is kept alive between visits, so this runs on every arrival): switch to their locus, or load them in this one. */
+  private openLocusOf(gene: string): void {
+    const locus = gene.slice(0, 3).toUpperCase();
+    const current = this.geneTableService.selection.value;
+    if (locus !== (this.selection.chain ?? current.commonDatasets[0])) {
+      // loadAscs picks up pendingAscs once the locus arrives
+      this.geneTableService.selection.next({ ...current, commonDatasets: [locus] });
+    } else if (this.selection.chain && this.availableAscs.length) {
+      this.pendingAscs = [];
+      this.loadAlleleCounts();
+    }
   }
 
   /** Re-read the selection when the browser moves through history. */

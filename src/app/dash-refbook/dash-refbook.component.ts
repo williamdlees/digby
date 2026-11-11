@@ -195,6 +195,7 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
 
   /** Genes named in the URL, held until the gene list for the locus arrives. */
   private pendingAscs: string[] = [];
+  private lastFamily: string = null;
 
   private destroy$ = new Subject<void>();
   private geneTableSubscription: Subscription;
@@ -776,6 +777,13 @@ export class DashRefbookComponent implements OnInit, OnDestroy {
       this.pendingAscs = genes;
       this.selection = { ...this.selection, ascs: genes, asc: genes[0] };
     }
+
+    // a family link (?family=IGHV1) opens the locus map in that family's locus; the map zooms in itself
+    const family = params.get('family');
+    if (family && family !== this.lastFamily) {
+      this.openLocusOf(family);
+    }
+    this.lastFamily = family;
 
     // Last, because it depends on what the rest of the URL restored. A link may
     const wanted = this.panels.find(panel => panel.id === params.get('panel'));

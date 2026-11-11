@@ -14,13 +14,14 @@ export interface SearchAction {
 }
 
 export interface SearchResult {
-  type: 'Gene' | 'Allele' | 'Download' | 'Sequence';
+  type: 'Gene' | 'Family' | 'Allele' | 'Download' | 'Sequence';
   label: string;
   detail: string;
   actions: SearchAction[];
 }
 
 const LOCUS = /^(IG[HKL]|TR[ABDG])/i;
+const FAMILY = /^(IG[HKL]|TR[ABDG])[VDJ]\d+$/i;
 const SEQUENCE = /^[ACGTN.\-]{30,}$/i;
 const PAGE_SIZE = 8;
 
@@ -55,7 +56,8 @@ export class SiteSearchService {
           ...pick(sets.genomic).map(d => this.names(this.genomicService.getSequencesApi(species, d, 0, PAGE_SIZE, nameFilter(query), undefined, COLS), 'Genomic', species, d)),
         ];
         return (calls.length ? forkJoin(calls) : of([])).pipe(
-          map(lists => group(lists.flat(), species, locus && sets.repseq.find(d => d.toUpperCase() === locus)))
+          map(lists => [...familyResult(query, species, lists.flat()),
+                        ...group(lists.flat(), species, locus && sets.repseq.find(d => d.toUpperCase() === locus))])
         );
       })
     );
@@ -93,10 +95,21 @@ function nameFilter(query: string): string {
   return JSON.stringify([{ field: 'name', op: 'ilike', value: `%${query}%` }]);
 }
 
-// with an allele, opens that allele's card; gene_name is the ASC name, the dashboard's own key
+// a gene opens its overview, an allele its card; gene_name is the ASC name, the dashboard's own key
 function dashboardLink(gene: string, allele?: string): Pick<SearchAction, 'route' | 'queryParams'> {
   const queryParams = { sources: 'genomic,airrseq', segment: gene.charAt(3).toUpperCase(), genes: gene };
-  return { route: ['/dash_refbook'], queryParams: allele ? { ...queryParams, panel: 'allele', alleles: allele } : queryParams };
+  return { route: ['/dash_refbook'], queryParams: allele ? { ...queryParams, panel: 'allele', alleles: allele } : { ...queryParams, panel: 'overview' } };
+}
+
+// a subgroup such as IGHV1 opens the locus map zoomed into it, when the dashboard has genes in it
+function familyResult(query: string, species: string, rows: Row[]): SearchResult[] {
+  const family = query.toUpperCase();
+  if (!FAMILY.test(family) || !rows.some(r => r.asc && r.gene?.toUpperCase().startsWith(family + '-'))) {
+    return [];
+  }
+  return [{ type: 'Family', label: family, detail: `${species} ${family.slice(0, 3)} subgroup`, actions: [
+    { label: 'Locus map', route: ['/dash_refbook'], queryParams: { panel: 'sunburst', family } },
+  ] }];
 }
 
 type Row = { name: string, gene: string, source: 'AIRR-seq' | 'Genomic', dataset: string, asc: boolean };
@@ -125,7 +138,7 @@ function group(rows: Row[], species: string, downloadDataset: string): SearchRes
   const results: SearchResult[] = [];
   for (const [gene, rs] of by(rows, r => r.gene)) {
     results.push({ type: 'Gene', label: gene, detail: `${species} ${rs[0].dataset} gene`, actions: [
-      ...(rs.some(r => r.asc) ? [{ label: 'Dashboard', ...dashboardLink(gene) }] : []),
+      ...(rs.some(r => r.asc) ? [{ label: 'Gene overview', ...dashboardLink(gene) }] : []),
       ...tableActions(rs, species, gene),
     ] });
   }

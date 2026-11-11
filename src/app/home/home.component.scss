@@ -52,17 +52,23 @@ a:not(.btn) { color: var(--vdj-teal-dark); }
 }
 .result {
   display: grid;
-  grid-template-columns: 7.5ch minmax(0, 1fr);
+  grid-template-columns: 7.5ch minmax(0, 1fr) auto;
+  align-items: center;
   gap: 0 12px;
   padding: 8px 12px;
   border-top: 1px solid var(--vdj-rule);
   color: var(--vdj-ink);
-  text-decoration: none;
   &:first-child { border-top: 0; }
-  &:hover, &:focus-visible { background: var(--vdj-teal-wash); }
-  .type { grid-row: span 2; font-size: .72rem; color: var(--vdj-muted); padding-top: 2px; }
+  .type { grid-row: span 2; font-size: .72rem; color: var(--vdj-muted); align-self: start; padding-top: 2px; }
   b { font-weight: 500; overflow-wrap: anywhere; }
   .detail { grid-column: 2; font-size: .8rem; color: var(--vdj-muted); }
+  .actions { grid-column: 3; grid-row: 1 / span 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; }
+  .btn { white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; }
+  .btn .material-icons { font-size: 14px; color: inherit; }
+}
+@media (max-width: 575.98px) {
+  // narrow: the buttons go under the name
+  .result .actions { grid-column: 2; grid-row: auto; justify-content: flex-start; margin-top: 4px; }
 }
 .tries {
   display: flex;

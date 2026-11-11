@@ -1,7 +1,9 @@
 import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY } from 'rxjs';
 import { PlotlyModule } from 'angular-plotly.js';
 
@@ -49,8 +51,24 @@ export class DashRefbookSunburstComponent implements OnInit, OnChanges {
   /** The hover text for each node, rendered once per payload. */
   private detail: string[] = [];
 
+  /** Subgroup named by a link (?family=IGHV1), which the map opens zoomed into. */
+  private family: string = null;
+
   constructor(private http: HttpClient, private drill: DashDrillService,
-              private host: ElementRef<HTMLElement>) {}
+              private host: ElementRef<HTMLElement>, route: ActivatedRoute) {
+    route.queryParamMap.pipe(map(p => p.get('family')), distinctUntilChanged(), takeUntilDestroyed())
+      .subscribe(family => {
+        this.family = family;
+        this.focusFamily();
+      });
+  }
+
+  private focusFamily(): void {
+    const i = this.family && this.data ? this.data.label.indexOf(this.family.toUpperCase()) : -1;
+    if (i > 0) {
+      this.drillTo(i);
+    }
+  }
 
   ngOnInit(): void {
     this.fetch();
@@ -122,6 +140,7 @@ export class DashRefbookSunburstComponent implements OnInit, OnChanges {
     this.labelArcs();
     this.describe();
     this.draw();
+    this.focusFamily();
   }
 
   /** Arc labels: short enough to fit, with the full name kept for the hover. */

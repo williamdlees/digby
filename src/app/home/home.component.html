@@ -10,9 +10,18 @@
         @if (siteQuery.trim().length >= 3) {
           <div class="results" id="site-results" aria-live="polite">
             @for (r of siteResults; track r.type + r.label) {
-              <a class="result" [routerLink]="r.route" [queryParams]="r.queryParams">
+              <div class="result">
                 <span class="type">{{r.type}}</span><b>{{r.label}}</b><span class="detail">{{r.detail}}</span>
-              </a>
+                <span class="actions">
+                  @for (a of r.actions; track a.label) {
+                    @if (a.href) {
+                      <a class="btn btn-sm btn-outline-primary" [href]="a.href" target="_blank" rel="noopener">{{a.label}}<span class="material-icons" aria-hidden="true">open_in_new</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+                    } @else {
+                      <a class="btn btn-sm btn-outline-primary" [routerLink]="a.route" [queryParams]="a.queryParams">{{a.label}}</a>
+                    }
+                  }
+                </span>
+              </div>
             } @empty {
               <p class="none">{{siteSearching ? 'Searching...' : 'No matches'}}</p>
             }

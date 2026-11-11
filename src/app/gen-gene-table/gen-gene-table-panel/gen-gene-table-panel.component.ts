@@ -16,7 +16,7 @@ import { ColumnPredicate } from '../../table/filter/column-predicate';
 import { GenGeneSelectedService } from '../gen-gene-selected.service'
 import { GenSampleSelectedService } from '../../gen-sample/gen-sample-selected.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportRunService } from '../../reports/report-run.service';
 import { listsOfDictionariesEqual } from '../../shared/struct_utils';
 import { AsyncPipe } from '@angular/common';
@@ -85,6 +85,7 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
               private genSampleSelectedService: GenSampleSelectedService,
               private router: Router,
               private reportRunService: ReportRunService,
+              private route: ActivatedRoute,
   ) {
   }
 
@@ -183,6 +184,24 @@ export class GenGeneTablePanelComponent implements AfterViewInit, OnInit, OnDest
       this.applyFilter(searchOrder);
       this.setTypeFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: 'REGION', op2: ''});
       this.setFuncFilterSubject.next({operator: { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' }, op1: 'Functional', op2: ''});
+    });
+
+    // a link naming an allele (from the landing page search) opens its locus and fills the quick search; the page is kept alive, so each new link arrives here
+    // shortcut: fixed wait for the table's load, as the AIRR-seq table does; upgrade if the table gains a loaded signal
+    this.route.queryParamMap.subscribe(params => {
+      const allele = params.get('allele');
+      const dataset = params.get('dataset');
+      if (!allele) {
+        return;
+      }
+      const sel = this.geneTableService.selection.value;
+      if (dataset && sel.datasets[0] !== dataset) {
+        this.geneTableService.selection.next({ ...sel, datasets: [dataset] });
+      }
+      setTimeout(() => {
+        this.searchBox.nativeElement.value = allele;
+        this.quickSearch(allele);
+      }, 2000);
     });
 
     fromEvent(this.searchBox.nativeElement, 'keyup').pipe(

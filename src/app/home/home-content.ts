@@ -18,7 +18,7 @@ export const QUESTIONS: (LinkItem & { kind: string })[] = [
   { kind: 'Data types', label: 'Which IGHV1-69 alleles are seen by genomic and which by AIRR-seq data?', route: '/dash_refbook',
     queryParams: { sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'overview' } },
   { kind: 'Gene usage QTL', label: 'Which variants change how much IGHV1-69 is used?', route: '/dash_qtl',
-    queryParams: { view: 'gene', species: 'Human', locus: 'IGH', asc: 'IGHV1-69' } },
+    queryParams: { view: 'gene', species: 'Human', locus: 'IGH', asc: 'V1-69/1-69D' } },  // the guQTL run's ASC key, not the gene name
 ];
 
 export const ENTRY_CARDS: { title: string, text: string, icon: string, source: 'airrseq' | 'genomic' | 'brand', main: LinkItem, links: LinkItem[] }[] = [

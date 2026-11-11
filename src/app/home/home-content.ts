@@ -12,11 +12,11 @@ export const SEARCH_EXAMPLES = ['IGHV1-69', 'IGHV1-69*02', 'IGKV', 'TRBV'];
 
 export const QUESTIONS: (LinkItem & { kind: string })[] = [
   { kind: 'Sequence', label: 'How do the IGHV1-69 alleles differ in CDR2?', route: '/dash_refbook',
-    queryParams: { sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'alignment' } },
+    queryParams: { species: 'Human', sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'alignment' } },
   { kind: 'Genotypes', label: 'Which IGHV1-69 alleles occur together?', route: '/dash_refbook',
-    queryParams: { sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'zygosity' } },
+    queryParams: { species: 'Human', sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'zygosity' } },
   { kind: 'Data types', label: 'Which IGHV1-69 alleles are seen by genomic and which by AIRR-seq data?', route: '/dash_refbook',
-    queryParams: { sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'overview' } },
+    queryParams: { species: 'Human', sources: 'genomic,airrseq', segment: 'V', genes: 'IGHV1-69', panel: 'overview' } },
   { kind: 'Gene usage QTL', label: 'Which variants change how much IGHV1-69 is used?', route: '/dash_qtl',
     queryParams: { view: 'gene', species: 'Human', locus: 'IGH', asc: 'V1-69/1-69D' } },  // the guQTL run's ASC key, not the gene name
 ];

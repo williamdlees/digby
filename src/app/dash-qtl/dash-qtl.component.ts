@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, Subject } from 'rxjs';
-import { catchError, takeUntil } from 'rxjs/operators';
+import { catchError, skip, takeUntil } from 'rxjs/operators';
 
 import { QtlService } from './qtl.service';
 import { QtlManhattanComponent } from './qtl-manhattan/qtl-manhattan.component';
@@ -192,6 +192,15 @@ export class DashQtlComponent implements OnInit, OnDestroy {
     this.restoreFromUrl();
     this.sync();
 
+    // the page is kept alive between visits, so a later link naming another gene (a landing page question) arrives here
+    this.route.queryParamMap.pipe(skip(1), takeUntil(this.destroy$)).subscribe(params => {
+      const asc = params.get('asc');
+      if (asc && asc !== this.selection.asc) {
+        this.atGallery = false;
+        this.onSearchGene({ locus: params.get('locus') ?? this.selection.locus, asc });
+      }
+    });
+
     this.qtl.speciesAndLoci()
       .pipe(catchError(err => {
         this.error = err?.error?.message ?? 'No guQTL results are available';
@@ -201,6 +210,11 @@ export class DashQtlComponent implements OnInit, OnDestroy {
         this.species = result.species ?? [];
         this.loci = result.loci ?? {};
         this.datasets = result.datasets ?? [];
+        // a server with no scans built: say so, rather than letting a panel opened from a link report its own 404
+        if (!this.species.length) {
+          this.error = 'No guQTL results are available on this server';
+          return;
+        }
 
         if (!this.selection.species || !this.species.includes(this.selection.species)) {
           this.selection = { ...this.selection, species: this.species[0] };

@@ -31,11 +31,11 @@
                 <li>
                   <button type="button" class="panel-link"
                           [class.on]="!showGallery && panel.id === activePanelId"
-                          [disabled]="!!blockedReason(panel)"
+                          [disabled]="!canOpen(panel)"
                           [title]="blockedReason(panel) ?? panel.description"
                           (click)="selectPanel(panel)">
                     <span class="panel-name">{{ panel.label }}</span>
-                    @if (blockedReason(panel)) { <span class="panel-lock">·</span> }
+                    @if (!canOpen(panel)) { <span class="panel-lock">·</span> }
                   </button>
                 </li>
               }
@@ -239,6 +239,18 @@
       <div class="panel-blocked">
         <p class="reason">{{ reason }}</p>
         <p class="description">{{ activePanel.description }}</p>
+        @if (activePanel.id === 'allele' && alleleChoices.length) {
+          <div class="allele-choices" role="list" aria-label="Alleles">
+            <div class="choices-head"><span>Allele</span><span>Samples carrying it</span></div>
+            @for (a of alleleChoices; track a.name) {
+              <button type="button" class="allele-choice" role="listitem" (click)="openAllele(a.name)">
+                <span class="choice-name">{{ a.name }}</span>
+                <span class="choice-bar"><span [style.width.%]="100 * a.carriers / (alleleChoices[0].carriers || 1)"></span></span>
+                <span class="choice-count">{{ a.carriers }}</span>
+              </button>
+            }
+          </div>
+        }
       </div>
     } @else if (loaded[activePanel.id]) {
       @if (activePanel.multi) {

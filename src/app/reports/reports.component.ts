@@ -15,6 +15,9 @@ import {ReportErrorDialogComponent} from './report-error-dialog/report-error-dia
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ReportRunService} from './report-run.service';
 import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
+import { ActivatedRoute } from '@angular/router';
+import { combineLatest } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 
 
 @Component({
@@ -48,6 +51,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     private reportsListDataSource: ReportsListDataSource,
     private httpClient: HttpClient,
     private reportRunService: ReportRunService,
+    private route: ActivatedRoute,
   ) {
       this.reportSections = [
         {source: repListDataSource, title: 'Reports using just AIRR-seq Sample Data', empty: 'Select AIRR-Seq data sets to see reports in this section'},
@@ -74,6 +78,37 @@ export class ReportsComponent implements OnInit, OnDestroy {
         this.repSampleFilters = filters.filters;
       }
     );
+
+    this.openReportFromUrl();
+  }
+
+  // /reports?report=sequence_search&sequence=... opens that report's parameter dialog with the other
+  // query parameters filled in, once the report list for the current selection has loaded
+  private openReportFromUrl(): void {
+    const params = this.route.snapshot.queryParamMap;
+    const name = params.get('report');
+    if (!name) {
+      return;
+    }
+
+    const initialValues = {};
+    params.keys.filter(k => k !== 'report' && k !== 'format').forEach(k => initialValues[k] = params.get(k));
+
+    // the run service needs the report filters before it can open a dialog, so wait for them too
+    combineLatest([this.reportsListDataSource.connect(), this.reportsListDataSource.globalReportFilterParams$,
+                   this.geneTableService.source.pipe(debounceTime(500))])
+      .pipe(filter(([reports, filters]) => reports.length > 0 && !!filters), debounceTime(0), take(1))
+      .subscribe(([reports, , sel]) => {
+        const report = reports.find(r => r.name === name);
+        if (!report) {
+          console.warn(`reports: no report named ${name} for the current selection`);
+          return;
+        }
+        const wanted = params.get('format') || 'html';
+        const format = report.format.includes(wanted) ? wanted : report.format[0];
+        this.reportRunService.runReport(report, format, sel.species, sel.datasets, this.genSampleFilters,
+          sel.repSeqs, this.repSampleFilters, null, initialValues);
+      });
   }
 
   ngOnDestroy(): void {

@@ -7,6 +7,8 @@ import { EMPTY } from 'rxjs';
 import { RefbookService } from '../../../../projects/digby-swagger-client/api/refbook.service';
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { SpeciesGeneSelection, sourcesParam, allelesParam } from '../../shared/models/species-gene-selection.model';
+import { DashDrillService } from '../dash-drill.service';
+import { CodonVariability, Region, V_REGIONS, variability } from './alignment-variability';
 
 @Component({
   selector: 'app-dash-refbook-alignment',
@@ -24,11 +26,18 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
   segment = '';
   codonWrap = 20;
   legend: { label: string; name: string }[] = [];
+  /** The alignment by line; a line that starts with a name gets that name as a link. */
+  rows: { name?: string; full?: string; rest: string }[] = [];
   showLegend = false;
+  /** Summary drawn above the alignment: how many alleles differ at each codon, and in which IMGT region. */
+  profile: { codons: CodonVariability[]; alleles: number } = { codons: [], alleles: 0 };
+  regions: (Region & { len: number; nt: number; aa: number })[] = [];
+  reference = '';
+  readonly barHeight = 40;
 
   readonly wrapOptions = [10, 15, 20, 30, 40];
 
-  constructor(private refbookService: RefbookService) {}
+  constructor(private refbookService: RefbookService, readonly drill: DashDrillService) {}
 
   ngOnInit() {
     this.fetchData();
@@ -58,6 +67,27 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
     URL.revokeObjectURL(url);
   }
 
+  private summarise(segment: string) {
+    this.profile = variability(this.alignment);
+    this.reference = this.rows.find(r => r.full)?.full ?? '';
+    const n = this.profile.codons.length;
+    // the regions are IMGT V numbering; D and J alignments get the bars alone
+    this.regions = segment === 'V' ? V_REGIONS.filter(r => r.start <= n).map(r => {
+      const end = Math.min(r.end, n);
+      const inside = this.profile.codons.slice(r.start - 1, end);
+      return { ...r, end, len: end - r.start + 1, nt: inside.filter(c => c.nt).length, aa: inside.filter(c => c.aa).length };
+    }) : [];
+  }
+
+  regionOf(codon: number): string {
+    const r = this.regions.find(x => codon >= x.start && codon <= x.end);
+    return r ? ` (${r.name})` : '';
+  }
+
+  barY(count: number): number {
+    return this.barHeight * (1 - count / this.profile.alleles);
+  }
+
   private fetchData() {
     if (!this.selection?.species || !this.selection?.chain || !this.selection?.asc) {
       this.isFetching = false;
@@ -78,6 +108,7 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
           this.error = err?.error?.message ?? err?.message ?? 'Could not load the alignment';
           this.isFetching = false;
           this.alignment = '';
+          this.rows = [];
           return EMPTY;
         })
       )
@@ -86,6 +117,12 @@ export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
         this.alignment = data.alignment;
         this.segment = data.segment;
         this.legend = Object.entries(data.legend ?? {}).map(([label, name]) => ({ label, name }));
+        // ruler and translation lines start with spaces; allele lines start with the (maybe shortened) name
+        this.rows = data.alignment.split('\n').map(line => {
+          const m = /^(\S+)(.*)$/.exec(line);
+          return m ? { name: m[1], full: data.legend?.[m[1]] ?? m[1], rest: m[2] } : { rest: line };
+        });
+        this.summarise(data.segment);
       });
   }
 }

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewEncapsulation, input} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation, input} from '@angular/core';
 import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
     imports: [FormsModule, NgMultiSelectDropDownModule]
 })
 
-export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
+export class GeneTableSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly showGenomic = input<boolean>(undefined);
   readonly showAssembly = input<boolean>(undefined);
   readonly showRepseq = input<boolean>(undefined);
@@ -38,6 +38,8 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   selectedRep: { id: number, text: string }[] = [];
   repDatasetDescriptions: { dataset: string, description: string }[] = [];
   commonDatasets: { id: number, text: string }[] = [];
+  private wantedCommon: string;
+  private commonLists = 0;
   singleSelectedCommon: { id: number, text: string } = null;
   selectedCommon: { id: number, text: string }[] = [];
   isFetching: boolean;
@@ -78,14 +80,18 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       // If we have URL params, override the default BehaviorSubject value immediately
       if (params.species && params.dataset) {
         console.log("GeneTableSelectorComponent: Route params detected", params.species, params.dataset);
+        // within the same species keep the rest of the selection: emptied genomic datasets read as a genomic change,
+        // and the selector then re-announced its old AIRR-seq locus over the one in the link
+        const current = this.geneTableService.selection.value;
+        const kept = current.species === params.species ? current : {
+          datasets: [], genDatasetDescriptions: [], assemblies: [], repDatasetDescriptions: [],
+        };
         this.geneTableService.selection.next({
+          ...current,
+          ...kept,
           species: params.species,
-          datasets: [],
-          genDatasetDescriptions: [],
-          assemblies: [],
           repSeqs: [params.dataset],
-          repDatasetDescriptions: [],
-          commonDatasets:[]
+          commonDatasets: [params.dataset]
         });
       }
     });
@@ -94,6 +100,11 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.isFetching = true;
 
+  }
+
+  // a selector left behind by a page change must stop answering the shared selection
+  ngOnDestroy() {
+    this.geneTableServiceSubscription?.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -130,6 +141,14 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
               }
             }
 
+            // a link can ask for another locus; show it in the dropdown
+            const asked = this.commonDatasets.find(d => d.text === sel.commonDatasets?.[0]);
+            if (asked && asked.text !== this.singleSelectedCommon?.text) {
+              this.singleSelectedCommon = asked;
+              this.selectedCommon = [asked];
+              this.wantedCommon = asked.text;
+            }
+
             // not sure why this is needed, but if we have some assembly choices and none are selected, select exactly one
             if (this.assemblies.length > 0 && (!this.selectedAssembly || (this.selectedAssembly.length != 1))) {
               this.selectedAssembly.push(this.assemblies[0]);
@@ -154,6 +173,9 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       )
       .subscribe((resp) => {
       this.isFetching = false;
+      // the selection may have changed while species were loading (e.g. a preselection from the URL), so use the latest
+      selection = this.geneTableService.selection.value;
+      this.wantedCommon = selection.commonDatasets?.[0];
       let id = 1;
       this.species = [];
       for (const sp of resp) {
@@ -338,6 +360,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   }
 
   addToCommon(recs: { id: number, text: string }[]) {
+    this.commonLists++;
     const currentVals = this.commonDatasets.map(x => x.text);
     for (const r of recs) {
       if (currentVals.indexOf(r.text) < 0) {
@@ -345,7 +368,12 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if ((this.selectedCommon.length === 0 && this.commonDatasets.length > 0)) {
+    // keep the locus already chosen (or asked for by a link) once its list arrives, else the first one
+    const wanted = this.commonDatasets.find(d => d.text === this.wantedCommon);
+    if (wanted && this.singleSelectedCommon?.text !== wanted.text) {
+      this.singleSelectedCommon = wanted;
+      this.selectedCommon = [wanted];
+    } else if ((this.selectedCommon.length === 0 && this.commonDatasets.length > 0)) {
       this.singleSelectedCommon = this.commonDatasets[0];
       this.selectedCommon = [this.singleSelectedCommon];
     }
@@ -359,6 +387,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
 
   speciesChange() {
     this.notifiedUpdates.species = true;
+    this.commonLists = 0;
     this.selectedGen = [];
     this.selectedRep = [];
     this.selectedAssembly = [];
@@ -400,6 +429,7 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
   commonChange() {
     this.notifiedUpdates.common = true;
     this.selectedCommon = [this.singleSelectedCommon]
+    this.wantedCommon = this.singleSelectedCommon?.text;
     if (symmetricDifference(new Set(this.geneTableService.selection.value.commonDatasets), new Set(this.selectedCommon.map((x) => (x.text)))).size || this.initializing) {
       this.onSelectionChange();
     }
@@ -414,6 +444,11 @@ export class GeneTableSelectorComponent implements OnInit, AfterViewInit {
     }
 
     console.log("onSelectionChange", this.selectedSpecies);
+
+    // hold back until the asked-for locus arrives (genomic and AIRR-seq lists load separately), so a link's locus is not overwritten by the first list
+    if (this.wantedCommon && this.commonLists < 2 && !this.commonDatasets.some(d => d.text === this.wantedCommon)) {
+      return;
+    }
 
     if (this.selectedSpecies) {
       this.notifiedUpdates = { species: false, refSeq: false, repSeq: false, assemblies: false, common: false };

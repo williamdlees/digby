@@ -24,6 +24,7 @@ export class ReportParamsDialogComponent implements OnInit {
   @Input() report;
   @Input() filterParams;
   @Input() sampleCoverage: SampleCoverage;
+  @Input() initialValues: Record<string, string> = null;   // e.g. a sequence passed in the URL
   myFormGroup: FormGroup;
   params = [];
   scopeText : string
@@ -84,10 +85,11 @@ export class ReportParamsDialogComponent implements OnInit {
   }
 
   private add_fields(t, group) {
+    const initial = this.initialValues?.[t.id];
     if (t.type === 'select' && t.options.length > 0) {
-      group[t.id] = new FormControl(t.options[0]);
+      group[t.id] = new FormControl(t.options.includes(initial) ? initial : t.options[0]);
     } else {
-      group[t.id] = new FormControl('');
+      group[t.id] = new FormControl(initial ?? '');
     }
 
     this.params.push(t);

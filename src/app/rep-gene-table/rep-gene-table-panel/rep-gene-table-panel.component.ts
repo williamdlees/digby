@@ -108,7 +108,15 @@ export class RepGeneTablePanelComponent
     private reportRunService: ReportRunService,
     private route: ActivatedRoute,
     ) {
-    this.route.params.subscribe((params) => (this.params = params));
+    this.route.params.subscribe((params) => {
+      const another = this.params && params.alleleName && params.alleleName !== this.params.alleleName;
+      this.params = params;
+      // the page is kept alive, so a later link to another allele arrives here after the first search ran
+      if (another && this.paramState === "post selection") {
+        this.searchBox.nativeElement.value = params.alleleName;
+        this.quickSearch(params.alleleName);
+      }
+    });
   }
 
   ngOnInit() {

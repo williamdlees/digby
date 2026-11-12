@@ -5,7 +5,7 @@ import { RepseqService } from 'projects/digby-swagger-client';
 import { GoogleChartsModule, ChartType } from 'angular-google-charts';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import {debounceTime} from "rxjs/operators";
-import {environment} from '../../../environments/environment';
+import { StudyTableComponent } from '../../shared/study-table/study-table.component';
 
 
 
@@ -15,7 +15,7 @@ import {environment} from '../../../environments/environment';
     styleUrls: ['./rep-explore-data-panel.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
-    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule]
+    imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule, StudyTableComponent]
 })
 
 export class RepExploreDataPanelComponent implements OnInit {
@@ -26,7 +26,6 @@ export class RepExploreDataPanelComponent implements OnInit {
   datasetInfo = null;
   loading = false;
   error = null;
-  apibasePath = environment.apiBasePath;
   barChartType = ChartType.BarChart;
   pieChartType = ChartType.PieChart;
   @ViewChild('datasetInfoTable') datasetInfoTable: MatTable<any>;

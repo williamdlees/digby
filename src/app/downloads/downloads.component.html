@@ -1,0 +1,43 @@
+<div class="container">
+  <h1 class="mt-4">Downloads</h1>
+  <p>
+    For each study in an AIRR-seq dataset, download a script that fetches its files with curl: the annotated
+    repertoires (from <a href="https://madc.vdjbase.org" rel="noopener">MADC</a>), the genotypes and the haplotypes
+    of every sample. All data are free under CC0. The repertoire server has a download limit: if it returns HTTP
+    code 503, it will say when you can retry.
+  </p>
+
+  <div class="row g-3 mb-4">
+    <div class="col-sm-4 col-md-3">
+      <label for="downloads-species" class="form-label">Species</label>
+      <select id="downloads-species" class="form-select" [value]="species" (change)="select($any($event.target).value, '')">
+        @for (sp of speciesList; track sp) {
+          <option [value]="sp" [selected]="sp === species">{{sp}}</option>
+        }
+      </select>
+    </div>
+    <div class="col-sm-4 col-md-3">
+      <label for="downloads-dataset" class="form-label">Locus</label>
+      <select id="downloads-dataset" class="form-select" [value]="dataset" (change)="select(species, $any($event.target).value)">
+        @for (ds of datasets; track ds.dataset) {
+          <option [value]="ds.dataset" [selected]="ds.dataset === dataset">{{ds.dataset}}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger">Error loading studies: {{error}}</div>
+  }
+
+  @if (studies) {
+    <h2>Studies in {{species}} {{dataset}}</h2>
+    <app-study-table [studies]="studies"></app-study-table>
+  }
+</div>

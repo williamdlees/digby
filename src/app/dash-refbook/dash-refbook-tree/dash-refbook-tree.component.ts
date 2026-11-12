@@ -228,7 +228,7 @@ plt.show()
 
   /** Give each shortened allele tick its full name as a native tooltip. */
   labelTitles(): void {
-    attachTickTitles(this.host.nativeElement, this.fullByLabel);
+    attachTickTitles(this.host.nativeElement, this.fullByLabel, name => this.drill.drill('allele', name));
   }
 
   private token(name: string, fallback: string): string {

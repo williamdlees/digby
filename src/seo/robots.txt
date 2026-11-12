@@ -1,0 +1,10 @@
+# VDJbase: https://vdjbase.org
+# The internal API under /admin/api/ serves this web site only. For programmatic access use the published API:
+#   https://vdjbase.org/api/v1/ (schema: https://vdjbase.org/static/vdjbase-api-openapi3.yaml)
+
+User-agent: *
+Allow: /
+Disallow: /admin/api/
+Disallow: /auth
+
+Sitemap: https://vdjbase.org/sitemap.xml

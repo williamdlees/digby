@@ -1,139 +1,162 @@
-<div class="container-fluid">
-
-  <div class="text-center py-1 bg-primary shadow-none"
-       style="background-image: url(./assets/img/virions.png);
-       background-position: center;
-       background-size: 100%;
-       background-repeat: repeat;
-       height: 200px;">
-    <div class="container-fluid" style="padding-top: 1vw; padding-bottom: 5vw;">
-      <div class="row mt-1 mb-5 ms-1 me-1">
-        <div class="col-lg-2 col-md-3  col-sm-4  bg-light" style="border-radius: 2vw">
-          <img class="img-fluid mt-2" src="./assets/img/logo_white_2.png" alt="VDJbase Logo">
-          <p style="font-size: 0.75rem;">Immune Receptor Genotypes and Haplotypes</p>
+<div class="hero-band">
+  <section class="wrap hero" aria-label="Introduction">
+    <div>
+      <h1>See how antibody and T-cell receptor genes differ between people</h1>
+      <p class="sub">Germline genotypes and haplotypes from AIRR-seq and genomic sequencing. Free under CC0.</p>
+      <div class="site-search" role="search" (keydown.escape)="clearSiteSearch()">
+        <span class="material-icons" aria-hidden="true">search</span>
+        <input type="search" [value]="siteQuery" (input)="searchSite($any($event.target).value)" autocomplete="off"
+               placeholder="Allele or gene name, or a pasted sequence" aria-label="Search VDJbase" aria-controls="site-results">
+        @if (siteQuery.trim().length >= 3) {
+          <div class="results" id="site-results" aria-live="polite">
+            @for (r of siteResults; track r.type + r.label) {
+              <div class="result">
+                <span class="type">{{r.type}}</span><b>{{r.label}}</b><span class="detail">{{r.detail}}</span>
+                <span class="actions">
+                  @for (a of r.actions; track a.label) {
+                    @if (a.href) {
+                      <a class="btn btn-sm btn-outline-primary" [href]="a.href" target="_blank" rel="noopener">{{a.label}}<span class="material-icons" aria-hidden="true">open_in_new</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+                    } @else {
+                      <a class="btn btn-sm btn-outline-primary" [routerLink]="a.route" [queryParams]="a.queryParams">{{a.label}}</a>
+                    }
+                  }
+                </span>
+              </div>
+            } @empty {
+              <p class="none">{{siteSearching ? 'Searching...' : 'No matches'}}</p>
+            }
+          </div>
+        }
+      </div>
+      <div class="tries">
+        <span>Try</span>
+        @for (ex of searchExamples; track ex) {
+          <button type="button" class="try" (click)="searchSite(ex)">{{ex}}</button>
+        }
+      </div>
+      <div ngbDropdown class="download" autoClose="outside" (openChange)="openDownloads($event)">
+        <button type="button" class="btn btn-primary" ngbDropdownToggle>Download curated data</button>
+        <div ngbDropdownMenu class="download-menu" aria-label="Choose a dataset to download">
+          <label for="dl-species">Species</label>
+          <select id="dl-species" class="form-select form-select-sm" (change)="selectDownloadSpecies($any($event.target).value)">
+            @for (sp of dlSpeciesList; track sp) {
+              <option [value]="sp" [selected]="sp === dlSpecies">{{sp}}</option>
+            }
+          </select>
+          <span class="label">Locus</span>
+          <div class="loci" role="group" aria-label="Locus">
+            @for (ds of dlDatasets; track ds) {
+              <button type="button" class="btn btn-outline-primary" [class.active]="ds === dlDataset" [attr.aria-pressed]="ds === dlDataset" (click)="dlDataset = ds">{{ds}}</button>
+            }
+          </div>
+          <a class="btn btn-primary" routerLink="/downloads" [queryParams]="{species: dlSpecies, dataset: dlDataset}" [class.disabled]="!dlDataset">Go to downloads</a>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="ps-1 pe-5 pt-5" style="background-color: #f5f5f5; color: #000000;">
-    <div class="container">
-      <div class="row">
-        <div class = "col-md-6">
-          <div class="row">
-            <div class="col-md-6">
-              <h1 class="mat-h1">Latest News (<a href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">more</a>)</h1>
-            </div>
-          </div>
-
-          @if (loadingNews) {
-            <div  class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          }
-
-          @if (errorNews) {
-            <div class="alert alert-danger">
-              <h4>Error loading news</h4>
-            </div>
-          }
-
-          <div>
-            @if (loadedNewsPosts.length < 1 && !loadingNews && !errorNews) {
-              <p>No posts available!</p>
-            }
-            @if (loadedNewsPosts.length >= 1 && !loadingNews) {
-              <div>
-                <ul class="list-unstyled">
-                  @for (post of loadedNewsPosts; track post) {
-                    <li>
-                      <a href="{{ post[1] }}">{{ post[0] }}</a>
-                    </li>
-                  }
-                </ul>
-              </div>
-            }
-          </div>
-        </div>
-
-        <div class = "col-md-6">
-          <div class="row">
-            <div class="col-md-6">
-              <h1 class="mat-h1">Help topics (<a href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">more</a>)</h1>
-            </div>
-          </div>
-
-          @if (loadingHelp) {
-            <div  class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          }
-
-          @if (errorHelp) {
-            <div class="alert alert-danger">
-              <h4>Error loading help</h4>
-            </div>
-          }
-
-          <div>
-            @if (loadedHelpPosts.length < 1 && !loadingHelp && !errorHelp) {
-              <p>No posts available!</p>
-            }
-            @if (loadedHelpPosts.length >= 1 && !loadingHelp) {
-              <div>
-                <ul class="list-unstyled">
-                  @for (post of loadedHelpPosts; track post) {
-                    <li>
-                      <a href="{{ post[1] }}">{{ post[0] }}</a>
-                    </li>
-                  }
-                </ul>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="mat-h1">About VDJbase</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <p>
-            <span class="mat-typography" style="font-weight: 500;">VDJbase</span> is a public database of immunoglobulin and T cell receptor genes, genotypes, and haplotypes.
-            Initially developed using <span class="mat-typography" style="font-weight: 500;">adaptive immune receptor repertoire sequencing (AIRR-seq)</span> based inferences,
-            the database now also incorporates growing amounts of information derived from long-read <span class="mat-typography" style="font-weight: 500;">genomic sequencing</span> data.
-          </p>
-          <p>
-            Comprehensive knowledge of immunoglobulin and T cell receptor genes across human populations and model organisms is critical for understanding immune function and variability.
-            In VDJbase we curate data from hundreds of individuals, enabling the discovery of previously unreported alleles and supporting population-level analysis of immune receptor variation.
-          </p>
-          <p>
-            The platform offers customizable reports to explore gene and allele usage patterns, based on both AIRR-seq and genomic sources.
-            All data and tools are freely available under an open-source license. Through VDJbase, you can:
-          </p>
-          <span class="mat-typography" style="font-weight: 500;">
-            <ul>
-              <li>Explore the <a href="/datarep">AIRR-seq</a> and <a href="/datagen">genomic</a> data available in VDJbase today</li>
-              <li>Browse AIRR-seq-derived <a href="/samplerep/null">datasets</a> and <a href="/generep">alleles</a></li>
-              <li>Browse genomically derived <a href="/genesample/null">datasets</a> and <a href="/genetable">alleles</a></li>
-              <li>View <a href="/genebrowser/Human/IGH">alignments</a> in an integrated genome browser</li>
-              <li>Generate <a href="/reports">interactive reports</a> on gene and allele usage</li>
-              <li>Access documentation on <a href="/assets/doc/report_documentation.pdf">reports</a> and a <a href="/user-guide">user guide</a></li>
-            </ul>
-          </span>
-
-          <p>All features are available via the top menu.</p>
-
-          <p>If you use VDJbase in your work, please <a href="https://doi.org/10.1093/nar/gkaf1094">cite our paper.</a></p>
-
-          <p>
-            VDJbase is developed and maintained by the <a href="https://medicine.yale.edu/profile/gur-yaari/">Yaari Lab</a> at Yale University in collaboration with William Lees.
-            For more information, please contact <a href="mailto:gur.yaari@yale.edu">Gur Yaari</a> or
-            <a href="mailto:william@lees.org.uk">William Lees</a>.
-          </p>
-        </div>
+    <div class="questions" aria-labelledby="questions-heading">
+      <h2 id="questions-heading">Start with a question</h2>
+      <div class="q-grid">
+        @for (q of questions; track q.label) {
+          <a class="q" [routerLink]="q.route" [queryParams]="q.queryParams">
+            <span class="kind">{{q.kind}}</span>
+            <strong>{{q.label}}</strong>
+          </a>
+        }
       </div>
     </div>
+  </section>
+</div>
+
+<section class="wrap cards" aria-label="Explore">
+  @for (card of entryCards; track card.title) {
+    <div class="entry-card">
+      <span class="icon material-icons {{card.source}}" aria-hidden="true">{{card.icon}}</span>
+      <h3>{{card.title}}</h3>
+      <p>{{card.text}}</p>
+      <a class="btn btn-primary" [routerLink]="card.main.route">{{card.main.label}}</a>
+      <div class="links">
+        @for (link of card.links; track link.label) {
+          <a [routerLink]="link.route">{{link.label}}</a>
+        }
+      </div>
+    </div>
+  }
+</section>
+
+<div class="help-band">
+  <section class="wrap help" aria-label="News and documentation">
+    <div>
+      <h2>News &amp; documentation</h2>
+      <div class="post-tools">
+        <input type="search" class="form-control" placeholder="Search news and help" aria-label="Search news and help"
+               (input)="searchPosts($any($event.target).value)">
+        <div class="chips" role="group" aria-label="Filter by topic">
+          @for (t of topics; track t.categories) {
+            <button type="button" class="chip" [class.on]="t.categories === topic" [attr.aria-pressed]="t.categories === topic"
+                    (click)="selectTopic(t.categories)">{{t.label}}</button>
+          }
+        </div>
+      </div>
+
+      @if (errorPosts) {
+        <p class="text-danger">News and help could not be loaded.</p>
+      }
+      <div class="posts" [class.loading]="loadingPosts" aria-live="polite">
+        @for (post of posts; track post.link) {
+          <article class="post-card">
+            <a [href]="post.link" [innerHTML]="post.title"></a>
+            <p>{{post.excerpt}}</p>
+            <div class="meta"><time [attr.datetime]="post.date">{{post.date | date:'d MMM y'}}</time><span class="tag">{{postTopic(post)}}</span></div>
+          </article>
+        } @empty {
+          @if (!loadingPosts && !errorPosts) {
+            <p class="muted">No posts match.</p>
+          }
+        }
+      </div>
+      <div class="pager">
+        <button type="button" class="btn btn-outline-primary" [disabled]="page <= 1 || loadingPosts" (click)="goToPage(page - 1)" aria-label="Previous page">&lsaquo;</button>
+        <span>Page {{page}} of {{totalPages}}</span>
+        <button type="button" class="btn btn-outline-primary" [disabled]="page >= totalPages || loadingPosts" (click)="goToPage(page + 1)" aria-label="Next page">&rsaquo;</button>
+        <span class="more">
+          <a href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">All news</a> &middot;
+          <a href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">All help topics</a> &middot;
+          <a routerLink="/user-guide">User guide</a>
+        </span>
+      </div>
+    </div>
+
+    <div class="side">
+      <aside class="box" aria-labelledby="cite-heading">
+        <h3 id="cite-heading">Cite VDJbase</h3>
+        <div class="cite">
+          {{citation.title}}
+          <i>{{citation.authors}} {{citation.journal}}</i>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" [href]="citation.doi">Read the article</a>
+          <button type="button" class="btn btn-outline-primary" (click)="copyCitation()">Copy citation</button>
+          <span class="muted" aria-live="polite">{{copied}}</span>
+        </div>
+      </aside>
+
+      <aside class="box" aria-labelledby="contribute-heading">
+        <h3 id="contribute-heading">Contribute data</h3>
+        <ul class="contribute">
+          @for (item of contribute; track item.label) {
+            <li>
+              <span class="icon material-icons" aria-hidden="true">{{item.icon}}</span>
+              <div><a [href]="item.href">{{item.label}}</a><p>{{item.text}}</p></div>
+            </li>
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<footer class="wrap">
+  VDJbase is developed and maintained by the <a href="https://medicine.yale.edu/profile/gur-yaari/">Yaari Lab</a> at Yale University
+  in collaboration with William Lees. Contact <a href="mailto:gur.yaari@yale.edu">Gur Yaari</a> or
+  <a href="mailto:william@lees.org.uk">William Lees</a>. <a routerLink="/licensing">Licensing</a>.
+</footer>

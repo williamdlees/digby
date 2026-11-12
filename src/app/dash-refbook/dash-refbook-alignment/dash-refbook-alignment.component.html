@@ -39,6 +39,40 @@
         }
       </div>
     }
-    <pre class="alignment-text">{{ alignment }}</pre>
+    @if (profile.alleles) {
+      <figure class="variability">
+        <figcaption>
+          Where {{ profile.alleles }} allele{{ profile.alleles === 1 ? '' : 's' }} differ from {{ reference }}. Bar height is the share of
+          alleles with a base change in that codon; the dark part changes the amino acid.
+        </figcaption>
+        <svg class="var-bars" [attr.viewBox]="'0 0 ' + profile.codons.length + ' ' + barHeight" preserveAspectRatio="none" aria-hidden="true">
+          @for (r of regions; track r.name) {
+            @if (r.cdr) {
+              <rect class="cdr-bg" [attr.x]="r.start - 1" y="0" [attr.width]="r.len" [attr.height]="barHeight"></rect>
+            }
+          }
+          @for (c of profile.codons; track c.codon) {
+            @if (c.nt) {
+              <g>
+                <title>Codon {{ c.codon }}{{ regionOf(c.codon) }}: {{ c.nt }} of {{ profile.alleles }} alleles differ, {{ c.aa }} change the amino acid</title>
+                <rect class="nt" [attr.x]="c.codon - 0.9" [attr.y]="barY(c.nt)" width="0.8" [attr.height]="barHeight - barY(c.nt)"></rect>
+                <rect class="aa" [attr.x]="c.codon - 0.9" [attr.y]="barY(c.aa)" width="0.8" [attr.height]="barHeight - barY(c.aa)"></rect>
+              </g>
+            }
+          }
+        </svg>
+        @if (regions.length) {
+          <div class="var-regions">
+            @for (r of regions; track r.name) {
+              <div class="var-region" [class.cdr]="r.cdr" [style.flex-grow]="r.len"
+                   [title]="r.name + ', codons ' + r.start + '–' + r.end + ': ' + r.nt + ' vary, ' + r.aa + ' change the amino acid'">
+                <b>{{ r.name }}</b><span>{{ r.nt }} vary · {{ r.aa }} aa</span>
+              </div>
+            }
+          </div>
+        }
+      </figure>
+    }
+    <pre class="alignment-text">@for (row of rows; track $index) {@if (row.name) {<button type="button" class="allele-link" (click)="drill.drill('allele', row.full)">{{ row.name }}</button>}{{ row.rest }}{{ '\n' }}}</pre>
   }
 </div>

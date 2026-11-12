@@ -9,7 +9,12 @@
         @if (isNovel) { <span class="tag novel">novel</span> }
       </p>
     </div>
-    <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
+    <div class="head-links">
+      <button type="button" class="link-button" (click)="clearAllele()">← back to {{ gene }}</button>
+      @if (airrseqAppearances) {
+        <a class="link-button" [routerLink]="['/generep', selection.species, selection.chain, allele]">AIRR-seq allele table →</a>
+      }
+    </div>
   </div>
 
   <app-scope-note [selection]="selection"></app-scope-note>
@@ -21,7 +26,7 @@
   } @else {
     <div class="allele-cards">
 
-      <section class="card">
+      <section class="card wide">
         <h4>Where it was seen</h4>
         <ul class="facts">
           <li>
@@ -53,8 +58,29 @@
           }
         </p>
       </section>
+      <section class="card wide">
+        <div class="seq-head">
+          <h4>Sequence</h4>
+          <div class="seq-views" role="group" aria-label="Sequence view">
+            @for (v of seqViews; track v.id) {
+              <button type="button" class="btn btn-outline-primary" [class.active]="seqView === v.id"
+                      [attr.aria-pressed]="seqView === v.id" (click)="seqView = v.id">{{ v.label }}</button>
+            }
+          </div>
+          <button type="button" class="btn btn-primary" [disabled]="!seqText()" (click)="copySequence()">Copy</button>
+          <span class="note" aria-live="polite">{{ copied }}</span>
+        </div>
+        @if (seqView === 'alignment') {
+          <p class="note">Against the gene's reference allele. Dashes match, lower case marks a substitution.</p>
+        }
+        @if (seqText()) {
+          <pre class="allele-alignment" [class.wrap]="seqView !== 'alignment'">{{ seqText() }}</pre>
+        } @else {
+          <p class="note">No sequence available.</p>
+        }
+      </section>
 
-      <section class="card wide-half">
+      <section class="card">
         <h4>Usage</h4>
         @if (usageCount) {
           <p class="headline">
@@ -73,7 +99,7 @@
         }
       </section>
 
-      <section class="card wide-half">
+      <section class="card">
         <h4>Carriers</h4>
         @if (carriers) {
           <ul class="facts">
@@ -96,6 +122,7 @@
           <p class="note">No carriers under the current filters.</p>
         }
       </section>
+
 
       <section class="card wide">
         <h4>Occurs alongside</h4>
@@ -126,15 +153,6 @@
         }
       </section>
 
-      <section class="card wide">
-        <h4>Sequence</h4>
-        <p class="note">Against the gene's reference allele. Dashes match, lower case marks a substitution.</p>
-        @if (alignment) {
-          <pre class="allele-alignment">{{ alignment }}</pre>
-        } @else {
-          <p class="note">No sequence available.</p>
-        }
-      </section>
     </div>
   }
 }

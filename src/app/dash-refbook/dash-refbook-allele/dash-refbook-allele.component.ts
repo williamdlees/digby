@@ -2,6 +2,7 @@ import {
   AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { EMPTY, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -48,7 +49,7 @@ const SET_CHART_SHARE = 0.18;
   templateUrl: './dash-refbook-allele.component.html',
   styleUrls: ['./dash-refbook-allele.component.scss'],
   standalone: true,
-  imports: [CommonModule, PlotlyModule, ScopeNoteComponent, PlotExportComponent],
+  imports: [CommonModule, RouterLink, PlotlyModule, ScopeNoteComponent, PlotExportComponent],
 })
 export class DashRefbookAlleleComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy {
@@ -89,6 +90,14 @@ export class DashRefbookAlleleComponent
 
   /** Sequence against the gene's reference. */
   alignment = '';
+
+  /** The allele itself, ungapped and IMGT-gapped. */
+  sequence = { seq: '', seq_gapped: '' };
+  readonly seqViews = [
+    { id: 'alignment', label: 'Alignment' }, { id: 'seq', label: 'Ungapped' }, { id: 'seq_gapped', label: 'Gapped' },
+  ] as const;
+  seqView: 'alignment' | 'seq' | 'seq_gapped' = 'seq';
+  copied = '';
 
   /** Carriers per project, one bar per database. */
   carrierPlot: unknown[] = [];
@@ -140,6 +149,18 @@ export class DashRefbookAlleleComponent
     clearTimeout(this.renderHandle);
   }
 
+  /** What the sequence card shows: the alignment, or the allele as FASTA. */
+  seqText(): string {
+    if (this.seqView === 'alignment') return this.alignment;
+    const seq = this.sequence[this.seqView];
+    return seq ? `>${this.allele}\n${seq.match(/.{1,60}/g).join('\n')}` : '';
+  }
+
+  copySequence() {
+    navigator.clipboard.writeText(this.seqText())
+      .then(() => this.copied = 'Copied', () => this.copied = 'Copy failed');
+  }
+
   /** Step back up to the gene, keeping everything else in place. */
   clearAllele() {
     this.drill.drill('allele', this.allele);
@@ -186,6 +207,8 @@ export class DashRefbookAlleleComponent
         .pipe(soften({ projects: [] })),
       alignment: this.refbookService.getAscAlignment(species, chain, asc, 20, sources, alleles)
         .pipe(soften<{ alignment: string }>({ alignment: '' })),
+      sequences: this.refbookService.getAscSeqs(species, chain, asc)
+        .pipe(soften<{ alleles: { name: string; seq: string; seq_gapped: string }[] }>({ alleles: [] })),
     })
       .pipe(catchError(err => {
         this.error = err?.message ?? 'Could not load this allele';
@@ -200,6 +223,9 @@ export class DashRefbookAlleleComponent
         this.readCarriers({ genomic: result.genomic, airrseq: result.airrseq });
         this.buildPlots();
         this.alignment = (result.alignment as { alignment?: string })?.alignment ?? '';
+        this.sequence = (result.sequences as { alleles?: { name: string; seq: string; seq_gapped: string }[] })
+          ?.alleles?.find(a => a.name === allele) ?? { seq: '', seq_gapped: '' };
+        this.copied = '';
         this.scheduleRender();
       });
   }

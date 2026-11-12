@@ -39,6 +39,11 @@
               },
               "src/jbrowse",
               {
+                "glob": "**/*",
+                "input": "src/seo",
+                "output": "/"
+              },
+              {
                 "glob": "mdi.svg",
                 "input": "node_modules/@mdi/angular-material/",
                 "output": "./assets"
@@ -46,7 +51,7 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/bootstrap.scss",
               "src/bootstrap-fixes.scss",
               "src/styles.scss",
               "node_modules/datatables.net-dt/css/jquery.dataTables.css",

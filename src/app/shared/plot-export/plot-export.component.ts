@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 import { ExportLayout, ExportTable, ExportTrace, python, safeStem, saveText, table, tsv }
   from './plot-export';
@@ -8,7 +8,7 @@ import { ExportLayout, ExportTable, ExportTrace, python, safeStem, saveText, tab
 @Component({
   selector: 'app-plot-export',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (rowCount) {
       <div class="plot-export">

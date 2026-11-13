@@ -1,7 +1,7 @@
 import {
   Component, ElementRef, EventEmitter, HostListener, Input, Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 export interface CheckOption {
   value: string;
@@ -23,7 +23,7 @@ interface OptionGroup {
   templateUrl: './check-dropdown.component.html',
   styleUrls: ['./check-dropdown.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
 })
 export class CheckDropdownComponent {
   @Input() label = '';

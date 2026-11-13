@@ -5,6 +5,7 @@ import { RefbookService } from '../../../projects/digby-swagger-client/api/refbo
 import { DashDrillService } from './dash-drill.service';
 import { DashRefbookOverviewComponent } from './dash-refbook-overview/dash-refbook-overview.component';
 import { DashRefbookUsageComponent } from './dash-refbook-usage/dash-refbook-usage.component';
+import { SpeciesGeneSelection } from '../shared/models/species-gene-selection.model';
 
 describe('reference dashboard plots', () => {
   const api = { getAscsOverview: vi.fn(), getAscUsage: vi.fn(), getProjects: vi.fn() };
@@ -110,10 +111,10 @@ describe('reference dashboard plots', () => {
       expect(component.plotData[1]).toMatchObject({ type: 'scatter' });
       expect(component.chartHeight).toBeGreaterThan(320);
       component.selection = { ...selection, asc: 'V2' };
-      component.ngOnChanges({ selection: new SimpleChange(selection, component.selection, false) });
+      component.ngOnChanges({ selection: new SimpleChange<SpeciesGeneSelection>(selection, component.selection, false) });
       expect(component.error).toBe('bad request');
       component.selection = { species: 'Human' };
-      component.ngOnChanges({ selection: new SimpleChange(selection, component.selection, false) });
+      component.ngOnChanges({ selection: new SimpleChange<SpeciesGeneSelection>(selection, component.selection, false) });
       expect(component.error).toBeNull();
       expect(component.plotData).toEqual([]);
     } finally {

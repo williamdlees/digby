@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 
@@ -25,7 +25,7 @@ interface NameRow {
   templateUrl: './dash-refbook-names.component.html',
   styleUrls: ['./dash-refbook-names.component.css'],
   standalone: true,
-  imports: [CommonModule, ScopeNoteComponent],
+  imports: [ScopeNoteComponent],
 })
 export class DashRefbookNamesComponent implements OnChanges {
   @Input() selection: SpeciesGeneSelection;

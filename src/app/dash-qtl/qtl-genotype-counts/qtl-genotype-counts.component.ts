@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { PlotlyModule } from 'angular-plotly.js';
 
 import { exportButtons } from '../../shared/plot-export/plot-export';
@@ -28,7 +28,7 @@ export type GenotypeCounts =
 @Component({
   selector: 'app-qtl-genotype-counts',
   standalone: true,
-  imports: [CommonModule, PlotlyModule],
+  imports: [PlotlyModule],
   template: `
     @if (total) {
       <plotly-plot [data]="plotData" [layout]="plotLayout" [config]="plotConfig"></plotly-plot>

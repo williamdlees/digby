@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Subject, of } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
@@ -29,7 +29,7 @@ export interface SearchHit {
   templateUrl: './qtl-search.component.html',
   styleUrls: ['./qtl-search.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
 })
 export class QtlSearchComponent {
   @Input() species?: string;

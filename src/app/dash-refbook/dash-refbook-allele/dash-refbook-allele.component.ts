@@ -1,7 +1,7 @@
 import {
   AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { EMPTY, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -49,7 +49,7 @@ const SET_CHART_SHARE = 0.18;
   templateUrl: './dash-refbook-allele.component.html',
   styleUrls: ['./dash-refbook-allele.component.scss'],
   standalone: true,
-  imports: [CommonModule, RouterLink, PlotlyModule, ScopeNoteComponent, PlotExportComponent],
+  imports: [RouterLink, PlotlyModule, ScopeNoteComponent, PlotExportComponent],
 })
 export class DashRefbookAlleleComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy {

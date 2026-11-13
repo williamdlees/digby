@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 /** All a card needs. */
@@ -14,7 +14,7 @@ export interface GalleryPanel {
 @Component({
   selector: 'app-panel-gallery',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './panel-gallery.component.html',
   styleUrls: ['./panel-gallery.component.scss'],
 })

@@ -33,6 +33,7 @@ describe('gene and sample table interactions', () => {
     genomic.getSequencesApi.mockReturnValue(of({ total_items: 0, uniques: {}, sequences: [] }));
     repseq.getSamplesApi.mockReturnValue(of({ total_items: 0, uniques: {}, samples: [] }));
     repseq.getSequencesApi.mockReturnValue(of({ total_items: 0, uniques: {}, samples: [] }));
+    TestBed.overrideComponent(MatTable, { set: { template: '' } });
     TestBed.configureTestingModule({ providers: [
       GeneTableSelectorService, GenGeneSelectedService, RepGeneSelectedService,
       GenSampleSelectedService, RepSampleSelectedService, GenSampleFilterService, RepSampleFilterService,

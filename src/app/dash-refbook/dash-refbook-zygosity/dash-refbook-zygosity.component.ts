@@ -2,7 +2,7 @@ import {
   AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -61,7 +61,7 @@ class ZygosityData {
     .upset-status.error { color: #d62839; }
   `],
   standalone: true,
-  imports: [CommonModule, FormsModule, ScopeNoteComponent, PlotExportComponent],
+  imports: [FormsModule, ScopeNoteComponent, PlotExportComponent],
 })
 export class DashRefbookZygosityComponent
   implements OnInit, OnChanges, AfterViewInit, OnDestroy {

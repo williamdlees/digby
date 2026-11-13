@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
@@ -21,7 +21,7 @@ import { collapseGroup, fills, layout, SunburstLayout, SunburstPayload }
   templateUrl: './dash-refbook-sunburst.component.html',
   styleUrls: ['./dash-refbook-sunburst.component.scss'],
   standalone: true,
-  imports: [CommonModule, PlotlyModule],
+  imports: [PlotlyModule],
 })
 export class DashRefbookSunburstComponent implements OnInit, OnChanges {
   @Input() selection: SpeciesGeneSelection;

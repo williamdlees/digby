@@ -21,10 +21,6 @@
       "node",
       "vitest/globals"
     ],
-    "lib": [
-      "es2022",
-      "dom"
-    ],
     "paths": {
       "digby-swagger-client": [
         "projects/digby-swagger-client"

@@ -1,4 +1,4 @@
-import { enableProdMode, provideAppInitializer, inject, importProvidersFrom } from '@angular/core';
+import { enableProdMode, provideAppInitializer, inject, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { apiConfigFactory } from './app/app.module';
 import { environment } from './environments/environment';
 import { RequestCache } from './app/shared/http_cache';
@@ -92,6 +92,7 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
     providers: [
+        provideZoneChangeDetection(),
         importProvidersFrom(BrowserModule, FormsModule, ReactiveFormsModule, NgbModule, MatInputModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule, ApiModule.forRoot(apiConfigFactory), NgMultiSelectDropDownModule.forRoot(), FilterModule, MatIconModule, MatMenuModule, MatCheckboxModule, DragDropModule, MatCardModule, ObserversModule, ResizableModule, GoogleChartsModule, MatTooltipModule),
         RequestCache,
         AuthService,

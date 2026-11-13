@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -15,7 +15,7 @@ import { CodonVariability, Region, V_REGIONS, variability } from './alignment-va
   templateUrl: './dash-refbook-alignment.component.html',
   styleUrls: ['./dash-refbook-alignment.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
 })
 export class DashRefbookAlignmentComponent implements OnInit, OnChanges {
   @Input() selection: SpeciesGeneSelection;

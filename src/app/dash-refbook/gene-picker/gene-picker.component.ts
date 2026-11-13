@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 
 import { familyOf, segmentOf } from '../../shared/models/gene-naming';
@@ -15,7 +15,7 @@ interface GeneGroup {
   templateUrl: './gene-picker.component.html',
   styleUrls: ['./gene-picker.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
 })
 export class GenePickerComponent implements OnChanges {
   /** Genes of the chosen segment, already narrowed by the caller. */

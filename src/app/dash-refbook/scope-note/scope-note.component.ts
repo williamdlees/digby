@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 import {
   DataSource, SpeciesGeneSelection, scopeNote,
@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'app-scope-note',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     @if (note) {
       <p class="scope-note"><span class="marker">▾</span>{{ note }}</p>

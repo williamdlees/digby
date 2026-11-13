@@ -1,6 +1,6 @@
 # Digby
 
-Digby is the Angular frontend for VDJbase. It uses Angular CLI 20.
+Digby is the Angular frontend for VDJbase. It uses Angular CLI 21.
 
 ## Development
 
@@ -9,6 +9,10 @@ Use Node.js 20.19 or later in the 20.x series, 22.12 or later in the 22.x series
 ```cmd
 npm start
 ```
+
+`angular-google-charts` does not yet declare Angular 21 support. A scoped npm
+peer override permits the existing chart integration; remove it when a compatible
+upstream release is available.
 
 The development server is available at `http://localhost:4200/` and reloads when source files change. The app uses the Python Flask backend in the sibling `../digby_backend` repository, which must be running locally at `http://localhost:5000`.
 
@@ -21,6 +25,11 @@ npm test
 
 Unit tests run with Vitest and jsdom; they mock backend calls and do not require Flask. Use `npm run test:watch` while developing and `npm run test:coverage` to generate text and LCOV reports.
 
+In VS Code, select **TypeScript: Select TypeScript Version** and choose **Use Workspace Version** to use the project's Angular-compatible TypeScript version. If test globals are still reported as missing after reinstalling dependencies, run **TypeScript: Restart TS Server**.
+
+The Angular build package's optional Vitest peer is overridden to retain Vitest 3
+for the Analog test builder; the Angular native Vitest test builder is not used.
+
 Coverage includes application TypeScript under `src/app` and the maintained refbook client; other generated client code, unit specs and bootstrap/configuration files outside that scope are excluded. The coverage command enforces 80% for statements, branches, functions and lines.
 
 The GitHub Actions unit-test workflow uses Node.js 22, type-checks the specs and runs the same coverage gate without a backend.
@@ -31,7 +40,7 @@ The Playwright suite covers direct route loading, internal links and their HTTP 
 
 Prerequisites:
 
-- A Node.js version supported by Angular 20, as listed above.
+- A Node.js version supported by Angular 21, as listed above.
 - The frontend dependencies installed with `npm install`.
 - The Flask backend running from `../digby_backend`, typically in its configured Python environment:
 

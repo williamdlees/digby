@@ -27,7 +27,7 @@ The GitHub Actions unit-test workflow uses Node.js 22, type-checks the specs and
 
 ## End-to-end tests
 
-The Playwright suite covers direct route loading, internal links and their HTTP responses, common search/selection workflows, and desktop/mobile navigation. It uses the local backend and its existing database; it does not reset or seed data. External links and chart rendering are not tested.
+The Playwright suite covers direct route loading, internal links and their HTTP responses, common search/selection workflows, populated Gene Usage QTL analyses, and desktop/mobile navigation. It uses the local backend and its existing database; it does not reset or seed data. External links and chart rendering accuracy are not tested.
 
 Prerequisites:
 
@@ -41,6 +41,7 @@ Prerequisites:
   ```
 
   Confirm that `http://localhost:5000/api/system/config` responds before starting the suite.
+- Human IGH and IGK guQTL datasets, including significant IGH gene-usage results and partner-pairing scans, loaded in the backend for the Gene Usage QTL tests.
 - Playwright's Chromium browser installed once:
 
   ```cmd

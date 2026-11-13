@@ -1,10 +1,10 @@
 # Digby
 
-Digby is the Angular frontend for VDJbase. It uses Angular CLI 19.
+Digby is the Angular frontend for VDJbase. It uses Angular CLI 20.
 
 ## Development
 
-Install the JavaScript dependencies with `npm install`, then start the frontend:
+Use Node.js 20.19 or later in the 20.x series, 22.12 or later in the 22.x series, or 24.x. Install the JavaScript dependencies with `npm install`, then start the frontend:
 
 ```cmd
 npm start
@@ -31,7 +31,7 @@ The Playwright suite covers direct route loading, internal links and their HTTP 
 
 Prerequisites:
 
-- Node.js 20 or newer.
+- A Node.js version supported by Angular 20, as listed above.
 - The frontend dependencies installed with `npm install`.
 - The Flask backend running from `../digby_backend`, typically in its configured Python environment:
 

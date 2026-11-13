@@ -56,4 +56,43 @@ describe('site search', () => {
     expect(results.find(result => result.type === 'Gene')?.actions.map(action => action.label))
       .toEqual(['Gene overview', 'AIRR-seq table']);
   });
+
+  it.each([
+    ['IGH', 'Locus'],
+    ['IGHV', 'Genes'],
+    ['IGHV1', 'Family'],
+  ] as const)('offers a locus map for matching %s search', async (query, type) => {
+    const results = await firstValueFrom(service.search(query, 'Human'));
+    expect(results.find(result => result.type === type)?.actions[0]).toMatchObject({
+      route: ['/dash_refbook'], queryParams: { panel: 'sunburst', family: query },
+    });
+  });
+
+  it('only offers table actions for genes not available in the reference dashboard', async () => {
+    refbook.getAscsInLocusApi.mockReturnValue(of({ ascs: [] }));
+    const results = await firstValueFrom(service.search('IGHV1-2', 'Human'));
+    expect(results.find(result => result.type === 'Gene')?.actions.map(action => action.label))
+      .toEqual(['AIRR-seq table', 'Genomic table']);
+    expect(results.find(result => result.type === 'Allele')?.actions.map(action => action.label))
+      .toEqual(['AIRR-seq table', 'Genomic table']);
+  });
+
+  it('reuses dataset and gene catalogues and tolerates a failed sequence source', async () => {
+    genomic.getSequencesApi.mockReturnValue(throwError(() => new Error('unavailable')));
+    const first = await firstValueFrom(service.search('IGHV1', 'Human'));
+    const second = await firstValueFrom(service.search('IGHV1-2', 'Human'));
+    expect(first.find(result => result.type === 'Gene')?.actions.map(action => action.label))
+      .toEqual(['Gene overview', 'AIRR-seq table']);
+    expect(second.find(result => result.type === 'Allele')).toBeDefined();
+    expect(repseq.getDataSetApi).toHaveBeenCalledOnce();
+    expect(genomic.getDataSetApi).toHaveBeenCalledOnce();
+    expect(refbook.getAscsInLocusApi).toHaveBeenCalledOnce();
+  });
+
+  it('does not request sequences for loci absent from both catalogues', async () => {
+    const results = await firstValueFrom(service.search('IGKV', 'Human'));
+    expect(results).toEqual([]);
+    expect(repseq.getSequencesApi).not.toHaveBeenCalled();
+    expect(genomic.getSequencesApi).not.toHaveBeenCalled();
+  });
 });

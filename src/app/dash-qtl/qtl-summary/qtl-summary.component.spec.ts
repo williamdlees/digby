@@ -67,4 +67,46 @@ describe('QTL summary', () => {
     expect(component.error).toBe('unavailable');
     expect(component.loading).toBe(false);
   });
+
+  it('filters gene rows by displayed name, segment and signal, then clears the filters', () => {
+    component.genes = { genes: [
+      { asc: 'V1', segment: 'V', n_significant: 1 },
+      { asc: 'V2', segment: 'V', n_significant: 0 },
+      { asc: 'J1', segment: 'J', n_significant: 1 },
+      { asc: 'X1', segment: 'X', n_significant: 1 },
+    ] };
+    expect(component.geneSegments).toEqual(['V', 'J', 'X']);
+    component.toggleGeneSegment('V');
+    component.withSignalOnly = true;
+    component.geneFilter = '  ighv1 ';
+    expect(component.geneFiltersOn).toBe(true);
+    expect(component.shownGenes.map(gene => gene.asc)).toEqual(['V1']);
+    component.toggleGeneSegment('V');
+    expect(component.geneSegment).toBe('');
+    component.clearGeneFilters();
+    expect(component.shownGenes).toHaveLength(4);
+    expect(component.geneFiltersOn).toBe(false);
+  });
+
+  it('handles empty summaries, absent species and generic request errors', () => {
+    component.species = undefined;
+    component.ngOnChanges({ species: new SimpleChange('Human', undefined, false) });
+    expect(api.usageSummary).not.toHaveBeenCalled();
+    expect(component.inFeatureShare).toBeNull();
+    expect(component.rankedGenes).toEqual([]);
+    expect(component.features).toEqual([]);
+    component.toggleScale();
+    expect(component.plotData).toEqual([]);
+    component.toggleInfo();
+    component.toggleGeneInfo();
+    expect(component.infoOpen).toBe(true);
+    expect(component.geneInfoOpen).toBe(true);
+
+    component.species = 'Human';
+    api.usageSummary.mockReturnValue(throwError(() => ({ status: 400 })));
+    api.geneSummary.mockReturnValue(of({ genes: [] }));
+    component.ngOnChanges({ species: new SimpleChange(undefined, 'Human', false) });
+    expect(component.error).toBe('Could not load the summary');
+    expect(component.loading).toBe(false);
+  });
 });

@@ -66,4 +66,26 @@ describe('QTL plot data', () => {
     expect(api.manhattan).toHaveBeenCalledTimes(1);
     expect(component.points).toEqual([]);
   });
+
+  it('draws a single-gene scan without a threshold and ignores invalid clicks', () => {
+    const api = { manhattan: vi.fn().mockReturnValue(of({
+      points: [{ variant: 'v1', asc: 'V1', pos: null, neglog10_p: 2, significant: false }],
+    })) };
+    TestBed.configureTestingModule({ providers: [{ provide: QtlService, useValue: api }] });
+    const component = new QtlManhattanComponent(TestBed.inject(QtlService));
+    component.selection = { species: 'Human', locus: 'IGH', asc: 'V1' };
+    component.ngOnChanges({ selection: new SimpleChange(null, component.selection, true) });
+    expect(api.manhattan).toHaveBeenCalledWith('Human', 'IGH', 'V1');
+    expect(component.ascCount).toBeNull();
+    expect(component.plotData[0]).toMatchObject({ x: [0] });
+    expect(component.plotLayout).toMatchObject({
+      xaxis: { title: { text: 'IGH position (Mb)' } },
+      yaxis: { title: { text: '-log10 p' } }, shapes: [], annotations: [],
+    });
+    const picked = vi.fn();
+    component.variantPicked.subscribe(picked);
+    component.onPlotClick({});
+    component.onPlotClick({ points: [{ customdata: [] }] });
+    expect(picked).not.toHaveBeenCalled();
+  });
 });

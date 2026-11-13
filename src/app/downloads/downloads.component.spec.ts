@@ -11,6 +11,7 @@ describe('downloads selection', () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
+    route.queryParamMap = of(convertToParamMap({ species: 'Human', dataset: 'IGK' }));
     api.getSpeciesApi.mockReturnValue(of(['Human']));
     api.getDataSetApi.mockReturnValue(of([{ dataset: 'IGH' }, { dataset: 'IGK' }]));
     api.getDataSetInfoApi.mockReturnValue(of({ studies: [{ study_name: 'P1' }] }));
@@ -43,5 +44,46 @@ describe('downloads selection', () => {
     expect(downloads.loading).toBe(false);
     expect(downloads.error).toBe('database unavailable');
     expect(api.getDataSetInfoApi).not.toHaveBeenCalled();
+  });
+
+  it('uses the first available species and dataset when the URL names are unavailable', () => {
+    route.queryParamMap = of(convertToParamMap({ species: 'Other', dataset: 'missing' }));
+    const downloads = component();
+    downloads.ngOnInit();
+    expect(downloads.species).toBe('Human');
+    expect(downloads.dataset).toBe('IGH');
+    expect(api.getDataSetInfoApi).toHaveBeenCalledWith('Human', 'IGH');
+  });
+
+  it('does not request studies when no species or datasets are available', () => {
+    api.getSpeciesApi.mockReturnValueOnce(of([]));
+    const downloads = component();
+    downloads.ngOnInit();
+    expect(downloads.species).toBe('');
+    expect(api.getDataSetApi).not.toHaveBeenCalled();
+    expect(api.getDataSetInfoApi).not.toHaveBeenCalled();
+  });
+
+  it('stops loading when a species has no datasets', () => {
+    api.getDataSetApi.mockReturnValue(of([]));
+    const downloads = component();
+    downloads.ngOnInit();
+    expect(downloads.dataset).toBe('');
+    expect(downloads.loading).toBe(false);
+    expect(api.getDataSetInfoApi).not.toHaveBeenCalled();
+  });
+
+  it('surfaces species and study request failures', () => {
+    api.getSpeciesApi.mockReturnValueOnce(throwError(() => new Error('species unavailable')));
+    const downloads = component();
+    downloads.ngOnInit();
+    expect(downloads.error).toBe('species unavailable');
+    expect(api.getDataSetApi).not.toHaveBeenCalled();
+
+    api.getDataSetInfoApi.mockReturnValueOnce(throwError(() => new Error('studies unavailable')));
+    downloads.ngOnInit();
+    expect(downloads.error).toBe('studies unavailable');
+    expect(downloads.loading).toBe(false);
+    expect(downloads.studies).toBeNull();
   });
 });

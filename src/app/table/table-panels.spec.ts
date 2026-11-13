@@ -5,7 +5,7 @@ import { MatTable } from '@angular/material/table';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { GeneTableSelectorService } from '../gene-table-selector/gene-table-selector.service';
 import { GenGeneSelectedService } from '../gen-gene-table/gen-gene-selected.service';
 import { GenGeneTablePanelComponent } from '../gen-gene-table/gen-gene-table-panel/gen-gene-table-panel.component';
@@ -18,6 +18,7 @@ import { RepSampleFilterService } from '../rep-sample/rep-sample-filter.service'
 import { RepSampleSelectedService } from '../rep-sample/rep-sample-selected.service';
 import { RepSamplePanelComponent } from '../rep-sample/rep-sample-panel/rep-sample-panel.component';
 import { ReportRunService } from '../reports/report-run.service';
+import { TextFilterComponent } from './filter/text-filter/text-filter.component';
 
 describe('gene and sample table interactions', () => {
   const genomic = { getSubjectsApi: vi.fn(), getSequencesApi: vi.fn() };
@@ -228,5 +229,97 @@ describe('gene and sample table interactions', () => {
       expect(component.filters).toEqual([]);
       component.ngOnDestroy();
     }
+  });
+
+  it('updates genomic selection and quick search from a linked allele', () => {
+    const route = TestBed.inject(ActivatedRoute);
+    Object.defineProperty(route, 'queryParamMap', {
+      value: new BehaviorSubject(convertToParamMap({ dataset: 'other', allele: 'IGHV1*01' })),
+    });
+    const component = new GenGeneTablePanelComponent(
+      TestBed.inject(GenomicService), selector, TestBed.inject(NgbModal), TestBed.inject(GenGeneSelectedService),
+      TestBed.inject(GenSampleSelectedService), TestBed.inject(Router), TestBed.inject(ReportRunService), route,
+    );
+    component.ngOnInit();
+    component.paginator = paginator();
+    component.searchBox = new ElementRef(document.createElement('input'));
+    component.ngAfterViewInit();
+    expect(selector.selection.value.datasets).toEqual(['other']);
+    vi.advanceTimersByTime(2000);
+    expect(component.searchBox.nativeElement.value).toBe('IGHV1*01');
+    expect(component.setFilterSubject.value.op1).toBe('IGHV1*01');
+    component.ngOnDestroy();
+  });
+
+  it('updates repertoire quick search when a later allele link arrives', () => {
+    const route = TestBed.inject(ActivatedRoute);
+    const params = new BehaviorSubject({ species: 'Human', alleleName: 'IGHV1*01' });
+    route.params = params;
+    const component = new RepGeneTablePanelComponent(
+      TestBed.inject(RepseqService), selector, TestBed.inject(NgbModal), TestBed.inject(RepGeneSelectedService),
+      TestBed.inject(RepSampleSelectedService), TestBed.inject(Router), TestBed.inject(ReportRunService), route,
+    );
+    component.ngOnInit();
+    component.paginator = paginator();
+    component.searchBox = new ElementRef(document.createElement('input'));
+    component.ngAfterViewInit();
+    vi.advanceTimersByTime(2500);
+    expect(component.setFilterSubject.value.op1).toBe('IGHV1*01');
+    params.next({ species: 'Human', alleleName: 'IGHV1*02' });
+    expect(component.searchBox.nativeElement.value).toBe('IGHV1*02');
+    expect(component.setFilterSubject.value.op1).toBe('IGHV1*02');
+    component.ngOnDestroy();
+  });
+
+  it('keeps matching quick search text and does not reload unchanged gene filters', () => {
+    const components = [
+      new GenGeneTablePanelComponent(TestBed.inject(GenomicService), selector, TestBed.inject(NgbModal),
+        TestBed.inject(GenGeneSelectedService), TestBed.inject(GenSampleSelectedService), TestBed.inject(Router),
+        TestBed.inject(ReportRunService), TestBed.inject(ActivatedRoute)),
+      new RepGeneTablePanelComponent(TestBed.inject(RepseqService), selector, TestBed.inject(NgbModal),
+        TestBed.inject(RepGeneSelectedService), TestBed.inject(RepSampleSelectedService), TestBed.inject(Router),
+        TestBed.inject(ReportRunService), TestBed.inject(ActivatedRoute)),
+    ];
+    for (const component of components) {
+      component.ngOnInit();
+      component.paginator = paginator();
+      component.searchBox = new ElementRef(document.createElement('input'));
+      component.searchBox.nativeElement.value = 'IGH';
+      const fixture = TestBed.createComponent(TextFilterComponent);
+      fixture.componentRef.setInput('columnName', 'name');
+      const textFilter = fixture.componentInstance;
+      textFilter.selectedOperator = { name: 'Includes', operands: 2, operator: 'like', prefix: '%', postfix: '%' };
+      textFilter.operand1Input = 'IGH';
+      const filter = textFilter.generatePredicate();
+      component.filters = filter.predicates.slice();
+      component.applyFilter(filter);
+      expect(component.paginator.pageIndex).toBe(2);
+      expect(component.searchBox.nativeElement.value).toBe('IGH');
+      textFilter.operand1Input = 'TR';
+      component.applyFilter(textFilter.generatePredicate());
+      expect(component.paginator.pageIndex).toBe(0);
+      expect(component.searchBox.nativeElement.value).toBe('');
+    }
+  });
+
+  it('opens repertoire notes and ungapped sequences and passes filters to downloads', () => {
+    const component = new RepGeneTablePanelComponent(
+      TestBed.inject(RepseqService), selector, TestBed.inject(NgbModal), TestBed.inject(RepGeneSelectedService),
+      TestBed.inject(RepSampleSelectedService), TestBed.inject(Router), TestBed.inject(ReportRunService), TestBed.inject(ActivatedRoute),
+    );
+    component.ngOnInit();
+    component.selection = selector.selection.value;
+    component.filters = [{ field: 'name', op: 'in', value: ['A'] }];
+    const dialog = { componentInstance: {} };
+    modal.open.mockReturnValue(dialog);
+    component.showNotes({ name: 'A', notes: 'Reviewed' });
+    expect(dialog.componentInstance).toMatchObject({ sequenceName: 'A', notes: 'Reviewed' });
+    component.onSequenceClick({ name: 'A', seq: 'AC' });
+    expect(dialog.componentInstance).toMatchObject({ name: 'A', content: { ungapped: 'AC', gapped: '' } });
+    component.sendReportRequest('download_rep_data', 'csv', {});
+    expect(reports.runReport).toHaveBeenCalledWith(
+      { name: 'download_rep_data', title: 'Download', filter_params: [] }, 'csv', 'Human',
+      [], [], ['rep'], [], { filters: component.filters },
+    );
   });
 });

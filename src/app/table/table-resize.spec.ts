@@ -13,6 +13,12 @@ import { TableParamsStorageService } from './table-params-storage-service';
 })
 class ResizeHost {}
 
+@Component({
+  imports: [ColumnResizeDirective],
+  template: `<div appColumnResize></div>`,
+})
+class ResizeWithoutTableHost {}
+
 describe('table column resizing', () => {
   beforeEach(() => {
     localStorage.removeItem('table-params-resize-test');
@@ -55,5 +61,75 @@ describe('table column resizing', () => {
     const defaults = new Map([['name', '90px']]);
     expect(storage.loadSavedInfo(defaults, 'resize-test')).toEqual(defaults);
     expect(storage.mapToObj(storage.loadSavedInfo(new Map(), 'resize-test'))).toEqual({ name: '90px' });
+  });
+
+  it('applies saved widths when rows arrive after the table is initialized', async () => {
+    localStorage.setItem('table-params-resize-test', JSON.stringify([['name', '175px']]));
+    const fixture = TestBed.createComponent(ResizeHost);
+    fixture.detectChanges();
+    const table = fixture.nativeElement.querySelector('table') as HTMLTableElement;
+    const row = document.createElement('tr');
+    row.className = 'mat-mdc-row';
+    const cell = document.createElement('td');
+    cell.className = 'mat-column-name';
+    row.appendChild(cell);
+    table.appendChild(document.createTextNode(' '));
+    table.appendChild(row);
+    await Promise.resolve();
+    vi.advanceTimersByTime(100);
+    expect(cell.style.width).toBe('175px');
+    expect(cell.style.minWidth).toBe('175px');
+    fixture.destroy();
+  });
+
+  it('falls back to restoring widths after several non-row mutations', async () => {
+    localStorage.setItem('table-params-resize-test', JSON.stringify([['name', '120px']]));
+    const fixture = TestBed.createComponent(ResizeHost);
+    fixture.detectChanges();
+    const table = fixture.nativeElement.querySelector('table') as HTMLTableElement;
+    for (let i = 0; i < 4; i++) {
+      table.appendChild(document.createElement('span'));
+    }
+    await Promise.resolve();
+    vi.advanceTimersByTime(200);
+    expect(fixture.nativeElement.querySelector('td').style.width).toBe('120px');
+    fixture.destroy();
+  });
+
+  it('restores saved widths after the delayed fallback when rows are not detected', () => {
+    localStorage.setItem('table-params-resize-test', JSON.stringify([['name', '95px']]));
+    const fixture = TestBed.createComponent(ResizeHost);
+    fixture.detectChanges();
+    vi.advanceTimersByTime(2500);
+    expect(fixture.nativeElement.querySelector('td').style.width).toBe('95px');
+    fixture.destroy();
+  });
+
+  it('shows the drag handle at the header edge and hides it after leaving', () => {
+    const fixture = TestBed.createComponent(ResizeHost);
+    fixture.detectChanges();
+    const resizer = fixture.nativeElement.querySelector('.column-resizer') as HTMLElement;
+    const handle = fixture.nativeElement.querySelector('.resize-handle') as HTMLElement;
+    vi.spyOn(resizer, 'getBoundingClientRect').mockReturnValue(new DOMRect(0, 0, 100, 10));
+    resizer.dispatchEvent(new MouseEvent('mouseover', { clientX: 20 }));
+    expect(handle.style.opacity).not.toBe('1');
+    resizer.dispatchEvent(new MouseEvent('mouseover', { clientX: 98 }));
+    expect(handle.style.opacity).toBe('1');
+    resizer.dispatchEvent(new MouseEvent('mouseout'));
+    expect(handle.style.opacity).toBe('0');
+    fixture.destroy();
+  });
+
+  it('reports an invalid resize target without creating a handle', () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const fixture = TestBed.createComponent(ResizeWithoutTableHost);
+      fixture.detectChanges();
+      expect(log).toHaveBeenCalledWith(expect.stringContaining('Parent table not found'));
+      expect(fixture.nativeElement.querySelector('.column-resizer')).toBeNull();
+      fixture.destroy();
+    } finally {
+      log.mockRestore();
+    }
   });
 });

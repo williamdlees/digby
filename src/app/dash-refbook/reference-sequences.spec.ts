@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ElementRef } from '@angular/core';
+import { ElementRef, SimpleChange } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
 import { RefbookService } from '../../../projects/digby-swagger-client/api/refbook.service';
@@ -54,6 +54,28 @@ describe('reference sequence views', () => {
     expect(component.isFetching).toBe(false);
   });
 
+  it('handles a single ungapped allele and clears an incomplete tree selection', () => {
+    http.get.mockReturnValue(of({
+      labels: ['A'], order: [0], merges: [], informative_columns: [],
+      duplicate_groups: [], columns: 12, gapped: false,
+    }));
+    const component = new DashRefbookTreeComponent(TestBed.inject(HttpClient), TestBed.inject(DashDrillService), host);
+    component.selection = { species: 'Human', chain: 'IGH', asc: 'D1' };
+    component.ngOnInit();
+    expect(component.plotData).toEqual([]);
+    expect(component.exportTable.rows).toEqual([]);
+    expect(component.exportScript).toBe('');
+    expect(component.columnsNote).toContain('no IMGT-gapped form');
+    component.onPlotClick({});
+    expect(drill.drill).not.toHaveBeenCalled();
+    const previous = component.selection;
+    component.selection = { species: 'Human' };
+    component.ngOnChanges({ selection: new SimpleChange(previous, component.selection, false) });
+    expect(component.tree).toBeNull();
+    expect(component.columnsNote).toBe('');
+    expect(http.get).toHaveBeenCalledOnce();
+  });
+
   it('parses alignment rows, builds a variability profile and refetches on wrap change', () => {
     const alignment = ['      1   2', 'ref   AAA CCC', '       K', 'a1    aAA CCC', 'a2    AAA cCC'].join('\n');
     api.getAscAlignment.mockReturnValue(of({ alignment, segment: 'V', legend: { ref: 'IGHV1*01' } }));
@@ -70,5 +92,53 @@ describe('reference sequence views', () => {
     component.codonWrap = 10;
     component.onWrapChange();
     expect(api.getAscAlignment).toHaveBeenLastCalledWith('Human', 'IGH', 'V1', 10, 'genomic', undefined);
+  });
+
+  it('clears incomplete alignments and reports request errors on selection changes', () => {
+    const component = new DashRefbookAlignmentComponent(TestBed.inject(RefbookService), TestBed.inject(DashDrillService));
+    component.selection = { species: 'Human' };
+    component.ngOnInit();
+    expect(api.getAscAlignment).not.toHaveBeenCalled();
+    expect(component.alignment).toBe('');
+    component.selection = { species: 'Human', chain: 'IGH', asc: 'J1', alleles: ['A'] };
+    api.getAscAlignment.mockReturnValueOnce(of({ alignment: 'ref AAA', segment: 'J' }))
+      .mockReturnValueOnce(throwError(() => ({ status: 400 })));
+    component.ngOnChanges({ selection: new SimpleChange(null, component.selection, false) });
+    expect(component.regions).toEqual([]);
+    expect(component.regionOf(1)).toBe('');
+    expect(component.reference).toBe('ref');
+    expect(api.getAscAlignment).toHaveBeenCalledWith('Human', 'IGH', 'J1', 20, undefined, 'A');
+    component.onWrapChange();
+    expect(component.error).toBe('Could not load the alignment');
+    expect(component.rows).toEqual([]);
+    expect(component.isFetching).toBe(false);
+  });
+
+  it('copies and downloads the displayed alignment', () => {
+    const writeText = vi.fn();
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    class TestURL extends URL {
+      static createObjectURL = vi.fn(() => 'blob:alignment');
+      static revokeObjectURL = vi.fn();
+    }
+    vi.stubGlobal('URL', TestURL);
+    let downloadName = '';
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+      downloadName = this.download;
+    });
+    try {
+      const component = new DashRefbookAlignmentComponent(TestBed.inject(RefbookService), TestBed.inject(DashDrillService));
+      component.selection = { species: 'Rhesus Macaque', chain: 'IGH', asc: 'V1/2' };
+      component.alignment = 'ref AAA';
+      component.copyToClipboard();
+      expect(writeText).toHaveBeenCalledWith('ref AAA');
+      component.download();
+      expect(click).toHaveBeenCalledOnce();
+      expect(downloadName).toBe('Rhesus_Macaque_V1_2_alignment.txt');
+      expect(TestURL.revokeObjectURL).toHaveBeenCalledWith('blob:alignment');
+    } finally {
+      click.mockRestore();
+      vi.unstubAllGlobals();
+    }
   });
 });

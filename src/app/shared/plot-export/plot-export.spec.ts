@@ -20,6 +20,23 @@ describe('plot data export', () => {
     expect(safeStem('IGHV*01 / a')).toBe('IGHV-01-a');
   });
 
+  it('exports labeled vertical bars and horizontal boxes with the correct axes', () => {
+    const data = { columns: ['Gene', 'series', 'Count'], rows: [['V1', 'study', 2]] };
+    const bar = python(data, { title: 'Bars', source: '/data', kind: 'bar', horizontal: false });
+    expect(bar).toContain("wide = df.pivot_table(index='Gene', columns='series'");
+    expect(bar).toContain('wide.plot.bar(ax=ax)');
+    expect(bar).toContain("ax.set_xlabel('Gene')");
+    expect(bar).toContain("ax.set_ylabel('Count')");
+
+    const box = python(
+      { columns: ['Gene', 'Count'], rows: [['V1', 2]] },
+      { title: 'Boxes', source: '/data', kind: 'box', horizontal: true },
+    );
+    expect(box).toContain('ax.boxplot(data, labels=groups, vert=False)');
+    expect(box).toContain("ax.set_xlabel('Count')");
+    expect(box).toContain("ax.set_ylabel('Gene')");
+  });
+
   it('downloads data and code through the plot buttons, and rejects empty data', () => {
     const createUrl = vi.fn((blob: Blob) => 'blob:test');
     const revokeUrl = vi.fn();
@@ -65,6 +82,40 @@ describe('plot data export', () => {
       component.downloadData();
       component.downloadCode();
       expect(click).toHaveBeenCalledTimes(2);
+    } finally {
+      click.mockRestore();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('generates downloads from traces when no explicit export is supplied', async () => {
+    const createUrl = vi.fn((blob: Blob) => 'blob:test');
+    class TestURL extends URL {
+      static createObjectURL = createUrl;
+      static revokeObjectURL = vi.fn();
+    }
+    vi.stubGlobal('URL', TestURL);
+    const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    try {
+      const component = new PlotExportComponent();
+      component.name = 'subject chart';
+      component.source = '/api/usage';
+      component.data = [{ type: 'bar', orientation: 'h', x: [3], y: ['V1'] }];
+      component.layout = { xaxis: { title: { text: 'Count' } }, yaxis: { title: { text: 'Gene' } } };
+      expect(component.rowCount).toBe(1);
+      component.downloadData();
+      component.downloadCode();
+      expect(click).toHaveBeenCalledTimes(2);
+      const text = await Promise.all(createUrl.mock.calls.map(([blob]) => new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(reader.error);
+        reader.readAsText(blob);
+      })));
+      expect(text[0]).toBe('Gene\tCount\nV1\t3\n');
+      expect(text[1]).toContain("ax.set_title('subject chart')");
+      expect(text[1]).toContain('df.plot.barh');
+      expect(text[1]).toContain('/api/usage');
     } finally {
       click.mockRestore();
       vi.unstubAllGlobals();

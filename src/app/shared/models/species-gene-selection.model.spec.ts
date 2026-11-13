@@ -18,4 +18,18 @@ describe('dashboard selection parameters', () => {
     expect(scopeNote({ samples: ['s1', 's2'] }, ['genomic'])).toBe('2 samples');
     expect(scopeNote({}, ['genomic'])).toBeNull();
   });
+
+  it('handles absent selections and combines allele filters without broadening them', () => {
+    expect(sourcesParam(null)).toBeUndefined();
+    expect(sourcesParam({ sources: [] })).toBeUndefined();
+    expect(projectsParam(null)).toBeUndefined();
+    expect(projectsParam({ projects: ['p1', 'p2'] })).toBe('p1,p2');
+    expect(samplesParam(null)).toBeUndefined();
+    expect(samplesParam({ samples: [] })).toBeUndefined();
+    expect(allelesParam(null)).toBeUndefined();
+    expect(allelesParam({ alleles: ['a', 'b'] })).toBe('a,b');
+    expect(allelesParam({ alleles: ['a'], countFilter: ['b'] })).toBeUndefined();
+    expect(countFilterExcludesAll({ countFilter: ['a'] })).toBe(false);
+    expect(scopeNote(null, ['genomic'])).toBeNull();
+  });
 });

@@ -178,6 +178,75 @@ describe('reference dashboard state', () => {
     expect(component.availableAscs).toEqual(['IGHV1', 'IGHV2', 'IGHJ1']);
   });
 
+  it('snaps large sample-count thresholds to slider stops and combines active source filters', () => {
+    api.getAscsOverview.mockReturnValue(of({
+      alleles: ['IGHV1*01', 'IGHV1*02', 'IGHV1*03'],
+      genomic_counts: [50, 20, 15],
+      vdjbase_counts: [12, 2, 12],
+    }));
+    initialize();
+
+    expect(component.genomicStops).toEqual([0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 50]);
+    expect(component.airrseqStops).toEqual(Array.from({ length: 13 }, (_, count) => count));
+
+    component.minGenomic = 17;
+    component.onGenesChange(['IGHV1']);
+    expect(component.minGenomic).toBe(15);
+
+    component.genomicIndex = component.genomicStops.indexOf(20);
+    component.airrseqIndex = component.airrseqStops.indexOf(12);
+    component.onStopInput('genomic');
+    component.onStopInput('airrseq');
+    component.onSeenInChange();
+
+    expect(component.selection.countFilter).toEqual(['IGHV1*01']);
+    expect(component.alleleChoices).toEqual([{ name: 'IGHV1*01', carriers: 62 }]);
+  });
+
+  it('keeps successful allele counts when another gene request fails and fills missing source counts with zero', () => {
+    api.getAscsOverview.mockImplementation((_species, _chain, gene) => {
+      if (gene === 'IGHV1') {
+        return throwError(() => new Error('gene request failed'));
+      }
+      return of({ alleles: ['IGHV2*01', 'IGHV2*02'], genomic_counts: [4] });
+    });
+    initialize();
+    component.onGenesChange(['IGHV1', 'IGHV2']);
+
+    expect(component.alleleCounts).toEqual([
+      { name: 'IGHV2*01', genomic: 4, airrseq: 0 },
+      { name: 'IGHV2*02', genomic: 0, airrseq: 0 },
+    ]);
+  });
+
+  it('does not navigate when a background dashboard updates its filters', () => {
+    initialize();
+    router.navigate.mockClear();
+    router.url = '/research';
+
+    component.onProjectsChange(['study']);
+
+    expect(component.selectedProjects).toEqual(['study']);
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('preserves selected cohort filters when project and sample lookups fail', () => {
+    initialize();
+    component.onProjectsChange(['study']);
+    component.onSamplesChange(['sample1']);
+    api.getProjects.mockReturnValue(throwError(() => new Error('projects unavailable')));
+    api.getSamples.mockReturnValue(throwError(() => new Error('samples unavailable')));
+
+    component.toggleSource('genomic');
+    component.onProjectsChange(['study']);
+
+    expect(component.selectedProjects).toEqual(['study']);
+    expect(component.selectedSamples).toEqual(['sample1']);
+    expect(component.selection).toMatchObject({
+      projects: ['study'], samples: ['sample1'], sources: ['airrseq'],
+    });
+  });
+
   it('drops stale project and sample filters when the available cohort changes', () => {
     initialize();
     component.onProjectsChange(['study']);

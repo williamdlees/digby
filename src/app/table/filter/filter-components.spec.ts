@@ -168,4 +168,103 @@ describe('table filters', () => {
     expect(component.selectedItems).toEqual([]);
     expect(component.selectedSort).toBeNull();
   });
+
+  it('updates boolean choices and closes the menu after validation or sorting', () => {
+    const fixture = TestBed.createComponent(BoolFilterComponent);
+    const choices = new Subject<IChoices>();
+    fixture.componentRef.setInput('columnName', 'active');
+    fixture.componentRef.setInput('choices$', choices);
+    const component = fixture.componentInstance;
+    const closed = vi.fn();
+    component.matMenuTrigger = { closed: { emit: closed } };
+    const emitted = vi.fn();
+    component.predicateEmitter.subscribe(emitted);
+    component.ngOnInit();
+    choices.next(undefined);
+    choices.next({ other: ['ignored'] });
+    expect(component.choices).toBeUndefined();
+    choices.next({ active: ['yes', 'no'] });
+    expect(component.choices).toEqual([{ id: 0, text: 'yes' }, { id: 1, text: 'no' }]);
+    component.selectedItems = [{ id: 0, text: 'yes' }];
+    component.onValidation();
+    expect(emitted).toHaveBeenLastCalledWith({
+      field: 'active', predicates: [{ field: 'active', op: 'in', value: ['yes'] }],
+      sort: { field: 'active', order: null },
+    });
+    component.onSortAsc();
+    component.onSortClear();
+    expect(emitted).toHaveBeenLastCalledWith({
+      field: 'active', predicates: [{ field: 'active', op: 'in', value: ['yes'] }],
+      sort: { field: 'active', order: null },
+    });
+    expect(closed).toHaveBeenCalledTimes(3);
+    component.onClearSelection();
+    expect(component.selectedItems).toEqual([]);
+  });
+
+  it('restores a cleared numeric filter and emits an empty predicate', () => {
+    const fixture = TestBed.createComponent(NumberFilterComponent);
+    const setFilter = new Subject<{ operator: { name: string; operands: number; operator: string }; op1: string; op2: string }>();
+    fixture.componentRef.setInput('columnName', 'count');
+    fixture.componentRef.setInput('setFilter$', setFilter);
+    const component = fixture.componentInstance;
+    const emitted = vi.fn();
+    const closed = vi.fn();
+    component.matMenuTrigger = { closed: { emit: closed } };
+    component.predicateEmitter.subscribe(emitted);
+    component.ngOnInit();
+    setFilter.next(null);
+    expect(emitted).not.toHaveBeenCalled();
+    setFilter.next({ operator: component.operatorList[0], op1: '7', op2: '' });
+    expect(emitted).toHaveBeenLastCalledWith({
+      field: 'count', predicates: [{ field: 'count', op: '<', value: '7' }],
+      sort: { field: 'count', order: null },
+    });
+    setFilter.next({ operator: component.operatorList[0], op1: '', op2: '' });
+    expect(emitted).toHaveBeenLastCalledWith({ field: 'count', predicates: [], sort: { field: 'count', order: null } });
+    component.onSortDesc();
+    component.onSortClear();
+    component.onClearFilter();
+    component.onClearSelection();
+    expect(component.filterCleared).toBe(true);
+    expect(closed).toHaveBeenCalledTimes(4);
+  });
+
+  it('handles date choices, single comparisons and reset events', () => {
+    const fixture = TestBed.createComponent(DateFilterComponent);
+    const choices = new Subject<IChoices>();
+    const clear = new Subject<null>();
+    fixture.componentRef.setInput('columnName', 'date');
+    fixture.componentRef.setInput('choices$', choices);
+    fixture.componentRef.setInput('clear$', clear);
+    const component = fixture.componentInstance;
+    const closed = vi.fn();
+    const emitted = vi.fn();
+    component.matMenuTrigger = { closed: { emit: closed } };
+    component.predicateEmitter.subscribe(emitted);
+    component.ngOnInit();
+    choices.next(undefined);
+    choices.next({ other: ['ignored'] });
+    choices.next({ date: ['2025-01-01'] });
+    expect(component.choices).toEqual([{ id: 0, text: '2025-01-01' }]);
+    component.selectedOperator = component.operatorList[0];
+    component.operand1Input = new Date('2025-01-01');
+    component.onValidation();
+    expect(emitted).toHaveBeenLastCalledWith({
+      field: 'date', predicates: [{ field: 'date', op: '<', value: new Date('2025-01-01') }],
+      sort: { field: 'date', order: null },
+    });
+    component.selectedOperator = component.operatorList[4];
+    component.operand2Input = new Date('2025-02-01');
+    expect(component.generatePredicate().predicates).toEqual([
+      { field: 'date', op: '>', value: new Date('2025-01-01') },
+      { field: 'date', op: '<', value: new Date('2025-02-01') },
+    ]);
+    component.onSortDesc();
+    clear.next(null);
+    expect(component.selectedOperator).toBeNull();
+    expect(component.selectedSort).toBeNull();
+    expect(component.filterCleared).toBe(true);
+    expect(closed).toHaveBeenCalledTimes(2);
+  });
 });

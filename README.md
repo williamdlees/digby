@@ -27,11 +27,9 @@ Unit tests run with Vitest and jsdom; they mock backend calls and do not require
 
 In VS Code, select **TypeScript: Select TypeScript Version** and choose **Use Workspace Version** to use the project's Angular-compatible TypeScript version. If test globals are still reported as missing after reinstalling dependencies, run **TypeScript: Restart TS Server**.
 
-The Angular build package's optional Vitest peer is overridden to retain Vitest 3
-for the Analog test builder and existing coverage thresholds; the Angular native
-Vitest test builder is not used. `npm audit` reports critical vulnerabilities
-in the Vitest 3 test-tooling dependency chain; upgrading Vitest changes coverage
-reporting and needs further work before the existing coverage gate can pass.
+The Angular native Vitest test builder is not used. The ESLint dependencies use
+scoped minimatch overrides for a security fix; revisit them when the parent
+packages support a patched version.
 
 Coverage includes application TypeScript under `src/app` and the maintained refbook client; other generated client code, unit specs and bootstrap/configuration files outside that scope are excluded. The coverage command enforces 80% for statements, branches, functions and lines.
 

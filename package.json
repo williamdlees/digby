@@ -5,7 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
     "lint": "ng lint"
   },
   "private": true,
@@ -46,6 +49,8 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "1.22.5",
+    "@analogjs/vitest-angular": "1.22.5",
     "@angular-devkit/build-angular": "^19.2.14",
     "@angular-eslint/builder": "^20.0.0",
     "@angular-eslint/eslint-plugin": "^20.0.0",
@@ -55,19 +60,21 @@
     "@angular/cli": "^19.2.14",
     "@angular/compiler-cli": "~19.2.14",
     "@angular/language-service": "~19.2.14",
-    "@types/jasmine": "~3.6.0",
+    "@playwright/test": "^1.65.0",
     "@types/jquery": "^3.3.32",
     "@types/lodash": "^4.14.149",
-    "@types/node": "^12.11.1",
+    "@types/node": "^22.0.0",
     "@types/plotly.js-dist-min": "^2.3.4",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "eslint": "^8.57.0",
-    "jasmine-core": ">=3.8.0",
-    "jasmine-spec-reporter": "~5.0.0",
+    "@vitest/coverage-v8": "3.2.4",
+    "jsdom": "^26.1.0",
     "ng-packagr": "^19.2.2",
     "ts-node": "~7.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "3.2.4"
   },
   "overrides": {
     "@types/eslint": "8.4.3"

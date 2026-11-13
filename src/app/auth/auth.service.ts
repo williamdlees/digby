@@ -132,8 +132,12 @@ export class AuthService {
   // set up the timer for refresh token expiry
   autoLogout(refreshTokenExpirationDuration: number) {
     //console.log('in auth.autologout');
+    if (this.refreshTokenExpirationTimer) {
+      clearTimeout(this.refreshTokenExpirationTimer);
+    }
+
     this.refreshTokenExpirationTimer = setTimeout(() => {
-      this.logout;
+      this.logout();
     }, refreshTokenExpirationDuration);
   }
 

@@ -166,15 +166,16 @@ export class NumberFilterComponent implements OnInit, FilterImplementation {
         value: this.operand1Input
       });
     } else if (this.selectedOperator && this.selectedOperator.operands === 3) {
+      const firstIsLower = Number(this.operand1Input) < Number(this.operand2Input);
       pred.predicates.push({
           field: columnName,
           op: this.selectedOperator.operator,
-          value: this.operand1Input < this.operand2Input ? this.operand1Input : this.operand2Input
+          value: firstIsLower ? this.operand1Input : this.operand2Input
         });
       pred.predicates.push({
           field: columnName,
           op: this.selectedOperator.operator2,
-          value: this.operand1Input < this.operand2Input ? this.operand2Input : this.operand1Input
+          value: firstIsLower ? this.operand2Input : this.operand1Input
         });
     }
 

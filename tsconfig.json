@@ -9,12 +9,17 @@
     "declaration": false,
     "experimentalDecorators": true,
     "module": "es2022",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "useDefineForClassFields": false,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "node_modules"
+    ],
+    "types": [
+      "node",
+      "vitest/globals"
     ],
     "lib": [
       "es2022",

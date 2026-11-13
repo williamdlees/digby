@@ -1,29 +1,24 @@
-import { TestBed, async } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { AppComponent } from './app.component';
+import { AppHeaderComponent } from './app-header/app-header.component';
+
+@Component({ selector: 'app-header', template: '' })
+class StubHeaderComponent {}
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-    imports: [AppComponent],
-}).compileComponents();
-  }));
-
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have as title 'digby'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('digby');
-  });
-
-  it('should render title', () => {
+  it('renders the header and the router outlet', async () => {
+    await TestBed.configureTestingModule({ imports: [AppComponent], providers: [provideRouter([])] })
+      .overrideComponent(AppComponent, {
+        remove: { imports: [AppHeaderComponent] },
+        add: { imports: [StubHeaderComponent] },
+      })
+      .compileComponents();
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('digby app is running!');
+
+    expect(fixture.nativeElement.querySelector('app-header')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('router-outlet')).not.toBeNull();
   });
 });

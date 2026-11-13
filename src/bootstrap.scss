@@ -1,8 +1,8 @@
 // Bootstrap built from source so it takes the VDJbase palette (the same colours as the --vdj-* tokens in styles.scss)
-$primary: #188080;
-$link-color: #0e5757;
-$link-hover-color: #188080;
-$body-color: #0f1a19;
-$border-color: #e7eeed;
-
-@import "bootstrap/scss/bootstrap";
+@use "bootstrap/scss/bootstrap" with (
+  $primary: #188080,
+  $link-color: #0e5757,
+  $link-hover-color: #188080,
+  $body-color: #0f1a19,
+  $border-color: #e7eeed
+);

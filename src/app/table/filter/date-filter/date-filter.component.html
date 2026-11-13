@@ -15,7 +15,7 @@
 
 <mat-menu #filterMenu="matMenu" xPosition="before" >
   <div class="container content-centered" (click) = "$event.stopPropagation()">
-    <form>
+    <div>
       <div class="row">
         <div class="col-8" style="padding-left: 0px; padding-right: 16px; display: flex">
           <button class="float-start" mat-button (click)="onSortAsc()">Sort Ascending</button>
@@ -101,6 +101,6 @@
             >
           </ng-multiselect-dropdown>
         </div>
-      </form>
+      </div>
     </div>
   </mat-menu>

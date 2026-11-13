@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {FormGroup} from '@angular/forms';
 
@@ -6,6 +6,7 @@ import {FormGroup} from '@angular/forms';
     selector: 'app-report-error-dialog',
     templateUrl: './report-error-dialog.component.html',
     styleUrls: ['./report-error-dialog.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None // needed for css styling
 })
 export class ReportErrorDialogComponent {

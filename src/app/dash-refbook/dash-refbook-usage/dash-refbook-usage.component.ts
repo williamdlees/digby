@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RefbookService } from '../../../../projects/digby-swagger-client/api/refbook.service';
 import { retryWithBackoff } from '../../shared/retry_with_backoff';
 import { catchError } from 'rxjs/operators';
@@ -25,6 +25,7 @@ class UsageData {
   templateUrl: './dash-refbook-usage.component.html',
   styleUrls: ['./dash-refbook-usage.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [PlotlyModule, ScopeNoteComponent],
 })
 

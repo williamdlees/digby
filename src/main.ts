@@ -5,10 +5,10 @@ import { RequestCache } from './app/shared/http_cache';
 import { AuthService } from './app/auth/auth.service';
 import { ReportsService, GenomicService, RepseqService, SystemService, BASE_PATH, Configuration, ConfigurationParameters, ApiModule } from 'projects/digby-swagger-client';
 import { ReportRunService } from './app/reports/report-run.service';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { CachingInterceptor } from './app/shared/caching_interceptor';
 import { AuthInterceptorService } from './app/auth/auth-interceptor.service';
-import { RouteReuseStrategy, provideRouter, withInMemoryScrolling, Routes } from '@angular/router';
+import { RouteReuseStrategy, provideRouter, withInMemoryScrolling, withRouterConfig, Routes } from '@angular/router';
 import { CustomReuseStrategy } from './app/shared/route-reuse-strategy';
 import { appInitializer } from './app/auth/auth.initializer';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
@@ -109,9 +109,9 @@ bootstrapApplication(AppComponent, {
             const initializerFn = (appInitializer)(inject(AuthService));
             return initializerFn();
         }),
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideAnimations(),
-        provideRouter(appRoutes, withInMemoryScrolling({
+        provideRouter(appRoutes, withRouterConfig({ paramsInheritanceStrategy: 'emptyOnly' }), withInMemoryScrolling({
       // both dashboards restore scroll on back, which needs this
       anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled',
     }))

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Subject, of } from 'rxjs';
@@ -29,6 +29,7 @@ export interface SearchHit {
   templateUrl: './qtl-search.component.html',
   styleUrls: ['./qtl-search.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule],
 })
 export class QtlSearchComponent {

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
 import {ReportsService} from 'digby-swagger-client';
 import {pollUntil} from '../../shared/poll-until-rxjs';
 import {defer, of} from 'rxjs';
@@ -14,6 +14,7 @@ import {ReportRequestService} from '../report-request-service';
     styleUrls: ['./report-run-dialog.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: []
 })
 export class ReportRunDialogComponent implements OnInit {

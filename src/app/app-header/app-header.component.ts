@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import {debounceTime} from 'rxjs/operators';
 import {AuthService} from "../auth/auth.service";
 import { Router, RouterLinkActive, RouterLink } from "@angular/router";
@@ -12,6 +12,7 @@ import { NgbCollapse, NgbNav, NgbNavItem, NgbNavItemRole, NgbNavLink, NgbNavLink
     selector: 'app-header',
     templateUrl: './app-header.component.html',
     styleUrls: ['./app-header.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgbCollapse, NgbNav, NgbNavItem, NgbNavItemRole, RouterLinkActive, NgbNavLink, NgbNavLinkBase, RouterLink, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, NgbDropdownItem]
 })
 

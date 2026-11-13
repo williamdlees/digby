@@ -1,4 +1,4 @@
-import {Component, Injectable} from '@angular/core';
+import {Component, Injectable, ChangeDetectionStrategy} from '@angular/core';
 import {ReportParamsDialogComponent, SampleCoverage} from './report-params-dialog/report-params-dialog.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ReportRunDialogComponent} from './report-run-dialog/report-run-dialog.component';
@@ -11,6 +11,7 @@ import {ReportsListDataSource} from './reports-list-data.source';
 
 @Component({
     template: '',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 @Injectable({

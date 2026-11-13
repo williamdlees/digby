@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 
 import { ExportLayout, ExportTable, ExportTrace, python, safeStem, saveText, table, tsv }
@@ -19,6 +19,7 @@ import { ExportLayout, ExportTable, ExportTrace, python, safeStem, saveText, tab
       </div>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .plot-export { display: flex; gap: 0.35rem; justify-content: flex-end; margin: 0.25rem 0 0; }
     button {

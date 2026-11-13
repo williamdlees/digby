@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -35,6 +35,7 @@ const MAX_GENES = 3;
   standalone: true,
   imports: [CommonModule, FormsModule, NgbModule,
             GeneTableSelectorComponent, GenePickerComponent, CheckDropdownComponent, PanelGalleryComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [{ provide: RefbookService, useClass: RefbookService }, DashDrillService],
 })
 export class DashRefbookComponent implements OnInit, OnDestroy {

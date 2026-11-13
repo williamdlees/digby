@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation, input} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation, input, ChangeDetectionStrategy} from '@angular/core';
 import { GenomicService, RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelectorService } from './gene-table-selector.service';
 import { retryWithBackoff } from '../shared/retry_with_backoff';
@@ -16,6 +16,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './gene-table-selector.component.html',
     styleUrls: ['./gene-table-selector.component.css'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, NgMultiSelectDropDownModule]
 })
 

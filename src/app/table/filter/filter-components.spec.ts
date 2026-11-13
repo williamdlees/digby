@@ -1,12 +1,29 @@
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { TextFilterComponent } from './text-filter/text-filter.component';
 import { IChoices } from './ichoices';
 import { BoolFilterComponent } from './bool-filter/bool-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
+import { FilterComponent } from './filter.component';
+import { FilterMode } from './filter-mode.enum';
 
 describe('table filters', () => {
+  it('passes inputs and outputs through the dynamically created filter', () => {
+    const fixture = TestBed.createComponent(FilterComponent);
+    fixture.componentRef.setInput('columnName', 'gene');
+    fixture.componentRef.setInput('filterMode', FilterMode.TEXT_MODE);
+    const emitted = vi.fn();
+    fixture.componentInstance.predicateEmitter.subscribe(emitted);
+    fixture.detectChanges();
+
+    const filter = fixture.debugElement.query(By.directive(TextFilterComponent)).componentInstance as TextFilterComponent;
+    expect(filter.columnName()).toBe('gene');
+    filter.onSortAsc();
+    expect(emitted).toHaveBeenCalledWith({ field: 'gene', predicates: [], sort: { field: 'gene', order: 'asc' } });
+  });
+
   it('generates text predicates for matching, choices and sort order', () => {
     const fixture = TestBed.createComponent(TextFilterComponent);
     fixture.componentRef.setInput('columnName', 'gene');

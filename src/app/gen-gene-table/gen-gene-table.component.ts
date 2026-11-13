@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
 import { GenGeneTablePanelComponent } from './gen-gene-table-panel/gen-gene-table-panel.component';
 
@@ -6,6 +6,7 @@ import { GenGeneTablePanelComponent } from './gen-gene-table-panel/gen-gene-tabl
     selector: 'app-genetable',
     templateUrl: './gen-gene-table.component.html',
     styleUrls: ['./gen-gene-table.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GeneTableSelectorComponent, GenGeneTablePanelComponent]
 })
 export class GenGeneTableComponent implements OnInit {

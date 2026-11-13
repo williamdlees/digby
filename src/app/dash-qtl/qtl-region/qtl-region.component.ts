@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -153,6 +153,7 @@ interface Mark {
   templateUrl: './qtl-region.component.html',
   styleUrls: ['./qtl-region.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, PlotExportComponent],
 })
 export class QtlRegionComponent implements OnChanges {

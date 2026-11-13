@@ -1,5 +1,6 @@
 import {
   AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { RouterLink } from '@angular/router';
@@ -49,6 +50,7 @@ const SET_CHART_SHARE = 0.18;
   templateUrl: './dash-refbook-allele.component.html',
   styleUrls: ['./dash-refbook-allele.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterLink, PlotlyModule, ScopeNoteComponent, PlotExportComponent],
 })
 export class DashRefbookAlleleComponent

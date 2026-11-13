@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, Output, EventEmitter, ViewEncapsulation, input} from '@angular/core';
+import {Component, OnInit, ViewChild, Output, EventEmitter, ViewEncapsulation, input, ChangeDetectionStrategy} from '@angular/core';
 import { FilterImplementation } from '../filter-implementation';
 import { ColumnPredicate } from '../column-predicate';
 import { IChoices } from '../ichoices';
@@ -34,6 +34,7 @@ class Operator {
     styleUrls: ['./date-filter.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, FormsModule, MatButton, MatFormField, MatSelect, MatOption, MatInput, MatDatepickerInput, MatDatepickerToggle, MatSuffix, MatDatepicker, NgMultiSelectDropDownModule]
 })
 export class DateFilterComponent implements OnInit, FilterImplementation {

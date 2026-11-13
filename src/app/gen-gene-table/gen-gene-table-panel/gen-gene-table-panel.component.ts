@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { GenomicService } from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -35,6 +35,7 @@ import { FilterComponent } from '../../table/filter/filter.component';
     styleUrls: ['./gen-gene-table-panel.component.css'],
     encapsulation: ViewEncapsulation.None, // needed for css styling on mat-menu-panel
     providers: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
 })
 

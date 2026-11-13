@@ -1,5 +1,5 @@
 /* tslint:disable:only-arrow-functions */
-import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, AfterViewInit, ChangeDetectionStrategy} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
 import { GeneTableSelectorService } from '../../gene-table-selector/gene-table-selector.service';
@@ -30,6 +30,7 @@ const options = {
 @Component({
     selector: 'app-gene-browser-panel',
     templateUrl: './gene-browser-panel.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./gene-browser-panel.component.scss']
 })
 

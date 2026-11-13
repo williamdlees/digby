@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -16,6 +16,7 @@ export interface GalleryPanel {
   standalone: true,
   imports: [],
   templateUrl: './panel-gallery.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./panel-gallery.component.scss'],
 })
 export class PanelGalleryComponent {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { catchError, distinctUntilChanged, map } from 'rxjs/operators';
@@ -21,6 +21,7 @@ import { collapseGroup, fills, layout, SunburstLayout, SunburstPayload }
   templateUrl: './dash-refbook-sunburst.component.html',
   styleUrls: ['./dash-refbook-sunburst.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [PlotlyModule],
 })
 export class DashRefbookSunburstComponent implements OnInit, OnChanges {

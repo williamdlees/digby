@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlotlyModule } from 'angular-plotly.js';
@@ -110,6 +110,7 @@ interface AnchorRow {
   templateUrl: './qtl-pairing.component.html',
   styleUrls: ['./qtl-pairing.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, PlotlyModule, QtlGenotypeCountsComponent],
 })
 export class QtlPairingComponent implements OnChanges {

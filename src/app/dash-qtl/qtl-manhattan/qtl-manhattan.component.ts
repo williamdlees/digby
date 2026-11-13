@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlotlyModule } from 'angular-plotly.js';
 import { catchError } from 'rxjs/operators';
@@ -36,6 +36,7 @@ import { exportButtons } from '../../shared/plot-export/plot-export';
   templateUrl: './qtl-manhattan.component.html',
   styleUrls: ['./qtl-manhattan.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, PlotlyModule],
 })
 export class QtlManhattanComponent implements OnChanges {

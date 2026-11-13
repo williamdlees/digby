@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
 import { GeneBrowserPanelComponent } from './gene-browser-panel/gene-browser-panel.component';
@@ -7,6 +7,7 @@ import { GeneBrowserPanelComponent } from './gene-browser-panel/gene-browser-pan
     selector: 'app-gene-browser',
     templateUrl: './gene-browser.component.html',
     styleUrls: ['./gene-browser.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GeneTableSelectorComponent, GeneBrowserPanelComponent]
 })
 export class GeneBrowserComponent implements OnInit {

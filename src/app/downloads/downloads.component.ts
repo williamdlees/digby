@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { StudyTableComponent } from '../shared/study-table/study-table.component
 @Component({
     selector: 'app-downloads',
     templateUrl: './downloads.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [StudyTableComponent]
 })
 export class DownloadsComponent implements OnInit {

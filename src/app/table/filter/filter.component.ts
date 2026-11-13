@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Type, Output, EventEmitter, input } from '@angular/core';
+import { Component, OnInit, ViewChild, Type, Output, EventEmitter, input, ChangeDetectionStrategy } from '@angular/core';
 import { TextFilterComponent } from './text-filter/text-filter.component';
 import { NumberFilterComponent } from './number-filter/number-filter.component';
 import { DateFilterComponent } from './date-filter/date-filter.component';
@@ -16,6 +16,7 @@ import { DynamicComponent, DynamicIoDirective } from 'ng-dynamic-component';
     templateUrl: './filter.component.html',
     styleUrls: ['./filter.component.css'],
     exportAs: 'menuInOtherComponent',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [DynamicComponent, DynamicIoDirective]
 })
 export class FilterComponent implements OnInit {

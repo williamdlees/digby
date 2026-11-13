@@ -1,16 +1,16 @@
 # Digby
 
-Digby is the Angular frontend for VDJbase. It uses Angular CLI 21.
+Digby is the Angular frontend for VDJbase. It uses Angular CLI 22.
 
 ## Development
 
-Use Node.js 20.19 or later in the 20.x series, 22.12 or later in the 22.x series, or 24.x. Install the JavaScript dependencies with `npm install`, then start the frontend:
+Use Node.js 22.22.3 or later in the 22.x series, 24.15 or later in the 24.x series, or 26.x. Install the JavaScript dependencies with `npm install`, then start the frontend:
 
 ```cmd
 npm start
 ```
 
-`angular-google-charts` does not yet declare Angular 21 support. A scoped npm
+`angular-google-charts` does not yet declare Angular 22 support. A scoped npm
 peer override permits the existing chart integration; remove it when a compatible
 upstream release is available.
 
@@ -28,7 +28,10 @@ Unit tests run with Vitest and jsdom; they mock backend calls and do not require
 In VS Code, select **TypeScript: Select TypeScript Version** and choose **Use Workspace Version** to use the project's Angular-compatible TypeScript version. If test globals are still reported as missing after reinstalling dependencies, run **TypeScript: Restart TS Server**.
 
 The Angular build package's optional Vitest peer is overridden to retain Vitest 3
-for the Analog test builder; the Angular native Vitest test builder is not used.
+for the Analog test builder and existing coverage thresholds; the Angular native
+Vitest test builder is not used. `npm audit` reports critical vulnerabilities
+in the Vitest 3 test-tooling dependency chain; upgrading Vitest changes coverage
+reporting and needs further work before the existing coverage gate can pass.
 
 Coverage includes application TypeScript under `src/app` and the maintained refbook client; other generated client code, unit specs and bootstrap/configuration files outside that scope are excluded. The coverage command enforces 80% for statements, branches, functions and lines.
 
@@ -40,7 +43,7 @@ The Playwright suite covers direct route loading, internal links and their HTTP 
 
 Prerequisites:
 
-- A Node.js version supported by Angular 21, as listed above.
+- A Node.js version supported by Angular 22, as listed above.
 - The frontend dependencies installed with `npm install`.
 - The Flask backend running from `../digby_backend`, typically in its configured Python environment:
 

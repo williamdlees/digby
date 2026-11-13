@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {retryWithBackoff} from '../../shared/retry_with_backoff';
 import {catchError, finalize} from 'rxjs/operators';
@@ -13,6 +13,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     styleUrls: ['./rep-sample-info.component.css'],
     encapsulation: ViewEncapsulation.None, // needed for css styling
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatTooltip]
 })
 export class RepSampleInfoComponent implements OnInit {

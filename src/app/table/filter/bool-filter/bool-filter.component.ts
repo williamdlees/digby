@@ -5,7 +5,8 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
-  input
+  input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {FilterImplementation} from '../filter-implementation';
 import {ColumnPredicate} from '../column-predicate';
@@ -37,6 +38,7 @@ class Operator {
     styleUrls: ['./bool-filter.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIconButton, MatMenuTrigger, MatIcon, MatMenu, FormsModule, MatButton, NgMultiSelectDropDownModule]
 })
 export class BoolFilterComponent implements OnInit, FilterImplementation {

@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {Post, WordpressService} from "./wordpress.service";
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
@@ -19,6 +19,7 @@ import { QUESTIONS, ENTRY_CARDS, CITATION, CONTRIBUTE, SEARCH_EXAMPLES } from '.
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterLink, NgbDropdown, NgbDropdownToggle, NgbDropdownMenu, DatePipe]
 })
 export class HomeComponent implements OnInit {

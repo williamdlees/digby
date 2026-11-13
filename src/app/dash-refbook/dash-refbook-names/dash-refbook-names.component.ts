@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -25,6 +25,7 @@ interface NameRow {
   templateUrl: './dash-refbook-names.component.html',
   styleUrls: ['./dash-refbook-names.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ScopeNoteComponent],
 })
 export class DashRefbookNamesComponent implements OnChanges {

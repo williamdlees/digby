@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
@@ -34,6 +34,7 @@ const GENOTYPE_LABEL: Record<string, string> = { 0: '0/0', 1: '0/1', 2: '1/1' };
   templateUrl: './qtl-variant-lookup.component.html',
   styleUrls: ['./qtl-variant-lookup.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, QtlGenotypeCountsComponent],
 })
 export class QtlVariantLookupComponent implements OnChanges {

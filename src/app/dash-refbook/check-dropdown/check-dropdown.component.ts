@@ -1,5 +1,6 @@
 import {
   Component, ElementRef, EventEmitter, HostListener, Input, Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 
@@ -23,6 +24,7 @@ interface OptionGroup {
   templateUrl: './check-dropdown.component.html',
   styleUrls: ['./check-dropdown.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class CheckDropdownComponent {

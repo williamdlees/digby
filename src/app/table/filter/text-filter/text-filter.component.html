@@ -15,7 +15,7 @@
 
 <mat-menu #filterMenu="matMenu" xPosition="before" class="menu-overflow-hidden tf-mat-menu">
   <div class="container content-centered" (click) = "$event.stopPropagation()">
-    <form>
+    <div>
       <div class="row">
         @if (showSort()) {
           <div class="col-8" style="padding-left: 0px; padding-right: 16px; display: flex">
@@ -100,6 +100,6 @@
         </ng-multiselect-dropdown>
       </div>
 
-    </form>
+    </div>
   </div>
 </mat-menu>

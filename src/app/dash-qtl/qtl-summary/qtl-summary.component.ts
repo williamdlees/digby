@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlotlyModule } from 'angular-plotly.js';
@@ -56,6 +56,7 @@ const fold = (feature: string): string => FOLD_INTO[feature] ?? feature;
   templateUrl: './qtl-summary.component.html',
   styleUrls: ['./qtl-summary.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, PlotlyModule],
 })
 export class QtlSummaryComponent implements OnChanges {

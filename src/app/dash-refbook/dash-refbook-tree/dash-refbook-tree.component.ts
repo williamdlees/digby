@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
@@ -48,6 +48,7 @@ interface TreeData {
     .legend-short { font-family: 'Roboto Mono', Menlo, Consolas, monospace; white-space: nowrap; }
   `],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [PlotlyModule, ScopeNoteComponent],
 })
 export class DashRefbookTreeComponent implements OnInit, OnChanges {

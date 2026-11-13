@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {catchError, finalize} from 'rxjs/operators';
 import { GenomicService } from 'projects/digby-swagger-client';
@@ -14,6 +14,7 @@ import { MatTooltip } from '@angular/material/tooltip';
     styleUrls: ['./gen-sample-info.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatTooltip]
 })
 

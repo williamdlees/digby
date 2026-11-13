@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewEncapsulation, input} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation, input, ChangeDetectionStrategy} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RepseqService } from 'projects/digby-swagger-client';
 import {DomSanitizer} from '@angular/platform-browser';
@@ -10,6 +10,7 @@ import { SafePipe } from '../../safe.pipe';
     styleUrls: ['./rep-gene-notes.component.scss'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SafePipe]
 })
 

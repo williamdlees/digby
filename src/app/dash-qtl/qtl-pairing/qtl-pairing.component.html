@@ -102,8 +102,8 @@
                 [class.sig]="omnibusOf(a)?.significant"
                 [disabled]="!isChosen(a) && atAnchorLimit"
                 (click)="toggleAnchor(a)"
-                [title]="'p ' + omnibusOf(a)?.p_value?.toExponential(2)
-                         + ' · n ' + omnibusOf(a)?.n">
+                [title]="'p ' + $safeNavigationMigration(omnibusOf(a)?.p_value?.toExponential(2))
+                         + ' · n ' + $safeNavigationMigration(omnibusOf(a)?.n)">
           {{ short(a) }}
         </button>
       }

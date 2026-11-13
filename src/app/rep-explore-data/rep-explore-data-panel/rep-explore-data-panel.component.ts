@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {GeneTableSelection} from '../../gene-table-selector/gene-table-selector.model';
 import {GeneTableSelectorService} from '../../gene-table-selector/gene-table-selector.service';
 import { RepseqService } from 'projects/digby-swagger-client';
@@ -15,6 +15,7 @@ import { StudyTableComponent } from '../../shared/study-table/study-table.compon
     styleUrls: ['./rep-explore-data-panel.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling on mat-menu-panel
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, GoogleChartsModule, StudyTableComponent]
 })
 

@@ -105,6 +105,12 @@ test('home search finds results and curated-data selection opens the chosen down
 });
 
 test('gene table selection and quick search work with backend data', async ({ page }) => {
+  const formWarnings: string[] = [];
+  page.on('console', message => {
+    if (message.type() === 'warning' && message.text().includes('NG01354')) {
+      formWarnings.push(message.text());
+    }
+  });
   await openRoute(page, '/generep', 'app-rep-gene-table');
 
   const species = page.locator('#selectSpecies');
@@ -116,6 +122,17 @@ test('gene table selection and quick search work with backend data', async ({ pa
   const firstName = (await rows.first().locator('mat-cell').first().innerText()).trim();
   expect(firstName.length).toBeGreaterThan(0);
 
+  const nameFilter = page.locator('mat-header-cell.mat-column-name app-filter button');
+  await nameFilter.click();
+  await page.getByRole('combobox', { name: 'Select Filter' }).click();
+  await page.getByRole('option', { name: 'Matches' }).click();
+  await page.getByPlaceholder('Filter value').fill(firstName);
+  await page.getByRole('button', { name: 'OK', exact: true }).click();
+  await expect(rows.first()).toContainText(firstName, { timeout: 30_000 });
+  await nameFilter.click();
+  await page.getByRole('button', { name: 'Clear Filter', exact: true }).click();
+  await page.getByRole('button', { name: 'OK', exact: true }).click();
+
   const search = page.locator('input[placeholder="Search..."]');
   await search.pressSequentially(firstName);
   await expect(rows.first()).toContainText(firstName, { timeout: 30_000 });
@@ -123,6 +140,7 @@ test('gene table selection and quick search work with backend data', async ({ pa
   await search.fill('');
   await search.pressSequentially('no-matching-gene-name-xyz');
   await expect(rows).toHaveCount(0, { timeout: 30_000 });
+  expect(formWarnings).toEqual([]);
 });
 
 test('navigation works at desktop and mobile widths', async ({ page }) => {

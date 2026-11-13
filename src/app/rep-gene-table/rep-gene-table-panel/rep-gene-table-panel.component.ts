@@ -7,7 +7,8 @@ import {
   ViewChild,
   AfterViewInit,
   ViewEncapsulation,
-  ElementRef
+  ElementRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { RepseqService } from 'projects/digby-swagger-client';
 import { GeneTableSelection } from '../../gene-table-selector/gene-table-selector.model';
@@ -45,6 +46,7 @@ import { FilterComponent } from '../../table/filter/filter.component';
     styleUrls: ["./rep-gene-table-panel.component.css"],
     providers: [],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatIcon, ColumnSorterComponent, MatMenuTrigger, FormsModule, MatPaginator, MatTable, TableResizeDirective, MatColumnDef, MatHeaderCellDef, MatHeaderCell, ColumnResizeDirective, FilterComponent, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatMenu, MatMenuContent, AsyncPipe]
 })
 export class RepGeneTablePanelComponent

@@ -34,8 +34,8 @@
     </div>
     @if (plottedAsc) {
       <button type="button" class="back-to-gene" (click)="backToGene.emit()"
-              [title]="'Back to the scan for ' + ascName(selection?.locus, plottedAsc)">
-        ← {{ ascName(selection?.locus, plottedAsc) }} scan
+              [title]="'Back to the scan for ' + ascName($safeNavigationMigration(selection?.locus), plottedAsc)">
+        ← {{ ascName($safeNavigationMigration(selection?.locus), plottedAsc) }} scan
       </button>
     }
   </div>
@@ -72,8 +72,8 @@
       } @else {
         <app-qtl-genotype-counts [counts]="counts" [height]="440"
                                  [variant]="variant.variant"
-                                 [source]="'/api/qtl/variant/' + selection?.species
-                                           + '/' + selection?.locus + '/' + variant.variant">
+                                 [source]="'/api/qtl/variant/' + $safeNavigationMigration(selection?.species)
+                                           + '/' + $safeNavigationMigration(selection?.locus) + '/' + variant.variant">
         </app-qtl-genotype-counts>
         <p class="note">
           How many subjects carry each genotype. A class with only a handful of

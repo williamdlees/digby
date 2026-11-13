@@ -1,6 +1,7 @@
 import {
   AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -61,6 +62,7 @@ class ZygosityData {
     .upset-status.error { color: #d62839; }
   `],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule, ScopeNoteComponent, PlotExportComponent],
 })
 export class DashRefbookZygosityComponent

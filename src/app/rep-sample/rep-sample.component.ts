@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { GeneTableSelectorComponent } from '../gene-table-selector/gene-table-selector.component';
 import { RepSamplePanelComponent } from './rep-sample-panel/rep-sample-panel.component';
 
@@ -6,6 +6,7 @@ import { RepSamplePanelComponent } from './rep-sample-panel/rep-sample-panel.com
     selector: 'app-sample-rep',
     templateUrl: './rep-sample.component.html',
     styleUrls: ['./rep-sample.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GeneTableSelectorComponent, RepSamplePanelComponent]
 })
 export class RepSampleComponent implements OnInit {

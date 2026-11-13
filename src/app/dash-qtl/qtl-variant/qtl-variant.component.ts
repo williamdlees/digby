@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PlotlyModule } from 'angular-plotly.js';
 import { EMPTY, forkJoin, of } from 'rxjs';
@@ -35,6 +35,7 @@ const GENOTYPE_COLOUR: Record<number, string> = { 0: '#2a78d6', 1: '#e34948', 2:
   templateUrl: './qtl-variant.component.html',
   styleUrls: ['./qtl-variant.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, PlotlyModule, QtlRegionComponent,
             QtlGenotypeCountsComponent],
 })

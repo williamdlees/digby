@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnChanges, SimpleChanges, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PlotlyModule } from 'angular-plotly.js';
@@ -34,6 +34,7 @@ export class OverviewData {
   templateUrl: './dash-refbook-overview.component.html',
   styleUrls: ['./dash-refbook-overview.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, PlotlyModule, ScopeNoteComponent]
 })
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
@@ -15,6 +15,7 @@ import { CodonVariability, Region, V_REGIONS, variability } from './alignment-va
   templateUrl: './dash-refbook-alignment.component.html',
   styleUrls: ['./dash-refbook-alignment.component.css'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [FormsModule],
 })
 export class DashRefbookAlignmentComponent implements OnInit, OnChanges {

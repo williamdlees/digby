@@ -1,4 +1,4 @@
-import {Component, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Injectable, OnDestroy, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import { MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow } from '@angular/material/table';
 import {ReportsListDataSource} from './reports-list-data.source';
 import {ReportsService} from 'projects/digby-swagger-client';
@@ -24,6 +24,7 @@ import { filter, take } from 'rxjs/operators';
     selector: 'app-reports',
     templateUrl: './reports.component.html',
     styleUrls: ['./reports.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GeneTableSelectorComponent, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatNoDataRow]
 })
 export class ReportsComponent implements OnInit, OnDestroy {

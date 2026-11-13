@@ -2,12 +2,12 @@
   "compileOnSave": false,
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
+    "strict": false,
     "module": "es2022",
     "moduleResolution": "bundler",
     "importHelpers": true,
@@ -23,15 +23,15 @@
     ],
     "paths": {
       "digby-swagger-client": [
-        "projects/digby-swagger-client"
+        "./projects/digby-swagger-client"
       ],
       "digby-swagger-client/*": [
-        "projects/digby-swagger-client/*"
-      ]
+        "./projects/digby-swagger-client/*"
+      ],
+      "*": ["./*"]
     }
   },
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "strictTemplates": true
   }

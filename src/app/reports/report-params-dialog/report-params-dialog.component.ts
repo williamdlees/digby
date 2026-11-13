@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Input} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Input, ChangeDetectionStrategy} from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
@@ -18,6 +18,7 @@ export interface SampleCoverage {
     styleUrls: ['./report-params-dialog.component.css'],
     encapsulation: ViewEncapsulation.None // needed for css styling
     ,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FormsModule, ReactiveFormsModule, NgMultiSelectDropDownModule]
 })
 export class ReportParamsDialogComponent implements OnInit {

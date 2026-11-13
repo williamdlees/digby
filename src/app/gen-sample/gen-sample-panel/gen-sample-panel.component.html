@@ -61,7 +61,7 @@
     }
 
     <div class="col-auto ms-auto">
-      <mat-paginator [length]="dataSource?.totalItems" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
+      <mat-paginator [length]="$safeNavigationMigration(dataSource?.totalItems)" [pageSize]="25" [pageSizeOptions]="[25, 50, 100, 250]"></mat-paginator>
     </div>
   </div>
 

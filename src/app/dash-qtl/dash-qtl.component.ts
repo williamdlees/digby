@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +31,7 @@ import { ascDisplayName } from '../shared/models/gene-naming';
   templateUrl: './dash-qtl.component.html',
   styleUrls: ['./dash-qtl.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, QtlManhattanComponent, QtlVariantComponent,
             QtlSearchComponent, QtlVariantLookupComponent, QtlRegionComponent,
             QtlPairingComponent, QtlSummaryComponent, PanelGalleryComponent],

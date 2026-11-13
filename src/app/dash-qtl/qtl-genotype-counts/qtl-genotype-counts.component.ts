@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ChangeDetectionStrategy } from '@angular/core';
 
 import { PlotlyModule } from 'angular-plotly.js';
 
@@ -36,6 +36,7 @@ export type GenotypeCounts =
       <p class="none">No genotypes are held for this variant.</p>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .none { margin: 0.4rem 0 0; font-size: 0.78rem; color: var(--vdj-muted, #5f6368); }
   `],

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 
 import {
@@ -15,6 +15,7 @@ import {
       <p class="scope-note"><span class="marker">▾</span>{{ note }}</p>
     }
   `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .scope-note {
       margin: 0 0 0.5rem; padding: 0.25rem 0.5rem;

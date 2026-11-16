@@ -120,8 +120,7 @@
         <button type="button" class="btn btn-outline-primary" [disabled]="page >= totalPages || loadingPosts" (click)="goToPage(page + 1)" aria-label="Next page">&rsaquo;</button>
         <span class="more">
           <a href="{{wpConfig.wp_news_url}}/index.php/vdjbase_news">All news</a> &middot;
-          <a href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">All help topics</a> &middot;
-          <a routerLink="/user-guide">User guide</a>
+          <a href="{{wpConfig.wp_help_url}}/index.php/vdjbase_help">All help topics</a>
         </span>
       </div>
     </div>
